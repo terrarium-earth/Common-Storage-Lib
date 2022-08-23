@@ -1,0 +1,49 @@
+dependencies {
+    // We depend on fabric loader here to use the fabric @Environment annotations and get the mixin dependencies
+    // Do NOT use other classes from fabric loader
+    modImplementation "net.fabricmc:fabric-loader:${rootProject.fabric_loader_version}"
+    modImplementation "com.teamresourceful.resourcefullib:resourcefullib-common-$rootProject.resourcefullib_version"
+    compileOnly "net.msrandom:class-extension-annotations:1.0"
+}
+
+architectury {
+    common()
+}
+
+publishing {
+    publications {
+        mavenFabric(MavenPublication) {
+            artifact remapJar
+            from components.java
+            artifactId = rootProject.archives_base_name + "-" + project.name + "-" + project.minecraft_version
+            pom {
+                name = 'Botarium'
+                description = 'Tiny lil library mod for cross platform energy and registries'
+                url = 'https://github.com/terrarium-earth/Spirit'
+
+                scm {
+                    connection = 'git:https://github.com/CodexAdrian/Botarium.git'
+                    developerConnection = 'git:https://github.com/CodexAdrian/Botarium.git'
+                    url = 'https://github.com/CodexAdrian/Botarium'
+                }
+
+                licenses {
+                    license {
+                        name = 'MIT'
+                    }
+                }
+            }
+        }
+    }
+
+    // See https://docs.gradle.org/current/userguide/publishing_maven.html for information on how to set up publishing.
+    repositories {
+        maven {
+            url = "https://maven.resourcefulbees.com/repository/codexadrian/"
+            credentials {
+                username ENV.MAVEN_USER
+                password ENV.MAVEN_PASS
+            }
+        }
+    }
+}

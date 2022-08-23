@@ -1,0 +1,76 @@
+architectury {
+    platformSetupLoomIde()
+}
+
+classExtensions {
+    registerForSourceSet sourceSets.main, "earth.terrarium.botarium.fabric.extensions"
+}
+
+sourceSets.main {
+    def commonSourceSets = project(":common").sourceSets
+
+    def commonMain = commonSourceSets.named("main")
+
+    java.srcDirs(
+            commonMain.map { it.java.srcDirs },
+    )
+
+    resources.srcDirs(
+            commonMain.map { it.resources.srcDirs },
+    )
+}
+
+dependencies {
+    modImplementation "net.fabricmc:fabric-loader:${rootProject.fabric_loader_version}"
+    modApi "net.fabricmc.fabric-api:fabric-api:${rootProject.fabric_api_version}"
+    include modApi('teamreborn:energy:2.2.0') {
+        exclude(group: "net.fabricmc.fabric-api")
+    }
+    compileOnly(project(path: ":common")) { transitive false }
+}
+
+processResources {
+    inputs.property "version", project.version
+
+    filesMatching("fabric.mod.json") {
+        expand "version": project.version
+    }
+}
+
+publishing {
+    publications {
+        mavenFabric(MavenPublication) {
+            artifact remapJar
+            from components.java
+            artifactId = rootProject.archives_base_name + "-" + project.name + "-" + project.minecraft_version
+            pom {
+                name = 'Botarium'
+                description = 'Tiny lil library mod for cross platform energy and registries'
+                url = 'https://github.com/terrarium-earth/Spirit'
+
+                scm {
+                    connection = 'git:https://github.com/CodexAdrian/Botarium.git'
+                    developerConnection = 'git:https://github.com/CodexAdrian/Botarium.git'
+                    url = 'https://github.com/CodexAdrian/Botarium'
+                }
+
+                licenses {
+                    license {
+                        name = 'MIT'
+                    }
+                }
+            }
+        }
+    }
+
+    // See https://docs.gradle.org/current/userguide/publishing_maven.html for information on how to set up publishing.
+    repositories {
+        maven {
+            url = "https://maven.resourcefulbees.com/repository/codexadrian/"
+            credentials {
+                username ENV.MAVEN_USER
+                password ENV.MAVEN_PASS
+            }
+        }
+    }
+}

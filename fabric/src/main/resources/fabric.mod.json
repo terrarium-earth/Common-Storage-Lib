@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "id": "botarium",
+  "version": "${version}",
+  "name": "Botarium",
+  "description": "tiny lil library mod for terrarium",
+  "authors": [
+    "CodexAdrian"
+  ],
+  "contact": {},
+  "license": "All-Rights-Reserved",
+  "icon": "icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "earth.terrarium.botarium.fabric.BotariumFabric"
+    ]
+  },
+  "depends": {
+    "fabricloader": ">=0.14.9",
+    "minecraft": ">=1.19.2"
+  }
+}
