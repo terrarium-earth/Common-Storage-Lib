@@ -18,7 +18,7 @@ In an Architectury project, you would implement it like so:
 Common
 ```
 dependencies {
-  include modImplementation "earth.terrarium:botarium-common-{minecraft_version}:{botarium_version}"
+  modImplementation "earth.terrarium:botarium-common-{minecraft_version}:{botarium_version}"
 }
 ```
 
