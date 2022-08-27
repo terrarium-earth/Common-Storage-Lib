@@ -37,11 +37,15 @@ processResources {
     }
 }
 
+def ENV = System.getenv()
+
 publishing {
     publications {
-        mavenFabric(MavenPublication) {
+        mavenJava(MavenPublication) {
             artifact remapJar
-            from components.java
+            artifact(sourcesJar) {
+                builtBy remapSourcesJar
+            }
             artifactId = rootProject.archives_base_name + "-" + project.name + "-" + project.minecraft_version
             pom {
                 name = 'Botarium'
