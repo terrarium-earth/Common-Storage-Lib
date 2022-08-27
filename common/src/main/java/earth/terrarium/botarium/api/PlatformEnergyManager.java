@@ -1,6 +1,9 @@
 package earth.terrarium.botarium.api;
 
-public interface ItemEnergyHandler {
+import org.jetbrains.annotations.ApiStatus;
+
+@ApiStatus.Internal
+public interface PlatformEnergyManager {
     long getCapacity();
     long maxCapacity();
     long extract(int amount, boolean simulate);

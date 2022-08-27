@@ -2,7 +2,7 @@ package earth.terrarium.botarium.api;
 
 import net.minecraft.nbt.CompoundTag;
 
-public interface EnergyHoldable {
+public interface EnergyContainer {
     long insertEnergy(long maxAmount);
     long extractEnergy(long maxAmount);
 

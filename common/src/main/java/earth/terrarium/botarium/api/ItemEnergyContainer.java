@@ -4,11 +4,11 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
 
-public class ItemEnergyStorage implements EnergyHoldable {
+public class ItemEnergyContainer implements EnergyContainer {
     private final ItemStack stack;
     private final long capacity;
 
-    public ItemEnergyStorage(ItemStack stack, long maxCapacity) {
+    public ItemEnergyContainer(ItemStack stack, long maxCapacity) {
         this.stack = stack;
         this.capacity = maxCapacity;
     }

@@ -1,12 +1,10 @@
 package earth.terrarium.botarium.forge.extensions;
 
 
-import earth.terrarium.botarium.api.EnergyHoldable;
-import earth.terrarium.botarium.api.EnergyStorage;
+import earth.terrarium.botarium.api.EnergyContainer;
+import earth.terrarium.botarium.api.BlockEnergyContainer;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.IntTag;
-import net.minecraft.nbt.Tag;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
@@ -17,27 +15,27 @@ import net.msrandom.extensions.annotations.ClassExtension;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-@ClassExtension(EnergyHoldable.class)
+@ClassExtension(EnergyContainer.class)
 public interface EnergyExtensions extends IEnergyStorage, ICapabilityProvider, INBTSerializable<CompoundTag> {
 
     @Override
     default int receiveEnergy(int maxAmount, boolean bl) {
-        return (int) ((EnergyHoldable) this).insertEnergy(maxAmount);
+        return (int) ((EnergyContainer) this).insertEnergy(maxAmount);
     }
 
     @Override
     default int extractEnergy(int maxAmount, boolean bl) {
-        return (int) ((EnergyHoldable) this).extractEnergy(maxAmount);
+        return (int) ((EnergyContainer) this).extractEnergy(maxAmount);
     }
 
     @Override
     default int getEnergyStored() {
-        return (int) ((EnergyHoldable) this).getStoredEnergy();
+        return (int) ((EnergyContainer) this).getStoredEnergy();
     }
 
     @Override
     default int getMaxEnergyStored() {
-        return (int) ((EnergyHoldable) this).getMaxCapacity();
+        return (int) ((EnergyContainer) this).getMaxCapacity();
     }
 
     @Override
@@ -52,12 +50,12 @@ public interface EnergyExtensions extends IEnergyStorage, ICapabilityProvider, I
 
     @Override
     default CompoundTag serializeNBT() {
-        return ((EnergyStorage) this).serialize(new CompoundTag());
+        return ((BlockEnergyContainer) this).serialize(new CompoundTag());
     }
 
     @Override
     default void deserializeNBT(CompoundTag tag) {
-        ((EnergyStorage) this).deseralize(tag);
+        ((BlockEnergyContainer) this).deseralize(tag);
     }
 
     @Override

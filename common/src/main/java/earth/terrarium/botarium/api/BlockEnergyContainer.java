@@ -3,11 +3,11 @@ package earth.terrarium.botarium.api;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Mth;
 
-public class EnergyStorage implements EnergyHoldable {
+public class BlockEnergyContainer implements EnergyContainer {
     private int energy;
     private final int energyCapacity;
 
-    public EnergyStorage(int energyCapacity) {
+    public BlockEnergyContainer(int energyCapacity) {
         this.energyCapacity = energyCapacity;
     }
 
