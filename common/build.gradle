@@ -10,6 +10,21 @@ architectury {
     common()
 }
 
+java {
+    registerFeature(sourceSets.test.name) {
+        usingSourceSet(sourceSets.test)
+    }
+}
+
+components.java {
+    withVariantsFromConfiguration(configurations.testApiElements) {
+        skip()
+    }
+    withVariantsFromConfiguration(configurations.testRuntimeElements) {
+        skip()
+    }
+}
+
 def ENV = System.getenv()
 
 publishing {

@@ -14,6 +14,16 @@ subprojects {
 
     loom {
         silentMojangMappingsLicense()
+        runs {
+            client {
+                name("Test Client")
+                source(sourceSets.test)
+            }
+            server {
+                name("Test Server")
+                source(sourceSets.test)
+            }
+        }
     }
 
     dependencies {
@@ -23,6 +33,7 @@ subprojects {
         // The following line declares the yarn mappings you may select this one as well.
         // mappings "net.fabricmc:yarn:@YARN_MAPPINGS@:v2"
     }
+
 }
 
 allprojects {

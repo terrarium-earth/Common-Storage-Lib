@@ -4,8 +4,8 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Mth;
 
 public class BlockEnergyContainer implements EnergyContainer {
-    private int energy;
     private final int energyCapacity;
+    private int energy;
 
     public BlockEnergyContainer(int energyCapacity) {
         this.energyCapacity = energyCapacity;
@@ -14,14 +14,14 @@ public class BlockEnergyContainer implements EnergyContainer {
     @Override
     public long insertEnergy(long maxAmount) {
         long inserted = Mth.clamp(maxAmount, 0, getMaxCapacity() - getStoredEnergy());
-        this.energy += maxAmount;
+        this.energy += inserted;
         return inserted;
     }
 
     @Override
     public long extractEnergy(long maxAmount) {
         long extracted = Mth.clamp(maxAmount, 0, getStoredEnergy());
-        this.energy -= maxAmount;
+        this.energy -= extracted;
         return extracted;
     }
 

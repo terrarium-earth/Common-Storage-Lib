@@ -2,10 +2,10 @@ package earth.terrarium.botarium.api;
 
 import org.jetbrains.annotations.ApiStatus;
 
-@ApiStatus.Internal
+@ApiStatus.NonExtendable
 public interface PlatformEnergyManager {
+    long getStoredEnergy();
     long getCapacity();
-    long maxCapacity();
     long extract(int amount, boolean simulate);
     long insert(int amount, boolean simulate);
 }

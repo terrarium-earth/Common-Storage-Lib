@@ -1,16 +1,16 @@
 package earth.terrarium.botarium.api;
 
-import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.msrandom.extensions.annotations.ImplementedByExtension;
 import org.jetbrains.annotations.NotNull;
 
 public class RegistryHelpers {
 
-    @ExpectPlatform
+    @ImplementedByExtension
     public static <E extends BlockEntity> BlockEntityType<E> createBlockEntityType(BlockEntityFactory<E> factory, Block... blocks) {
         throw new AssertionError();
     }

@@ -1,9 +1,9 @@
 {
   "schemaVersion": 1,
-  "id": "botarium",
+  "id": "testmod",
   "version": "${version}",
-  "name": "Botarium",
-  "description": "tiny lil library mod for terrarium",
+  "name": "Botarium Testmod",
+  "description": "tiny lil test mod",
   "authors": [
     "CodexAdrian"
   ],
@@ -12,12 +12,9 @@
   "environment": "*",
   "entrypoints": {
     "main": [
-      "earth.terrarium.botarium.fabric.BotariumFabric"
+      "testmod.TestMod::init"
     ]
   },
-  "mixins": [
-    "botarium.fabric.mixins.json"
-  ],
   "depends": {
     "fabricloader": ">=0.14.9",
     "minecraft": ">=1.19.2"

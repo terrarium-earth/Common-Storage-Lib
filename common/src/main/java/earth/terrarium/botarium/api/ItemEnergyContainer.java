@@ -7,6 +7,7 @@ import net.minecraft.world.item.ItemStack;
 public class ItemEnergyContainer implements EnergyContainer {
     private final ItemStack stack;
     private final long capacity;
+    private long energy;
 
     public ItemEnergyContainer(ItemStack stack, long maxCapacity) {
         this.stack = stack;
@@ -15,28 +16,26 @@ public class ItemEnergyContainer implements EnergyContainer {
 
     @Override
     public long insertEnergy(long maxAmount) {
-        long storedEnergy = getStoredEnergy();
-        long extracted = Mth.clamp(maxAmount, 0, this.getMaxCapacity() - storedEnergy);
-        setEnergy(storedEnergy + extracted);
-        return extracted;
+        long inserted = Mth.clamp(maxAmount, 0, getMaxCapacity() - getStoredEnergy());
+        this.setEnergy(this.energy + inserted);
+        return inserted;
     }
 
     @Override
     public long extractEnergy(long maxAmount) {
-        long storedEnergy = getStoredEnergy();
-        long extracted = Mth.clamp(maxAmount, 0, storedEnergy);
-        setEnergy(storedEnergy - extracted);
+        long extracted = Mth.clamp(maxAmount, 0, getStoredEnergy());
+        this.setEnergy(this.energy - extracted);
         return extracted;
     }
 
     @Override
     public void setEnergy(long energy) {
-        stack.getOrCreateTag().putLong("Energy", energy);
+        this.energy = energy;
     }
 
     @Override
     public long getStoredEnergy() {
-        return stack.getOrCreateTag().getLong("Energy");
+        return energy;
     }
 
     @Override
@@ -46,9 +45,12 @@ public class ItemEnergyContainer implements EnergyContainer {
 
     @Override
     public CompoundTag serialize(CompoundTag tag) {
+        tag.putLong("Energy", this.energy);
         return tag;
     }
 
     @Override
-    public void deseralize(CompoundTag tag) {}
+    public void deseralize(CompoundTag tag) {
+        this.energy = tag.getLong("Energy");
+    }
 }

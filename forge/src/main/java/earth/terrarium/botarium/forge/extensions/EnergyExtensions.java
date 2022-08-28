@@ -50,12 +50,12 @@ public interface EnergyExtensions extends IEnergyStorage, ICapabilityProvider, I
 
     @Override
     default CompoundTag serializeNBT() {
-        return ((BlockEnergyContainer) this).serialize(new CompoundTag());
+        return ((EnergyContainer) this).serialize(new CompoundTag());
     }
 
     @Override
     default void deserializeNBT(CompoundTag tag) {
-        ((BlockEnergyContainer) this).deseralize(tag);
+        ((EnergyContainer) this).deseralize(tag);
     }
 
     @Override

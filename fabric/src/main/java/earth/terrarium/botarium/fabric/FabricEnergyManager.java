@@ -1,4 +1,4 @@
-package earth.terrarium.botarium.api.fabric;
+package earth.terrarium.botarium.fabric;
 
 import earth.terrarium.botarium.api.PlatformEnergyManager;
 import net.fabricmc.fabric.api.transfer.v1.context.ContainerItemContext;
@@ -6,8 +6,10 @@ import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import org.jetbrains.annotations.ApiStatus;
 import team.reborn.energy.api.EnergyStorage;
 
+@ApiStatus.Internal
 @SuppressWarnings("UnstableApiUsage")
 public class FabricEnergyManager implements PlatformEnergyManager {
     private final EnergyStorage energy;
@@ -21,12 +23,12 @@ public class FabricEnergyManager implements PlatformEnergyManager {
     }
 
     @Override
-    public long getCapacity() {
+    public long getStoredEnergy() {
         return energy.getAmount();
     }
 
     @Override
-    public long maxCapacity() {
+    public long getCapacity() {
         return energy.getCapacity();
     }
 

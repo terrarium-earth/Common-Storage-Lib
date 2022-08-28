@@ -6,10 +6,21 @@ classExtensions {
     registerForSourceSet sourceSets.main, "earth.terrarium.botarium.forge.extensions"
 }
 
+loom {
+    mods {
+        testmod {
+            sourceSet(sourceSets.test)
+        }
+    }
+}
+
 dependencies {
     forge "net.minecraftforge:forge:${rootProject.forge_version}"
 
     compileOnly(project(path: ":common")) { transitive false }
+    testCompileOnly(project(path: ":common", configuration: "testApiElements")) { transitive false }
+    modRuntimeOnly "mekanism:Mekanism:${rootProject.mekanism_version}"// core
+    modRuntimeOnly "mekanism:Mekanism:${rootProject.mekanism_version}:generators"// Mekanism: Generator
 }
 
 processResources {
@@ -31,6 +42,19 @@ sourceSets.main {
 
     resources.srcDirs(
             commonMain.map { it.resources.srcDirs },
+    )
+}
+
+sourceSets.test {
+    def commonSourceSets = project(":common").sourceSets
+    def commonTest = commonSourceSets.test
+
+    java.srcDirs(
+            commonTest.java.srcDirs
+    )
+
+    resources.srcDirs(
+            commonTest.resources.srcDirs
     )
 }
 

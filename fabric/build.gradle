@@ -9,14 +9,27 @@ classExtensions {
 sourceSets.main {
     def commonSourceSets = project(":common").sourceSets
 
-    def commonMain = commonSourceSets.named("main")
+    def commonMain = commonSourceSets.main
 
     java.srcDirs(
-            commonMain.map { it.java.srcDirs },
+            commonMain.java.srcDirs
     )
 
     resources.srcDirs(
-            commonMain.map { it.resources.srcDirs },
+            commonMain.resources.srcDirs
+    )
+}
+
+sourceSets.test {
+    def commonSourceSets = project(":common").sourceSets
+    def commonTest = commonSourceSets.test
+
+    java.srcDirs(
+            commonTest.java.srcDirs
+    )
+
+    resources.srcDirs(
+            commonTest.resources.srcDirs
     )
 }
 
@@ -27,6 +40,9 @@ dependencies {
         exclude(group: "net.fabricmc.fabric-api")
     }
     compileOnly(project(path: ":common")) { transitive false }
+    testCompileOnly(project(path: ":common", configuration: "testApiElements")) { transitive false }
+    modRuntimeOnly 'RebornCore:RebornCore-1.19:+'
+    modRuntimeOnly 'TechReborn:TechReborn-1.19:+'
 }
 
 processResources {
