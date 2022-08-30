@@ -1,6 +1,6 @@
 package earth.terrarium.botarium.forge.extensions;
 
-import earth.terrarium.botarium.api.RegistryHelpers;
+import earth.terrarium.botarium.api.registry.RegistryHelpers;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;

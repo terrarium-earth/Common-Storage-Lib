@@ -1,6 +1,6 @@
-package earth.terrarium.botarium.fabric;
+package earth.terrarium.botarium.fabric.energy;
 
-import earth.terrarium.botarium.api.PlatformEnergyManager;
+import earth.terrarium.botarium.api.energy.PlatformEnergyManager;
 import net.fabricmc.fabric.api.transfer.v1.context.ContainerItemContext;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.core.Direction;

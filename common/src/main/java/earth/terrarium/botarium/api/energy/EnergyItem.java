@@ -1,4 +1,4 @@
-package earth.terrarium.botarium.api;
+package earth.terrarium.botarium.api.energy;
 
 import net.minecraft.world.item.ItemStack;
 

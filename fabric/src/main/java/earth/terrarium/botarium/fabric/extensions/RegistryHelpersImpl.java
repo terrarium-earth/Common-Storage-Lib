@@ -1,6 +1,6 @@
 package earth.terrarium.botarium.fabric.extensions;
 
-import earth.terrarium.botarium.api.RegistryHelpers;
+import earth.terrarium.botarium.api.registry.RegistryHelpers;
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;

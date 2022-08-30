@@ -1,7 +1,7 @@
 package earth.terrarium.botarium.mixin;
 
-import earth.terrarium.botarium.api.EnergyBlock;
-import earth.terrarium.botarium.api.EnergyItem;
+import earth.terrarium.botarium.api.energy.EnergyHoldable;
+import earth.terrarium.botarium.api.fluid.FluidHoldable;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import org.spongepowered.asm.mixin.Mixin;
@@ -13,16 +13,22 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class BlockEntityMixin {
 
     @Inject(method = "load", at = @At("TAIL"))
-    public void deserializeEnergy(CompoundTag compoundTag, CallbackInfo ci) {
-        if(this instanceof EnergyBlock energyBlock) {
-            energyBlock.getEnergyStorage().deseralize(compoundTag);
+    public void deserializeData(CompoundTag compoundTag, CallbackInfo ci) {
+        if(this instanceof EnergyHoldable energyHoldable) {
+            energyHoldable.getEnergyStorage().deseralize(compoundTag);
+        }
+        if(this instanceof FluidHoldable fluidHoldable) {
+            fluidHoldable.getFluidContainer().deseralize(compoundTag);
         }
     }
 
     @Inject(method = "saveAdditional", at = @At("TAIL"))
-    public void serializeEnergy(CompoundTag compoundTag, CallbackInfo ci) {
-        if(this instanceof EnergyBlock energyBlock) {
-            energyBlock.getEnergyStorage().serialize(compoundTag);
+    public void serializeData(CompoundTag compoundTag, CallbackInfo ci) {
+        if(this instanceof EnergyHoldable energyHoldable) {
+            energyHoldable.getEnergyStorage().serialize(compoundTag);
+        }
+        if(this instanceof FluidHoldable fluidHoldable) {
+            fluidHoldable.getFluidContainer().serialize(compoundTag);
         }
     }
 }

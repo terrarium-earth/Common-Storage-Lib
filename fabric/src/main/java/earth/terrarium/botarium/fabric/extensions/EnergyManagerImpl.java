@@ -1,8 +1,8 @@
 package earth.terrarium.botarium.fabric.extensions;
 
-import earth.terrarium.botarium.api.EnergyManager;
-import earth.terrarium.botarium.api.PlatformEnergyManager;
-import earth.terrarium.botarium.fabric.FabricEnergyManager;
+import earth.terrarium.botarium.api.energy.EnergyManager;
+import earth.terrarium.botarium.api.energy.PlatformEnergyManager;
+import earth.terrarium.botarium.fabric.energy.FabricEnergyManager;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;

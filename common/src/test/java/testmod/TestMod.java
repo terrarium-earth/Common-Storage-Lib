@@ -1,13 +1,12 @@
 package testmod;
 
-import earth.terrarium.botarium.api.RegistryHelpers;
-import earth.terrarium.botarium.api.RegistryHolder;
+import earth.terrarium.botarium.api.registry.RegistryHelpers;
+import earth.terrarium.botarium.api.registry.RegistryHolder;
 import net.minecraft.core.Registry;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.SpawnerBlock;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 

@@ -1,7 +1,7 @@
 package earth.terrarium.botarium.forge.extensions;
 
-import earth.terrarium.botarium.api.EnergyManager;
-import earth.terrarium.botarium.api.PlatformEnergyManager;
+import earth.terrarium.botarium.api.energy.EnergyManager;
+import earth.terrarium.botarium.api.energy.PlatformEnergyManager;
 import earth.terrarium.botarium.forge.ForgeEnergyManager;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemStack;

@@ -1,13 +1,15 @@
 package earth.terrarium.botarium.fabric;
 
 import earth.terrarium.botarium.Botarium;
-import earth.terrarium.botarium.api.EnergyBlock;
-import earth.terrarium.botarium.api.EnergyContainer;
-import earth.terrarium.botarium.api.EnergyItem;
+import earth.terrarium.botarium.api.energy.EnergyHoldable;
+import earth.terrarium.botarium.api.energy.EnergyItem;
+import earth.terrarium.botarium.api.fluid.FluidHoldable;
+import earth.terrarium.botarium.fabric.energy.FabricBlockEnergyStorage;
+import earth.terrarium.botarium.fabric.energy.FabricItemEnergyStorage;
+import earth.terrarium.botarium.fabric.fluid.FabricBlockFluidContainer;
 import net.fabricmc.api.ModInitializer;
-import net.minecraft.world.item.ItemStack;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
 import team.reborn.energy.api.EnergyStorage;
-import team.reborn.energy.api.base.SimpleBatteryItem;
 
 @SuppressWarnings("UnstableApiUsage")
 public class BotariumFabric implements ModInitializer {
@@ -16,15 +18,20 @@ public class BotariumFabric implements ModInitializer {
     public void onInitialize() {
         Botarium.init();
         EnergyStorage.SIDED.registerFallback((world, pos, state, blockEntity, context) -> {
-            if (blockEntity instanceof EnergyBlock energyCapable) {
-                return (EnergyStorage) energyCapable.getEnergyStorage();
+            if (blockEntity instanceof EnergyHoldable energyCapable) {
+                return new FabricBlockEnergyStorage(energyCapable.getEnergyStorage());
             }
             return null;
         });
         EnergyStorage.ITEM.registerFallback((itemStack, context) -> {
             if(itemStack.getItem() instanceof EnergyItem energyCapable) {
-                EnergyContainer energyStorage = energyCapable.getEnergyStorage(itemStack);
-                return new FabricEnergyStorage(context, energyStorage);
+                return new FabricItemEnergyStorage(context, energyCapable.getEnergyStorage(itemStack));
+            }
+            return null;
+        });
+        FluidStorage.SIDED.registerFallback((world, pos, state, blockEntity, context) -> {
+            if(blockEntity instanceof FluidHoldable fluidHoldable) {
+                return new FabricBlockFluidContainer(fluidHoldable.getFluidContainer());
             }
             return null;
         });

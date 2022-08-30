@@ -1,8 +1,7 @@
 package earth.terrarium.botarium.forge.extensions;
 
 
-import earth.terrarium.botarium.api.EnergyContainer;
-import earth.terrarium.botarium.api.BlockEnergyContainer;
+import earth.terrarium.botarium.api.energy.EnergyContainer;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraftforge.common.capabilities.Capability;
@@ -20,12 +19,12 @@ public interface EnergyExtensions extends IEnergyStorage, ICapabilityProvider, I
 
     @Override
     default int receiveEnergy(int maxAmount, boolean bl) {
-        return (int) ((EnergyContainer) this).insertEnergy(maxAmount);
+        return (int) ((EnergyContainer) this).insertEnergy(maxAmount, bl);
     }
 
     @Override
     default int extractEnergy(int maxAmount, boolean bl) {
-        return (int) ((EnergyContainer) this).extractEnergy(maxAmount);
+        return (int) ((EnergyContainer) this).extractEnergy(maxAmount, bl);
     }
 
     @Override
@@ -40,12 +39,12 @@ public interface EnergyExtensions extends IEnergyStorage, ICapabilityProvider, I
 
     @Override
     default boolean canExtract() {
-        return false;
+        return ((EnergyContainer) this).allowsExtraction();
     }
 
     @Override
     default boolean canReceive() {
-        return true;
+        return ((EnergyContainer) this).allowsInsertion();
     }
 
     @Override

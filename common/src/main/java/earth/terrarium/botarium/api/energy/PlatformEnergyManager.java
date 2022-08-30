@@ -1,4 +1,4 @@
-package earth.terrarium.botarium.api;
+package earth.terrarium.botarium.api.energy;
 
 import org.jetbrains.annotations.ApiStatus;
 

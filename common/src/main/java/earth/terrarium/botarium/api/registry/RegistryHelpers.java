@@ -1,4 +1,4 @@
-package earth.terrarium.botarium.api;
+package earth.terrarium.botarium.api.registry;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.Block;

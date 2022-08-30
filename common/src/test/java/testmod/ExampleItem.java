@@ -1,8 +1,8 @@
 package testmod;
 
-import earth.terrarium.botarium.api.EnergyContainer;
-import earth.terrarium.botarium.api.EnergyItem;
-import earth.terrarium.botarium.api.ItemEnergyContainer;
+import earth.terrarium.botarium.api.energy.EnergyContainer;
+import earth.terrarium.botarium.api.energy.EnergyItem;
+import earth.terrarium.botarium.api.energy.ItemEnergyContainer;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 

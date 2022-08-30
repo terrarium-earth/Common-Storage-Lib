@@ -1,6 +1,6 @@
 package earth.terrarium.botarium.forge.extensions;
 
-import earth.terrarium.botarium.api.RegistryHolder;
+import earth.terrarium.botarium.api.registry.RegistryHolder;
 import net.minecraft.core.Registry;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
