@@ -33,7 +33,7 @@ public class ForgeBlockFluidContainer implements IFluidHandler, INBTSerializable
 
     @Override
     public int getTankCapacity(int i) {
-        return Integer.MAX_VALUE;
+        return (int) this.container.maxStackSize();
     }
 
     @Override
@@ -43,7 +43,7 @@ public class ForgeBlockFluidContainer implements IFluidHandler, INBTSerializable
 
     @Override
     public int fill(FluidStack fluidStack, FluidAction fluidAction) {
-        return 0;
+        return (int) this.container.insertFluid(new ForgeFluidHolder(fluidStack), fluidAction.simulate());
     }
 
     @Override
@@ -53,7 +53,8 @@ public class ForgeBlockFluidContainer implements IFluidHandler, INBTSerializable
 
     @Override
     public @NotNull FluidStack drain(int i, FluidAction fluidAction) {
-        FluidHolder fluid = this.container.getFluids().get(1).copyHolder();
+        FluidHolder fluid = this.container.getFluids().get(0).copyHolder();
+        if(fluid.isEmpty()) return FluidStack.EMPTY;
         fluid.setAmount(i);
         return new ForgeFluidHolder(this.container.extractFluid(fluid, fluidAction.simulate()));
     }

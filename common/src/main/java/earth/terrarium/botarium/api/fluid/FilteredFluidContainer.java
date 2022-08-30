@@ -8,14 +8,13 @@ import net.minecraft.util.Mth;
 
 import java.util.List;
 import java.util.function.BiPredicate;
-import java.util.function.Predicate;
 
-public class FiltedFluidContainer implements FluidContainer {
+public class FilteredFluidContainer implements FluidContainer {
     NonNullList<FluidHolder> storedFluid;
     long maxAmount;
     BiPredicate<Integer, FluidHolder> fluidFilter;
 
-    public FiltedFluidContainer(long maxAmount, int tanks, BiPredicate<Integer, FluidHolder> fluidFilter) {
+    public FilteredFluidContainer(long maxAmount, int tanks, BiPredicate<Integer, FluidHolder> fluidFilter) {
         this.maxAmount = maxAmount;
         this.fluidFilter = fluidFilter;
         this.storedFluid = NonNullList.withSize(tanks, FluidHooks.emptyFluid());
@@ -88,7 +87,12 @@ public class FiltedFluidContainer implements FluidContainer {
 
     @Override
     public FluidContainer copy() {
-        return new FiltedFluidContainer(maxAmount, this.getSize(), fluidFilter);
+        return new FilteredFluidContainer(maxAmount, this.getSize(), fluidFilter);
+    }
+
+    @Override
+    public long maxStackSize() {
+        return this.maxAmount;
     }
 
     @Override

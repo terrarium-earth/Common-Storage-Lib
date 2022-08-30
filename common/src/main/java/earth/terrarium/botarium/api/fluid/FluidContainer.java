@@ -13,6 +13,7 @@ public interface FluidContainer {
     int getSize();
     boolean isEmpty();
     FluidContainer copy();
+    long maxStackSize();
     void fromContainer(FluidContainer container);
 
     CompoundTag serialize(CompoundTag tag);

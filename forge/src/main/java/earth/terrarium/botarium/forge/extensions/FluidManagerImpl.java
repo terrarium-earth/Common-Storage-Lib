@@ -27,6 +27,6 @@ public class FluidManagerImpl {
 
     @ImplementsBaseElement
     public static long buckets(int buckets) {
-        return 2000L * buckets;
+        return 1000L * buckets;
     }
 }

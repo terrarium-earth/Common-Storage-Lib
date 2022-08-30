@@ -6,6 +6,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.level.material.Fluids;
 import net.minecraftforge.fluids.FluidStack;
 
 import java.util.Objects;
@@ -82,5 +83,10 @@ public class ForgeFluidHolder extends FluidStack implements FluidHolder {
     @Override
     public void deserialize(CompoundTag tag) {
         //not used
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return this.getFluid() == Fluids.EMPTY || this.getFluidAmount() == 0;
     }
 }

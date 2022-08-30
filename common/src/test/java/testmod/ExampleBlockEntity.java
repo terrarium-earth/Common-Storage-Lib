@@ -6,7 +6,7 @@ import earth.terrarium.botarium.api.energy.EnergyContainer;
 import earth.terrarium.botarium.api.fluid.FluidContainer;
 import earth.terrarium.botarium.api.fluid.FluidHoldable;
 import earth.terrarium.botarium.api.fluid.FluidHooks;
-import earth.terrarium.botarium.api.fluid.FiltedFluidContainer;
+import earth.terrarium.botarium.api.fluid.FilteredFluidContainer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -29,7 +29,7 @@ public class ExampleBlockEntity extends BlockEntity implements EnergyHoldable, F
     @Override
     public FluidContainer getFluidContainer() {
         if(fluidContainer == null) {
-            this.fluidContainer = new FiltedFluidContainer(FluidHooks.buckets(2), 1, (i, fluidHolder) -> true);
+            this.fluidContainer = new FilteredFluidContainer(FluidHooks.buckets(2), 1, (i, fluidHolder) -> true);
         }
         return fluidContainer;
     }
