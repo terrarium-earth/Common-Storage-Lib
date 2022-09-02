@@ -5,16 +5,22 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.util.Mth;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.msrandom.extensions.annotations.ImplementedByExtension;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.function.BiPredicate;
 
 public class FilteredFluidContainer implements FluidContainer {
+    private final BlockEntity blockEntity;
     NonNullList<FluidHolder> storedFluid;
     long maxAmount;
     BiPredicate<Integer, FluidHolder> fluidFilter;
 
-    public FilteredFluidContainer(long maxAmount, int tanks, BiPredicate<Integer, FluidHolder> fluidFilter) {
+    public FilteredFluidContainer(BlockEntity entity, long maxAmount, int tanks, BiPredicate<Integer, FluidHolder> fluidFilter) {
+        this.blockEntity = entity;
         this.maxAmount = maxAmount;
         this.fluidFilter = fluidFilter;
         this.storedFluid = NonNullList.withSize(tanks, FluidHooks.emptyFluid());
@@ -29,12 +35,14 @@ public class FilteredFluidContainer implements FluidContainer {
                     insertedFluid.setAmount(Mth.clamp(fluid.getFluidAmount(), 0, maxAmount));
                     if(simulate) return insertedFluid.getFluidAmount();
                     this.storedFluid.set(i, insertedFluid);
+                    this.update();
                     return storedFluid.get(i).getFluidAmount();
                 } else {
                     if (storedFluid.get(i).matches(fluid)) {
                         long insertedAmount = Mth.clamp(fluid.getFluidAmount(), 0, maxAmount - storedFluid.get(i).getFluidAmount());
                         if(simulate) return insertedAmount;
                         this.storedFluid.get(i).setAmount(storedFluid.get(i).getFluidAmount() + insertedAmount);
+                        this.update();
                         return insertedAmount;
                     }
                 }
@@ -57,12 +65,23 @@ public class FilteredFluidContainer implements FluidContainer {
                         if(simulate) return toExtract;
                         this.storedFluid.get(i).setAmount(storedFluid.get(i).getFluidAmount() - extractedAmount);
                         if(storedFluid.get(i).getFluidAmount() == 0) storedFluid.set(i, FluidHooks.emptyFluid());
+                        this.update();
                         return toExtract;
                     }
                 }
             }
         }
         return FluidHooks.emptyFluid();
+    }
+
+    public long extractFromSlot(FluidHolder fluidHolder, FluidHolder toInsert, Runnable snapshot) {
+        if (Objects.equals(fluidHolder.getCompound(), toInsert.getCompound()) && fluidHolder.getFluid().isSame(toInsert.getFluid())) {
+            long extracted = Mth.clamp(toInsert.getFluidAmount(), 0, fluidHolder.getFluidAmount());
+            snapshot.run();
+            fluidHolder.setAmount(fluidHolder.getFluidAmount() - extracted);
+            return extracted;
+        }
+        return 0;
     }
 
     @Override
@@ -87,7 +106,7 @@ public class FilteredFluidContainer implements FluidContainer {
 
     @Override
     public FluidContainer copy() {
-        return new FilteredFluidContainer(maxAmount, this.getSize(), fluidFilter);
+        return new FilteredFluidContainer(this.blockEntity, maxAmount, this.getSize(), fluidFilter);
     }
 
     @Override
@@ -129,5 +148,10 @@ public class FilteredFluidContainer implements FluidContainer {
     @Override
     public boolean allowsExtraction() {
         return true;
+    }
+
+    public void update() {
+        blockEntity.setChanged();
+        blockEntity.getLevel().sendBlockUpdated(blockEntity.getBlockPos(), blockEntity.getBlockState(), blockEntity.getBlockState(), Block.UPDATE_ALL);
     }
 }

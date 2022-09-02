@@ -16,6 +16,8 @@ public interface FluidContainer {
     long maxStackSize();
     void fromContainer(FluidContainer container);
 
+    long extractFromSlot(FluidHolder fluidHolder, FluidHolder toInsert, Runnable snapshot);
+
     CompoundTag serialize(CompoundTag tag);
     void deseralize(CompoundTag tag);
 

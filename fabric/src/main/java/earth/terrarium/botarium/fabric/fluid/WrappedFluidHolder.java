@@ -11,9 +11,11 @@ import net.minecraft.util.Mth;
 public class WrappedFluidHolder extends SnapshotParticipant<FluidHolder> implements StorageView<FluidVariant> {
 
     private final FluidHolder fluidHolder;
+    private final FluidExtraction extraction;
 
-    public WrappedFluidHolder(FluidHolder fluidHolder) {
+    public WrappedFluidHolder(FluidHolder fluidHolder, FluidExtraction extraction) {
         this.fluidHolder = fluidHolder;
+        this.extraction = extraction;
     }
 
     public FluidVariant fluidVariant() {
@@ -22,13 +24,7 @@ public class WrappedFluidHolder extends SnapshotParticipant<FluidHolder> impleme
 
     @Override
     public long extract(FluidVariant resource, long maxAmount, TransactionContext transaction) {
-        if (fluidVariant().nbtMatches(resource.getNbt()) && fluidVariant().isOf(resource.getFluid())) {
-            long extracted = Mth.clamp(maxAmount, 0, this.getAmount());
-            this.updateSnapshots(transaction);
-            this.fluidHolder.setAmount(this.fluidHolder.getFluidAmount() - extracted);
-            return extracted;
-        }
-        return 0;
+        return extraction.apply(this.fluidHolder, FabricFluidHolder.of(resource, maxAmount), () -> this.updateSnapshots(transaction));
     }
 
     @Override
@@ -61,5 +57,10 @@ public class WrappedFluidHolder extends SnapshotParticipant<FluidHolder> impleme
         fluidHolder.setFluid(snapshot.getFluid());
         fluidHolder.setAmount(snapshot.getFluidAmount());
         fluidHolder.setCompound(snapshot.getCompound());
+    }
+
+    @FunctionalInterface
+    public interface FluidExtraction {
+        long apply(FluidHolder fluidHolder, FluidHolder toInsert, Runnable runnable);
     }
 }

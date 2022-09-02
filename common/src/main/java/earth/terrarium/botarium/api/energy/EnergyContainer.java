@@ -15,6 +15,4 @@ public interface EnergyContainer {
 
     boolean allowsInsertion();
     boolean allowsExtraction();
-
-    void 
 }

@@ -21,7 +21,7 @@ public class ExampleBlockEntity extends BlockEntity implements EnergyHoldable, F
     @Override
     public EnergyContainer getEnergyStorage() {
         if(energyContainer == null) {
-            this.energyContainer = new BlockEnergyContainer(1000000);
+            this.energyContainer = new BlockEnergyContainer(this, 1000000);
         }
         return energyContainer;
     }
@@ -29,7 +29,7 @@ public class ExampleBlockEntity extends BlockEntity implements EnergyHoldable, F
     @Override
     public FluidContainer getFluidContainer() {
         if(fluidContainer == null) {
-            this.fluidContainer = new FilteredFluidContainer(FluidHooks.buckets(2), 1, (i, fluidHolder) -> true);
+            this.fluidContainer = new FilteredFluidContainer(this, FluidHooks.buckets(2), 1, (i, fluidHolder) -> true);
         }
         return fluidContainer;
     }

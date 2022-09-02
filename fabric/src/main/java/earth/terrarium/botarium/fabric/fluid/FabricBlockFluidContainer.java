@@ -31,7 +31,7 @@ public class FabricBlockFluidContainer extends SnapshotParticipant<FluidContaine
 
     @Override
     public Iterator<StorageView<FluidVariant>> iterator() {
-        return container.getFluids().stream().map(WrappedFluidHolder::new).map(holder -> (StorageView<FluidVariant>) holder).iterator();
+        return container.getFluids().stream().map(holder -> new WrappedFluidHolder(holder, container::extractFromSlot)).map(holder -> (StorageView<FluidVariant>) holder).iterator();
     }
 
     @Override
