@@ -6,7 +6,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.msrandom.extensions.annotations.ImplementedByExtension;
 import org.apache.commons.lang3.NotImplementedException;
 
-public class EnergyManager {
+public class EnergyHooks {
 
     @ImplementedByExtension
     public static PlatformEnergyManager getItemHandler(ItemStack stack) {
@@ -20,6 +20,11 @@ public class EnergyManager {
 
     @ImplementedByExtension
     public static boolean isEnergyItem(ItemStack stack) {
+        throw new NotImplementedException("Energy item check not Implemented");
+    }
+
+    @ImplementedByExtension
+    public static boolean isEnergyContainer(BlockEntity stack, Direction direction) {
         throw new NotImplementedException("Energy item check not Implemented");
     }
 }

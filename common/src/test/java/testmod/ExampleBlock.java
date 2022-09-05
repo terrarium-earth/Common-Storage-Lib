@@ -1,6 +1,6 @@
 package testmod;
 
-import earth.terrarium.botarium.api.energy.EnergyManager;
+import earth.terrarium.botarium.api.energy.EnergyHooks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
@@ -26,7 +26,7 @@ public class ExampleBlock extends BaseEntityBlock {
 
     @Override
     public InteractionResult use(BlockState blockState, Level level, BlockPos blockPos, Player player, InteractionHand interactionHand, BlockHitResult blockHitResult) {
-        var blockEnergyManager = EnergyManager.getBlockEnergyManager(level.getBlockEntity(blockPos), blockHitResult.getDirection());
+        var blockEnergyManager = EnergyHooks.getBlockEnergyManager(level.getBlockEntity(blockPos), blockHitResult.getDirection());
         player.sendSystemMessage(Component.literal(String.valueOf(blockEnergyManager.getStoredEnergy())));
         return InteractionResult.SUCCESS;
     }

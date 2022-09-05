@@ -71,12 +71,12 @@ publishing {
             pom {
                 name = 'Botarium'
                 description = 'Tiny lil library mod for cross platform energy and registries'
-                url = 'https://github.com/terrarium-earth/Spirit'
+                url = 'https://github.com/terrarium-earth/Botarium'
 
                 scm {
-                    connection = 'git:https://github.com/CodexAdrian/Botarium.git'
-                    developerConnection = 'git:https://github.com/CodexAdrian/Botarium.git'
-                    url = 'https://github.com/CodexAdrian/Botarium'
+                    connection = 'git:https://github.com/terrarium-earth/Botarium.git'
+                    developerConnection = 'git:https://github.com/terrarium-earth/Botarium.git'
+                    url = 'https://github.com/terrarium-earth/Botarium'
                 }
 
                 licenses {
