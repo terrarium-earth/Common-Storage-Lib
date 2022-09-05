@@ -1,6 +1,7 @@
 package earth.terrarium.botarium.fabric.energy;
 
 import earth.terrarium.botarium.api.energy.EnergyContainer;
+import earth.terrarium.botarium.api.energy.UpdatingEnergyContainer;
 import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
 import net.fabricmc.fabric.api.transfer.v1.transaction.base.SnapshotParticipant;
 import net.minecraft.nbt.CompoundTag;
@@ -8,9 +9,9 @@ import team.reborn.energy.api.EnergyStorage;
 
 @SuppressWarnings("UnstableApiUsage")
 public class FabricBlockEnergyStorage extends SnapshotParticipant<CompoundTag> implements EnergyStorage {
-    private final EnergyContainer container;
+    private final UpdatingEnergyContainer container;
 
-    public FabricBlockEnergyStorage(EnergyContainer container) {
+    public FabricBlockEnergyStorage(UpdatingEnergyContainer container) {
         this.container = container;
     }
 
@@ -54,5 +55,10 @@ public class FabricBlockEnergyStorage extends SnapshotParticipant<CompoundTag> i
     @Override
     protected void readSnapshot(CompoundTag snapshot) {
         container.deseralize(snapshot);
+    }
+
+    @Override
+    protected void onFinalCommit() {
+        this.container.update();
     }
 }
