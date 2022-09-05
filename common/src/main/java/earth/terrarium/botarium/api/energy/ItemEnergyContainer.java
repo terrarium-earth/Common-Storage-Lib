@@ -46,6 +46,16 @@ public class ItemEnergyContainer implements EnergyContainer {
     }
 
     @Override
+    public long maxInsert() {
+        return 1024;
+    }
+
+    @Override
+    public long maxExtract() {
+        return 1024;
+    }
+
+    @Override
     public CompoundTag serialize(CompoundTag tag) {
         tag.putLong("Energy", this.energy);
         return tag;

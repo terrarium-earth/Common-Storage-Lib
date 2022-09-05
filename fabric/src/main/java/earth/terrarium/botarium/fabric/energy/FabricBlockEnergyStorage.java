@@ -1,14 +1,15 @@
 package earth.terrarium.botarium.fabric.energy;
 
-import earth.terrarium.botarium.api.energy.EnergyContainer;
+import earth.terrarium.botarium.api.energy.EnergySnapshot;
 import earth.terrarium.botarium.api.energy.UpdatingEnergyContainer;
+import net.fabricmc.fabric.api.transfer.v1.storage.StoragePreconditions;
 import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
 import net.fabricmc.fabric.api.transfer.v1.transaction.base.SnapshotParticipant;
 import net.minecraft.nbt.CompoundTag;
 import team.reborn.energy.api.EnergyStorage;
 
 @SuppressWarnings("UnstableApiUsage")
-public class FabricBlockEnergyStorage extends SnapshotParticipant<CompoundTag> implements EnergyStorage {
+public class FabricBlockEnergyStorage extends SnapshotParticipant<EnergySnapshot> implements EnergyStorage {
     private final UpdatingEnergyContainer container;
 
     public FabricBlockEnergyStorage(UpdatingEnergyContainer container) {
@@ -17,14 +18,16 @@ public class FabricBlockEnergyStorage extends SnapshotParticipant<CompoundTag> i
 
     @Override
     public long insert(long maxAmount, TransactionContext transaction) {
+        StoragePreconditions.notNegative(maxAmount);
         this.updateSnapshots(transaction);
-        return container.insertEnergy(maxAmount, false);
+        return container.insertEnergy(Math.max(maxAmount, this.container.maxInsert()), false);
     }
 
     @Override
     public long extract(long maxAmount, TransactionContext transaction) {
+        StoragePreconditions.notNegative(maxAmount);
         this.updateSnapshots(transaction);
-        return container.insertEnergy(maxAmount, false);
+        return container.insertEnergy(Math.max(maxAmount, this.container.maxExtract()), false);
     }
 
     @Override
@@ -48,13 +51,13 @@ public class FabricBlockEnergyStorage extends SnapshotParticipant<CompoundTag> i
     }
 
     @Override
-    protected CompoundTag createSnapshot() {
-        return container.serialize(new CompoundTag());
+    protected EnergySnapshot createSnapshot() {
+        return container.createSnapshot();
     }
 
     @Override
-    protected void readSnapshot(CompoundTag snapshot) {
-        container.deseralize(snapshot);
+    protected void readSnapshot(EnergySnapshot snapshot) {
+        container.readSnapshot(snapshot);
     }
 
     @Override

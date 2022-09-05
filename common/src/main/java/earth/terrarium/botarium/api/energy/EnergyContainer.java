@@ -9,6 +9,8 @@ public interface EnergyContainer {
     void setEnergy(long energy);
     long getStoredEnergy();
     long getMaxCapacity();
+    long maxInsert();
+    long maxExtract();
 
     CompoundTag serialize(CompoundTag tag);
     void deseralize(CompoundTag tag);

@@ -8,7 +8,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 public class BlockEnergyContainer implements UpdatingEnergyContainer {
     private final int energyCapacity;
     private final BlockEntity blockEntity;
-    private int energy;
+    private long energy;
 
     public BlockEnergyContainer(BlockEntity entity, int energyCapacity) {
         this.blockEntity = entity;
@@ -33,7 +33,7 @@ public class BlockEnergyContainer implements UpdatingEnergyContainer {
 
     @Override
     public void setEnergy(long energy) {
-        this.energy = (int) energy;
+        this.energy = energy;
     }
 
     @Override
@@ -44,6 +44,16 @@ public class BlockEnergyContainer implements UpdatingEnergyContainer {
     @Override
     public long getMaxCapacity() {
         return energyCapacity;
+    }
+
+    @Override
+    public long maxInsert() {
+        return 1024;
+    }
+
+    @Override
+    public long maxExtract() {
+        return 1024;
     }
 
     @Override
@@ -70,5 +80,27 @@ public class BlockEnergyContainer implements UpdatingEnergyContainer {
     public void update() {
         blockEntity.setChanged();
         blockEntity.getLevel().sendBlockUpdated(blockEntity.getBlockPos(), blockEntity.getBlockState(), blockEntity.getBlockState(), Block.UPDATE_ALL);
+    }
+
+    @Override
+    public EnergySnapshot createSnapshot() {
+        return new LongEnergySnapshot(this);
+    }
+
+    @Override
+    public void readSnapshot(EnergySnapshot snapshot) {
+        snapshot.loadSnapshot(this);
+    }
+
+    public static class LongEnergySnapshot implements EnergySnapshot {
+        long energy;
+        public LongEnergySnapshot(BlockEnergyContainer container) {
+            this.energy = container.energy;
+        }
+
+        @Override
+        public void loadSnapshot(BlockEnergyContainer container) {
+            container.setEnergy(energy);
+        }
     }
 }
