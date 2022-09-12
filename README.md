@@ -6,7 +6,7 @@ To add this library to your project, do the following
 ```
 repositories {
   maven {
-    // location of the maven that hosts JEI files
+    // location of the maven that hosts Mine and Team Resourceful's files
     name = "Resourceful Bees Maven"
     url = "https://nexus.resourcefulbees.com/repository/maven-public/"
   }
