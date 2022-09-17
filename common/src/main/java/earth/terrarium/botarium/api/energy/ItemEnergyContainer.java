@@ -5,12 +5,10 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
 
 public class ItemEnergyContainer implements EnergyContainer {
-    private final ItemStack stack;
     private final long capacity;
     private long energy;
 
-    public ItemEnergyContainer(ItemStack stack, long maxCapacity) {
-        this.stack = stack;
+    public ItemEnergyContainer(long maxCapacity) {
         this.capacity = maxCapacity;
     }
 

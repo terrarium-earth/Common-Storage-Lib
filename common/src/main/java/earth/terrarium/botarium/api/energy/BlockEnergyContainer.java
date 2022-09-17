@@ -5,7 +5,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
-public class BlockEnergyContainer implements UpdatingEnergyContainer {
+public class BlockEnergyContainer implements StatefulEnergyContainer {
     protected final int energyCapacity;
     protected final BlockEntity blockEntity;
     protected long energy;
@@ -95,19 +95,15 @@ public class BlockEnergyContainer implements UpdatingEnergyContainer {
         return new LongEnergySnapshot(this);
     }
 
-    @Override
-    public void readSnapshot(EnergySnapshot snapshot) {
-        snapshot.loadSnapshot(this);
-    }
-
     public static class LongEnergySnapshot implements EnergySnapshot {
-        long energy;
+        private final long energy;
+
         public LongEnergySnapshot(BlockEnergyContainer container) {
-            this.energy = container.energy;
+            this.energy = container.getStoredEnergy();
         }
 
         @Override
-        public void loadSnapshot(BlockEnergyContainer container) {
+        public void loadSnapshot(EnergyContainer container) {
             container.setEnergy(energy);
         }
     }

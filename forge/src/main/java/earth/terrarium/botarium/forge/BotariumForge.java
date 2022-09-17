@@ -3,7 +3,7 @@ package earth.terrarium.botarium.forge;
 import earth.terrarium.botarium.Botarium;
 import earth.terrarium.botarium.api.energy.EnergyBlock;
 import earth.terrarium.botarium.api.energy.EnergyItem;
-import earth.terrarium.botarium.api.fluid.FluidHoldable;
+import earth.terrarium.botarium.api.fluid.FluidHoldingBlock;
 import earth.terrarium.botarium.api.item.ItemContainerBlock;
 import earth.terrarium.botarium.forge.fluid.ForgeBlockFluidContainer;
 import earth.terrarium.botarium.forge.item.ItemContainerWrapper;
@@ -31,8 +31,8 @@ public class BotariumForge {
             event.addCapability(new ResourceLocation(Botarium.MOD_ID, "energy"), (ICapabilityProvider) energyBlock.getEnergyStorage());
         }
 
-        if (event.getObject() instanceof FluidHoldable fluidHoldable) {
-            event.addCapability(new ResourceLocation(Botarium.MOD_ID, "fluid"), new ForgeBlockFluidContainer(fluidHoldable.getFluidContainer()));
+        if (event.getObject() instanceof FluidHoldingBlock fluidHoldingBlock) {
+            event.addCapability(new ResourceLocation(Botarium.MOD_ID, "fluid"), new ForgeBlockFluidContainer(fluidHoldingBlock.getFluidContainer()));
         }
 
         if (event.getObject() instanceof ItemContainerBlock itemContainerBlock) {

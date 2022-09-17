@@ -1,5 +1,5 @@
 package earth.terrarium.botarium.api.energy;
 
 public interface EnergySnapshot {
-    void loadSnapshot(BlockEnergyContainer container);
+    void loadSnapshot(EnergyContainer container);
 }

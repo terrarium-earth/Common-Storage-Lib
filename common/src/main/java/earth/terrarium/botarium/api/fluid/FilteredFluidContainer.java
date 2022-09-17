@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.function.BiPredicate;
 
-public class FilteredFluidContainer implements FluidContainer {
+public class FilteredFluidContainer implements StatefulFluidContainer {
     private final BlockEntity blockEntity;
     NonNullList<FluidHolder> storedFluid;
     long maxAmount;
@@ -105,7 +105,7 @@ public class FilteredFluidContainer implements FluidContainer {
     }
 
     @Override
-    public FluidContainer copy() {
+    public FilteredFluidContainer copy() {
         return new FilteredFluidContainer(this.blockEntity, maxAmount, this.getSize(), fluidFilter);
     }
 
@@ -156,5 +156,25 @@ public class FilteredFluidContainer implements FluidContainer {
     public void update() {
         blockEntity.setChanged();
         blockEntity.getLevel().sendBlockUpdated(blockEntity.getBlockPos(), blockEntity.getBlockState(), blockEntity.getBlockState(), Block.UPDATE_ALL);
+    }
+
+    @Override
+    public FluidSnapshot createSnapshot() {
+        return new FilteredFluidSnapshot(this);
+    }
+
+    public static class FilteredFluidSnapshot implements FluidSnapshot {
+        private final FilteredFluidContainer container;
+
+        public FilteredFluidSnapshot(FilteredFluidContainer fluidContainer) {
+            this.container = fluidContainer.copy();
+        }
+
+        @Override
+        public void loadSnapshot(FluidContainer container) {
+            for (int i = 0; i < container.getSize(); i++) {
+                this.container.getFluids().set(i, container.getFluids().get(i).copyHolder());
+            }
+        }
     }
 }

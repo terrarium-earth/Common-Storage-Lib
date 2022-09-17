@@ -13,6 +13,6 @@ public class ExampleItem extends Item implements EnergyItem {
 
     @Override
     public EnergyContainer getEnergyStorage(ItemStack stack) {
-        return new ItemEnergyContainer(stack, 1000000);
+        return new ItemEnergyContainer(1000000);
     }
 }

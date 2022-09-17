@@ -1,7 +1,7 @@
 package earth.terrarium.botarium.mixin;
 
 import earth.terrarium.botarium.api.energy.EnergyBlock;
-import earth.terrarium.botarium.api.fluid.FluidHoldable;
+import earth.terrarium.botarium.api.fluid.FluidHoldingBlock;
 import earth.terrarium.botarium.api.item.ItemContainerBlock;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -18,8 +18,8 @@ public class BlockEntityMixin {
         if (this instanceof EnergyBlock energyBlock) {
             energyBlock.getEnergyStorage().deserialize(compoundTag);
         }
-        if (this instanceof FluidHoldable fluidHoldable) {
-            fluidHoldable.getFluidContainer().deserialize(compoundTag);
+        if (this instanceof FluidHoldingBlock fluidHoldingBlock) {
+            fluidHoldingBlock.getFluidContainer().deserialize(compoundTag);
         }
         if (this instanceof ItemContainerBlock itemContainerBlock) {
             itemContainerBlock.getContainer().deserialize(compoundTag);
@@ -31,8 +31,8 @@ public class BlockEntityMixin {
         if (this instanceof EnergyBlock energyBlock) {
             energyBlock.getEnergyStorage().serialize(compoundTag);
         }
-        if (this instanceof FluidHoldable fluidHoldable) {
-            fluidHoldable.getFluidContainer().serialize(compoundTag);
+        if (this instanceof FluidHoldingBlock fluidHoldingBlock) {
+            fluidHoldingBlock.getFluidContainer().serialize(compoundTag);
         }
         if (this instanceof ItemContainerBlock itemContainerBlock) {
             itemContainerBlock.getContainer().serialize(compoundTag);

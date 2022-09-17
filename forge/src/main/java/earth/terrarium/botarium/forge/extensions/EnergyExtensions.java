@@ -3,15 +3,13 @@ package earth.terrarium.botarium.forge.extensions;
 
 import earth.terrarium.botarium.api.Serializable;
 import earth.terrarium.botarium.api.energy.EnergyContainer;
-import earth.terrarium.botarium.api.energy.UpdatingEnergyContainer;
+import earth.terrarium.botarium.api.energy.StatefulEnergyContainer;
 import earth.terrarium.botarium.forge.AutoSerializable;
 import net.minecraft.core.Direction;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Mth;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
-import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.energy.IEnergyStorage;
 import net.msrandom.extensions.annotations.ClassExtension;
@@ -24,14 +22,14 @@ public interface EnergyExtensions extends IEnergyStorage, ICapabilityProvider, A
     @Override
     default int receiveEnergy(int maxAmount, boolean bl) {
         int inserted = (int) ((EnergyContainer) this).insertEnergy(Mth.clamp(maxAmount, 0, ((EnergyContainer) this).maxInsert()), bl);
-        if(!bl && this instanceof UpdatingEnergyContainer container) container.update();
+        if(!bl && this instanceof StatefulEnergyContainer container) container.update();
         return inserted;
     }
 
     @Override
     default int extractEnergy(int maxAmount, boolean bl) {
         int extracted = (int) ((EnergyContainer) this).extractEnergy(Mth.clamp(maxAmount, 0, ((EnergyContainer) this).maxExtract()), bl);
-        if(!bl && this instanceof UpdatingEnergyContainer container) container.update();
+        if(!bl && this instanceof StatefulEnergyContainer container) container.update();
         return extracted;
     }
 
