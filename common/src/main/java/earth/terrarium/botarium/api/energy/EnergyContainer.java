@@ -1,5 +1,6 @@
 package earth.terrarium.botarium.api.energy;
 
+import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 
 public interface EnergyContainer {
@@ -17,4 +18,8 @@ public interface EnergyContainer {
 
     boolean allowsInsertion();
     boolean allowsExtraction();
+
+    default EnergyContainer getContainer(Direction direction) {
+        return this;
+    }
 }

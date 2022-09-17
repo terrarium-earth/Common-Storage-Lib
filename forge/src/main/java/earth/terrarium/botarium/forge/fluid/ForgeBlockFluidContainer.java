@@ -61,7 +61,7 @@ public class ForgeBlockFluidContainer implements IFluidHandler, INBTSerializable
 
     @Override
     public @NotNull <T> LazyOptional<T> getCapability(@NotNull Capability<T> capability, @Nullable Direction arg) {
-        return capability == ForgeCapabilities.FLUID_HANDLER ? LazyOptional.of(() -> this).cast() : LazyOptional.empty();
+        return capability == ForgeCapabilities.FLUID_HANDLER && container.getContainer(arg) != null ? LazyOptional.of(() -> this).cast() : LazyOptional.empty();
     }
 
     @Override

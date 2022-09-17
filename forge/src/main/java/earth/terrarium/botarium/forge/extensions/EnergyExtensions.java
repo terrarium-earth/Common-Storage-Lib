@@ -65,6 +65,6 @@ public interface EnergyExtensions extends IEnergyStorage, ICapabilityProvider, I
 
     @Override
     @NotNull default <T> LazyOptional<T> getCapability(@NotNull Capability<T> capability, @Nullable Direction arg) {
-        return capability == ForgeCapabilities.ENERGY ? LazyOptional.of(() -> (IEnergyStorage) this).cast() : LazyOptional.empty();
+        return capability == ForgeCapabilities.ENERGY && ((EnergyContainer) this).getContainer(arg) != null? LazyOptional.of(() -> (IEnergyStorage) this).cast() : LazyOptional.empty();
     }
 }

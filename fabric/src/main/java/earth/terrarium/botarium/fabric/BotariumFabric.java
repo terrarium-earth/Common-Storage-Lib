@@ -2,7 +2,10 @@ package earth.terrarium.botarium.fabric;
 
 import earth.terrarium.botarium.Botarium;
 import earth.terrarium.botarium.api.energy.EnergyBlock;
+import earth.terrarium.botarium.api.energy.EnergyContainer;
 import earth.terrarium.botarium.api.energy.EnergyItem;
+import earth.terrarium.botarium.api.energy.UpdatingEnergyContainer;
+import earth.terrarium.botarium.api.fluid.FluidContainer;
 import earth.terrarium.botarium.api.fluid.FluidHoldable;
 import earth.terrarium.botarium.fabric.energy.FabricBlockEnergyStorage;
 import earth.terrarium.botarium.fabric.energy.FabricItemEnergyStorage;
@@ -19,7 +22,8 @@ public class BotariumFabric implements ModInitializer {
         Botarium.init();
         EnergyStorage.SIDED.registerFallback((world, pos, state, blockEntity, context) -> {
             if (blockEntity instanceof EnergyBlock energyCapable) {
-                return new FabricBlockEnergyStorage(energyCapable.getEnergyStorage());
+                UpdatingEnergyContainer container = energyCapable.getEnergyStorage().getContainer(context);
+                return container == null ? null : new FabricBlockEnergyStorage(container);
             }
             return null;
         });
@@ -31,7 +35,8 @@ public class BotariumFabric implements ModInitializer {
         });
         FluidStorage.SIDED.registerFallback((world, pos, state, blockEntity, context) -> {
             if(blockEntity instanceof FluidHoldable fluidHoldable) {
-                return new FabricBlockFluidContainer(fluidHoldable.getFluidContainer());
+                FluidContainer container = fluidHoldable.getFluidContainer().getContainer(context);
+                return container == null ? null : new FabricBlockFluidContainer(container);
             }
             return null;
         });

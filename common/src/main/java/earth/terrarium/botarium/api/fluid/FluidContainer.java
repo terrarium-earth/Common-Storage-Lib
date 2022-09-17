@@ -1,5 +1,6 @@
 package earth.terrarium.botarium.api.fluid;
 
+import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 
 import java.util.List;
@@ -23,4 +24,8 @@ public interface FluidContainer {
 
     boolean allowsInsertion();
     boolean allowsExtraction();
+
+    default FluidContainer getContainer(Direction direction) {
+        return this;
+    }
 }
