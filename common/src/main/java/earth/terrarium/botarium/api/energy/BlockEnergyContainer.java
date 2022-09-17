@@ -71,7 +71,7 @@ public class BlockEnergyContainer implements UpdatingEnergyContainer {
     }
 
     @Override
-    public void deseralize(CompoundTag tag) {
+    public void deserialize(CompoundTag tag) {
         setEnergy(tag.getLong("Energy"));
     }
 

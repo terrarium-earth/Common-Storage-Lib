@@ -17,7 +17,7 @@ public class FabricItemEnergyStorage extends SnapshotParticipant<CompoundTag> im
     public FabricItemEnergyStorage(ContainerItemContext ctx, EnergyContainer container) {
         this.ctx = ctx;
         CompoundTag nbt = ctx.getItemVariant().getNbt();
-        if(nbt != null) container.deseralize(nbt);
+        if(nbt != null) container.deserialize(nbt);
         this.container = container;
     }
 
@@ -59,6 +59,6 @@ public class FabricItemEnergyStorage extends SnapshotParticipant<CompoundTag> im
 
     @Override
     protected void readSnapshot(CompoundTag snapshot) {
-        this.container.deseralize(snapshot);
+        this.container.deserialize(snapshot);
     }
 }

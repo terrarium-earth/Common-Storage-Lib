@@ -1,9 +1,9 @@
 package earth.terrarium.botarium.api.energy;
 
+import earth.terrarium.botarium.api.Serializable;
 import net.minecraft.core.Direction;
-import net.minecraft.nbt.CompoundTag;
 
-public interface EnergyContainer {
+public interface EnergyContainer extends Serializable {
     long insertEnergy(long maxAmount, boolean simulate);
     long extractEnergy(long maxAmount, boolean simulate);
 
@@ -12,9 +12,6 @@ public interface EnergyContainer {
     long getMaxCapacity();
     long maxInsert();
     long maxExtract();
-
-    CompoundTag serialize(CompoundTag tag);
-    void deseralize(CompoundTag tag);
 
     boolean allowsInsertion();
     boolean allowsExtraction();

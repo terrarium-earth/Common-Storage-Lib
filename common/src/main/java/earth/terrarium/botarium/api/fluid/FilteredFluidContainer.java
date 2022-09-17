@@ -123,6 +123,15 @@ public class FilteredFluidContainer implements FluidContainer {
     }
 
     @Override
+    public void deserialize(CompoundTag tag) {
+        ListTag fluids = tag.getList("StoredFluids", Tag.TAG_COMPOUND);
+        for (int i = 0; i < fluids.size(); i++) {
+            CompoundTag fluid = fluids.getCompound(i);
+            this.storedFluid.set(i, FluidHooks.fluidFromCompound(fluid));
+        }
+    }
+
+    @Override
     public CompoundTag serialize(CompoundTag tag) {
         ListTag tags = new ListTag();
         for (FluidHolder fluidHolder : this.storedFluid) {
@@ -132,15 +141,6 @@ public class FilteredFluidContainer implements FluidContainer {
         }
         tag.put("StoredFluids", tags);
         return tag;
-    }
-
-    @Override
-    public void deseralize(CompoundTag tag) {
-        ListTag fluids = tag.getList("StoredFluids", Tag.TAG_COMPOUND);
-        for (int i = 0; i < fluids.size(); i++) {
-            CompoundTag fluid = fluids.getCompound(i);
-            this.storedFluid.set(i, FluidHooks.fluidFromCompound(fluid));
-        }
     }
 
     @Override

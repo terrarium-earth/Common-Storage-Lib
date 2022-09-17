@@ -1,4 +1,4 @@
-package earth.terrarium.botarium.forge;
+package earth.terrarium.botarium.forge.energy;
 
 import earth.terrarium.botarium.api.energy.PlatformEnergyManager;
 import net.minecraft.core.Direction;

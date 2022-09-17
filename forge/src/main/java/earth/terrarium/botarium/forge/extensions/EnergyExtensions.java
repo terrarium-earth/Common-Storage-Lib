@@ -1,8 +1,10 @@
 package earth.terrarium.botarium.forge.extensions;
 
 
+import earth.terrarium.botarium.api.Serializable;
 import earth.terrarium.botarium.api.energy.EnergyContainer;
 import earth.terrarium.botarium.api.energy.UpdatingEnergyContainer;
+import earth.terrarium.botarium.forge.AutoSerializable;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Mth;
@@ -17,7 +19,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 @ClassExtension(EnergyContainer.class)
-public interface EnergyExtensions extends IEnergyStorage, ICapabilityProvider, INBTSerializable<CompoundTag> {
+public interface EnergyExtensions extends IEnergyStorage, ICapabilityProvider, AutoSerializable {
 
     @Override
     default int receiveEnergy(int maxAmount, boolean bl) {
@@ -54,13 +56,8 @@ public interface EnergyExtensions extends IEnergyStorage, ICapabilityProvider, I
     }
 
     @Override
-    default CompoundTag serializeNBT() {
-        return ((EnergyContainer) this).serialize(new CompoundTag());
-    }
-
-    @Override
-    default void deserializeNBT(CompoundTag tag) {
-        ((EnergyContainer) this).deseralize(tag);
+    default Serializable getSerializable() {
+        return (Serializable) this;
     }
 
     @Override

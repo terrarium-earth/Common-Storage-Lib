@@ -1,7 +1,9 @@
 package earth.terrarium.botarium.forge.fluid;
 
+import earth.terrarium.botarium.api.Serializable;
 import earth.terrarium.botarium.api.fluid.FluidContainer;
 import earth.terrarium.botarium.api.fluid.FluidHolder;
+import earth.terrarium.botarium.forge.AutoSerializable;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraftforge.common.capabilities.Capability;
@@ -14,7 +16,7 @@ import net.minecraftforge.fluids.capability.IFluidHandler;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class ForgeBlockFluidContainer implements IFluidHandler, INBTSerializable<CompoundTag>, ICapabilityProvider {
+public class ForgeBlockFluidContainer implements IFluidHandler, ICapabilityProvider, AutoSerializable {
     FluidContainer container;
 
     public ForgeBlockFluidContainer(FluidContainer container) {
@@ -65,12 +67,7 @@ public class ForgeBlockFluidContainer implements IFluidHandler, INBTSerializable
     }
 
     @Override
-    public CompoundTag serializeNBT() {
-        return this.container.serialize(new CompoundTag());
-    }
-
-    @Override
-    public void deserializeNBT(CompoundTag arg) {
-        this.container.deseralize(arg);
+    public Serializable getSerializable() {
+        return container;
     }
 }

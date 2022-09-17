@@ -62,7 +62,7 @@ public class ItemEnergyContainer implements EnergyContainer {
     }
 
     @Override
-    public void deseralize(CompoundTag tag) {
+    public void deserialize(CompoundTag tag) {
         this.energy = tag.getLong("Energy");
     }
 
