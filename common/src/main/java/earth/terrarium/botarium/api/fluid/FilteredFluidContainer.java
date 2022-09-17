@@ -116,7 +116,10 @@ public class FilteredFluidContainer implements FluidContainer {
 
     @Override
     public void fromContainer(FluidContainer container) {
-
+        this.storedFluid = NonNullList.withSize(container.getSize(), FluidHooks.emptyFluid());
+        for (int i = 0; i < container.getSize(); i++) {
+            this.storedFluid.set(i, container.getFluids().get(i).copyHolder());
+        }
     }
 
     @Override

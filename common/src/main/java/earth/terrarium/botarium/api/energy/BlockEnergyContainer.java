@@ -6,9 +6,9 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
 public class BlockEnergyContainer implements UpdatingEnergyContainer {
-    private final int energyCapacity;
-    private final BlockEntity blockEntity;
-    private long energy;
+    protected final int energyCapacity;
+    protected final BlockEntity blockEntity;
+    protected long energy;
 
     public BlockEnergyContainer(BlockEntity entity, int energyCapacity) {
         this.blockEntity = entity;
@@ -29,6 +29,14 @@ public class BlockEnergyContainer implements UpdatingEnergyContainer {
         if(simulate) return extracted;
         this.energy -= extracted;
         return extracted;
+    }
+
+    public long internalInsert(long maxAmount, boolean simulate) {
+        return insertEnergy(maxAmount, simulate);
+    }
+
+    public long internalExtract(long maxAmount, boolean simulate) {
+        return extractEnergy(maxAmount, simulate);
     }
 
     @Override
