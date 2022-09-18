@@ -25,4 +25,9 @@ public interface FluidContainer extends Serializable {
     default FluidContainer getContainer(Direction direction) {
         return this;
     }
+
+    FluidSnapshot createSnapshot();
+    default void readSnapshot(FluidSnapshot snapshot) {
+        snapshot.loadSnapshot(this);
+    }
 }

@@ -2,7 +2,6 @@ package earth.terrarium.botarium.api.energy;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Mth;
-import net.minecraft.world.item.ItemStack;
 
 public class ItemEnergyContainer implements EnergyContainer {
     private final long capacity;
@@ -72,5 +71,10 @@ public class ItemEnergyContainer implements EnergyContainer {
     @Override
     public boolean allowsExtraction() {
         return true;
+    }
+
+    @Override
+    public EnergySnapshot createSnapshot() {
+        return new SimpleEnergySnapshot(this);
     }
 }

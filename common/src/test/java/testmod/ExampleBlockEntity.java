@@ -13,7 +13,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
 public class ExampleBlockEntity extends BlockEntity implements EnergyBlock, FluidHoldingBlock, ItemContainerBlock{
-    public FilteredFluidContainer fluidContainer;
+    public BlockFilteredFluidContainer fluidContainer;
     private SimpleItemContainer itemContainer;
     private BlockEnergyContainer energyContainer;
 
@@ -27,8 +27,8 @@ public class ExampleBlockEntity extends BlockEntity implements EnergyBlock, Flui
     }
 
     @Override
-    public StatefulFluidContainer getFluidContainer() {
-        return fluidContainer == null ? this.fluidContainer = new FilteredFluidContainer(this, FluidHooks.buckets(2), 1, (i, fluidHolder) -> true) : this.fluidContainer;
+    public UpdatingFluidContainer getFluidContainer() {
+        return fluidContainer == null ? this.fluidContainer = new BlockFilteredFluidContainer(this, FluidHooks.buckets(2), 1, (i, fluidHolder) -> true) : this.fluidContainer;
     }
 
     @Override

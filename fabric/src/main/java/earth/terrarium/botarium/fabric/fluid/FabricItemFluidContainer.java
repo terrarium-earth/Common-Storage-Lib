@@ -1,33 +1,40 @@
 package earth.terrarium.botarium.fabric.fluid;
 
+import earth.terrarium.botarium.api.fluid.FluidContainer;
 import earth.terrarium.botarium.api.fluid.FluidSnapshot;
-import earth.terrarium.botarium.api.fluid.UpdatingFluidContainer;
+import net.fabricmc.fabric.api.transfer.v1.context.ContainerItemContext;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
+import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.fabricmc.fabric.api.transfer.v1.storage.StorageView;
 import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
 import net.fabricmc.fabric.api.transfer.v1.transaction.base.SnapshotParticipant;
+import net.minecraft.world.item.ItemStack;
 
 import java.util.Iterator;
 
 @SuppressWarnings("UnstableApiUsage")
-public class FabricBlockFluidContainer extends SnapshotParticipant<FluidSnapshot> implements Storage<FluidVariant> {
-    private final UpdatingFluidContainer container;
+public class FabricItemFluidContainer extends SnapshotParticipant<FluidSnapshot> implements Storage<FluidVariant> {
+    private final FluidContainer container;
+    private final ContainerItemContext ctx;
 
-    public FabricBlockFluidContainer(UpdatingFluidContainer container) {
+    public FabricItemFluidContainer(ContainerItemContext ctx, FluidContainer container) {
         this.container = container;
+        this.ctx = ctx;
     }
 
     @Override
     public long insert(FluidVariant resource, long maxAmount, TransactionContext transaction) {
-        updateSnapshots(transaction);
-        return container.insertFluid(FabricFluidHolder.of(resource, maxAmount), false);
+        long inserted = container.insertFluid(FabricFluidHolder.of(resource, maxAmount), false);
+        setChanged(transaction);
+        return inserted;
     }
 
     @Override
     public long extract(FluidVariant resource, long maxAmount, TransactionContext transaction) {
-        updateSnapshots(transaction);
-        return container.extractFluid(FabricFluidHolder.of(resource, maxAmount), false).getFluidAmount();
+        long extracted = container.extractFluid(FabricFluidHolder.of(resource, maxAmount), false).getFluidAmount();
+        setChanged(transaction);
+        return extracted;
     }
 
     @Override
@@ -45,8 +52,10 @@ public class FabricBlockFluidContainer extends SnapshotParticipant<FluidSnapshot
         container.readSnapshot(snapshot);
     }
 
-    @Override
-    protected void onFinalCommit() {
-        container.update();
+    public void setChanged(TransactionContext transaction) {
+        ItemStack stack = ctx.getItemVariant().toStack();
+        this.updateSnapshots(transaction);
+        this.container.serialize(stack.getOrCreateTag());
+        ctx.exchange(ItemVariant.of(stack), ctx.getAmount(), transaction);
     }
 }

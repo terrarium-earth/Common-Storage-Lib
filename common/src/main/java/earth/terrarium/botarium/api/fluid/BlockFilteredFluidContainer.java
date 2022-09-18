@@ -7,19 +7,18 @@ import net.minecraft.nbt.Tag;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.msrandom.extensions.annotations.ImplementedByExtension;
 
 import java.util.List;
 import java.util.Objects;
 import java.util.function.BiPredicate;
 
-public class FilteredFluidContainer implements StatefulFluidContainer {
+public class BlockFilteredFluidContainer implements UpdatingFluidContainer {
     private final BlockEntity blockEntity;
     NonNullList<FluidHolder> storedFluid;
     long maxAmount;
     BiPredicate<Integer, FluidHolder> fluidFilter;
 
-    public FilteredFluidContainer(BlockEntity entity, long maxAmount, int tanks, BiPredicate<Integer, FluidHolder> fluidFilter) {
+    public BlockFilteredFluidContainer(BlockEntity entity, long maxAmount, int tanks, BiPredicate<Integer, FluidHolder> fluidFilter) {
         this.blockEntity = entity;
         this.maxAmount = maxAmount;
         this.fluidFilter = fluidFilter;
@@ -105,8 +104,8 @@ public class FilteredFluidContainer implements StatefulFluidContainer {
     }
 
     @Override
-    public FilteredFluidContainer copy() {
-        return new FilteredFluidContainer(this.blockEntity, maxAmount, this.getSize(), fluidFilter);
+    public BlockFilteredFluidContainer copy() {
+        return new BlockFilteredFluidContainer(this.blockEntity, maxAmount, this.getSize(), fluidFilter);
     }
 
     @Override
@@ -160,21 +159,6 @@ public class FilteredFluidContainer implements StatefulFluidContainer {
 
     @Override
     public FluidSnapshot createSnapshot() {
-        return new FilteredFluidSnapshot(this);
-    }
-
-    public static class FilteredFluidSnapshot implements FluidSnapshot {
-        private final FilteredFluidContainer container;
-
-        public FilteredFluidSnapshot(FilteredFluidContainer fluidContainer) {
-            this.container = fluidContainer.copy();
-        }
-
-        @Override
-        public void loadSnapshot(FluidContainer container) {
-            for (int i = 0; i < container.getSize(); i++) {
-                this.container.getFluids().set(i, container.getFluids().get(i).copyHolder());
-            }
-        }
+        return new SimpleFluidSnapshot(this);
     }
 }

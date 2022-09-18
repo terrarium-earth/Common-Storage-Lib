@@ -92,19 +92,6 @@ public class BlockEnergyContainer implements StatefulEnergyContainer {
 
     @Override
     public EnergySnapshot createSnapshot() {
-        return new LongEnergySnapshot(this);
-    }
-
-    public static class LongEnergySnapshot implements EnergySnapshot {
-        private final long energy;
-
-        public LongEnergySnapshot(BlockEnergyContainer container) {
-            this.energy = container.getStoredEnergy();
-        }
-
-        @Override
-        public void loadSnapshot(EnergyContainer container) {
-            container.setEnergy(energy);
-        }
+        return new SimpleEnergySnapshot(this);
     }
 }

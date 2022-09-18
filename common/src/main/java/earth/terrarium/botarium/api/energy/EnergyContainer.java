@@ -16,6 +16,12 @@ public interface EnergyContainer extends Serializable {
     boolean allowsInsertion();
     boolean allowsExtraction();
 
+    EnergySnapshot createSnapshot();
+
+    default void readSnapshot(EnergySnapshot snapshot) {
+        snapshot.loadSnapshot(this);
+    }
+
     default EnergyContainer getContainer(Direction direction) {
         return this;
     }

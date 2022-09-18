@@ -4,8 +4,10 @@ import earth.terrarium.botarium.Botarium;
 import earth.terrarium.botarium.api.energy.EnergyBlock;
 import earth.terrarium.botarium.api.energy.EnergyItem;
 import earth.terrarium.botarium.api.fluid.FluidHoldingBlock;
+import earth.terrarium.botarium.api.fluid.FluidHoldingItem;
 import earth.terrarium.botarium.api.item.ItemContainerBlock;
-import earth.terrarium.botarium.forge.fluid.ForgeBlockFluidContainer;
+import earth.terrarium.botarium.forge.fluid.ForgeFluidContainer;
+import earth.terrarium.botarium.forge.fluid.ForgeItemFluidContainer;
 import earth.terrarium.botarium.forge.item.ItemContainerWrapper;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
@@ -32,7 +34,7 @@ public class BotariumForge {
         }
 
         if (event.getObject() instanceof FluidHoldingBlock fluidHoldingBlock) {
-            event.addCapability(new ResourceLocation(Botarium.MOD_ID, "fluid"), new ForgeBlockFluidContainer(fluidHoldingBlock.getFluidContainer()));
+            event.addCapability(new ResourceLocation(Botarium.MOD_ID, "fluid"), new ForgeFluidContainer(fluidHoldingBlock.getFluidContainer()));
         }
 
         if (event.getObject() instanceof ItemContainerBlock itemContainerBlock) {
@@ -43,7 +45,10 @@ public class BotariumForge {
     public static void attachItemCapabilities(AttachCapabilitiesEvent<ItemStack> event) {
         ItemStack item = event.getObject();
         if (item.getItem() instanceof EnergyItem energyItem) {
-            event.addCapability(new ResourceLocation(Botarium.MOD_ID, "energy"), (ICapabilityProvider) energyItem.getEnergyStorage(item));
+            event.addCapability(new ResourceLocation(Botarium.MOD_ID, "energy_item"), (ICapabilityProvider) energyItem.getEnergyStorage(item));
+        }
+        if (item.getItem() instanceof FluidHoldingItem fluidHoldingItem) {
+            event.addCapability(new ResourceLocation(Botarium.MOD_ID, "fluid_item"), new ForgeItemFluidContainer(fluidHoldingItem.getFluidContainer(item)));
         }
     }
 }
