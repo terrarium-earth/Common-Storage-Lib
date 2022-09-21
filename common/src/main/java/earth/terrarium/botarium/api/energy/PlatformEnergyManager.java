@@ -6,6 +6,6 @@ import org.jetbrains.annotations.ApiStatus;
 public interface PlatformEnergyManager {
     long getStoredEnergy();
     long getCapacity();
-    long extract(int amount, boolean simulate);
-    long insert(int amount, boolean simulate);
+    long extract(long amount, boolean simulate);
+    long insert(long amount, boolean simulate);
 }

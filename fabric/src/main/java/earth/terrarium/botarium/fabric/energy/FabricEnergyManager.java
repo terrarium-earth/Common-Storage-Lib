@@ -33,7 +33,7 @@ public class FabricEnergyManager implements PlatformEnergyManager {
     }
 
     @Override
-    public long extract(int amount, boolean simulate) {
+    public long extract(long amount, boolean simulate) {
         try (Transaction txn = Transaction.openOuter()) {
             long extract = energy.extract(amount, txn);
             if(simulate) txn.abort();
@@ -43,7 +43,7 @@ public class FabricEnergyManager implements PlatformEnergyManager {
     }
 
     @Override
-    public long insert(int amount, boolean simulate) {
+    public long insert(long amount, boolean simulate) {
         try (Transaction txn = Transaction.openOuter()) {
             long insert = energy.insert(amount, txn);
             if(simulate) txn.abort();

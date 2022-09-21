@@ -32,12 +32,12 @@ public class ForgeEnergyManager implements PlatformEnergyManager {
     }
 
     @Override
-    public long extract(int amount, boolean simulate) {
-        return energy.extractEnergy(amount, simulate);
+    public long extract(long amount, boolean simulate) {
+        return energy.extractEnergy((int) amount, simulate);
     }
 
     @Override
-    public long insert(int amount, boolean simulate) {
-        return energy.receiveEnergy(amount, simulate);
+    public long insert(long amount, boolean simulate) {
+        return energy.receiveEnergy((int) amount, simulate);
     }
 }
