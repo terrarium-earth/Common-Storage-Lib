@@ -20,6 +20,6 @@ public class ExampleItem extends Item implements EnergyItem, FluidHoldingItem {
 
     @Override
     public ItemFluidContainer getFluidContainer(ItemStack stack) {
-        return new FilteredItemFluidContainer(FluidHooks.buckets(4), 1, stack, (integer, fluidHolder) -> fluidHolder.getFluid() == Fluids.WATER);
+        return new ItemFilteredFluidContainer(FluidHooks.buckets(4), 1, stack, (integer, fluidHolder) -> fluidHolder.getFluid() == Fluids.WATER);
     }
 }

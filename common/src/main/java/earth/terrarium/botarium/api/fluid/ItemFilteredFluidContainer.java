@@ -11,13 +11,13 @@ import java.util.List;
 import java.util.Objects;
 import java.util.function.BiPredicate;
 
-public class FilteredItemFluidContainer implements ItemFluidContainer {
+public class ItemFilteredFluidContainer implements ItemFluidContainer {
     private final NonNullList<FluidHolder> storedFluid;
     private final BiPredicate<Integer, FluidHolder> fluidFilter;
     private final long maxAmount;
     private final ItemStack containerItem;
 
-    public FilteredItemFluidContainer(long maxAmount, int size, ItemStack itemStack, BiPredicate<Integer, FluidHolder> fluidFilter) {
+    public ItemFilteredFluidContainer(long maxAmount, int size, ItemStack itemStack, BiPredicate<Integer, FluidHolder> fluidFilter) {
         this.maxAmount = maxAmount;
         this.fluidFilter = fluidFilter;
         this.storedFluid = NonNullList.withSize(size, FluidHooks.emptyFluid());
@@ -100,8 +100,8 @@ public class FilteredItemFluidContainer implements ItemFluidContainer {
     }
 
     @Override
-    public FilteredItemFluidContainer copy() {
-        return new FilteredItemFluidContainer(maxAmount, this.getSize(), containerItem.copy(), fluidFilter);
+    public ItemFilteredFluidContainer copy() {
+        return new ItemFilteredFluidContainer(maxAmount, this.getSize(), containerItem.copy(), fluidFilter);
     }
 
     @Override

@@ -7,6 +7,7 @@ import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.material.Fluid;
 import net.msrandom.extensions.annotations.ClassExtension;
+import net.msrandom.extensions.annotations.ImplementedByExtension;
 import net.msrandom.extensions.annotations.ImplementsBaseElement;
 import org.apache.commons.lang3.NotImplementedException;
 
@@ -34,5 +35,35 @@ public class FluidManagerImpl {
     @ImplementsBaseElement
     public static long buckets(int buckets) {
         return FluidConstants.BUCKET * buckets;
+    }
+
+    @ImplementsBaseElement
+    public static long toMillibuckets(long amount) {
+        return amount / 81;
+    }
+
+    @ImplementsBaseElement
+    private static long getBucketAmount() {
+        return FluidConstants.BUCKET;
+    }
+
+    @ImplementsBaseElement
+    private static long getBottleAmount() {
+        return FluidConstants.BOTTLE;
+    }
+
+    @ImplementsBaseElement
+    private static long getBlockAmount() {
+        return FluidConstants.BLOCK;
+    }
+
+    @ImplementsBaseElement
+    private static long getIngotAmount() {
+        return FluidConstants.INGOT;
+    }
+
+    @ImplementsBaseElement
+    private static long getNuggetAmount() {
+        return FluidConstants.NUGGET;
     }
 }

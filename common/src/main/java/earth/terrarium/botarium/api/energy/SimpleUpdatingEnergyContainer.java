@@ -1,17 +1,16 @@
 package earth.terrarium.botarium.api.energy;
 
+import earth.terrarium.botarium.api.Updatable;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Mth;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.entity.BlockEntity;
 
-public class BlockEnergyContainer implements StatefulEnergyContainer {
+public class SimpleUpdatingEnergyContainer implements StatefulEnergyContainer {
     protected final int energyCapacity;
-    protected final BlockEntity blockEntity;
+    protected final Updatable updatable;
     protected long energy;
 
-    public BlockEnergyContainer(BlockEntity entity, int energyCapacity) {
-        this.blockEntity = entity;
+    public SimpleUpdatingEnergyContainer(Updatable entity, int energyCapacity) {
+        this.updatable = entity;
         this.energyCapacity = energyCapacity;
     }
 
@@ -85,9 +84,9 @@ public class BlockEnergyContainer implements StatefulEnergyContainer {
         return true;
     }
 
+    @Override
     public void update() {
-        blockEntity.setChanged();
-        blockEntity.getLevel().sendBlockUpdated(blockEntity.getBlockPos(), blockEntity.getBlockState(), blockEntity.getBlockState(), Block.UPDATE_ALL);
+        updatable.update();
     }
 
     @Override

@@ -1,25 +1,24 @@
 package earth.terrarium.botarium.api.fluid;
 
+import earth.terrarium.botarium.api.Updatable;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.util.Mth;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.entity.BlockEntity;
 
 import java.util.List;
 import java.util.Objects;
 import java.util.function.BiPredicate;
 
-public class BlockFilteredFluidContainer implements UpdatingFluidContainer {
-    private final BlockEntity blockEntity;
-    NonNullList<FluidHolder> storedFluid;
-    long maxAmount;
-    BiPredicate<Integer, FluidHolder> fluidFilter;
+public class SimpleUpdatingFluidContainer implements UpdatingFluidContainer {
+    private NonNullList<FluidHolder> storedFluid;
+    private final long maxAmount;
+    private final BiPredicate<Integer, FluidHolder> fluidFilter;
+    private final Updatable updatable;
 
-    public BlockFilteredFluidContainer(BlockEntity entity, long maxAmount, int tanks, BiPredicate<Integer, FluidHolder> fluidFilter) {
-        this.blockEntity = entity;
+    public SimpleUpdatingFluidContainer(Updatable updatable, long maxAmount, int tanks, BiPredicate<Integer, FluidHolder> fluidFilter) {
+        this.updatable = updatable;
         this.maxAmount = maxAmount;
         this.fluidFilter = fluidFilter;
         this.storedFluid = NonNullList.withSize(tanks, FluidHooks.emptyFluid());
@@ -28,18 +27,18 @@ public class BlockFilteredFluidContainer implements UpdatingFluidContainer {
     @Override
     public long insertFluid(FluidHolder fluid, boolean simulate) {
         for (int i = 0; i < this.storedFluid.size(); i++) {
-            if(fluidFilter.test(i, fluid)) {
-                if(storedFluid.get(i).isEmpty()) {
+            if (fluidFilter.test(i, fluid)) {
+                if (storedFluid.get(i).isEmpty()) {
                     FluidHolder insertedFluid = fluid.copyHolder();
                     insertedFluid.setAmount(Mth.clamp(fluid.getFluidAmount(), 0, maxAmount));
-                    if(simulate) return insertedFluid.getFluidAmount();
+                    if (simulate) return insertedFluid.getFluidAmount();
                     this.storedFluid.set(i, insertedFluid);
                     this.update();
                     return storedFluid.get(i).getFluidAmount();
                 } else {
                     if (storedFluid.get(i).matches(fluid)) {
                         long insertedAmount = Mth.clamp(fluid.getFluidAmount(), 0, maxAmount - storedFluid.get(i).getFluidAmount());
-                        if(simulate) return insertedAmount;
+                        if (simulate) return insertedAmount;
                         this.storedFluid.get(i).setAmount(storedFluid.get(i).getFluidAmount() + insertedAmount);
                         this.update();
                         return insertedAmount;
@@ -53,20 +52,18 @@ public class BlockFilteredFluidContainer implements UpdatingFluidContainer {
     @Override
     public FluidHolder extractFluid(FluidHolder fluid, boolean simulate) {
         for (int i = 0; i < this.storedFluid.size(); i++) {
-            if(fluidFilter.test(i, fluid)) {
+            if (fluidFilter.test(i, fluid)) {
                 FluidHolder toExtract = fluid.copyHolder();
-                if(storedFluid.isEmpty()) {
+                if (storedFluid.isEmpty()) {
                     return FluidHooks.emptyFluid();
-                } else {
-                    if (storedFluid.get(i).matches(fluid)) {
-                        long extractedAmount = Mth.clamp(fluid.getFluidAmount(), 0, storedFluid.get(i).getFluidAmount());
-                        toExtract.setAmount(extractedAmount);
-                        if(simulate) return toExtract;
-                        this.storedFluid.get(i).setAmount(storedFluid.get(i).getFluidAmount() - extractedAmount);
-                        if(storedFluid.get(i).getFluidAmount() == 0) storedFluid.set(i, FluidHooks.emptyFluid());
-                        this.update();
-                        return toExtract;
-                    }
+                } else if (storedFluid.get(i).matches(fluid)) {
+                    long extractedAmount = Mth.clamp(fluid.getFluidAmount(), 0, storedFluid.get(i).getFluidAmount());
+                    toExtract.setAmount(extractedAmount);
+                    if (simulate) return toExtract;
+                    this.storedFluid.get(i).setAmount(storedFluid.get(i).getFluidAmount() - extractedAmount);
+                    if (storedFluid.get(i).getFluidAmount() == 0) storedFluid.set(i, FluidHooks.emptyFluid());
+                    this.update();
+                    return toExtract;
                 }
             }
         }
@@ -104,8 +101,8 @@ public class BlockFilteredFluidContainer implements UpdatingFluidContainer {
     }
 
     @Override
-    public BlockFilteredFluidContainer copy() {
-        return new BlockFilteredFluidContainer(this.blockEntity, maxAmount, this.getSize(), fluidFilter);
+    public SimpleUpdatingFluidContainer copy() {
+        return new SimpleUpdatingFluidContainer(updatable, maxAmount, this.getSize(), fluidFilter);
     }
 
     @Override
@@ -153,8 +150,7 @@ public class BlockFilteredFluidContainer implements UpdatingFluidContainer {
     }
 
     public void update() {
-        blockEntity.setChanged();
-        blockEntity.getLevel().sendBlockUpdated(blockEntity.getBlockPos(), blockEntity.getBlockState(), blockEntity.getBlockState(), Block.UPDATE_ALL);
+        updatable.update();
     }
 
     @Override

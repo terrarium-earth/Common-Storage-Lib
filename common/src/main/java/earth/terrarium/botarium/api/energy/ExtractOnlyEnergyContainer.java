@@ -1,10 +1,11 @@
 package earth.terrarium.botarium.api.energy;
 
+import earth.terrarium.botarium.api.Updatable;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
-public class ExtractOnlyEnergyContainer extends BlockEnergyContainer {
-    public ExtractOnlyEnergyContainer(BlockEntity entity, int energyCapacity) {
+public class ExtractOnlyEnergyContainer extends SimpleUpdatingEnergyContainer {
+    public ExtractOnlyEnergyContainer(Updatable entity, int energyCapacity) {
         super(entity, energyCapacity);
     }
 

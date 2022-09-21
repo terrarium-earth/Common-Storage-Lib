@@ -5,6 +5,8 @@ import earth.terrarium.botarium.api.fluid.FluidHooks;
 import earth.terrarium.botarium.forge.fluid.ForgeFluidHolder;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.material.Fluid;
+import net.minecraftforge.fluids.FluidType;
+import net.minecraftforge.fluids.capability.wrappers.BlockWrapper;
 import net.msrandom.extensions.annotations.ClassExtension;
 import net.msrandom.extensions.annotations.ImplementsBaseElement;
 
@@ -27,6 +29,36 @@ public class FluidManagerImpl {
 
     @ImplementsBaseElement
     public static long buckets(int buckets) {
-        return 1000L * buckets;
+        return (long) FluidType.BUCKET_VOLUME * buckets;
+    }
+
+    @ImplementsBaseElement
+    public static long toMillibuckets(long amount) {
+        return amount;
+    }
+
+    @ImplementsBaseElement
+    private static long getBucketAmount() {
+        return FluidType.BUCKET_VOLUME;
+    }
+
+    @ImplementsBaseElement
+    private static long getBottleAmount() {
+        return FluidType.BUCKET_VOLUME / 4;
+    }
+
+    @ImplementsBaseElement
+    private static long getBlockAmount() {
+        return FluidType.BUCKET_VOLUME;
+    }
+
+    @ImplementsBaseElement
+    private static long getIngotAmount() {
+        return 90;
+    }
+
+    @ImplementsBaseElement
+    private static long getNuggetAmount() {
+        return 10;
     }
 }

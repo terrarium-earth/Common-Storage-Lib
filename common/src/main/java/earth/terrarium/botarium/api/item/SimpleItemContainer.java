@@ -1,22 +1,29 @@
 package earth.terrarium.botarium.api.item;
 
+import earth.terrarium.botarium.api.Updatable;
 import net.minecraft.core.NonNullList;
-import net.minecraft.core.Vec3i;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
+
+import java.util.function.Predicate;
 
 public class SimpleItemContainer implements SerializbleContainer {
 
     private final NonNullList<ItemStack> items;
-    private final BlockEntity blockEntity;
+    private final Updatable updatable;
+    private final Predicate<Player> canPlayerAccess;
 
-    public SimpleItemContainer(BlockEntity entity, int size) {
+    public SimpleItemContainer(Updatable entity, int size, Predicate<Player> canPlayerAccess) {
         this.items = NonNullList.withSize(size, ItemStack.EMPTY);
-        this.blockEntity = entity;
+        this.updatable = entity;
+        this.canPlayerAccess = canPlayerAccess;
+    }
+
+    public <T extends BlockEntity & Updatable> SimpleItemContainer(T entity, int size) {
+        this(entity, size, player -> entity.getBlockPos().distSqr(player.blockPosition()) <= 64);
     }
 
     @Override
@@ -61,13 +68,12 @@ public class SimpleItemContainer implements SerializbleContainer {
 
     @Override
     public void setChanged() {
-        blockEntity.setChanged();
-        blockEntity.getLevel().sendBlockUpdated(blockEntity.getBlockPos(), blockEntity.getBlockState(), blockEntity.getBlockState(), Block.UPDATE_ALL);
+        updatable.update();
     }
 
     @Override
     public boolean stillValid(Player player) {
-        return blockEntity.getBlockPos().distSqr(player.blockPosition()) <= 64;
+        return canPlayerAccess.test(player);
     }
 
     @Override

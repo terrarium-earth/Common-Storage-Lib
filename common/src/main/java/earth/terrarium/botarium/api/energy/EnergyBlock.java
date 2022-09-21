@@ -1,5 +1,7 @@
 package earth.terrarium.botarium.api.energy;
 
-public interface EnergyBlock {
+import earth.terrarium.botarium.api.Updatable;
+
+public interface EnergyBlock extends Updatable {
     StatefulEnergyContainer getEnergyStorage();
 }
