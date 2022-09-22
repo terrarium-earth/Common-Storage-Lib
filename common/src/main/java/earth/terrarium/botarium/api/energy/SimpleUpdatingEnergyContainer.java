@@ -5,11 +5,11 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Mth;
 
 public class SimpleUpdatingEnergyContainer implements StatefulEnergyContainer {
-    protected final int energyCapacity;
+    protected final long energyCapacity;
     protected final Updatable updatable;
     protected long energy;
 
-    public SimpleUpdatingEnergyContainer(Updatable entity, int energyCapacity) {
+    public SimpleUpdatingEnergyContainer(Updatable entity, long energyCapacity) {
         this.updatable = entity;
         this.energyCapacity = energyCapacity;
     }
