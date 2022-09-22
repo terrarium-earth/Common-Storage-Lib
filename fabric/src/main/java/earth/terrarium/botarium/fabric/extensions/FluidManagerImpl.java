@@ -2,14 +2,22 @@ package earth.terrarium.botarium.fabric.extensions;
 
 import earth.terrarium.botarium.api.fluid.FluidHolder;
 import earth.terrarium.botarium.api.fluid.FluidHooks;
+import earth.terrarium.botarium.api.fluid.PlatformFluidHandler;
+import earth.terrarium.botarium.fabric.fluid.FabricFluidHandler;
 import earth.terrarium.botarium.fabric.fluid.FabricFluidHolder;
+import net.fabricmc.fabric.api.transfer.v1.context.ContainerItemContext;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
+import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.material.Fluid;
 import net.msrandom.extensions.annotations.ClassExtension;
 import net.msrandom.extensions.annotations.ImplementedByExtension;
 import net.msrandom.extensions.annotations.ImplementsBaseElement;
 import org.apache.commons.lang3.NotImplementedException;
+import org.jetbrains.annotations.Nullable;
 
 @ClassExtension(FluidHooks.class)
 @SuppressWarnings("UnstableApiUsage")
@@ -35,6 +43,26 @@ public class FluidManagerImpl {
     @ImplementsBaseElement
     public static long buckets(int buckets) {
         return FluidConstants.BUCKET * buckets;
+    }
+
+    @ImplementsBaseElement
+    public static PlatformFluidHandler getItemFluidManager(ItemStack stack) {
+        return new FabricFluidHandler(FluidStorage.ITEM.find(stack, ContainerItemContext.withInitial(stack)));
+    }
+
+    @ImplementsBaseElement
+    public static PlatformFluidHandler getBlockFluidManager(BlockEntity entity, @Nullable Direction direction) {
+        return new FabricFluidHandler(FluidStorage.SIDED.find(entity.getLevel(), entity.getBlockPos(), direction));
+    }
+
+    @ImplementsBaseElement
+    public static boolean isFluidContainingBlock(BlockEntity entity, @Nullable Direction direction) {
+        return FluidStorage.SIDED.find(entity.getLevel(), entity.getBlockPos(), direction) != null;
+    }
+
+    @ImplementsBaseElement
+    public static boolean isFluidContainingItem(ItemStack stack) {
+        return FluidStorage.ITEM.find(stack, ContainerItemContext.withInitial(stack)) != null;
     }
 
     @ImplementsBaseElement

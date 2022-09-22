@@ -65,23 +65,23 @@ public class EnergyHooks {
         return isEnergyItem(stack) ? Optional.of(getItemEnergyManager(stack)) : Optional.empty();
     }
 
-    public static long moveItemEnergy(ItemStack from, ItemStack to, long amount) {
+    public static long moveItemToItemEnergy(ItemStack from, ItemStack to, long amount) {
         return safeMoveEnergy(safeGetItemEnergyManager(from), safeGetItemEnergyManager(to), amount);
     }
 
-    public static long moveBlockEnergy(BlockEntity from, @Nullable Direction fromDirection, BlockEntity to, @Nullable Direction toDirection, long amount) {
+    public static long moveBlockToBlockEnergy(BlockEntity from, @Nullable Direction fromDirection, BlockEntity to, @Nullable Direction toDirection, long amount) {
         return safeMoveEnergy(safeGetBlockEnergyManager(from, fromDirection), safeGetBlockEnergyManager(to, toDirection), amount);
     }
 
-    public static long moveBlockEnergy(BlockEntity from, BlockEntity to, long amount) {
+    public static long moveBlockToBlockEnergy(BlockEntity from, BlockEntity to, long amount) {
         return safeMoveEnergy(safeGetBlockEnergyManager(from, null), safeGetBlockEnergyManager(to, null), amount);
     }
 
-    public static long moveBlockEnergy(BlockEntity from, @Nullable Direction fromDirection, ItemStack to, long amount) {
+    public static long moveBlockToItemEnergy(BlockEntity from, @Nullable Direction fromDirection, ItemStack to, long amount) {
         return safeMoveEnergy(safeGetBlockEnergyManager(from, fromDirection), safeGetItemEnergyManager(to), amount);
     }
 
-    public static long moveBlockEnergy(ItemStack from, BlockEntity to, @Nullable Direction toDirection, long amount) {
+    public static long moveItemToBlockEnergy(ItemStack from, BlockEntity to, @Nullable Direction toDirection, long amount) {
         return safeMoveEnergy(safeGetItemEnergyManager(from), safeGetBlockEnergyManager(to, toDirection), amount);
     }
 }

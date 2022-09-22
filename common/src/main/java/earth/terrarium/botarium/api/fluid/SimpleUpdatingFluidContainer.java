@@ -10,18 +10,24 @@ import net.minecraft.util.Mth;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.BiPredicate;
+import java.util.function.Function;
+import java.util.function.IntPredicate;
 
 public class SimpleUpdatingFluidContainer implements UpdatingFluidContainer {
     private NonNullList<FluidHolder> storedFluid;
-    private final long maxAmount;
+    private final Function<Integer, Long> maxAmount;
     private final BiPredicate<Integer, FluidHolder> fluidFilter;
     private final Updatable updatable;
 
-    public SimpleUpdatingFluidContainer(Updatable updatable, long maxAmount, int tanks, BiPredicate<Integer, FluidHolder> fluidFilter) {
+    public SimpleUpdatingFluidContainer(Updatable updatable, Function<Integer, Long> maxAmount, int tanks, BiPredicate<Integer, FluidHolder> fluidFilter) {
         this.updatable = updatable;
         this.maxAmount = maxAmount;
         this.fluidFilter = fluidFilter;
         this.storedFluid = NonNullList.withSize(tanks, FluidHooks.emptyFluid());
+    }
+
+    public SimpleUpdatingFluidContainer(Updatable updatable, long maxAmount, int tanks, BiPredicate<Integer, FluidHolder> fluidFilter) {
+        this(updatable, integer -> maxAmount, tanks, fluidFilter);
     }
 
     @Override
@@ -30,14 +36,14 @@ public class SimpleUpdatingFluidContainer implements UpdatingFluidContainer {
             if (fluidFilter.test(i, fluid)) {
                 if (storedFluid.get(i).isEmpty()) {
                     FluidHolder insertedFluid = fluid.copyHolder();
-                    insertedFluid.setAmount(Mth.clamp(fluid.getFluidAmount(), 0, maxAmount));
+                    insertedFluid.setAmount(Mth.clamp(fluid.getFluidAmount(), 0, maxAmount.apply(i)));
                     if (simulate) return insertedFluid.getFluidAmount();
                     this.storedFluid.set(i, insertedFluid);
                     this.update();
                     return storedFluid.get(i).getFluidAmount();
                 } else {
                     if (storedFluid.get(i).matches(fluid)) {
-                        long insertedAmount = Mth.clamp(fluid.getFluidAmount(), 0, maxAmount - storedFluid.get(i).getFluidAmount());
+                        long insertedAmount = Mth.clamp(fluid.getFluidAmount(), 0, maxAmount.apply(i) - storedFluid.get(i).getFluidAmount());
                         if (simulate) return insertedAmount;
                         this.storedFluid.get(i).setAmount(storedFluid.get(i).getFluidAmount() + insertedAmount);
                         this.update();
@@ -107,7 +113,7 @@ public class SimpleUpdatingFluidContainer implements UpdatingFluidContainer {
 
     @Override
     public long maxStackSize() {
-        return this.maxAmount;
+        return this.maxAmount.apply(0);
     }
 
     @Override
