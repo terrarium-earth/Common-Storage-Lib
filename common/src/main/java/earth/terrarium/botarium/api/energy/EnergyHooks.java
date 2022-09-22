@@ -10,8 +10,23 @@ import java.util.Optional;
 
 public class EnergyHooks {
 
+
+    /**
+     * Gets the energy container of the given itemstack.
+     * Will throw error if the itemstack is not an energy container.
+     *
+     * @deprecated Use {@link EnergyHooks#getItemEnergyManager(ItemStack)} instead.
+     * @param stack Gets the energy container from the item stack
+     * @return The energy container
+     */
+    @Deprecated
     @ImplementedByExtension
     public static PlatformEnergyManager getItemHandler(ItemStack stack) {
+        return getItemEnergyManager(stack);
+    }
+
+    @ImplementedByExtension
+    public static PlatformEnergyManager getItemEnergyManager(ItemStack stack) {
         throw new NotImplementedException("Item Energy Manager not Implemented");
     }
 
@@ -47,6 +62,6 @@ public class EnergyHooks {
     }
 
     public static Optional<PlatformEnergyManager> safeGetBlockEnergyManager(ItemStack stack) {
-        return isEnergyItem(stack) ? Optional.of(getItemHandler(stack)) : Optional.empty();
+        return isEnergyItem(stack) ? Optional.of(getItemEnergyManager(stack)) : Optional.empty();
     }
 }

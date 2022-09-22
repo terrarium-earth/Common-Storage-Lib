@@ -16,7 +16,7 @@ import team.reborn.energy.api.EnergyStorageUtil;
 public class EnergyManagerImpl {
 
     @ImplementsBaseElement
-    public static PlatformEnergyManager getItemHandler(ItemStack stack) {
+    public static PlatformEnergyManager getItemEnergyManager(ItemStack stack) {
         return new FabricEnergyManager(stack);
     }
 

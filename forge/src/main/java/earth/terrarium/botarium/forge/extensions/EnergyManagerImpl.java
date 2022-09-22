@@ -15,7 +15,7 @@ import net.msrandom.extensions.annotations.ImplementsBaseElement;
 public class EnergyManagerImpl {
 
     @ImplementsBaseElement
-    public static PlatformEnergyManager getItemHandler(ItemStack stack) {
+    public static PlatformEnergyManager getItemEnergyManager(ItemStack stack) {
         return new ForgeEnergyManager(stack);
     }
 
