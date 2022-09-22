@@ -6,6 +6,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.util.Mth;
+import net.minecraft.world.level.material.Fluids;
 
 import java.util.List;
 import java.util.Objects;
@@ -81,6 +82,7 @@ public class SimpleUpdatingFluidContainer implements UpdatingFluidContainer {
             long extracted = Mth.clamp(toInsert.getFluidAmount(), 0, fluidHolder.getFluidAmount());
             snapshot.run();
             fluidHolder.setAmount(fluidHolder.getFluidAmount() - extracted);
+            if(fluidHolder.getFluidAmount() == 0) fluidHolder.setFluid(Fluids.EMPTY);
             return extracted;
         }
         return 0;
