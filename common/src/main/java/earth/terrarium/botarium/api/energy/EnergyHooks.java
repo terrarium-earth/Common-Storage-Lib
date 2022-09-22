@@ -5,6 +5,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.msrandom.extensions.annotations.ImplementedByExtension;
 import org.apache.commons.lang3.NotImplementedException;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 
@@ -20,7 +21,6 @@ public class EnergyHooks {
      * @return The energy container
      */
     @Deprecated
-    @ImplementedByExtension
     public static PlatformEnergyManager getItemHandler(ItemStack stack) {
         return getItemEnergyManager(stack);
     }
@@ -31,7 +31,7 @@ public class EnergyHooks {
     }
 
     @ImplementedByExtension
-    public static PlatformEnergyManager getBlockEnergyManager(BlockEntity entity, Direction direction) {
+    public static PlatformEnergyManager getBlockEnergyManager(BlockEntity entity, @Nullable Direction direction) {
         throw new NotImplementedException("Block Entity Energy manager not implemented");
     }
 
@@ -41,7 +41,7 @@ public class EnergyHooks {
     }
 
     @ImplementedByExtension
-    public static boolean isEnergyContainer(BlockEntity stack, Direction direction) {
+    public static boolean isEnergyContainer(BlockEntity stack, @Nullable Direction direction) {
         throw new NotImplementedException("Energy item check not Implemented");
     }
 
@@ -57,11 +57,31 @@ public class EnergyHooks {
         return from.map(f -> to.map(t -> moveEnergy(f, t, amount)).orElse(0L)).orElse(0L);
     }
 
-    public static Optional<PlatformEnergyManager> safeGetItemEnergyManager(BlockEntity entity, Direction direction) {
+    public static Optional<PlatformEnergyManager> safeGetBlockEnergyManager(BlockEntity entity, @Nullable Direction direction) {
         return isEnergyContainer(entity, direction) ? Optional.of(getBlockEnergyManager(entity, direction)) : Optional.empty();
     }
 
-    public static Optional<PlatformEnergyManager> safeGetBlockEnergyManager(ItemStack stack) {
+    public static Optional<PlatformEnergyManager> safeGetItemEnergyManager(ItemStack stack) {
         return isEnergyItem(stack) ? Optional.of(getItemEnergyManager(stack)) : Optional.empty();
+    }
+
+    public static long moveItemEnergy(ItemStack from, ItemStack to, long amount) {
+        return safeMoveEnergy(safeGetItemEnergyManager(from), safeGetItemEnergyManager(to), amount);
+    }
+
+    public static long moveBlockEnergy(BlockEntity from, @Nullable Direction fromDirection, BlockEntity to, @Nullable Direction toDirection, long amount) {
+        return safeMoveEnergy(safeGetBlockEnergyManager(from, fromDirection), safeGetBlockEnergyManager(to, toDirection), amount);
+    }
+
+    public static long moveBlockEnergy(BlockEntity from, BlockEntity to, long amount) {
+        return safeMoveEnergy(safeGetBlockEnergyManager(from, null), safeGetBlockEnergyManager(to, null), amount);
+    }
+
+    public static long moveBlockEnergy(BlockEntity from, @Nullable Direction fromDirection, ItemStack to, long amount) {
+        return safeMoveEnergy(safeGetBlockEnergyManager(from, fromDirection), safeGetItemEnergyManager(to), amount);
+    }
+
+    public static long moveBlockEnergy(ItemStack from, BlockEntity to, @Nullable Direction toDirection, long amount) {
+        return safeMoveEnergy(safeGetItemEnergyManager(from), safeGetBlockEnergyManager(to, toDirection), amount);
     }
 }
