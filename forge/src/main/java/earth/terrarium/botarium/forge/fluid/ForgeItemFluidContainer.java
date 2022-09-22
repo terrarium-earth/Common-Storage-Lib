@@ -18,13 +18,8 @@ import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public record ForgeItemFluidContainer(ItemFluidContainer container) implements IFluidHandlerItem, ICapabilityProvider {
+public record ForgeItemFluidContainer(ItemFluidContainer container) implements IFluidHandlerItem, ICapabilityProvider, AutoSerializable {
     public static final ResourceLocation FLUID_KEY = new ResourceLocation(Botarium.MOD_ID, "fluid_item");
-
-    public ForgeItemFluidContainer(ItemFluidContainer container) {
-        this.container = container;
-        init();
-    }
 
     @Override
     public @NotNull ItemStack getContainer() {
@@ -58,37 +53,24 @@ public record ForgeItemFluidContainer(ItemFluidContainer container) implements I
 
     @Override
     public int fill(FluidStack fluidStack, FluidAction fluidAction) {
-        init();
-        int insertFluid = (int) this.container.insertFluid(new ForgeFluidHolder(fluidStack), fluidAction.simulate());
-        if (fluidAction.execute()) setChanged();
-        return insertFluid;
+        return (int) this.container.insertFluid(new ForgeFluidHolder(fluidStack), fluidAction.simulate());
     }
 
     @Override
     public @NotNull FluidStack drain(FluidStack fluidStack, FluidAction fluidAction) {
-        init();
-        ForgeFluidHolder forgeFluidHolder = new ForgeFluidHolder(this.container.extractFluid(new ForgeFluidHolder(fluidStack), fluidAction.simulate()));
-        if (fluidAction.execute()) setChanged();
-        return forgeFluidHolder;
+        return new ForgeFluidHolder(this.container.extractFluid(new ForgeFluidHolder(fluidStack), fluidAction.simulate()));
     }
 
     @Override
     public @NotNull FluidStack drain(int i, FluidAction fluidAction) {
-        init();
         FluidHolder fluid = this.container.getFluids().get(0).copyHolder();
         if (fluid.isEmpty()) return FluidStack.EMPTY;
         fluid.setAmount(i);
-        ForgeFluidHolder forgeFluidHolder = new ForgeFluidHolder(this.container.extractFluid(fluid, fluidAction.simulate()));
-        if (fluidAction.execute()) setChanged();
-        return forgeFluidHolder;
+        return new ForgeFluidHolder(this.container.extractFluid(fluid, fluidAction.simulate()));
     }
 
-    private void setChanged() {
-        CompoundTag serialize = this.container.serialize(new CompoundTag());
-        getContainer().getOrCreateTag().put(FLUID_KEY.toString(), serialize);
-    }
-
-    private void init() {
-        this.container.deserialize(this.container.getContainerItem().getOrCreateTag().getCompound(FLUID_KEY.toString()));
+    @Override
+    public Serializable getSerializable() {
+        return container;
     }
 }

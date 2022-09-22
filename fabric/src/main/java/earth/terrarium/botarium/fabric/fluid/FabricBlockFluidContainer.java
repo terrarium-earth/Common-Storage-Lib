@@ -11,7 +11,7 @@ import net.fabricmc.fabric.api.transfer.v1.transaction.base.SnapshotParticipant;
 import java.util.Iterator;
 
 @SuppressWarnings("UnstableApiUsage")
-public class FabricBlockFluidContainer extends SnapshotParticipant<FluidSnapshot> implements Storage<FluidVariant> {
+public class FabricBlockFluidContainer extends SnapshotParticipant<FluidSnapshot> implements Storage<FluidVariant>, ManualSyncing {
     private final UpdatingFluidContainer container;
 
     public FabricBlockFluidContainer(UpdatingFluidContainer container) {
@@ -32,7 +32,7 @@ public class FabricBlockFluidContainer extends SnapshotParticipant<FluidSnapshot
 
     @Override
     public Iterator<StorageView<FluidVariant>> iterator() {
-        return container.getFluids().stream().map(holder -> new WrappedFluidHolder(holder, container::extractFromSlot)).map(holder -> (StorageView<FluidVariant>) holder).iterator();
+        return container.getFluids().stream().map(holder -> new WrappedFluidHolder(this, holder, container::extractFromSlot)).map(holder -> (StorageView<FluidVariant>) holder).iterator();
     }
 
     @Override
@@ -47,6 +47,11 @@ public class FabricBlockFluidContainer extends SnapshotParticipant<FluidSnapshot
 
     @Override
     protected void onFinalCommit() {
+        container.update();
+    }
+
+    @Override
+    public void finalChange() {
         container.update();
     }
 }

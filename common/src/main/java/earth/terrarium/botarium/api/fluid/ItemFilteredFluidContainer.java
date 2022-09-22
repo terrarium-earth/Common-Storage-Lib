@@ -6,6 +6,7 @@ import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.material.Fluids;
 
 import java.util.List;
 import java.util.Objects;
@@ -74,6 +75,7 @@ public class ItemFilteredFluidContainer implements ItemFluidContainer {
             long extracted = Mth.clamp(toInsert.getFluidAmount(), 0, fluidHolder.getFluidAmount());
             snapshot.run();
             fluidHolder.setAmount(fluidHolder.getFluidAmount() - extracted);
+            if(fluidHolder.getFluidAmount() == 0) fluidHolder.setFluid(Fluids.EMPTY);
             return extracted;
         }
         return 0;
@@ -121,7 +123,7 @@ public class ItemFilteredFluidContainer implements ItemFluidContainer {
         ListTag fluids = tag.getList("StoredFluids", Tag.TAG_COMPOUND);
         for (int i = 0; i < fluids.size(); i++) {
             CompoundTag fluid = fluids.getCompound(i);
-            this.storedFluid.set(i, FluidHooks.fluidFromCompound(fluid.getCompound("StoredFluid")));
+            this.storedFluid.set(i, FluidHooks.fluidFromCompound(fluid));
         }
     }
 

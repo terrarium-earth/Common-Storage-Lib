@@ -9,18 +9,21 @@ import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.fabricmc.fabric.api.transfer.v1.storage.StorageView;
 import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
 import net.fabricmc.fabric.api.transfer.v1.transaction.base.SnapshotParticipant;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.Iterator;
 
 @SuppressWarnings("UnstableApiUsage")
-public class FabricItemFluidContainer extends SnapshotParticipant<FluidSnapshot> implements Storage<FluidVariant> {
+public class FabricItemFluidContainer extends SnapshotParticipant<FluidSnapshot> implements Storage<FluidVariant>, ManualSyncing {
     private final FluidContainer container;
     private final ContainerItemContext ctx;
 
     public FabricItemFluidContainer(ContainerItemContext ctx, FluidContainer container) {
         this.container = container;
         this.ctx = ctx;
+        CompoundTag nbt = ctx.getItemVariant().getNbt();
+        if(nbt != null) container.deserialize(nbt);
     }
 
     @Override
@@ -39,7 +42,7 @@ public class FabricItemFluidContainer extends SnapshotParticipant<FluidSnapshot>
 
     @Override
     public Iterator<StorageView<FluidVariant>> iterator() {
-        return container.getFluids().stream().map(holder -> new WrappedFluidHolder(holder, container::extractFromSlot)).map(holder -> (StorageView<FluidVariant>) holder).iterator();
+        return container.getFluids().stream().map(holder -> new WrappedFluidHolder(this, holder, container::extractFromSlot)).map(holder -> (StorageView<FluidVariant>) holder).iterator();
     }
 
     @Override
@@ -52,6 +55,7 @@ public class FabricItemFluidContainer extends SnapshotParticipant<FluidSnapshot>
         container.readSnapshot(snapshot);
     }
 
+    @Override
     public void setChanged(TransactionContext transaction) {
         ItemStack stack = ctx.getItemVariant().toStack();
         this.updateSnapshots(transaction);

@@ -3,19 +3,23 @@ package earth.terrarium.botarium.fabric.fluid;
 import earth.terrarium.botarium.api.fluid.FluidHolder;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.StorageView;
+import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
 import net.fabricmc.fabric.api.transfer.v1.transaction.base.SnapshotParticipant;
 import net.minecraft.util.Mth;
+import org.jetbrains.annotations.Nullable;
 
 @SuppressWarnings("UnstableApiUsage")
 public class WrappedFluidHolder extends SnapshotParticipant<FluidHolder> implements StorageView<FluidVariant> {
 
     private final FluidHolder fluidHolder;
     private final FluidExtraction extraction;
+    private final @Nullable ManualSyncing container;
 
-    public WrappedFluidHolder(FluidHolder fluidHolder, FluidExtraction extraction) {
+    public WrappedFluidHolder(@Nullable ManualSyncing container, FluidHolder fluidHolder, FluidExtraction extraction) {
         this.fluidHolder = fluidHolder;
         this.extraction = extraction;
+        this.container = container;
     }
 
     public FluidVariant fluidVariant() {
@@ -24,7 +28,9 @@ public class WrappedFluidHolder extends SnapshotParticipant<FluidHolder> impleme
 
     @Override
     public long extract(FluidVariant resource, long maxAmount, TransactionContext transaction) {
-        return extraction.apply(this.fluidHolder, FabricFluidHolder.of(resource, maxAmount), () -> this.updateSnapshots(transaction));
+        long apply = extraction.apply(this.fluidHolder, FabricFluidHolder.of(resource, maxAmount), () -> this.updateSnapshots(transaction));
+        container.setChanged(transaction);
+        return apply;
     }
 
     @Override
@@ -57,6 +63,13 @@ public class WrappedFluidHolder extends SnapshotParticipant<FluidHolder> impleme
         fluidHolder.setFluid(snapshot.getFluid());
         fluidHolder.setAmount(snapshot.getFluidAmount());
         fluidHolder.setCompound(snapshot.getCompound());
+    }
+
+    @Override
+    protected void onFinalCommit() {
+        if(container != null) {
+            container.finalChange();
+        }
     }
 
     @FunctionalInterface
