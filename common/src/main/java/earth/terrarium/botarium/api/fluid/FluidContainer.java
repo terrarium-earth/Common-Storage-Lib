@@ -14,7 +14,7 @@ public interface FluidContainer extends Serializable {
     int getSize();
     boolean isEmpty();
     FluidContainer copy();
-    long maxStackSize();
+    long getTankCapacity(int tankSlot);
     void fromContainer(FluidContainer container);
 
     long extractFromSlot(FluidHolder fluidHolder, FluidHolder toInsert, Runnable snapshot);

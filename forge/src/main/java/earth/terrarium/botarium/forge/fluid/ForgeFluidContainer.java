@@ -14,12 +14,7 @@ import net.minecraftforge.fluids.capability.IFluidHandler;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class ForgeFluidContainer implements IFluidHandler, ICapabilityProvider, AutoSerializable {
-    FluidContainer container;
-
-    public ForgeFluidContainer(FluidContainer container) {
-        this.container = container;
-    }
+public record ForgeFluidContainer(FluidContainer container) implements IFluidHandler, ICapabilityProvider, AutoSerializable {
 
     @Override
     public int getTanks() {
@@ -33,7 +28,7 @@ public class ForgeFluidContainer implements IFluidHandler, ICapabilityProvider, 
 
     @Override
     public int getTankCapacity(int i) {
-        return (int) this.container.maxStackSize();
+        return (int) this.container.getTankCapacity(i);
     }
 
     @Override
@@ -54,7 +49,7 @@ public class ForgeFluidContainer implements IFluidHandler, ICapabilityProvider, 
     @Override
     public @NotNull FluidStack drain(int i, FluidAction fluidAction) {
         FluidHolder fluid = this.container.getFluids().get(0).copyHolder();
-        if(fluid.isEmpty()) return FluidStack.EMPTY;
+        if (fluid.isEmpty()) return FluidStack.EMPTY;
         fluid.setAmount(i);
         return new ForgeFluidHolder(this.container.extractFluid(fluid, fluidAction.simulate()));
     }

@@ -4,13 +4,7 @@ import earth.terrarium.botarium.api.fluid.FluidHolder;
 import earth.terrarium.botarium.api.fluid.PlatformFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 
-public class ForgeFluidHandler implements PlatformFluidHandler {
-
-    private final IFluidHandler handler;
-
-    public ForgeFluidHandler(IFluidHandler handler) {
-        this.handler = handler;
-    }
+public record ForgeFluidHandler(IFluidHandler handler) implements PlatformFluidHandler {
 
     @Override
     public long insertFluid(FluidHolder fluid, boolean simulate) {

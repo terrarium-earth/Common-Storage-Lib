@@ -105,7 +105,7 @@ public class ItemFilteredFluidContainer implements ItemFluidContainer {
     }
 
     @Override
-    public long maxStackSize() {
+    public long getTankCapacity(int slot) {
         return this.maxAmount;
     }
 
@@ -121,7 +121,7 @@ public class ItemFilteredFluidContainer implements ItemFluidContainer {
         ListTag fluids = tag.getList("StoredFluids", Tag.TAG_COMPOUND);
         for (int i = 0; i < fluids.size(); i++) {
             CompoundTag fluid = fluids.getCompound(i);
-            this.storedFluid.set(i, FluidHooks.fluidFromCompound(fluid));
+            this.storedFluid.set(i, FluidHooks.fluidFromCompound(fluid.getCompound("StoredFluid")));
         }
     }
 
@@ -129,9 +129,7 @@ public class ItemFilteredFluidContainer implements ItemFluidContainer {
     public CompoundTag serialize(CompoundTag tag) {
         ListTag tags = new ListTag();
         for (FluidHolder fluidHolder : this.storedFluid) {
-            CompoundTag fluid = new CompoundTag();
-            fluid.put("StoredFluid", fluidHolder.serialize());
-            tags.add(fluid);
+            tags.add(fluidHolder.serialize());
         }
         tag.put("StoredFluids", tags);
         return tag;

@@ -112,8 +112,8 @@ public class SimpleUpdatingFluidContainer implements UpdatingFluidContainer {
     }
 
     @Override
-    public long maxStackSize() {
-        return this.maxAmount.apply(0);
+    public long getTankCapacity(int slot) {
+        return this.maxAmount.apply(slot);
     }
 
     @Override
