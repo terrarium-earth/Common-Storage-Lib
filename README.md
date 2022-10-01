@@ -36,6 +36,6 @@ dependencies {
 }
 ```
 
-If you use forge gradle, figure it out. https://forge.gemwire.uk/wiki/Jar-in-jar
+If you use forge gradle, you can see how to do it here -> https://forge.gemwire.uk/wiki/Jar-in-jar
 
 This library is not on curseforge and probably won't be, so jar in jaring is your only option!
