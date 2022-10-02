@@ -15,11 +15,20 @@ import org.jetbrains.annotations.NotNull;
 
 public class RegistryHelpers {
 
+    /**
+     * @param factory The factory to create the block entity.
+     * @param blocks The blocks that the block entity can be attached to.
+     * @return The created block entity type instance for the given factory.
+     */
     @ImplementedByExtension
     public static <E extends BlockEntity> BlockEntityType<E> createBlockEntityType(BlockEntityFactory<E> factory, Block... blocks) {
         throw new AssertionError();
     }
 
+    /**
+     * @param factory The factory to create the menu.
+     * @return The created menu type instance for the given factory.
+     */
     @ImplementedByExtension
     public static <T extends AbstractContainerMenu> MenuType<T> createMenuType(MenuFactory<T> factory) {
         throw new NotImplementedException();
@@ -27,11 +36,24 @@ public class RegistryHelpers {
 
     @FunctionalInterface
     public interface BlockEntityFactory<T extends BlockEntity> {
+
+        /**
+         * @param blockPos The position of the block entity.
+         * @param blockState The state of the block the {@link BlockEntity} will be attached to.
+         * @return The created block entity.
+         */
         @NotNull T create(BlockPos blockPos, BlockState blockState);
     }
 
     @FunctionalInterface
     public interface MenuFactory<T extends AbstractContainerMenu> {
+
+        /**
+         * @param syncId The internal id for the menu.
+         * @param inventory The inventory of the player.
+         * @param byteBuf The extra packet data for the menu.
+         * @return The created menu instance.
+         */
         T create(int syncId, Inventory inventory, FriendlyByteBuf byteBuf);
     }
 }

@@ -70,6 +70,7 @@ public class ItemFilteredFluidContainer implements ItemFluidContainer {
         return FluidHooks.emptyFluid();
     }
 
+    @Override
     public long extractFromSlot(FluidHolder fluidHolder, FluidHolder toInsert, Runnable snapshot) {
         if (Objects.equals(fluidHolder.getCompound(), toInsert.getCompound()) && fluidHolder.getFluid().isSame(toInsert.getFluid())) {
             long extracted = Mth.clamp(toInsert.getFluidAmount(), 0, fluidHolder.getFluidAmount());
