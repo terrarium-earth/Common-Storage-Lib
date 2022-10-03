@@ -3,6 +3,9 @@ package earth.terrarium.botarium.api.energy;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Mth;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+
+@ParametersAreNonnullByDefault
 public class ItemEnergyContainer implements EnergyContainer {
     private final long capacity;
     private long energy;
@@ -11,70 +14,58 @@ public class ItemEnergyContainer implements EnergyContainer {
         this.capacity = maxCapacity;
     }
 
-    @Override
-    public long insertEnergy(long maxAmount, boolean simulate) {
+    @Override public long insertEnergy(long maxAmount, boolean simulate) {
         long inserted = Mth.clamp(maxAmount, 0, getMaxCapacity() - getStoredEnergy());
-        if(simulate) return inserted;
+        if (simulate) return inserted;
         this.setEnergy(this.energy + inserted);
         return inserted;
     }
 
-    @Override
-    public long extractEnergy(long maxAmount, boolean simulate) {
+    @Override public long extractEnergy(long maxAmount, boolean simulate) {
         long extracted = Mth.clamp(maxAmount, 0, getStoredEnergy());
-        if(simulate) return extracted;
+        if (simulate) return extracted;
         this.setEnergy(this.energy - extracted);
         return extracted;
     }
 
-    @Override
-    public void setEnergy(long energy) {
+    @Override public void setEnergy(long energy) {
         this.energy = energy;
     }
 
-    @Override
-    public long getStoredEnergy() {
+    @Override public long getStoredEnergy() {
         return energy;
     }
 
-    @Override
-    public long getMaxCapacity() {
+    @Override public long getMaxCapacity() {
         return capacity;
     }
 
-    @Override
-    public long maxInsert() {
+    @Override public long maxInsert() {
         return 1024;
     }
 
-    @Override
-    public long maxExtract() {
+    @Override public long maxExtract() {
         return 1024;
     }
 
-    @Override
-    public CompoundTag serialize(CompoundTag tag) {
+    @Override public CompoundTag serialize(CompoundTag tag) {
         tag.putLong("Energy", this.energy);
         return tag;
     }
 
-    @Override
-    public void deserialize(CompoundTag tag) {
+    @Override public void deserialize(CompoundTag tag) {
         this.energy = tag.getLong("Energy");
     }
 
-    @Override
-    public boolean allowsInsertion() {
+    @Override public boolean allowsInsertion() {
         return true;
     }
 
-    @Override
-    public boolean allowsExtraction() {
+    @Override public boolean allowsExtraction() {
         return true;
     }
 
-    @Override
-    public EnergySnapshot createSnapshot() {
+    @Override public EnergySnapshot createSnapshot() {
         return new SimpleEnergySnapshot(this);
     }
 }

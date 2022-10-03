@@ -2,6 +2,9 @@ package earth.terrarium.botarium.api;
 
 import net.minecraft.nbt.CompoundTag;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+
+@ParametersAreNonnullByDefault
 public interface Serializable {
 
     /**

@@ -7,7 +7,10 @@ import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
 import net.fabricmc.fabric.api.transfer.v1.transaction.base.SnapshotParticipant;
 import team.reborn.energy.api.EnergyStorage;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+
 @SuppressWarnings("UnstableApiUsage")
+@ParametersAreNonnullByDefault
 public class FabricBlockEnergyStorage extends SnapshotParticipant<EnergySnapshot> implements EnergyStorage {
     private final StatefulEnergyContainer container;
 
@@ -15,52 +18,43 @@ public class FabricBlockEnergyStorage extends SnapshotParticipant<EnergySnapshot
         this.container = container;
     }
 
-    @Override
-    public long insert(long maxAmount, TransactionContext transaction) {
+    @Override public long insert(long maxAmount, TransactionContext transaction) {
         StoragePreconditions.notNegative(maxAmount);
         this.updateSnapshots(transaction);
         return container.insertEnergy(Math.max(maxAmount, this.container.maxInsert()), false);
     }
 
-    @Override
-    public long extract(long maxAmount, TransactionContext transaction) {
+    @Override public long extract(long maxAmount, TransactionContext transaction) {
         StoragePreconditions.notNegative(maxAmount);
         this.updateSnapshots(transaction);
         return container.insertEnergy(Math.max(maxAmount, this.container.maxExtract()), false);
     }
 
-    @Override
-    public long getAmount() {
+    @Override public long getAmount() {
         return container.getStoredEnergy();
     }
 
-    @Override
-    public long getCapacity() {
+    @Override public long getCapacity() {
         return container.getMaxCapacity();
     }
 
-    @Override
-    public boolean supportsInsertion() {
+    @Override public boolean supportsInsertion() {
         return container.allowsInsertion();
     }
 
-    @Override
-    public boolean supportsExtraction() {
+    @Override public boolean supportsExtraction() {
         return container.allowsExtraction();
     }
 
-    @Override
-    protected EnergySnapshot createSnapshot() {
+    @Override protected EnergySnapshot createSnapshot() {
         return container.createSnapshot();
     }
 
-    @Override
-    protected void readSnapshot(EnergySnapshot snapshot) {
+    @Override protected void readSnapshot(EnergySnapshot snapshot) {
         container.readSnapshot(snapshot);
     }
 
-    @Override
-    protected void onFinalCommit() {
+    @Override protected void onFinalCommit() {
         this.container.update();
     }
 }

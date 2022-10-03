@@ -17,7 +17,10 @@ import net.msrandom.extensions.annotations.ClassExtension;
 import net.msrandom.extensions.annotations.ImplementsBaseElement;
 import org.jetbrains.annotations.Nullable;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+
 @ClassExtension(FluidHooks.class)
+@ParametersAreNonnullByDefault
 public class FluidManagerImpl {
     @ImplementsBaseElement
     public static FluidHolder newFluidHolder(Fluid fluid, long amount, CompoundTag tag) {

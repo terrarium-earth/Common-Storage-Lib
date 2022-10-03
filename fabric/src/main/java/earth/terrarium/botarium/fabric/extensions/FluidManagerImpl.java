@@ -8,6 +8,8 @@ import earth.terrarium.botarium.fabric.fluid.FabricFluidHolder;
 import net.fabricmc.fabric.api.transfer.v1.context.ContainerItemContext;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
+import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
@@ -19,8 +21,11 @@ import net.msrandom.extensions.annotations.ImplementsBaseElement;
 import org.apache.commons.lang3.NotImplementedException;
 import org.jetbrains.annotations.Nullable;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+
 @ClassExtension(FluidHooks.class)
 @SuppressWarnings("UnstableApiUsage")
+@ParametersAreNonnullByDefault
 public class FluidManagerImpl {
 
     @ImplementsBaseElement
@@ -46,13 +51,17 @@ public class FluidManagerImpl {
     }
 
     @ImplementsBaseElement
-    public static PlatformFluidHandler getItemFluidManager(ItemStack stack) {
-        return new FabricFluidHandler(FluidStorage.ITEM.find(stack, ContainerItemContext.withInitial(stack)));
+    @Nullable public static PlatformFluidHandler getItemFluidManager(ItemStack stack) {
+        Storage<FluidVariant> storage = FluidStorage.ITEM.find(stack, ContainerItemContext.withInitial(stack));
+        if (storage == null) return null;
+        return new FabricFluidHandler(storage);
     }
 
     @ImplementsBaseElement
-    public static PlatformFluidHandler getBlockFluidManager(BlockEntity entity, @Nullable Direction direction) {
-        return new FabricFluidHandler(FluidStorage.SIDED.find(entity.getLevel(), entity.getBlockPos(), direction));
+    @Nullable public static PlatformFluidHandler getBlockFluidManager(BlockEntity entity, @Nullable Direction direction) {
+        Storage<FluidVariant> storage = FluidStorage.SIDED.find(entity.getLevel(), entity.getBlockPos(), direction);
+        if (storage == null) return null;
+        return new FabricFluidHandler(storage);
     }
 
     @ImplementsBaseElement

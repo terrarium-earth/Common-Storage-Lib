@@ -18,11 +18,13 @@ import net.fabricmc.fabric.api.transfer.v1.item.ItemStorage;
 import net.fabricmc.fabric.impl.transfer.item.InventoryStorageImpl;
 import team.reborn.energy.api.EnergyStorage;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+
 @SuppressWarnings("UnstableApiUsage")
+@ParametersAreNonnullByDefault
 public class BotariumFabric implements ModInitializer {
 
-    @Override
-    public void onInitialize() {
+    @Override public void onInitialize() {
         Botarium.init();
         EnergyStorage.SIDED.registerFallback((world, pos, state, blockEntity, context) -> {
             if (blockEntity instanceof EnergyBlock energyCapable) {
@@ -31,31 +33,21 @@ public class BotariumFabric implements ModInitializer {
             }
             return null;
         });
-        EnergyStorage.ITEM.registerFallback((itemStack, context) -> {
-            if(itemStack.getItem() instanceof EnergyItem energyCapable) {
-                return new FabricItemEnergyStorage(context, energyCapable.getEnergyStorage(itemStack));
-            }
-            return null;
-        });
+        EnergyStorage.ITEM.registerFallback((itemStack, context) ->
+            itemStack.getItem() instanceof EnergyItem energyCapable ? new FabricItemEnergyStorage(context, energyCapable.getEnergyStorage(itemStack)) : null
+        );
         FluidStorage.SIDED.registerFallback((world, pos, state, blockEntity, context) -> {
-            if(blockEntity instanceof FluidHoldingBlock fluidHoldingBlock) {
+            if (blockEntity instanceof FluidHoldingBlock fluidHoldingBlock) {
                 UpdatingFluidContainer container = fluidHoldingBlock.getFluidContainer().getContainer(context);
                 return container == null ? null : new FabricBlockFluidContainer(container);
             }
             return null;
         });
-        FluidStorage.ITEM.registerFallback((itemStack, context) -> {
-            if(itemStack.getItem() instanceof FluidHoldingItem fluidHoldingBlock) {
-                return new FabricItemFluidContainer(context, fluidHoldingBlock.getFluidContainer(itemStack));
-            }
-            return null;
-        });
-        ItemStorage.SIDED.registerFallback((world, pos, state, blockEntity, context) -> {
-            if(blockEntity instanceof ItemContainerBlock energyContainer) {
-                return InventoryStorageImpl.of(energyContainer.getContainer(), context);
-            }
-            return null;
-        });
-
+        FluidStorage.ITEM.registerFallback((itemStack, context) ->
+            itemStack.getItem() instanceof FluidHoldingItem fluidHoldingBlock ? new FabricItemFluidContainer(context, fluidHoldingBlock.getFluidContainer(itemStack)) : null
+        );
+        ItemStorage.SIDED.registerFallback((world, pos, state, blockEntity, context) ->
+                blockEntity instanceof ItemContainerBlock energyContainer ? InventoryStorageImpl.of(energyContainer.getContainer(), context) : null
+        );
     }
 }

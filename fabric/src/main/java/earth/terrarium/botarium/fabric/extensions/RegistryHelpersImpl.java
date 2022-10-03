@@ -12,7 +12,10 @@ import net.msrandom.extensions.annotations.ClassExtension;
 import net.msrandom.extensions.annotations.ImplementsBaseElement;
 import org.spongepowered.asm.mixin.Overwrite;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+
 @ClassExtension(RegistryHelpers.class)
+@ParametersAreNonnullByDefault
 public class RegistryHelpersImpl {
 
     @ImplementsBaseElement

@@ -3,10 +3,13 @@ package earth.terrarium.botarium.api.fluid;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.material.Fluid;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+
 /**
  * An object that holds a fluid with an amount and a tag.
  * Similar to {@link net.minecraft.world.item.ItemStack}, but for fluids.
  */
+@ParametersAreNonnullByDefault
 public interface FluidHolder {
 
     /**

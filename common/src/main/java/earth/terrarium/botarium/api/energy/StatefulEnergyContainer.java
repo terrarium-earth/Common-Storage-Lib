@@ -2,6 +2,9 @@ package earth.terrarium.botarium.api.energy;
 
 import net.minecraft.core.Direction;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+
+@ParametersAreNonnullByDefault
 public interface StatefulEnergyContainer extends EnergyContainer {
 
     /**

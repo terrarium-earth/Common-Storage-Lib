@@ -1,5 +1,8 @@
 package earth.terrarium.botarium.api.energy;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+
+@ParametersAreNonnullByDefault
 public class SimpleEnergySnapshot implements EnergySnapshot {
     private final long energy;
 
@@ -7,8 +10,7 @@ public class SimpleEnergySnapshot implements EnergySnapshot {
         this.energy = container.getStoredEnergy();
     }
 
-    @Override
-    public void loadSnapshot(EnergyContainer container) {
+    @Override public void loadSnapshot(EnergyContainer container) {
         container.setEnergy(energy);
     }
 }

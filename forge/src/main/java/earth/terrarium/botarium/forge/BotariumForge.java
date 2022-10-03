@@ -19,8 +19,10 @@ import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+
 @Mod(Botarium.MOD_ID)
-@SuppressWarnings("unchecked")
+@ParametersAreNonnullByDefault
 public class BotariumForge {
     public BotariumForge() {
         Botarium.init();
@@ -30,26 +32,21 @@ public class BotariumForge {
     }
 
     public static void attachBlockCapabilities(AttachCapabilitiesEvent<BlockEntity> event) {
-        if (event.getObject() instanceof EnergyBlock energyBlock) {
-            event.addCapability(new ResourceLocation(Botarium.MOD_ID, "energy"), (ICapabilityProvider) energyBlock.getEnergyStorage());
-        }
+        if (event.getObject() instanceof EnergyBlock energyBlock)
+            event.addCapability(Botarium.id("energy"), (ICapabilityProvider) energyBlock.getEnergyStorage());
 
-        if (event.getObject() instanceof FluidHoldingBlock fluidHoldingBlock) {
-            event.addCapability(new ResourceLocation(Botarium.MOD_ID, "fluid"), new ForgeFluidContainer(fluidHoldingBlock.getFluidContainer()));
-        }
+        if (event.getObject() instanceof FluidHoldingBlock fluidHoldingBlock)
+            event.addCapability(Botarium.id("fluid"), new ForgeFluidContainer(fluidHoldingBlock.getFluidContainer()));
 
-        if (event.getObject() instanceof ItemContainerBlock itemContainerBlock) {
-            event.addCapability(new ResourceLocation(Botarium.MOD_ID, "item"), new ItemContainerWrapper(itemContainerBlock.getContainer()));
-        }
+        if (event.getObject() instanceof ItemContainerBlock itemContainerBlock)
+            event.addCapability(Botarium.id("item"), new ItemContainerWrapper(itemContainerBlock.getContainer()));
     }
 
     public static void attachItemCapabilities(AttachCapabilitiesEvent<ItemStack> event) {
         ItemStack item = event.getObject();
-        if (item.getItem() instanceof EnergyItem energyItem) {
-            event.addCapability(new ResourceLocation(Botarium.MOD_ID, "energy_item"), (ICapabilityProvider) energyItem.getEnergyStorage(item));
-        }
-        if (item.getItem() instanceof FluidHoldingItem fluidHoldingItem) {
+        if (item.getItem() instanceof EnergyItem energyItem)
+            event.addCapability(Botarium.id("energy_item"), (ICapabilityProvider) energyItem.getEnergyStorage(item));
+        if (item.getItem() instanceof FluidHoldingItem fluidHoldingItem)
             event.addCapability(ForgeItemFluidContainer.FLUID_KEY, new ForgeItemFluidContainer(fluidHoldingItem.getFluidContainer(item)));
-        }
     }
 }

@@ -9,10 +9,12 @@ import net.msrandom.extensions.annotations.ClassExtension;
 import net.msrandom.extensions.annotations.ExtensionInjectedElement;
 import net.msrandom.extensions.annotations.ImplementsBaseElement;
 
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Collection;
 import java.util.function.Supplier;
 
 @ClassExtension(RegistryHolder.class)
+@ParametersAreNonnullByDefault
 public class ForgeRegistryHelper<V> {
 
     @ExtensionInjectedElement
@@ -38,5 +40,4 @@ public class ForgeRegistryHelper<V> {
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
         this.register.register(modEventBus);
     }
-
 }

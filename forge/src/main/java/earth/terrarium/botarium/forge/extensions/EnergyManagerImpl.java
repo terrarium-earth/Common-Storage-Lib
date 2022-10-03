@@ -11,7 +11,10 @@ import net.msrandom.extensions.annotations.ClassExtension;
 import net.msrandom.extensions.annotations.ImplementedByExtension;
 import net.msrandom.extensions.annotations.ImplementsBaseElement;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+
 @ClassExtension(EnergyHooks.class)
+@ParametersAreNonnullByDefault
 public class EnergyManagerImpl {
 
     @ImplementsBaseElement

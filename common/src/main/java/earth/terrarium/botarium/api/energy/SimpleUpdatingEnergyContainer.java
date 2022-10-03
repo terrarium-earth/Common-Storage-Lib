@@ -4,6 +4,9 @@ import earth.terrarium.botarium.api.Updatable;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Mth;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+
+@ParametersAreNonnullByDefault
 public class SimpleUpdatingEnergyContainer implements StatefulEnergyContainer {
     protected final long energyCapacity;
     protected final Updatable updatable;
@@ -14,18 +17,16 @@ public class SimpleUpdatingEnergyContainer implements StatefulEnergyContainer {
         this.energyCapacity = energyCapacity;
     }
 
-    @Override
-    public long insertEnergy(long maxAmount, boolean simulate) {
+    @Override public long insertEnergy(long maxAmount, boolean simulate) {
         long inserted = Mth.clamp(maxAmount, 0, getMaxCapacity() - getStoredEnergy());
-        if(simulate) return inserted;
+        if (simulate) return inserted;
         this.energy += inserted;
         return inserted;
     }
 
-    @Override
-    public long extractEnergy(long maxAmount, boolean simulate) {
+    @Override public long extractEnergy(long maxAmount, boolean simulate) {
         long extracted = Mth.clamp(maxAmount, 0, getStoredEnergy());
-        if(simulate) return extracted;
+        if (simulate) return extracted;
         this.energy -= extracted;
         return extracted;
     }
@@ -38,59 +39,48 @@ public class SimpleUpdatingEnergyContainer implements StatefulEnergyContainer {
         return extractEnergy(maxAmount, simulate);
     }
 
-    @Override
-    public void setEnergy(long energy) {
+    @Override public void setEnergy(long energy) {
         this.energy = energy;
     }
 
-    @Override
-    public long getStoredEnergy() {
+    @Override public long getStoredEnergy() {
         return energy;
     }
 
-    @Override
-    public long getMaxCapacity() {
+    @Override public long getMaxCapacity() {
         return energyCapacity;
     }
 
-    @Override
-    public long maxInsert() {
+    @Override public long maxInsert() {
         return 1024;
     }
 
-    @Override
-    public long maxExtract() {
+    @Override public long maxExtract() {
         return 1024;
     }
 
-    @Override
-    public CompoundTag serialize(CompoundTag tag) {
+    @Override public CompoundTag serialize(CompoundTag tag) {
         tag.putLong("Energy", this.getStoredEnergy());
         return tag;
     }
 
-    @Override
-    public void deserialize(CompoundTag tag) {
+    @Override public void deserialize(CompoundTag tag) {
         setEnergy(tag.getLong("Energy"));
     }
 
-    @Override
-    public boolean allowsInsertion() {
+    @Override public boolean allowsInsertion() {
         return true;
     }
 
-    @Override
-    public boolean allowsExtraction() {
+    @Override public boolean allowsExtraction() {
         return true;
     }
 
-    @Override
-    public void update() {
+    @Override public void update() {
         updatable.update();
     }
 
-    @Override
-    public EnergySnapshot createSnapshot() {
+    @Override public EnergySnapshot createSnapshot() {
         return new SimpleEnergySnapshot(this);
     }
 }

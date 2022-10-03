@@ -3,8 +3,11 @@ package earth.terrarium.botarium.api.fluid;
 import earth.terrarium.botarium.api.Serializable;
 import net.minecraft.core.Direction;
 
+import org.jetbrains.annotations.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
 
+@ParametersAreNonnullByDefault
 public interface FluidContainer extends Serializable {
 
     /**
@@ -85,7 +88,7 @@ public interface FluidContainer extends Serializable {
      * @param direction The direction to check.
      * @return A {@link FluidContainer} from the given {@link Direction}.
      */
-    default FluidContainer getContainer(Direction direction) {
+    default FluidContainer getContainer(@Nullable Direction direction) {
         return this;
     }
 

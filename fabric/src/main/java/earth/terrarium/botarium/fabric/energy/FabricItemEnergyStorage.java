@@ -9,7 +9,10 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
 import team.reborn.energy.api.EnergyStorage;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+
 @SuppressWarnings("UnstableApiUsage")
+@ParametersAreNonnullByDefault
 public class FabricItemEnergyStorage extends SnapshotParticipant<CompoundTag> implements EnergyStorage {
     private final ContainerItemContext ctx;
     private final EnergyContainer container;
@@ -17,31 +20,27 @@ public class FabricItemEnergyStorage extends SnapshotParticipant<CompoundTag> im
     public FabricItemEnergyStorage(ContainerItemContext ctx, EnergyContainer container) {
         this.ctx = ctx;
         CompoundTag nbt = ctx.getItemVariant().getNbt();
-        if(nbt != null) container.deserialize(nbt);
+        if (nbt != null) container.deserialize(nbt);
         this.container = container;
     }
 
-    @Override
-    public long insert(long maxAmount, TransactionContext transaction) {
+    @Override public long insert(long maxAmount, TransactionContext transaction) {
         long inserted = container.insertEnergy(maxAmount, false);
         setChanged(transaction);
         return inserted;
     }
 
-    @Override
-    public long extract(long maxAmount, TransactionContext transaction) {
+    @Override public long extract(long maxAmount, TransactionContext transaction) {
         long l = container.extractEnergy(maxAmount, false);
         setChanged(transaction);
         return l;
     }
 
-    @Override
-    public long getAmount() {
+    @Override public long getAmount() {
         return container.getStoredEnergy();
     }
 
-    @Override
-    public long getCapacity() {
+    @Override public long getCapacity() {
         return container.getMaxCapacity();
     }
 
@@ -52,13 +51,11 @@ public class FabricItemEnergyStorage extends SnapshotParticipant<CompoundTag> im
         ctx.exchange(ItemVariant.of(stack), ctx.getAmount(), transaction);
     }
 
-    @Override
-    protected CompoundTag createSnapshot() {
+    @Override protected CompoundTag createSnapshot() {
         return this.container.serialize(new CompoundTag());
     }
 
-    @Override
-    protected void readSnapshot(CompoundTag snapshot) {
+    @Override protected void readSnapshot(CompoundTag snapshot) {
         this.container.deserialize(snapshot);
     }
 }

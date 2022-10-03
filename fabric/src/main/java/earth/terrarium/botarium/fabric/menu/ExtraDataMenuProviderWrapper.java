@@ -10,6 +10,9 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import org.jetbrains.annotations.Nullable;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+
+@ParametersAreNonnullByDefault
 public class ExtraDataMenuProviderWrapper implements ExtendedScreenHandlerFactory {
     private final ExtraDataMenuProvider provider;
 
@@ -17,19 +20,16 @@ public class ExtraDataMenuProviderWrapper implements ExtendedScreenHandlerFactor
         this.provider = provider;
     }
 
-    @Override
-    public void writeScreenOpeningData(ServerPlayer player, FriendlyByteBuf buf) {
+    @Override public void writeScreenOpeningData(ServerPlayer player, FriendlyByteBuf buf) {
         provider.writeExtraData(player, buf);
     }
 
-    @Override
-    public Component getDisplayName() {
+    @Override public Component getDisplayName() {
         return provider.getDisplayName();
     }
 
     @Nullable
-    @Override
-    public AbstractContainerMenu createMenu(int windowId, Inventory inventory, Player player) {
+    @Override public AbstractContainerMenu createMenu(int windowId, Inventory inventory, Player player) {
         return provider.createMenu(windowId, inventory, player);
     }
 }

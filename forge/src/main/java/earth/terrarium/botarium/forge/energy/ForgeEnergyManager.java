@@ -7,7 +7,10 @@ import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.energy.IEnergyStorage;
 import org.jetbrains.annotations.ApiStatus;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+
 @ApiStatus.Internal
+@ParametersAreNonnullByDefault
 public class ForgeEnergyManager implements PlatformEnergyManager {
     private final IEnergyStorage energy;
 
@@ -21,23 +24,19 @@ public class ForgeEnergyManager implements PlatformEnergyManager {
         this.energy = energyItem.getCapability(ForgeCapabilities.ENERGY, direction).orElseThrow(IllegalArgumentException::new);
     }
 
-    @Override
-    public long getStoredEnergy() {
+    @Override public long getStoredEnergy() {
         return energy.getEnergyStored();
     }
 
-    @Override
-    public long getCapacity() {
+    @Override public long getCapacity() {
         return energy.getMaxEnergyStored();
     }
 
-    @Override
-    public long extract(long amount, boolean simulate) {
+    @Override public long extract(long amount, boolean simulate) {
         return energy.extractEnergy((int) amount, simulate);
     }
 
-    @Override
-    public long insert(long amount, boolean simulate) {
+    @Override public long insert(long amount, boolean simulate) {
         return energy.receiveEnergy((int) amount, simulate);
     }
 }

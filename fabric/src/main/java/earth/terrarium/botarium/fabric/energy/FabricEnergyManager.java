@@ -9,8 +9,11 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import org.jetbrains.annotations.ApiStatus;
 import team.reborn.energy.api.EnergyStorage;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+
 @ApiStatus.Internal
 @SuppressWarnings("UnstableApiUsage")
+@ParametersAreNonnullByDefault
 public class FabricEnergyManager implements PlatformEnergyManager {
     private final EnergyStorage energy;
 
@@ -22,31 +25,27 @@ public class FabricEnergyManager implements PlatformEnergyManager {
         this.energy = EnergyStorage.SIDED.find(entity.getLevel(), entity.getBlockPos(), direction);
     }
 
-    @Override
-    public long getStoredEnergy() {
+    @Override public long getStoredEnergy() {
         return energy.getAmount();
     }
 
-    @Override
-    public long getCapacity() {
+    @Override public long getCapacity() {
         return energy.getCapacity();
     }
 
-    @Override
-    public long extract(long amount, boolean simulate) {
+    @Override public long extract(long amount, boolean simulate) {
         try (Transaction txn = Transaction.openOuter()) {
             long extract = energy.extract(amount, txn);
-            if(simulate) txn.abort();
+            if (simulate) txn.abort();
             else txn.commit();
             return extract;
         }
     }
 
-    @Override
-    public long insert(long amount, boolean simulate) {
+    @Override public long insert(long amount, boolean simulate) {
         try (Transaction txn = Transaction.openOuter()) {
             long insert = energy.insert(amount, txn);
-            if(simulate) txn.abort();
+            if (simulate) txn.abort();
             else txn.commit();
             return insert;
         }

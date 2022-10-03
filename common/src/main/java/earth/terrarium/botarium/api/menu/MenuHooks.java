@@ -4,6 +4,10 @@ import net.minecraft.server.level.ServerPlayer;
 import net.msrandom.extensions.annotations.ImplementedByExtension;
 import org.apache.commons.lang3.NotImplementedException;
 
+import org.jetbrains.annotations.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
+
+@ParametersAreNonnullByDefault
 public class MenuHooks {
 
     /**
@@ -15,7 +19,7 @@ public class MenuHooks {
      * @param provider The provider to create the menu from.
      */
     @ImplementedByExtension
-    public static void openMenu(ServerPlayer player, ExtraDataMenuProvider provider) {
-        throw new NotImplementedException();
+    public static void openMenu(ServerPlayer player, @Nullable ExtraDataMenuProvider provider) {
+        player.openMenu(provider);
     }
 }

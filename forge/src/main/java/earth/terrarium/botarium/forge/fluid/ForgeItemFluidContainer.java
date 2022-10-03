@@ -18,11 +18,13 @@ import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public record ForgeItemFluidContainer(ItemFluidContainer container) implements IFluidHandlerItem, ICapabilityProvider, AutoSerializable {
-    public static final ResourceLocation FLUID_KEY = new ResourceLocation(Botarium.MOD_ID, "fluid_item");
+import javax.annotation.ParametersAreNonnullByDefault;
 
-    @Override
-    public @NotNull ItemStack getContainer() {
+@ParametersAreNonnullByDefault
+public record ForgeItemFluidContainer(ItemFluidContainer container) implements IFluidHandlerItem, ICapabilityProvider, AutoSerializable {
+    public static final ResourceLocation FLUID_KEY = Botarium.id("fluid_item");
+
+    @Override public @NotNull ItemStack getContainer() {
         return container.getContainerItem();
     }
 
@@ -31,46 +33,38 @@ public record ForgeItemFluidContainer(ItemFluidContainer container) implements I
         return capability == ForgeCapabilities.FLUID_HANDLER_ITEM ? LazyOptional.of(() -> this).cast() : LazyOptional.empty();
     }
 
-    @Override
-    public int getTanks() {
+    @Override public int getTanks() {
         return container.getSize();
     }
 
-    @Override
-    public @NotNull FluidStack getFluidInTank(int i) {
+    @Override public @NotNull FluidStack getFluidInTank(int i) {
         return new ForgeFluidHolder(container.getFluids().get(i));
     }
 
-    @Override
-    public int getTankCapacity(int i) {
+    @Override public int getTankCapacity(int i) {
         return (int) container.getTankCapacity(i);
     }
 
-    @Override
-    public boolean isFluidValid(int i, @NotNull FluidStack fluidStack) {
+    @Override public boolean isFluidValid(int i, @NotNull FluidStack fluidStack) {
         return getFluidInTank(i).isFluidEqual(fluidStack);
     }
 
-    @Override
-    public int fill(FluidStack fluidStack, FluidAction fluidAction) {
+    @Override public int fill(FluidStack fluidStack, FluidAction fluidAction) {
         return (int) this.container.insertFluid(new ForgeFluidHolder(fluidStack), fluidAction.simulate());
     }
 
-    @Override
-    public @NotNull FluidStack drain(FluidStack fluidStack, FluidAction fluidAction) {
+    @Override public @NotNull FluidStack drain(FluidStack fluidStack, FluidAction fluidAction) {
         return new ForgeFluidHolder(this.container.extractFluid(new ForgeFluidHolder(fluidStack), fluidAction.simulate()));
     }
 
-    @Override
-    public @NotNull FluidStack drain(int i, FluidAction fluidAction) {
+    @Override public @NotNull FluidStack drain(int i, FluidAction fluidAction) {
         FluidHolder fluid = this.container.getFluids().get(0).copyHolder();
         if (fluid.isEmpty()) return FluidStack.EMPTY;
         fluid.setAmount(i);
         return new ForgeFluidHolder(this.container.extractFluid(fluid, fluidAction.simulate()));
     }
 
-    @Override
-    public Serializable getSerializable() {
+    @Override public Serializable getSerializable() {
         return container;
     }
 }

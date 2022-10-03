@@ -4,9 +4,12 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.MenuProvider;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+
 /**
  * A menu provider that can be used to send extra data to the client.
  */
+@ParametersAreNonnullByDefault
 public interface ExtraDataMenuProvider extends MenuProvider {
 
     /**

@@ -19,8 +19,8 @@ dependencies {
 
     compileOnly(project(path: ":common")) { transitive false }
     testCompileOnly(project(path: ":common", configuration: "testApiElements")) { transitive false }
-    modRuntimeOnly "mekanism:Mekanism:${rootProject.mekanism_version}"// core
-    modRuntimeOnly "mekanism:Mekanism:${rootProject.mekanism_version}:generators"// Mekanism: Generator
+    modRuntimeOnly "mekanism:Mekanism:${rootProject.mekanism_version}"  // Core
+    modRuntimeOnly "mekanism:Mekanism:${rootProject.mekanism_version}:generators"   // Mekanism: Generator
 }
 
 processResources {
@@ -67,10 +67,10 @@ publishing {
             artifact(sourcesJar) {
                 builtBy remapSourcesJar
             }
-            artifactId = rootProject.archives_base_name + "-" + project.name + "-" + project.minecraft_version
+            artifactId = "$rootProject.archives_base_name-$project.name-$project.minecraft_version"
             pom {
                 name = 'Botarium'
-                description = 'Tiny lil library mod for cross platform energy and registries'
+                description = 'Tiny lil library mod for cross platform stuff!'
                 url = 'https://github.com/terrarium-earth/Botarium'
 
                 scm {

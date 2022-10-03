@@ -2,6 +2,9 @@ package earth.terrarium.botarium.api.fluid;
 
 import net.minecraft.world.item.ItemStack;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+
+@ParametersAreNonnullByDefault
 public interface FluidHoldingItem {
 
     /**

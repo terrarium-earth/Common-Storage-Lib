@@ -8,7 +8,10 @@ import net.msrandom.extensions.annotations.ClassExtension;
 import net.msrandom.extensions.annotations.ImplementsBaseElement;
 import org.apache.commons.lang3.NotImplementedException;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+
 @ClassExtension(MenuHooks.class)
+@ParametersAreNonnullByDefault
 public class MenuHooksExtensions {
 
     @ImplementsBaseElement

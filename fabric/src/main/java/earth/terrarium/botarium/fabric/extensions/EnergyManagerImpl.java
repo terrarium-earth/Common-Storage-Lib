@@ -12,7 +12,10 @@ import net.msrandom.extensions.annotations.ImplementsBaseElement;
 import team.reborn.energy.api.EnergyStorage;
 import team.reborn.energy.api.EnergyStorageUtil;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+
 @ClassExtension(EnergyHooks.class)
+@ParametersAreNonnullByDefault
 public class EnergyManagerImpl {
 
     @ImplementsBaseElement

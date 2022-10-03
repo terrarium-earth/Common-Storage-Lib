@@ -1,7 +1,9 @@
 package earth.terrarium.botarium.api.fluid;
 
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
 
+@ParametersAreNonnullByDefault
 public class SimpleFluidSnapshot implements FluidSnapshot {
     private final List<FluidHolder> fluids;
 
@@ -9,10 +11,7 @@ public class SimpleFluidSnapshot implements FluidSnapshot {
         this.fluids = fluidContainer.getFluids();
     }
 
-    @Override
-    public void loadSnapshot(FluidContainer container) {
-        for (int i = 0; i < Math.min(container.getSize(), fluids.size()); i++) {
-            container.getFluids().set(i, fluids.get(i).copyHolder());
-        }
+    @Override public void loadSnapshot(FluidContainer container) {
+        for (int i = 0; i < Math.min(container.getSize(), fluids.size()); i++) container.getFluids().set(i, fluids.get(i).copyHolder());
     }
 }

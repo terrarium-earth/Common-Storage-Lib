@@ -13,20 +13,23 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.Nullable;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+
+@ParametersAreNonnullByDefault
 public class ExampleBlock extends BaseEntityBlock {
     public ExampleBlock(Properties properties) {
         super(properties);
     }
 
     @Nullable
-    @Override
-    public BlockEntity newBlockEntity(BlockPos blockPos, BlockState blockState) {
+    @Override public BlockEntity newBlockEntity(BlockPos blockPos, BlockState blockState) {
         return new ExampleBlockEntity(blockPos, blockState);
     }
 
-    @Override
-    public InteractionResult use(BlockState blockState, Level level, BlockPos blockPos, Player player, InteractionHand interactionHand, BlockHitResult blockHitResult) {
-        var blockEnergyManager = EnergyHooks.getBlockEnergyManager(level.getBlockEntity(blockPos), blockHitResult.getDirection());
+    @Override public InteractionResult use(BlockState blockState, Level level, BlockPos blockPos, Player player, InteractionHand interactionHand, BlockHitResult blockHitResult) {
+        BlockEntity blockEntity = level.getBlockEntity(blockPos);
+        if (blockEntity == null) return InteractionResult.PASS;
+        var blockEnergyManager = EnergyHooks.getBlockEnergyManager(blockEntity, blockHitResult.getDirection());
         player.sendSystemMessage(Component.literal(String.valueOf(blockEnergyManager.getStoredEnergy())));
         return InteractionResult.SUCCESS;
     }

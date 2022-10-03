@@ -8,12 +8,14 @@ import net.msrandom.extensions.annotations.ClassExtension;
 import net.msrandom.extensions.annotations.ExtensionInjectedElement;
 import net.msrandom.extensions.annotations.ImplementsBaseElement;
 
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.function.Supplier;
 
 @ClassExtension(RegistryHolder.class)
+@ParametersAreNonnullByDefault
 public class FabricRegistryHelper<V> {
     @ExtensionInjectedElement
     private final Registry<V> registry;
@@ -44,6 +46,6 @@ public class FabricRegistryHelper<V> {
 
     @ImplementsBaseElement
     public void initialize() {
-        //Its empty because i love. also because fabric registers when register is called. and also because i love <3
+        // It's empty because I love. Also, because Fabric registers when register is called...and also because I love. <3
     }
 }

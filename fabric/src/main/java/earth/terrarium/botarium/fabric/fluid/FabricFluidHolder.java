@@ -12,22 +12,26 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
 
+import org.jetbrains.annotations.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
+
 @SuppressWarnings("UnstableApiUsage")
+@ParametersAreNonnullByDefault
 public class FabricFluidHolder extends SnapshotParticipant<FabricFluidHolder> implements FluidHolder, StorageView<FluidVariant> {
-    public static FabricFluidHolder EMPTY = FabricFluidHolder.of(Fluids.EMPTY, null, 0);
+    public static final FabricFluidHolder EMPTY = FabricFluidHolder.of(Fluids.EMPTY, null, 0);
     private FluidVariant fluidVariant;
     private long amount;
 
-    private FabricFluidHolder(FluidVariant variant, long amount) {
+    private FabricFluidHolder(@Nullable FluidVariant variant, long amount) {
         this.fluidVariant = variant;
         this.amount = amount;
     }
 
-    public static FabricFluidHolder of(FluidVariant variant, long amount) {
+    public static FabricFluidHolder of(@Nullable FluidVariant variant, long amount) {
         return new FabricFluidHolder(variant, amount);
     }
 
-    public static FabricFluidHolder of(Fluid variant, CompoundTag compoundTag, long amount) {
+    public static FabricFluidHolder of(Fluid variant, @Nullable CompoundTag compoundTag, long amount) {
         return new FabricFluidHolder(FluidVariant.of(variant, compoundTag), amount);
     }
 
@@ -39,18 +43,15 @@ public class FabricFluidHolder extends SnapshotParticipant<FabricFluidHolder> im
         return FluidVariant.of(this.getFluid(), this.getCompound());
     }
 
-    @Override
-    public Fluid getFluid() {
+    @Override public Fluid getFluid() {
         return fluidVariant.getFluid();
     }
 
-    @Override
-    public void setFluid(Fluid fluid) {
+    @Override public void setFluid(Fluid fluid) {
         fluidVariant = FluidVariant.of(fluid);
     }
 
-    @Override
-    public long extract(FluidVariant resource, long maxAmount, TransactionContext transaction) {
+    @Override public long extract(FluidVariant resource, long maxAmount, TransactionContext transaction) {
         if (this.fluidVariant.nbtMatches(resource.getNbt()) && this.fluidVariant.isOf(resource.getFluid())) {
             long extracted = Mth.clamp(maxAmount, 0, this.getFluidAmount());
             this.updateSnapshots(transaction);
@@ -60,89 +61,70 @@ public class FabricFluidHolder extends SnapshotParticipant<FabricFluidHolder> im
         return 0;
     }
 
-    @Override
-    public boolean isResourceBlank() {
+    @Override public boolean isResourceBlank() {
         return fluidVariant.isBlank();
     }
 
-    @Override
-    public FluidVariant getResource() {
+    @Override public FluidVariant getResource() {
         return this.toVariant();
     }
 
-    @Override
-    public long getAmount() {
+    @Override public long getAmount() {
         return getFluidAmount();
     }
 
-    @Override
-    public long getFluidAmount() {
+    @Override public long getFluidAmount() {
         return amount;
     }
 
-    @Override
-    public long getCapacity() {
+    @Override public long getCapacity() {
         return Integer.MAX_VALUE;
     }
 
-    @Override
-    public void setAmount(long amount) {
+    @Override public void setAmount(long amount) {
         this.amount = amount;
     }
 
-    @Override
-    public CompoundTag getCompound() {
+    @Override public CompoundTag getCompound() {
         return fluidVariant.getNbt();
     }
 
-    @Override
-    public void setCompound(CompoundTag tag) {
+    @Override public void setCompound(CompoundTag tag) {
         this.fluidVariant = FluidVariant.of(fluidVariant.getFluid(), tag);
     }
 
-    @Override
-    public boolean isEmpty() {
+    @Override public boolean isEmpty() {
         return this.fluidVariant.isBlank() || amount == 0;
     }
 
-    @Override
-    public boolean matches(FluidHolder fluidHolder) {
+    @Override public boolean matches(FluidHolder fluidHolder) {
         return this.fluidVariant.isOf(fluidHolder.getFluid()) && this.fluidVariant.nbtMatches(fluidHolder.getCompound());
     }
 
-    @Override
-    public FabricFluidHolder copyHolder() {
+    @Override public FabricFluidHolder copyHolder() {
         return FabricFluidHolder.of(getFluid(), getCompound() == null ? null : getCompound().copy(), getFluidAmount());
     }
 
-    @Override
-    public CompoundTag serialize() {
+    @Override public CompoundTag serialize() {
         CompoundTag compoundTag = new CompoundTag();
         compoundTag.putString("Fluid", Registry.FLUID.getKey(getFluid()).toString());
         compoundTag.putLong("Amount", getFluidAmount());
-        if(this.getCompound() != null) {
-            compoundTag.put("Nbt", getCompound());
-        }
+        if (this.getCompound() != null) compoundTag.put("Nbt", getCompound());
         return compoundTag;
     }
 
-    @Override
-    public void deserialize(CompoundTag compound) {
+    @Override public void deserialize(CompoundTag compound) {
         this.amount = compound.getLong("Amount");
         CompoundTag tag = null;
-        if(compound.contains("Nbt")) {
-            tag = compound.getCompound("Nbt");
-        }
+        if (compound.contains("Nbt")) tag = compound.getCompound("Nbt");
         this.fluidVariant = FluidVariant.of(Registry.FLUID.get(new ResourceLocation(compound.getString("Fluid"))), tag);
     }
 
-    @Override
-    protected FabricFluidHolder createSnapshot() {
+    @Override protected FabricFluidHolder createSnapshot() {
         return this.copyHolder();
     }
 
-    @Override
-    protected void readSnapshot(FabricFluidHolder snapshot) {
+    @Override protected void readSnapshot(FabricFluidHolder snapshot) {
         this.fluidVariant = FluidVariant.of(snapshot.getFluid(), snapshot.getCompound());
         this.setAmount(snapshot.getFluidAmount());
     }

@@ -1,6 +1,6 @@
 dependencies {
-    // We depend on fabric loader here to use the fabric @Environment annotations and get the mixin dependencies
-    // Do NOT use other classes from fabric loader
+    // We depend on Fabric loader here to use the Fabric @Environment annotations and get the mixin dependencies.
+    // Do NOT use other classes from Fabric loader.
     modImplementation "net.fabricmc:fabric-loader:${rootProject.fabric_loader_version}"
     compileOnly "net.msrandom:class-extension-annotations:1.0"
 }
@@ -33,10 +33,10 @@ publishing {
             artifact(sourcesJar) {
                 builtBy remapSourcesJar
             }
-            artifactId = rootProject.archives_base_name + "-" + project.name + "-" + project.minecraft_version
+            artifactId = "$rootProject.archives_base_name-$project.name-$project.minecraft_version"
             pom {
                 name = 'Botarium'
-                description = 'Tiny lil library mod for cross platform energy and registries'
+                description = 'Tiny lil library mod for cross platform stuff!'
                 url = 'https://github.com/terrarium-earth/Spirit'
 
                 scm {

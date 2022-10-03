@@ -9,8 +9,10 @@ import net.msrandom.extensions.annotations.ImplementedByExtension;
 import org.apache.commons.lang3.NotImplementedException;
 import org.jetbrains.annotations.Nullable;
 
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Optional;
 
+@ParametersAreNonnullByDefault
 public class FluidHooks {
     public static final long BUCKET = 81000;
     public static final long BOTTLE = 27000;
@@ -97,7 +99,7 @@ public class FluidHooks {
         throw new NotImplementedException();
     }
 
-    //optional platform fluid handler getters
+    // Optional platform fluid handler getters.
 
     /**
      * Safely gets the {@link PlatformFluidHandler} for a given {@link BlockEntity}.
@@ -135,7 +137,7 @@ public class FluidHooks {
     /**
      * A safe version of {@link #moveFluid(PlatformFluidHandler, PlatformFluidHandler, FluidHolder)} that will not move any fluid if the
      * {@link PlatformFluidHandler} is not present.
-     *
+     * <p>
      * Transfers fluid from a {@link PlatformFluidHandler} to another {@link PlatformFluidHandler}.
      * @param from The {@link PlatformFluidHandler} to extract fluid from.
      * @param to The {@link PlatformFluidHandler} to transfer fluid to.

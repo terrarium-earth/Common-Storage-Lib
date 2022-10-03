@@ -8,9 +8,11 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.function.Predicate;
 
-public class SimpleItemContainer implements SerializbleContainer {
+@ParametersAreNonnullByDefault
+public class SimpleItemContainer implements SerializableContainer {
 
     private final NonNullList<ItemStack> items;
     private final Updatable updatable;
@@ -26,58 +28,51 @@ public class SimpleItemContainer implements SerializbleContainer {
         this(entity, size, player -> entity.getBlockPos().distSqr(player.blockPosition()) <= 64);
     }
 
-    @Override
-    public void deserialize(CompoundTag nbt) {
+    @Override public void deserialize(CompoundTag nbt) {
         ContainerHelper.loadAllItems(nbt, items);
     }
 
-    @Override
-    public CompoundTag serialize(CompoundTag nbt) {
+    @Override public CompoundTag serialize(CompoundTag nbt) {
         return ContainerHelper.saveAllItems(nbt, items);
     }
 
-    @Override
-    public int getContainerSize() {
+    @Override public int getContainerSize() {
         return items.size();
     }
 
-    @Override
-    public boolean isEmpty() {
+    @Override public boolean isEmpty() {
         return items.isEmpty();
     }
 
-    @Override
-    public ItemStack getItem(int i) {
+    @Override public ItemStack getItem(int i) {
         return items.get(i);
     }
 
-    @Override
-    public ItemStack removeItem(int i, int j) {
+    public NonNullList<ItemStack> getItems() {
+        return items;
+    }
+
+    @Override public ItemStack removeItem(int i, int j) {
         return ContainerHelper.removeItem(items, i, j);
     }
 
-    @Override
-    public ItemStack removeItemNoUpdate(int i) {
+    @Override public ItemStack removeItemNoUpdate(int i) {
         return ContainerHelper.takeItem(items, i);
     }
 
-    @Override
-    public void setItem(int i, ItemStack itemStack) {
+    @Override public void setItem(int i, ItemStack itemStack) {
         items.set(i, itemStack);
     }
 
-    @Override
-    public void setChanged() {
+    @Override public void setChanged() {
         updatable.update();
     }
 
-    @Override
-    public boolean stillValid(Player player) {
+    @Override public boolean stillValid(Player player) {
         return canPlayerAccess.test(player);
     }
 
-    @Override
-    public void clearContent() {
+    @Override public void clearContent() {
         items.clear();
     }
 }
