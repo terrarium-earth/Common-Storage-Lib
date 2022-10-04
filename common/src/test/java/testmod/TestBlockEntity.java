@@ -9,16 +9,20 @@ import earth.terrarium.botarium.api.item.SerializableContainer;
 import earth.terrarium.botarium.api.item.SimpleItemContainer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
-public class ExampleBlockEntity extends BlockEntity implements EnergyBlock, FluidHoldingBlock, ItemContainerBlock{
+import javax.annotation.ParametersAreNonnullByDefault;
+
+@ParametersAreNonnullByDefault
+public class TestBlockEntity extends BlockEntity implements EnergyBlock, FluidHoldingBlock, ItemContainerBlock{
     public SimpleUpdatingFluidContainer fluidContainer;
     private SimpleItemContainer itemContainer;
     private SimpleUpdatingEnergyContainer energyContainer;
 
-    public ExampleBlockEntity(BlockPos blockPos, BlockState blockState) {
+    public TestBlockEntity(BlockPos blockPos, BlockState blockState) {
         super(TestMod.EXAMPLE_BLOCK_ENTITY.get(), blockPos, blockState);
     }
 
@@ -47,6 +51,6 @@ public class ExampleBlockEntity extends BlockEntity implements EnergyBlock, Flui
     @Override
     public void update() {
         this.setChanged();
-        this.getLevel().sendBlockUpdated(this.getBlockPos(), this.getBlockState(), this.getBlockState(), Block.UPDATE_ALL);
+        if (level != null) level.sendBlockUpdated(this.getBlockPos(), this.getBlockState(), this.getBlockState(), Block.UPDATE_ALL);
     }
 }
