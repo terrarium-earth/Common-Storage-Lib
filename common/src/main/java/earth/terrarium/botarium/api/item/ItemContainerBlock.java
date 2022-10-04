@@ -3,7 +3,7 @@ package earth.terrarium.botarium.api.item;
 public interface ItemContainerBlock {
 
     /**
-     * @return A {@link SerializbleContainer} that represents the inventory of this block.
+     * @return A {@link SerializableContainer} that represents the inventory of this block.
      */
-    SerializbleContainer getContainer();
+    SerializableContainer getContainer();
 }

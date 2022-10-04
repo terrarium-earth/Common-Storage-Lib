@@ -109,6 +109,10 @@ public class SimpleUpdatingFluidContainer implements UpdatingFluidContainer {
         return getFluids().isEmpty() || getFluids().get(0) == null || getFluids().get(0).isEmpty();
     }
 
+    public void clear() {
+        this.storedFluid.clear();
+    }
+
     @Override
     public SimpleUpdatingFluidContainer copy() {
         return new SimpleUpdatingFluidContainer(updatable, maxAmount, this.getSize(), fluidFilter);

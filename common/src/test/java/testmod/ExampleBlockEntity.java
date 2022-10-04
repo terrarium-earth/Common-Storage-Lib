@@ -5,7 +5,7 @@ import earth.terrarium.botarium.api.energy.EnergyBlock;
 import earth.terrarium.botarium.api.energy.StatefulEnergyContainer;
 import earth.terrarium.botarium.api.fluid.*;
 import earth.terrarium.botarium.api.item.ItemContainerBlock;
-import earth.terrarium.botarium.api.item.SerializbleContainer;
+import earth.terrarium.botarium.api.item.SerializableContainer;
 import earth.terrarium.botarium.api.item.SimpleItemContainer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -33,7 +33,7 @@ public class ExampleBlockEntity extends BlockEntity implements EnergyBlock, Flui
     }
 
     @Override
-    public SerializbleContainer getContainer() {
+    public SerializableContainer getContainer() {
         return itemContainer == null ? this.itemContainer = new SimpleItemContainer(this, 1) : this.itemContainer;
     }
 
