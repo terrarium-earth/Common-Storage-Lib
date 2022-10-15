@@ -114,7 +114,7 @@ public class SimpleUpdatingFluidContainer implements UpdatingFluidContainer {
      * <br />
      * <u>Meant only for internal use!</u>
      */
-    protected void clear() {
+    public void clear() {
         this.storedFluid.clear();
         update();
     }
