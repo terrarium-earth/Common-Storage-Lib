@@ -109,8 +109,14 @@ public class SimpleUpdatingFluidContainer implements UpdatingFluidContainer {
         return getFluids().isEmpty() || getFluids().get(0) == null || getFluids().get(0).isEmpty();
     }
 
-    public void clear() {
+    /**
+     * Clears the container of all fluids.
+     * <br />
+     * <u>Meant only for internal use!</u>
+     */
+    protected void clear() {
         this.storedFluid.clear();
+        update();
     }
 
     @Override
