@@ -12,7 +12,6 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.fluids.FluidType;
-import net.minecraftforge.fluids.capability.wrappers.BlockWrapper;
 import net.msrandom.extensions.annotations.ClassExtension;
 import net.msrandom.extensions.annotations.ImplementsBaseElement;
 import org.jetbrains.annotations.Nullable;

@@ -9,10 +9,15 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.Nullable;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+
+@ParametersAreNonnullByDefault
 public class ExampleBlock extends BaseEntityBlock {
     public ExampleBlock(Properties properties) {
         super(properties);
@@ -29,5 +34,10 @@ public class ExampleBlock extends BaseEntityBlock {
         var blockEnergyManager = EnergyHooks.getBlockEnergyManager(level.getBlockEntity(blockPos), blockHitResult.getDirection());
         player.sendSystemMessage(Component.literal(String.valueOf(blockEnergyManager.getStoredEnergy())));
         return InteractionResult.SUCCESS;
+    }
+
+    @Override
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type) {
+        return (entityWorld, pos, entityState, blockEntity) -> ((ExampleBlockEntity)blockEntity).tick();
     }
 }

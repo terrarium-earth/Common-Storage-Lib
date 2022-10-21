@@ -38,7 +38,7 @@ public class FabricFluidHandler implements PlatformFluidHandler {
             if (!simulate) {
                 transaction.commit();
             }
-            return extracted == 0 ? FabricFluidHolder.of(fabricFluidHolder.toVariant(), extracted) : FabricFluidHolder.EMPTY;
+            return extracted == 0 ? FabricFluidHolder.of(fabricFluidHolder.toVariant(), extracted) : fluid;
         }
     }
 
@@ -56,5 +56,15 @@ public class FabricFluidHandler implements PlatformFluidHandler {
         List<FluidHolder> fluids = new ArrayList<>();
         storage.iterator().forEachRemaining(variant -> fluids.add(FabricFluidHolder.of(variant.getResource(), variant.getAmount())));
         return fluids.get(tank);
+    }
+
+    @Override
+    public boolean supportsInsertion() {
+        return insertFluid(getFluidInTank(0), true) > 0;
+    }
+
+    @Override
+    public boolean supportsExtraction() {
+        return extractFluid(getFluidInTank(0), true).getFluidAmount() > 0;
     }
 }

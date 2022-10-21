@@ -3,7 +3,6 @@ package earth.terrarium.botarium.forge.fluid;
 import earth.terrarium.botarium.api.fluid.FluidHolder;
 import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.NbtUtils;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;

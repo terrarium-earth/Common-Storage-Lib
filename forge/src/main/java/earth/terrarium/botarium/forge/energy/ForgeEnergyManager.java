@@ -40,4 +40,14 @@ public class ForgeEnergyManager implements PlatformEnergyManager {
     public long insert(long amount, boolean simulate) {
         return energy.receiveEnergy((int) amount, simulate);
     }
+
+    @Override
+    public boolean supportsInsertion() {
+        return energy.canReceive();
+    }
+
+    @Override
+    public boolean supportsExtraction() {
+        return energy.canExtract();
+    }
 }
