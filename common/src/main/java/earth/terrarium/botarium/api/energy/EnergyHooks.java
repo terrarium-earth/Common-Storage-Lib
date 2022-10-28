@@ -83,7 +83,7 @@ public class EnergyHooks {
     /**
      * A safe version of {@link #moveEnergy(PlatformEnergyManager, PlatformEnergyManager, long)} that will not move any energy if the
      * {@link PlatformEnergyManager} is not present.
-     *
+     * <p>
      * Transfers energy from a {@link PlatformEnergyManager} to another {@link PlatformEnergyManager}.
      * @param from The {@link PlatformEnergyManager} to extract energy from.
      * @param to The {@link PlatformEnergyManager} to transfer energy to.
