@@ -93,8 +93,8 @@ publishing {
         maven {
             url = "https://maven.resourcefulbees.com/repository/codexadrian/"
             credentials {
-                username ENV.MAVEN_USER
-                password ENV.MAVEN_PASS
+                username ENV.MAVEN_USERNAME
+                password ENV.MAVEN_PASSWORD
             }
         }
     }

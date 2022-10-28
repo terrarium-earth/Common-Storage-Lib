@@ -11,19 +11,25 @@ import net.minecraftforge.fluids.FluidStack;
 
 import java.util.Objects;
 
-public class ForgeFluidHolder extends FluidStack implements FluidHolder {
+public class ForgeFluidHolder implements FluidHolder {
+    protected FluidStack fluidStack;
+
     public static final ForgeFluidHolder EMPTY = new ForgeFluidHolder(FluidStack.EMPTY);
 
     public ForgeFluidHolder(FluidStack stack) {
-        super(stack, stack.getAmount());
+        this.fluidStack = stack.copy();
     }
 
     public ForgeFluidHolder(FluidHolder fluid) {
-        this(fluid.getFluid(), (int) fluid.getFluidAmount(), fluid.getCompound());
+        this(toStack(fluid));
     }
 
     public ForgeFluidHolder(Fluid fluid, int amount, CompoundTag tag) {
-        super(fluid, amount, tag);
+        this.fluidStack = new FluidStack(fluid, amount, tag);
+    }
+
+    public FluidStack getFluidStack() {
+        return fluidStack;
     }
 
     public static ForgeFluidHolder fromCompound(CompoundTag compound) {
@@ -35,28 +41,33 @@ public class ForgeFluidHolder extends FluidStack implements FluidHolder {
     }
 
     @Override
+    public Fluid getFluid() {
+        return fluidStack.getFluid();
+    }
+
+    @Override
     public void setFluid(Fluid fluid) {
-        //Not used in forge
+        this.fluidStack = new FluidStack(fluid, this.fluidStack.getAmount(), this.fluidStack.getTag());
     }
 
     @Override
     public long getFluidAmount() {
-        return getAmount();
+        return fluidStack.getAmount();
     }
 
     @Override
     public void setAmount(long amount) {
-        this.setAmount((int) amount);
+        this.fluidStack.setAmount((int) amount);
     }
 
     @Override
     public CompoundTag getCompound() {
-        return getTag();
+        return fluidStack.getTag();
     }
 
     @Override
     public void setCompound(CompoundTag tag) {
-        this.setTag(tag);
+        fluidStack.setTag(tag);
     }
 
     @Override
@@ -66,7 +77,7 @@ public class ForgeFluidHolder extends FluidStack implements FluidHolder {
 
     @Override
     public FluidHolder copyHolder() {
-        return new ForgeFluidHolder(getFluid(), getAmount(), getCompound() == null ? null : getCompound().copy());
+        return new ForgeFluidHolder(getFluid(), fluidStack.getAmount(), getCompound() == null ? null : getCompound().copy());
     }
 
     @Override
@@ -81,12 +92,21 @@ public class ForgeFluidHolder extends FluidStack implements FluidHolder {
     }
 
     @Override
-    public void deserialize(CompoundTag tag) {
-        //not used
+    public void deserialize(CompoundTag compound) {
+        long amount = compound.getLong("Amount");
+        CompoundTag tag = null;
+        if(compound.contains("Nbt")) {
+            tag = compound.getCompound("Nbt");
+        }
+        this.fluidStack = new FluidStack(Registry.FLUID.get(new ResourceLocation(compound.getString("Fluid"))), (int) amount, tag);
     }
 
     @Override
     public boolean isEmpty() {
         return this.getFluid() == Fluids.EMPTY || this.getFluidAmount() == 0;
+    }
+
+    public static FluidStack toStack(FluidHolder holder) {
+        return new FluidStack(holder.getFluid(), (int) holder.getFluidAmount(), holder.getCompound());
     }
 }

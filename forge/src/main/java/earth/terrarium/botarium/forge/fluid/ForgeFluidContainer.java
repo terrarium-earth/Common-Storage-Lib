@@ -23,7 +23,7 @@ public record ForgeFluidContainer(FluidContainer container) implements IFluidHan
 
     @Override
     public @NotNull FluidStack getFluidInTank(int i) {
-        return new ForgeFluidHolder(container.getFluids().get(i));
+        return new ForgeFluidHolder(container.getFluids().get(i)).fluidStack;
     }
 
     @Override
@@ -43,7 +43,7 @@ public record ForgeFluidContainer(FluidContainer container) implements IFluidHan
 
     @Override
     public @NotNull FluidStack drain(FluidStack fluidStack, FluidAction fluidAction) {
-        return new ForgeFluidHolder(this.container.extractFluid(new ForgeFluidHolder(fluidStack), fluidAction.simulate()));
+        return new ForgeFluidHolder(this.container.extractFluid(new ForgeFluidHolder(fluidStack), fluidAction.simulate())).getFluidStack();
     }
 
     @Override
@@ -51,7 +51,7 @@ public record ForgeFluidContainer(FluidContainer container) implements IFluidHan
         FluidHolder fluid = this.container.getFluids().get(0).copyHolder();
         if (fluid.isEmpty()) return FluidStack.EMPTY;
         fluid.setAmount(i);
-        return new ForgeFluidHolder(this.container.extractFluid(fluid, fluidAction.simulate()));
+        return new ForgeFluidHolder(this.container.extractFluid(fluid, fluidAction.simulate())).getFluidStack();
     }
 
     @Override

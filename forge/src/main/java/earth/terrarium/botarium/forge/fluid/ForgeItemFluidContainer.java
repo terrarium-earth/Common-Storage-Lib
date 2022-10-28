@@ -38,7 +38,7 @@ public record ForgeItemFluidContainer(ItemFluidContainer container) implements I
 
     @Override
     public @NotNull FluidStack getFluidInTank(int i) {
-        return new ForgeFluidHolder(container.getFluids().get(i));
+        return new ForgeFluidHolder(container.getFluids().get(i)).getFluidStack();
     }
 
     @Override
@@ -58,7 +58,7 @@ public record ForgeItemFluidContainer(ItemFluidContainer container) implements I
 
     @Override
     public @NotNull FluidStack drain(FluidStack fluidStack, FluidAction fluidAction) {
-        return new ForgeFluidHolder(this.container.extractFluid(new ForgeFluidHolder(fluidStack), fluidAction.simulate()));
+        return new ForgeFluidHolder(this.container.extractFluid(new ForgeFluidHolder(fluidStack), fluidAction.simulate())).getFluidStack();
     }
 
     @Override
@@ -66,7 +66,7 @@ public record ForgeItemFluidContainer(ItemFluidContainer container) implements I
         FluidHolder fluid = this.container.getFluids().get(0).copyHolder();
         if (fluid.isEmpty()) return FluidStack.EMPTY;
         fluid.setAmount(i);
-        return new ForgeFluidHolder(this.container.extractFluid(fluid, fluidAction.simulate()));
+        return new ForgeFluidHolder(this.container.extractFluid(fluid, fluidAction.simulate())).getFluidStack();
     }
 
     @Override

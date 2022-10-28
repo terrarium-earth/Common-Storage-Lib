@@ -8,12 +8,12 @@ public record ForgeFluidHandler(IFluidHandler handler) implements PlatformFluidH
 
     @Override
     public long insertFluid(FluidHolder fluid, boolean simulate) {
-        return handler.fill(new ForgeFluidHolder(fluid), simulate ? IFluidHandler.FluidAction.SIMULATE : IFluidHandler.FluidAction.EXECUTE);
+        return handler.fill(new ForgeFluidHolder(fluid).getFluidStack(), simulate ? IFluidHandler.FluidAction.SIMULATE : IFluidHandler.FluidAction.EXECUTE);
     }
 
     @Override
     public FluidHolder extractFluid(FluidHolder fluid, boolean simulate) {
-        return new ForgeFluidHolder(handler.drain(new ForgeFluidHolder(fluid), simulate ? IFluidHandler.FluidAction.SIMULATE : IFluidHandler.FluidAction.EXECUTE));
+        return new ForgeFluidHolder(handler.drain(new ForgeFluidHolder(fluid).getFluidStack(), simulate ? IFluidHandler.FluidAction.SIMULATE : IFluidHandler.FluidAction.EXECUTE));
     }
 
     @Override
