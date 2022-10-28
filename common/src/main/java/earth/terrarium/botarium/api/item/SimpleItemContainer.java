@@ -10,7 +10,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 
 import java.util.function.Predicate;
 
-public class SimpleItemContainer implements SerializbleContainer {
+public class SimpleItemContainer implements SerializableContainer {
 
     private final NonNullList<ItemStack> items;
     private final Updatable updatable;
@@ -44,6 +44,10 @@ public class SimpleItemContainer implements SerializbleContainer {
     @Override
     public boolean isEmpty() {
         return items.isEmpty();
+    }
+
+    public NonNullList<ItemStack> getItems() {
+        return items;
     }
 
     @Override

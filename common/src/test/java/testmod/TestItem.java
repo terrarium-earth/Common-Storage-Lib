@@ -8,8 +8,11 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.material.Fluids;
 
-public class ExampleItem extends Item implements EnergyItem, FluidHoldingItem {
-    public ExampleItem(Properties properties) {
+import javax.annotation.ParametersAreNonnullByDefault;
+
+@ParametersAreNonnullByDefault
+public class TestItem extends Item implements EnergyItem, FluidHoldingItem {
+    public TestItem(Properties properties) {
         super(properties);
     }
 
