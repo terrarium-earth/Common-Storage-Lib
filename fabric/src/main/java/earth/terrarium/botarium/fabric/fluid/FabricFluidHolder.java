@@ -14,7 +14,7 @@ import net.minecraft.world.level.material.Fluids;
 
 @SuppressWarnings("UnstableApiUsage")
 public class FabricFluidHolder extends SnapshotParticipant<FabricFluidHolder> implements FluidHolder, StorageView<FluidVariant> {
-    public static FabricFluidHolder EMPTY = FabricFluidHolder.of(Fluids.EMPTY, null, 0);
+    public static final FabricFluidHolder EMPTY = FabricFluidHolder.of(Fluids.EMPTY, null, 0);
     private FluidVariant fluidVariant;
     private long amount;
 

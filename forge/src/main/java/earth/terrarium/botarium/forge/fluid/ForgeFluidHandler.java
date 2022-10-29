@@ -25,4 +25,14 @@ public record ForgeFluidHandler(IFluidHandler handler) implements PlatformFluidH
     public FluidHolder getFluidInTank(int tank) {
         return new ForgeFluidHolder(handler.getFluidInTank(tank));
     }
+
+    @Override
+    public boolean supportsInsertion() {
+        return insertFluid(getFluidInTank(0), true) > 0;
+    }
+
+    @Override
+    public boolean supportsExtraction() {
+        return extractFluid(getFluidInTank(0), true).getFluidAmount() > 0;
+    }
 }

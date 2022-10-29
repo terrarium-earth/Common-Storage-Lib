@@ -51,4 +51,14 @@ public class FabricEnergyManager implements PlatformEnergyManager {
             return insert;
         }
     }
+
+    @Override
+    public boolean supportsInsertion() {
+        return energy.supportsInsertion();
+    }
+
+    @Override
+    public boolean supportsExtraction() {
+        return energy.supportsExtraction();
+    }
 }

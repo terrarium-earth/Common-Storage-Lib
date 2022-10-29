@@ -5,9 +5,7 @@ import earth.terrarium.botarium.api.menu.MenuHooks;
 import earth.terrarium.botarium.fabric.menu.ExtraDataMenuProviderWrapper;
 import net.minecraft.server.level.ServerPlayer;
 import net.msrandom.extensions.annotations.ClassExtension;
-import net.msrandom.extensions.annotations.ImplementedByExtension;
 import net.msrandom.extensions.annotations.ImplementsBaseElement;
-import org.apache.commons.lang3.NotImplementedException;
 
 @ClassExtension(MenuHooks.class)
 public class MenuHooksExtensions {
