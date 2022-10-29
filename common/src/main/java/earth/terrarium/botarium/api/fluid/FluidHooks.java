@@ -106,6 +106,7 @@ public class FluidHooks {
      * @return An optional containing the {@link PlatformFluidHandler} if the {@link BlockEntity} is a fluid container, otherwise empty.
      */
     public static Optional<PlatformFluidHandler> safeGetBlockFluidManager(BlockEntity entity, @Nullable Direction direction) {
+        if (entity == null) return Optional.empty();
         return isFluidContainingBlock(entity, direction) ? Optional.of(getBlockFluidManager(entity, direction)) : Optional.empty();
     }
 
@@ -135,7 +136,7 @@ public class FluidHooks {
     /**
      * A safe version of {@link #moveFluid(PlatformFluidHandler, PlatformFluidHandler, FluidHolder)} that will not move any fluid if the
      * {@link PlatformFluidHandler} is not present.
-     *
+     * <p>
      * Transfers fluid from a {@link PlatformFluidHandler} to another {@link PlatformFluidHandler}.
      * @param from The {@link PlatformFluidHandler} to extract fluid from.
      * @param to The {@link PlatformFluidHandler} to transfer fluid to.

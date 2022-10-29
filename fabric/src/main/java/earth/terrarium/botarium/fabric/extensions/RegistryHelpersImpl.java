@@ -10,7 +10,6 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.msrandom.extensions.annotations.ClassExtension;
 import net.msrandom.extensions.annotations.ImplementsBaseElement;
-import org.spongepowered.asm.mixin.Overwrite;
 
 @ClassExtension(RegistryHelpers.class)
 public class RegistryHelpersImpl {

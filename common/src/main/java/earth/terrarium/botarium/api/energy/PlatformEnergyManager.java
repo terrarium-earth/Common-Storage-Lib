@@ -17,7 +17,8 @@ public interface PlatformEnergyManager {
 
     /**
      * Extracts an amount of energy from the manager.
-     * @param amount The amount of energy to extract.
+     *
+     * @param amount   The amount of energy to extract.
      * @param simulate If true, the extraction will only be simulated.
      * @return The amount of energy that was extracted.
      */
@@ -25,9 +26,20 @@ public interface PlatformEnergyManager {
 
     /**
      * Inserts an amount of energy from the manager.
-     * @param amount The amount of energy to insert.
+     *
+     * @param amount   The amount of energy to insert.
      * @param simulate If true, the insertion will only be simulated.
      * @return The amount of energy that was inserted.
      */
     long insert(long amount, boolean simulate);
+
+    /**
+     * @return If the manager supports insertion.
+     */
+    boolean supportsInsertion();
+
+    /**
+     * @return If the manager supports extraction.
+     */
+    boolean supportsExtraction();
 }
