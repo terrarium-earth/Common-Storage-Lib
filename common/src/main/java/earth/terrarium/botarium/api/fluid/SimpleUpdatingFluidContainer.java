@@ -12,15 +12,15 @@ import java.util.List;
 import java.util.Objects;
 import java.util.function.BiPredicate;
 import java.util.function.Function;
+import java.util.function.IntToLongFunction;
 
-@Deprecated
 public class SimpleUpdatingFluidContainer implements UpdatingFluidContainer {
-    private NonNullList<FluidHolder> storedFluid;
-    private final Function<Integer, Long> maxAmount;
-    private final BiPredicate<Integer, FluidHolder> fluidFilter;
-    private final Updatable updatable;
+    public NonNullList<FluidHolder> storedFluid;
+    public final IntToLongFunction maxAmount;
+    public final BiPredicate<Integer, FluidHolder> fluidFilter;
+    public final Updatable updatable;
 
-    public SimpleUpdatingFluidContainer(Updatable updatable, Function<Integer, Long> maxAmount, int tanks, BiPredicate<Integer, FluidHolder> fluidFilter) {
+    public SimpleUpdatingFluidContainer(Updatable updatable, IntToLongFunction maxAmount, int tanks, BiPredicate<Integer, FluidHolder> fluidFilter) {
         this.updatable = updatable;
         this.maxAmount = maxAmount;
         this.fluidFilter = fluidFilter;
@@ -37,14 +37,14 @@ public class SimpleUpdatingFluidContainer implements UpdatingFluidContainer {
             if (fluidFilter.test(i, fluid)) {
                 if (storedFluid.get(i).isEmpty()) {
                     FluidHolder insertedFluid = fluid.copyHolder();
-                    insertedFluid.setAmount(Mth.clamp(fluid.getFluidAmount(), 0, maxAmount.apply(i)));
+                    insertedFluid.setAmount(Mth.clamp(fluid.getFluidAmount(), 0, maxAmount.applyAsLong(i)));
                     if (simulate) return insertedFluid.getFluidAmount();
                     this.storedFluid.set(i, insertedFluid);
                     this.update();
                     return storedFluid.get(i).getFluidAmount();
                 } else {
                     if (storedFluid.get(i).matches(fluid)) {
-                        long insertedAmount = Mth.clamp(fluid.getFluidAmount(), 0, maxAmount.apply(i) - storedFluid.get(i).getFluidAmount());
+                        long insertedAmount = Mth.clamp(fluid.getFluidAmount(), 0, maxAmount.applyAsLong(i) - storedFluid.get(i).getFluidAmount());
                         if (simulate) return insertedAmount;
                         this.storedFluid.get(i).setAmount(storedFluid.get(i).getFluidAmount() + insertedAmount);
                         this.update();
@@ -125,7 +125,7 @@ public class SimpleUpdatingFluidContainer implements UpdatingFluidContainer {
 
     @Override
     public long getTankCapacity(int slot) {
-        return this.maxAmount.apply(slot);
+        return this.maxAmount.applyAsLong(slot);
     }
 
     @Override
@@ -149,9 +149,7 @@ public class SimpleUpdatingFluidContainer implements UpdatingFluidContainer {
     public CompoundTag serialize(CompoundTag tag) {
         ListTag tags = new ListTag();
         for (FluidHolder fluidHolder : this.storedFluid) {
-            CompoundTag fluid = new CompoundTag();
-            fluid.put("StoredFluid", fluidHolder.serialize());
-            tags.add(fluid);
+            tags.add(fluidHolder.serialize());
         }
         tag.put("StoredFluids", tags);
         return tag;

@@ -24,6 +24,10 @@ public class TestMod {
     public static final Supplier<BlockItem> EXAMPLE_BLOCK_ITEM = ITEMS.register("block", () -> new BlockItem(EXAMPLE_BLOCK.get(), new Item.Properties()));
     public static final Supplier<Item> EXAMPLE_ITEM = ITEMS.register("item", () -> new TestItem(new Item.Properties().stacksTo(1)));
 
+    public static final Supplier<Block> EXAMPLE_PIPE = BLOCKS.register("pipe", () -> new ExamplePipe(BlockBehaviour.Properties.copy(Blocks.STONE)));
+    public static final Supplier<BlockEntityType<?>> EXAMPLE_PIPE_ENTITY = BLOCK_ENTITIES.register("pipe", () -> RegistryHelpers.createBlockEntityType(ExampleN2SPipeBlockEntity::new, EXAMPLE_PIPE.get()));
+    public static final Supplier<BlockItem> EXAMPLE_PIPE_ITEM = ITEMS.register("pipe", () -> new BlockItem(EXAMPLE_PIPE.get(), new Item.Properties()));
+
     public static void init() {
         BLOCK_ENTITIES.initialize();
         BLOCKS.initialize();

@@ -17,16 +17,14 @@ public class FabricBlockEnergyStorage extends SnapshotParticipant<EnergySnapshot
 
     @Override
     public long insert(long maxAmount, TransactionContext transaction) {
-        StoragePreconditions.notNegative(maxAmount);
         this.updateSnapshots(transaction);
         return container.insertEnergy(Math.max(maxAmount, this.container.maxInsert()), false);
     }
 
     @Override
     public long extract(long maxAmount, TransactionContext transaction) {
-        StoragePreconditions.notNegative(maxAmount);
         this.updateSnapshots(transaction);
-        return container.insertEnergy(Math.max(maxAmount, this.container.maxExtract()), false);
+        return container.extractEnergy(Math.max(maxAmount, this.container.maxExtract()), false);
     }
 
     @Override

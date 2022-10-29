@@ -4,7 +4,7 @@ import earth.terrarium.botarium.api.Updatable;
 import net.minecraft.util.Mth;
 
 public class InsertOnlyEnergyContainer extends SimpleUpdatingEnergyContainer {
-    public InsertOnlyEnergyContainer(Updatable entity, int energyCapacity) {
+    public InsertOnlyEnergyContainer(Updatable entity, long energyCapacity) {
         super(entity, energyCapacity);
     }
 

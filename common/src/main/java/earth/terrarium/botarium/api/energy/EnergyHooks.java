@@ -1,13 +1,18 @@
 package earth.terrarium.botarium.api.energy;
 
+import com.mojang.datafixers.util.Pair;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.msrandom.extensions.annotations.ImplementedByExtension;
 import org.apache.commons.lang3.NotImplementedException;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Objects;
 import java.util.Optional;
+import java.util.function.BiFunction;
 
 public class EnergyHooks {
 
@@ -37,7 +42,7 @@ public class EnergyHooks {
      * Gets the energy container of the given {@link BlockEntity} and {@link Direction}.
      * Will throw error if the {@link BlockEntity} is not an energy container.
      *
-     * @param entity The {@link BlockEntity} to get the energy container from.
+     * @param entity    The {@link BlockEntity} to get the energy container from.
      * @param direction The {@link Direction} to get the energy container from.
      * @return The {@link PlatformEnergyManager} of the given {@link BlockEntity} and {@link Direction}.
      * @throws IllegalArgumentException If the item stack is not an energy container.
@@ -57,7 +62,7 @@ public class EnergyHooks {
     }
 
     /**
-     * @param stack The {@link BlockEntity} to check if it is an energy container.
+     * @param stack     The {@link BlockEntity} to check if it is an energy container.
      * @param direction The {@link Direction} to check for an energy container on the {@link BlockEntity}.
      * @return Whether the given {@link BlockEntity} is an energy container.
      */
@@ -68,8 +73,9 @@ public class EnergyHooks {
 
     /**
      * Transfers energy from a {@link PlatformEnergyManager} to another {@link PlatformEnergyManager}.
-     * @param from The {@link PlatformEnergyManager} to extract energy from.
-     * @param to The {@link PlatformEnergyManager} to transfer energy to.
+     *
+     * @param from   The {@link PlatformEnergyManager} to extract energy from.
+     * @param to     The {@link PlatformEnergyManager} to transfer energy to.
      * @param amount The amount to transfer.
      * @return The amount of energy transferred.
      */
@@ -85,8 +91,9 @@ public class EnergyHooks {
      * {@link PlatformEnergyManager} is not present.
      * <p>
      * Transfers energy from a {@link PlatformEnergyManager} to another {@link PlatformEnergyManager}.
-     * @param from The {@link PlatformEnergyManager} to extract energy from.
-     * @param to The {@link PlatformEnergyManager} to transfer energy to.
+     *
+     * @param from   The {@link PlatformEnergyManager} to extract energy from.
+     * @param to     The {@link PlatformEnergyManager} to transfer energy to.
      * @param amount The amount to transfer.
      * @return The amount of energy transferred.
      */
@@ -97,7 +104,8 @@ public class EnergyHooks {
 
     /**
      * Safely gets the {@link PlatformEnergyManager} for a {@link BlockEntity}.
-     * @param entity The {@link BlockEntity} to get the {@link PlatformEnergyManager} from.
+     *
+     * @param entity    The {@link BlockEntity} to get the {@link PlatformEnergyManager} from.
      * @param direction The {@link Direction} to get the {@link PlatformEnergyManager} from on the {@link BlockEntity}.
      * @return An optional containing the {@link PlatformEnergyManager} if the {@link BlockEntity} is an energy container, otherwise empty.
      */
@@ -107,6 +115,7 @@ public class EnergyHooks {
 
     /**
      * Safely gets the {@link PlatformEnergyManager} for an {@link ItemStack}.
+     *
      * @param stack The {@link ItemStack} to get the {@link PlatformEnergyManager} from.
      * @return An optional containing the {@link PlatformEnergyManager} if the {@link ItemStack} is an energy container, otherwise empty.
      */
@@ -116,8 +125,9 @@ public class EnergyHooks {
 
     /**
      * Transfers energy from an {@link ItemStack} to an {@link ItemStack}.
-     * @param from The {@link ItemStack} to extract energy from.
-     * @param to The {@link ItemStack} to transfer energy to.
+     *
+     * @param from   The {@link ItemStack} to extract energy from.
+     * @param to     The {@link ItemStack} to transfer energy to.
      * @param amount The amount of energy to transfer.
      * @return The amount of energy transferred.
      */
@@ -127,11 +137,12 @@ public class EnergyHooks {
 
     /**
      * Transfers energy from an {@link BlockEntity} to an {@link BlockEntity}.
-     * @param from The {@link BlockEntity} to extract energy from.
+     *
+     * @param from          The {@link BlockEntity} to extract energy from.
      * @param fromDirection The {@link Direction} to extract energy from on the {@link BlockEntity}.
-     * @param to The {@link BlockEntity} to transfer energy to.
-     * @param toDirection The {@link Direction} to insert energy into on the {@link BlockEntity}.
-     * @param amount The amount of energy to transfer.
+     * @param to            The {@link BlockEntity} to transfer energy to.
+     * @param toDirection   The {@link Direction} to insert energy into on the {@link BlockEntity}.
+     * @param amount        The amount of energy to transfer.
      * @return The amount of energy transferred.
      */
     public static long moveBlockToBlockEnergy(BlockEntity from, @Nullable Direction fromDirection, BlockEntity to, @Nullable Direction toDirection, long amount) {
@@ -140,8 +151,9 @@ public class EnergyHooks {
 
     /**
      * Transfers energy from an {@link BlockEntity} to an {@link BlockEntity}.
-     * @param from The {@link BlockEntity} to extract energy from.
-     * @param to The {@link BlockEntity} to transfer energy to.
+     *
+     * @param from   The {@link BlockEntity} to extract energy from.
+     * @param to     The {@link BlockEntity} to transfer energy to.
      * @param amount The amount of energy to transfer.
      * @return The amount of energy transferred.
      */
@@ -151,10 +163,11 @@ public class EnergyHooks {
 
     /**
      * Transfers energy from an {@link BlockEntity} to an {@link ItemStack}.
-     * @param from The {@link BlockEntity} to extract energy from.
+     *
+     * @param from          The {@link BlockEntity} to extract energy from.
      * @param fromDirection The {@link Direction} to extract energy from on the {@link BlockEntity}.
-     * @param to The {@link ItemStack} to transfer energy to.
-     * @param amount The amount of energy to transfer.
+     * @param to            The {@link ItemStack} to transfer energy to.
+     * @param amount        The amount of energy to transfer.
      * @return The amount of energy transferred.
      */
     public static long moveBlockToItemEnergy(BlockEntity from, @Nullable Direction fromDirection, ItemStack to, long amount) {
@@ -164,13 +177,45 @@ public class EnergyHooks {
 
     /**
      * Transfers energy from an {@link ItemStack} to an {@link BlockEntity}.
-     * @param from The {@link ItemStack} to extract energy from.
-     * @param to The {@link BlockEntity} to transfer energy to.
+     *
+     * @param from        The {@link ItemStack} to extract energy from.
+     * @param to          The {@link BlockEntity} to transfer energy to.
      * @param toDirection The {@link Direction} to insert energy into on the {@link BlockEntity}.
-     * @param amount The amount of energy to transfer.
+     * @param amount      The amount of energy to transfer.
      * @return The amount of energy transferred.
      */
     public static long moveItemToBlockEnergy(ItemStack from, BlockEntity to, @Nullable Direction toDirection, long amount) {
         return safeMoveEnergy(safeGetItemEnergyManager(from), safeGetBlockEnergyManager(to, toDirection), amount);
+    }
+
+
+    /**
+     * Automatically transfers energy from an energy block to surrounding blocks
+     * @param energyBlock A block entity that is an instance of {@link EnergyBlock}
+     * @param amount The amount it will transfer to each side (if possible)
+     */
+    public static <T extends BlockEntity & EnergyBlock> void distributeEnergyNearby(T energyBlock, long amount) {
+        BlockPos blockPos = energyBlock.getBlockPos();
+        Level level = energyBlock.getLevel();
+        if (level == null) return;
+        Direction.stream()
+            .map(direction -> Pair.of(direction, level.getBlockEntity(blockPos.relative(direction))))
+            .filter(pair -> pair.getSecond() != null)
+            .map(pair -> Pair.of(safeGetBlockEnergyManager(pair.getSecond(), pair.getFirst()), pair.getFirst()))
+            .filter(pair -> pair.getFirst().isPresent())
+            .forEach(pair -> {
+                PlatformEnergyManager externalEnergy = pair.getFirst().get();
+                safeGetBlockEnergyManager(energyBlock, pair.getSecond().getOpposite())
+                    .ifPresent(platformEnergyManager -> moveEnergy(platformEnergyManager, externalEnergy, amount == -1 ? energyBlock.getEnergyStorage().getStoredEnergy() : amount));
+            });
+    }
+
+    /**
+     * Automatically transfers energy from an energy block to surrounding blocks.
+     * Will transfer as much energy as it can.
+     * @param energyBlock A block entity that is an instance of {@link EnergyBlock}
+     */
+    public static <T extends BlockEntity & EnergyBlock> void distributeEnergyNearby(T energyBlock) {
+        distributeEnergyNearby(energyBlock, -1);
     }
 }

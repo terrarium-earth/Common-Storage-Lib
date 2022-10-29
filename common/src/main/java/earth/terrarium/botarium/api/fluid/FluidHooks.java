@@ -12,12 +12,6 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Optional;
 
 public class FluidHooks {
-    public static final long BUCKET = 81000;
-    public static final long BOTTLE = 27000;
-    public static final long BLOCK = 81000;
-    public static final long INGOT = 9000;
-    public static final long NUGGET = 1000;
-
     /**
      * @param fluid The fluid to create the holder for.
      * @param amount The amount of fluid in the holder.

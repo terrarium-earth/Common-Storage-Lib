@@ -12,6 +12,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -23,7 +24,11 @@ public class TestBlockEntity extends BlockEntity implements EnergyBlock, FluidHo
     private SimpleUpdatingEnergyContainer energyContainer;
 
     public TestBlockEntity(BlockPos blockPos, BlockState blockState) {
-        super(TestMod.EXAMPLE_BLOCK_ENTITY.get(), blockPos, blockState);
+        this(TestMod.EXAMPLE_BLOCK_ENTITY.get(), blockPos, blockState);
+    }
+
+    public TestBlockEntity(BlockEntityType<?> entityType, BlockPos blockPos, BlockState blockState) {
+        super(entityType, blockPos, blockState);
     }
 
     @Override
@@ -53,4 +58,6 @@ public class TestBlockEntity extends BlockEntity implements EnergyBlock, FluidHo
         this.setChanged();
         if (level != null) level.sendBlockUpdated(this.getBlockPos(), this.getBlockState(), this.getBlockState(), Block.UPDATE_ALL);
     }
+
+    public void tick() {}
 }

@@ -19,7 +19,7 @@ import org.jetbrains.annotations.Nullable;
 
 @ClassExtension(FluidHooks.class)
 @SuppressWarnings("UnstableApiUsage")
-public class FluidManagerImpl {
+public class FluidHooksImpl {
 
     @ImplementsBaseElement
     public static FluidHolder newFluidHolder(Fluid fluid, long amount, CompoundTag tag) {

@@ -7,10 +7,10 @@ import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
-public class ExampleN2SPipeBlockEntity extends ExampleBlockEntity {
+public class ExampleN2SPipeBlockEntity extends TestBlockEntity {
 
     public ExampleN2SPipeBlockEntity(BlockPos blockPos, BlockState blockState) {
-        super(TestMod.EXAMPLE_PIPE_BLOCK_ENTITY.get(), blockPos, blockState);
+        super(TestMod.EXAMPLE_PIPE_ENTITY.get(), blockPos, blockState);
     }
 
     @Override

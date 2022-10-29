@@ -13,10 +13,10 @@ import java.util.Objects;
 import java.util.function.BiPredicate;
 
 public class ItemFilteredFluidContainer implements ItemFluidContainer {
-    private final NonNullList<FluidHolder> storedFluid;
-    private final BiPredicate<Integer, FluidHolder> fluidFilter;
-    private final long maxAmount;
-    private final ItemStack containerItem;
+    public final NonNullList<FluidHolder> storedFluid;
+    public final BiPredicate<Integer, FluidHolder> fluidFilter;
+    public final long maxAmount;
+    public final ItemStack containerItem;
 
     public ItemFilteredFluidContainer(long maxAmount, int size, ItemStack itemStack, BiPredicate<Integer, FluidHolder> fluidFilter) {
         this.maxAmount = maxAmount;
