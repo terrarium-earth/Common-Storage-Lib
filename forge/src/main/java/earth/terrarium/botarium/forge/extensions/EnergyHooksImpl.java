@@ -2,7 +2,9 @@ package earth.terrarium.botarium.forge.extensions;
 
 import earth.terrarium.botarium.api.energy.EnergyHooks;
 import earth.terrarium.botarium.api.energy.PlatformEnergyManager;
+import earth.terrarium.botarium.api.energy.PlatformItemEnergyManager;
 import earth.terrarium.botarium.forge.energy.ForgeEnergyManager;
+import earth.terrarium.botarium.forge.energy.ForgeItemEnergyManager;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -15,8 +17,8 @@ import net.msrandom.extensions.annotations.ImplementsBaseElement;
 public class EnergyHooksImpl {
 
     @ImplementsBaseElement
-    public static PlatformEnergyManager getItemEnergyManager(ItemStack stack) {
-        return new ForgeEnergyManager(stack);
+    public static PlatformItemEnergyManager getItemEnergyManager(ItemStack stack) {
+        return new ForgeItemEnergyManager(stack);
     }
 
     @ImplementsBaseElement

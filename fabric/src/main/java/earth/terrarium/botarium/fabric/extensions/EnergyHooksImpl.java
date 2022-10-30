@@ -2,7 +2,9 @@ package earth.terrarium.botarium.fabric.extensions;
 
 import earth.terrarium.botarium.api.energy.EnergyHooks;
 import earth.terrarium.botarium.api.energy.PlatformEnergyManager;
+import earth.terrarium.botarium.api.energy.PlatformItemEnergyManager;
 import earth.terrarium.botarium.fabric.energy.FabricEnergyManager;
+import earth.terrarium.botarium.fabric.energy.FabricItemEnergyManager;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -16,8 +18,8 @@ import team.reborn.energy.api.EnergyStorageUtil;
 public class EnergyHooksImpl {
 
     @ImplementsBaseElement
-    public static PlatformEnergyManager getItemEnergyManager(ItemStack stack) {
-        return new FabricEnergyManager(stack);
+    public static PlatformItemEnergyManager getItemEnergyManager(ItemStack stack) {
+        return new FabricItemEnergyManager(stack);
     }
 
     @ImplementsBaseElement

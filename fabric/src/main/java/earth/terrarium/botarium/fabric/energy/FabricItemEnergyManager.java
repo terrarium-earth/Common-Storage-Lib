@@ -1,20 +1,23 @@
 package earth.terrarium.botarium.fabric.energy;
 
-import earth.terrarium.botarium.api.energy.PlatformEnergyManager;
+import earth.terrarium.botarium.api.energy.PlatformItemEnergyManager;
+import earth.terrarium.botarium.api.item.ItemStackHolder;
 import earth.terrarium.botarium.fabric.fluid.ItemStackStorage;
+import net.fabricmc.fabric.api.transfer.v1.context.ContainerItemContext;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
-import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import org.jetbrains.annotations.ApiStatus;
 import team.reborn.energy.api.EnergyStorage;
 
-@ApiStatus.Internal
 @SuppressWarnings("UnstableApiUsage")
-public record FabricEnergyManager(EnergyStorage energy) implements PlatformEnergyManager {
+public record FabricItemEnergyManager(ItemStack stack, ContainerItemContext context, EnergyStorage energy) implements PlatformItemEnergyManager {
 
-    public FabricEnergyManager(BlockEntity entity, Direction direction) {
-        this(EnergyStorage.SIDED.find(entity.getLevel(), entity.getBlockPos(), direction));
+    public FabricItemEnergyManager(ItemStack stack) {
+        this(stack, ItemStackStorage.of(stack));
+    }
+
+    public FabricItemEnergyManager(ItemStack stack, ContainerItemContext context) {
+        this(stack, context, EnergyStorage.ITEM.find(stack, context));
     }
 
     @Override
@@ -28,21 +31,23 @@ public record FabricEnergyManager(EnergyStorage energy) implements PlatformEnerg
     }
 
     @Override
-    public long extract(long amount, boolean simulate) {
+    public long extract(ItemStackHolder holder, long amount, boolean simulate) {
         try (Transaction txn = Transaction.openOuter()) {
             long extract = energy.extract(amount, txn);
             if(simulate) txn.abort();
             else txn.commit();
+            holder.setStack(context.getItemVariant().toStack());
             return extract;
         }
     }
 
     @Override
-    public long insert(long amount, boolean simulate) {
+    public long insert(ItemStackHolder holder, long amount, boolean simulate) {
         try (Transaction txn = Transaction.openOuter()) {
             long insert = energy.insert(amount, txn);
             if(simulate) txn.abort();
             else txn.commit();
+            holder.setStack(context.getItemVariant().toStack());
             return insert;
         }
     }

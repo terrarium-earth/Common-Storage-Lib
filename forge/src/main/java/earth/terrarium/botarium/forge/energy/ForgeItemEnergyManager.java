@@ -1,18 +1,18 @@
 package earth.terrarium.botarium.forge.energy;
 
-import earth.terrarium.botarium.api.energy.PlatformEnergyManager;
-import net.minecraft.core.Direction;
+import earth.terrarium.botarium.api.energy.PlatformItemEnergyManager;
+import earth.terrarium.botarium.api.item.ItemStackHolder;
 import net.minecraftforge.common.capabilities.CapabilityProvider;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.energy.IEnergyStorage;
 import org.jetbrains.annotations.ApiStatus;
 
 @ApiStatus.Internal
-public record ForgeEnergyManager(IEnergyStorage energy) implements PlatformEnergyManager {
+@SuppressWarnings("UnstableApiUsage")
+public record ForgeItemEnergyManager(IEnergyStorage energy) implements PlatformItemEnergyManager {
 
-    @SuppressWarnings("UnstableApiUsage")
-    public ForgeEnergyManager(CapabilityProvider<?> energyItem, Direction direction) {
-        this(energyItem.getCapability(ForgeCapabilities.ENERGY, direction).orElseThrow(IllegalArgumentException::new));
+    public ForgeItemEnergyManager(CapabilityProvider<?> energyItem) {
+        this(energyItem.getCapability(ForgeCapabilities.ENERGY).orElseThrow(IllegalArgumentException::new));
     }
 
     @Override
@@ -26,12 +26,12 @@ public record ForgeEnergyManager(IEnergyStorage energy) implements PlatformEnerg
     }
 
     @Override
-    public long extract(long amount, boolean simulate) {
+    public long extract(ItemStackHolder holder, long amount, boolean simulate) {
         return energy.extractEnergy((int) amount, simulate);
     }
 
     @Override
-    public long insert(long amount, boolean simulate) {
+    public long insert(ItemStackHolder holder, long amount, boolean simulate) {
         return energy.receiveEnergy((int) amount, simulate);
     }
 
