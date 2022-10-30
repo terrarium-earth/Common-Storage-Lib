@@ -53,6 +53,13 @@ public record FabricFluidHandler(Storage<FluidVariant> storage) implements Platf
     }
 
     @Override
+    public List<FluidHolder> getFluidTanks() {
+        List<FluidHolder> fluids = new ArrayList<>();
+        storage.iterator().forEachRemaining(variant -> fluids.add(FabricFluidHolder.of(variant.getResource(), variant.getAmount())));
+        return fluids;
+    }
+
+    @Override
     public boolean supportsInsertion() {
         return insertFluid(getFluidInTank(0), true) > 0;
     }

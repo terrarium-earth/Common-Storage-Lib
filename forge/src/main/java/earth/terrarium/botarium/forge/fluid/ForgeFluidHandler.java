@@ -4,6 +4,9 @@ import earth.terrarium.botarium.api.fluid.FluidHolder;
 import earth.terrarium.botarium.api.fluid.PlatformFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public record ForgeFluidHandler(IFluidHandler handler) implements PlatformFluidHandler {
 
     @Override
@@ -24,6 +27,15 @@ public record ForgeFluidHandler(IFluidHandler handler) implements PlatformFluidH
     @Override
     public FluidHolder getFluidInTank(int tank) {
         return new ForgeFluidHolder(handler.getFluidInTank(tank));
+    }
+
+    @Override
+    public List<FluidHolder> getFluidTanks() {
+        List<FluidHolder> fluids = new ArrayList<>();
+        for (int i = 0; i < handler.getTanks(); i++) {
+            fluids.add(getFluidInTank(i));
+        }
+        return fluids;
     }
 
     @Override
