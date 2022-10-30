@@ -203,7 +203,7 @@ public class FluidHooks {
      * @return The amount of fluid a bucket is for the platform.
      */
     @ImplementedByExtension
-    private static long getBucketAmount() {
+    public static long getBucketAmount() {
         throw new NotImplementedException();
     }
 
@@ -211,7 +211,7 @@ public class FluidHooks {
      * @return The amount of fluid a bottle is for the platform.
      */
     @ImplementedByExtension
-    private static long getBottleAmount() {
+    public static long getBottleAmount() {
         throw new NotImplementedException();
     }
 
@@ -219,7 +219,7 @@ public class FluidHooks {
      * @return The amount of fluid a block is for the platform.
      */
     @ImplementedByExtension
-    private static long getBlockAmount() {
+    public static long getBlockAmount() {
         throw new NotImplementedException();
     }
 
@@ -227,7 +227,7 @@ public class FluidHooks {
      * @return The amount of fluid an ingot is for the platform.
      */
     @ImplementedByExtension
-    private static long getIngotAmount() {
+    public static long getIngotAmount() {
         throw new NotImplementedException();
     }
 
@@ -235,7 +235,7 @@ public class FluidHooks {
      * @return The amount of fluid a nugget is for the platform.
      */
     @ImplementedByExtension
-    private static long getNuggetAmount() {
+    public static long getNuggetAmount() {
         throw new NotImplementedException();
     }
 }

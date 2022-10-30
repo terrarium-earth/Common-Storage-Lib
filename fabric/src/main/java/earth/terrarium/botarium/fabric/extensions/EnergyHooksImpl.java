@@ -13,7 +13,7 @@ import team.reborn.energy.api.EnergyStorage;
 import team.reborn.energy.api.EnergyStorageUtil;
 
 @ClassExtension(EnergyHooks.class)
-public class EnergyManagerImpl {
+public class EnergyHooksImpl {
 
     @ImplementsBaseElement
     public static PlatformEnergyManager getItemEnergyManager(ItemStack stack) {

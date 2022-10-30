@@ -12,7 +12,7 @@ import net.msrandom.extensions.annotations.ImplementedByExtension;
 import net.msrandom.extensions.annotations.ImplementsBaseElement;
 
 @ClassExtension(EnergyHooks.class)
-public class EnergyManagerImpl {
+public class EnergyHooksImpl {
 
     @ImplementsBaseElement
     public static PlatformEnergyManager getItemEnergyManager(ItemStack stack) {

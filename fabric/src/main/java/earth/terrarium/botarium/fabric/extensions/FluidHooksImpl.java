@@ -69,27 +69,27 @@ public class FluidHooksImpl {
     }
 
     @ImplementsBaseElement
-    private static long getBucketAmount() {
+    public static long getBucketAmount() {
         return FluidConstants.BUCKET;
     }
 
     @ImplementsBaseElement
-    private static long getBottleAmount() {
+    public static long getBottleAmount() {
         return FluidConstants.BOTTLE;
     }
 
     @ImplementsBaseElement
-    private static long getBlockAmount() {
+    public static long getBlockAmount() {
         return FluidConstants.BLOCK;
     }
 
     @ImplementsBaseElement
-    private static long getIngotAmount() {
+    public static long getIngotAmount() {
         return FluidConstants.INGOT;
     }
 
     @ImplementsBaseElement
-    private static long getNuggetAmount() {
+    public static long getNuggetAmount() {
         return FluidConstants.NUGGET;
     }
 }

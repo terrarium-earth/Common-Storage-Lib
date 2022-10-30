@@ -21,14 +21,16 @@ public interface EnergyExtensions extends IEnergyStorage, ICapabilityProvider, A
 
     @Override
     default int receiveEnergy(int maxAmount, boolean bl) {
-        int inserted = (int) ((EnergyContainer) this).insertEnergy(Math.max(maxAmount, ((EnergyContainer) this).maxInsert()), bl);
+        if(maxAmount <= 0) return 0;
+        int inserted = (int) ((EnergyContainer) this).insertEnergy(Math.min(maxAmount, ((EnergyContainer) this).maxInsert()), bl);
         if(!bl && this instanceof StatefulEnergyContainer container) container.update();
         return inserted;
     }
 
     @Override
     default int extractEnergy(int maxAmount, boolean bl) {
-        int extracted = (int) ((EnergyContainer) this).extractEnergy(Math.max(maxAmount, ((EnergyContainer) this).maxExtract()), bl);
+        if(maxAmount <= 0) return 0;
+        int extracted = (int) ((EnergyContainer) this).extractEnergy(Math.min(maxAmount, ((EnergyContainer) this).maxExtract()), bl);
         if(!bl && this instanceof StatefulEnergyContainer container) container.update();
         return extracted;
     }

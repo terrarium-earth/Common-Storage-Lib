@@ -10,7 +10,7 @@ import org.jetbrains.annotations.Nullable;
 @SuppressWarnings("UnstableApiUsage")
 public class WrappedFluidHolder extends SnapshotParticipant<FluidHolder> implements StorageView<FluidVariant> {
 
-    private final FluidHolder fluidHolder;
+    private FluidHolder fluidHolder;
     private final FluidExtraction extraction;
     private final @Nullable ManualSyncing container;
 
@@ -58,9 +58,7 @@ public class WrappedFluidHolder extends SnapshotParticipant<FluidHolder> impleme
 
     @Override
     protected void readSnapshot(FluidHolder snapshot) {
-        fluidHolder.setFluid(snapshot.getFluid());
-        fluidHolder.setAmount(snapshot.getFluidAmount());
-        fluidHolder.setCompound(snapshot.getCompound());
+        fluidHolder = snapshot.copyHolder();
     }
 
     @Override

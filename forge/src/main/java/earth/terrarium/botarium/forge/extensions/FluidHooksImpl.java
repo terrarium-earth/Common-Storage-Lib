@@ -17,7 +17,7 @@ import net.msrandom.extensions.annotations.ImplementsBaseElement;
 import org.jetbrains.annotations.Nullable;
 
 @ClassExtension(FluidHooks.class)
-public class FluidManagerImpl {
+public class FluidHooksImpl {
     @ImplementsBaseElement
     public static FluidHolder newFluidHolder(Fluid fluid, long amount, CompoundTag tag) {
         return new ForgeFluidHolder(fluid, (int) amount, tag);
@@ -64,27 +64,27 @@ public class FluidManagerImpl {
     }
 
     @ImplementsBaseElement
-    private static long getBucketAmount() {
+    public static long getBucketAmount() {
         return FluidType.BUCKET_VOLUME;
     }
 
     @ImplementsBaseElement
-    private static long getBottleAmount() {
+    public static long getBottleAmount() {
         return FluidType.BUCKET_VOLUME / 4;
     }
 
     @ImplementsBaseElement
-    private static long getBlockAmount() {
+    public static long getBlockAmount() {
         return FluidType.BUCKET_VOLUME;
     }
 
     @ImplementsBaseElement
-    private static long getIngotAmount() {
+    public static long getIngotAmount() {
         return 90;
     }
 
     @ImplementsBaseElement
-    private static long getNuggetAmount() {
+    public static long getNuggetAmount() {
         return 10;
     }
 }
