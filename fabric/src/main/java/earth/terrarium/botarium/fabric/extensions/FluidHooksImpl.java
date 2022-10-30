@@ -3,9 +3,11 @@ package earth.terrarium.botarium.fabric.extensions;
 import earth.terrarium.botarium.api.fluid.FluidHolder;
 import earth.terrarium.botarium.api.fluid.FluidHooks;
 import earth.terrarium.botarium.api.fluid.PlatformFluidHandler;
+import earth.terrarium.botarium.api.fluid.PlatformFluidItemHandler;
 import earth.terrarium.botarium.fabric.fluid.FabricFluidHandler;
 import earth.terrarium.botarium.fabric.fluid.FabricFluidHolder;
-import net.fabricmc.fabric.api.transfer.v1.context.ContainerItemContext;
+import earth.terrarium.botarium.fabric.fluid.FabricFluidItemHandler;
+import earth.terrarium.botarium.fabric.fluid.ItemStackStorage;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
 import net.minecraft.core.Direction;
@@ -44,8 +46,8 @@ public class FluidHooksImpl {
     }
 
     @ImplementsBaseElement
-    public static PlatformFluidHandler getItemFluidManager(ItemStack stack) {
-        return new FabricFluidHandler(FluidStorage.ITEM.find(stack, ContainerItemContext.withInitial(stack)));
+    public static PlatformFluidItemHandler getItemFluidManager(ItemStack stack) {
+        return new FabricFluidItemHandler(stack);
     }
 
     @ImplementsBaseElement
@@ -60,7 +62,7 @@ public class FluidHooksImpl {
 
     @ImplementsBaseElement
     public static boolean isFluidContainingItem(ItemStack stack) {
-        return FluidStorage.ITEM.find(stack, ContainerItemContext.withInitial(stack)) != null;
+        return FluidStorage.ITEM.find(stack, ItemStackStorage.of(stack)) != null;
     }
 
     @ImplementsBaseElement

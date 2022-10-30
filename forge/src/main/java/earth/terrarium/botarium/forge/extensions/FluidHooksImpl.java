@@ -3,8 +3,10 @@ package earth.terrarium.botarium.forge.extensions;
 import earth.terrarium.botarium.api.fluid.FluidHolder;
 import earth.terrarium.botarium.api.fluid.FluidHooks;
 import earth.terrarium.botarium.api.fluid.PlatformFluidHandler;
+import earth.terrarium.botarium.api.fluid.PlatformFluidItemHandler;
 import earth.terrarium.botarium.forge.fluid.ForgeFluidHandler;
 import earth.terrarium.botarium.forge.fluid.ForgeFluidHolder;
+import earth.terrarium.botarium.forge.fluid.ForgeFluidItemHandler;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
@@ -29,8 +31,8 @@ public class FluidHooksImpl {
     }
 
     @ImplementsBaseElement
-    public static PlatformFluidHandler getItemFluidManager(ItemStack stack) {
-        return new ForgeFluidHandler(stack.getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM).orElseThrow(IllegalArgumentException::new));
+    public static PlatformFluidItemHandler getItemFluidManager(ItemStack stack) {
+        return new ForgeFluidItemHandler(stack.getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM).orElseThrow(IllegalArgumentException::new));
     }
 
     @ImplementsBaseElement

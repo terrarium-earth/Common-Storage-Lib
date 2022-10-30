@@ -56,7 +56,7 @@ public class FluidHooks {
      * @throws IllegalArgumentException If the {@link ItemStack} does not have a {@link PlatformFluidHandler}.
      */
     @ImplementedByExtension
-    public static PlatformFluidHandler getItemFluidManager(ItemStack stack) {
+    public static PlatformFluidItemHandler getItemFluidManager(ItemStack stack) {
         throw new NotImplementedException("Item Fluid Manager not Implemented");
     }
 
@@ -109,7 +109,7 @@ public class FluidHooks {
      * @param stack The {@link ItemStack} to get the {@link PlatformFluidHandler} from.
      * @return An optional containing the {@link PlatformFluidHandler} if the item is a fluid container, otherwise empty.
      */
-    public static Optional<PlatformFluidHandler> safeGetItemFluidManager(ItemStack stack) {
+    public static Optional<PlatformFluidItemHandler> safeGetItemFluidManager(ItemStack stack) {
         return isFluidContainingItem(stack) ? Optional.of(getItemFluidManager(stack)) : Optional.empty();
     }
 
@@ -142,29 +142,6 @@ public class FluidHooks {
         return from.flatMap(f -> to.map(t -> moveFluid(f, t, fluid))).orElse(0L);
     }
 
-    /**
-     * Transfers fluid from an {@link ItemStack} to an {@link BlockEntity}.
-     * @param from The {@link ItemStack} to extract fluid from.
-     * @param to The {@link BlockEntity} to transfer fluid to.
-     * @param direction The {@link Direction} that the fluid is inserted into.
-     * @param fluid The {@link FluidHolder} to transfer.
-     * @return The amount of fluid transferred.
-     */
-    public static long moveItemToBlockFluid(ItemStack from, BlockEntity to, @Nullable Direction direction, FluidHolder fluid) {
-        return safeMoveFluid(safeGetItemFluidManager(from), safeGetBlockFluidManager(to, direction), fluid);
-    }
-
-    /**
-     * Transfers fluid from an {@link BlockEntity} to an {@link ItemStack}.
-     * @param from The {@link BlockEntity} to extract fluid from.
-     * @param direction The {@link Direction} that the fluid is extracted from.
-     * @param to The {@link ItemStack} to transfer fluid to.
-     * @param fluid The {@link FluidHolder} to transfer.
-     * @return The amount of fluid transferred.
-     */
-    public static long moveBlockToItemFluid(BlockEntity from, @Nullable Direction direction, ItemStack to, FluidHolder fluid) {
-        return safeMoveFluid(safeGetBlockFluidManager(from, direction), safeGetItemFluidManager(to), fluid);
-    }
 
     /**
      * Transfers fluid from an {@link BlockEntity} to another {@link BlockEntity}.
@@ -177,17 +154,6 @@ public class FluidHooks {
      */
     public static long moveBlockToBlockFluid(BlockEntity from, @Nullable Direction fromDirection, BlockEntity to, @Nullable Direction toDirection, FluidHolder fluid) {
         return safeMoveFluid(safeGetBlockFluidManager(from, fromDirection), safeGetBlockFluidManager(to, toDirection), fluid);
-    }
-
-    /**
-     * Transfers fluid from an {@link ItemStack} to another {@link ItemStack}.
-     * @param from The {@link ItemStack} to extract fluid from.
-     * @param to The {@link ItemStack} to transfer fluid to.
-     * @param fluid The {@link FluidHolder} to transfer.
-     * @return The amount of fluid transferred.
-     */
-    public static long moveItemToItemFluid(ItemStack from, ItemStack to, FluidHolder fluid) {
-        return safeMoveFluid(safeGetItemFluidManager(from), safeGetItemFluidManager(to), fluid);
     }
 
     /**

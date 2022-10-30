@@ -1,7 +1,7 @@
 package earth.terrarium.botarium.fabric.energy;
 
 import earth.terrarium.botarium.api.energy.PlatformEnergyManager;
-import net.fabricmc.fabric.api.transfer.v1.context.ContainerItemContext;
+import earth.terrarium.botarium.fabric.fluid.ItemStackStorage;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemStack;
@@ -15,7 +15,7 @@ public class FabricEnergyManager implements PlatformEnergyManager {
     private final EnergyStorage energy;
 
     public FabricEnergyManager(ItemStack stack) {
-        this.energy = EnergyStorage.ITEM.find(stack, ContainerItemContext.withInitial(stack));
+        this.energy = EnergyStorage.ITEM.find(stack, ItemStackStorage.of(stack));
     }
 
     public FabricEnergyManager(BlockEntity entity, Direction direction) {
