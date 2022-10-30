@@ -13,8 +13,6 @@ import java.util.Objects;
 public class ForgeFluidHolder implements FluidHolder {
     protected FluidStack fluidStack;
 
-    public static final ForgeFluidHolder EMPTY = new ForgeFluidHolder(FluidStack.EMPTY);
-
     public ForgeFluidHolder(FluidStack stack) {
         this.fluidStack = stack.copy();
     }
@@ -107,5 +105,9 @@ public class ForgeFluidHolder implements FluidHolder {
 
     public static FluidStack toStack(FluidHolder holder) {
         return new FluidStack(holder.getFluid(), (int) holder.getFluidAmount(), holder.getCompound());
+    }
+
+    public static ForgeFluidHolder empty() {
+        return new ForgeFluidHolder(FluidStack.EMPTY);
     }
 }

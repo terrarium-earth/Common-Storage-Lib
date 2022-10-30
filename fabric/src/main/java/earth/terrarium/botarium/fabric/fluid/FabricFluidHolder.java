@@ -14,7 +14,6 @@ import net.minecraft.world.level.material.Fluids;
 
 @SuppressWarnings("UnstableApiUsage")
 public class FabricFluidHolder extends SnapshotParticipant<FabricFluidHolder> implements FluidHolder, StorageView<FluidVariant> {
-    public static final FabricFluidHolder EMPTY = FabricFluidHolder.of(Fluids.EMPTY, null, 0);
     private FluidVariant fluidVariant;
     private long amount;
 
@@ -22,6 +21,7 @@ public class FabricFluidHolder extends SnapshotParticipant<FabricFluidHolder> im
         this.fluidVariant = variant;
         this.amount = amount;
     }
+
 
     public static FabricFluidHolder of(FluidVariant variant, long amount) {
         return new FabricFluidHolder(variant, amount);
@@ -120,7 +120,7 @@ public class FabricFluidHolder extends SnapshotParticipant<FabricFluidHolder> im
         CompoundTag compoundTag = new CompoundTag();
         compoundTag.putString("Fluid", Registry.FLUID.getKey(getFluid()).toString());
         compoundTag.putLong("Amount", getFluidAmount());
-        if(this.getCompound() != null) {
+        if (this.getCompound() != null) {
             compoundTag.put("Nbt", getCompound());
         }
         return compoundTag;
@@ -130,7 +130,7 @@ public class FabricFluidHolder extends SnapshotParticipant<FabricFluidHolder> im
     public void deserialize(CompoundTag compound) {
         this.amount = compound.getLong("Amount");
         CompoundTag tag = null;
-        if(compound.contains("Nbt")) {
+        if (compound.contains("Nbt")) {
             tag = compound.getCompound("Nbt");
         }
         this.fluidVariant = FluidVariant.of(Registry.FLUID.get(new ResourceLocation(compound.getString("Fluid"))), tag);
@@ -145,5 +145,9 @@ public class FabricFluidHolder extends SnapshotParticipant<FabricFluidHolder> im
     protected void readSnapshot(FabricFluidHolder snapshot) {
         this.fluidVariant = FluidVariant.of(snapshot.getFluid(), snapshot.getCompound());
         this.setAmount(snapshot.getFluidAmount());
+    }
+
+    public static FabricFluidHolder empty() {
+        return new FabricFluidHolder(FluidVariant.blank(), 0);
     }
 }

@@ -37,7 +37,7 @@ public class FluidHooksImpl {
 
     @ImplementsBaseElement
     public static FluidHolder emptyFluid() {
-        return FabricFluidHolder.EMPTY;
+        return FabricFluidHolder.empty();
     }
 
     @ImplementsBaseElement

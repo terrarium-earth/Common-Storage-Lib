@@ -52,7 +52,7 @@ public class FluidHooksImpl {
 
     @ImplementsBaseElement
     public static FluidHolder emptyFluid() {
-        return ForgeFluidHolder.EMPTY;
+        return ForgeFluidHolder.empty();
     }
 
     @ImplementsBaseElement
