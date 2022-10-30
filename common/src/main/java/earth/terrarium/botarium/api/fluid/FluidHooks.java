@@ -1,5 +1,6 @@
 package earth.terrarium.botarium.api.fluid;
 
+import earth.terrarium.botarium.api.item.ItemStackHolder;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
@@ -128,6 +129,48 @@ public class FluidHooks {
     }
 
     /**
+     * Transfers fluid from a {@link PlatformFluidHandler} to another {@link PlatformFluidHandler}.
+     * @param from The {@link PlatformFluidHandler} to extract fluid from.
+     * @param to The {@link PlatformFluidHandler} to transfer fluid to.
+     * @param fluid The {@link FluidHolder} to transfer.
+     * @return The amount of fluid transferred.
+     */
+    public static long moveItemToStandardFluid(PlatformFluidItemHandler from, ItemStackHolder sender, PlatformFluidHandler to, FluidHolder fluid) {
+        FluidHolder extracted = from.extractFluid(sender, fluid, true);
+        long inserted = to.insertFluid(extracted, true);
+        from.extractFluid(sender, newFluidHolder(fluid.getFluid(), inserted, fluid.getCompound()), false);
+        return to.insertFluid(extracted, false);
+    }
+
+    /**
+     * Transfers fluid from a {@link PlatformFluidHandler} to another {@link PlatformFluidHandler}.
+     * @param from The {@link PlatformFluidHandler} to extract fluid from.
+     * @param to The {@link PlatformFluidHandler} to transfer fluid to.
+     * @param fluid The {@link FluidHolder} to transfer.
+     * @return The amount of fluid transferred.
+     */
+    public static long moveStandardToItemFluid(PlatformFluidHandler from, PlatformFluidItemHandler to, ItemStackHolder receiver, FluidHolder fluid) {
+        FluidHolder extracted = from.extractFluid(fluid, true);
+        long inserted = to.insertFluid(receiver, extracted, true);
+        from.extractFluid(newFluidHolder(fluid.getFluid(), inserted, fluid.getCompound()), false);
+        return to.insertFluid(receiver, extracted, false);
+    }
+
+    /**
+     * Transfers fluid from a {@link PlatformFluidHandler} to another {@link PlatformFluidHandler}.
+     * @param from The {@link PlatformFluidHandler} to extract fluid from.
+     * @param to The {@link PlatformFluidHandler} to transfer fluid to.
+     * @param fluid The {@link FluidHolder} to transfer.
+     * @return The amount of fluid transferred.
+     */
+    public static long moveItemToItemFluid(PlatformFluidItemHandler from, ItemStackHolder sender, PlatformFluidItemHandler to, ItemStackHolder receiver, FluidHolder fluid) {
+        FluidHolder extracted = from.extractFluid(sender, fluid, true);
+        long inserted = to.insertFluid(receiver, extracted, true);
+        from.extractFluid(sender, newFluidHolder(fluid.getFluid(), inserted, fluid.getCompound()), false);
+        return to.insertFluid(receiver, extracted, false);
+    }
+
+    /**
      * A safe version of {@link #moveFluid(PlatformFluidHandler, PlatformFluidHandler, FluidHolder)} that will not move any fluid if the
      * {@link PlatformFluidHandler} is not present.
      * <p>
@@ -142,6 +185,55 @@ public class FluidHooks {
         return from.flatMap(f -> to.map(t -> moveFluid(f, t, fluid))).orElse(0L);
     }
 
+    /**
+     * A safe version of {@link #moveItemToStandardFluid(PlatformFluidItemHandler, ItemStackHolder, PlatformFluidHandler, FluidHolder)} that will not move any fluid if the
+     * {@link PlatformFluidHandler} is not present.
+     * <p>
+     * Transfers fluid from a {@link PlatformFluidItemHandler} to another {@link PlatformFluidHandler}.
+     * @param from The {@link PlatformFluidItemHandler} to extract fluid from.
+     * @param sender The {@link ItemStackHolder} that is sending the fluid.
+     * @param to The {@link PlatformFluidHandler} to transfer fluid to.
+     * @param fluid The {@link FluidHolder} to transfer.
+     * @return The amount of fluid transferred.
+     */
+    @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
+    public static long safeMoveItemToStandard(Optional<PlatformFluidItemHandler> from, ItemStackHolder sender, Optional<PlatformFluidHandler> to, FluidHolder fluid) {
+        return from.flatMap(f -> to.map(t -> moveItemToStandardFluid(f, sender, t, fluid))).orElse(0L);
+    }
+
+    /**
+     * A safe version of {@link #moveStandardToItemFluid(PlatformFluidHandler, PlatformFluidItemHandler, ItemStackHolder, FluidHolder)} (PlatformFluidItemHandler, PlatformFluidItemHandler, ItemStackHolder, FluidHolder)} that will not move any fluid if the
+     * {@link PlatformFluidHandler} is not present.
+     * <p>
+     * Transfers fluid from a {@link PlatformFluidHandler} to another {@link PlatformFluidItemHandler}.
+     * @param from The {@link PlatformFluidHandler} to extract fluid from.
+     * @param to The {@link PlatformFluidItemHandler} to transfer fluid to.
+     * @param receiver The {@link ItemStackHolder} to receive the fluid.
+     * @param fluid The {@link FluidHolder} to transfer.
+     * @return The amount of fluid transferred.
+     */
+    @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
+    public static long safeMoveStandardToItem(Optional<PlatformFluidHandler> from, Optional<PlatformFluidItemHandler> to, ItemStackHolder receiver, FluidHolder fluid) {
+        return from.flatMap(f -> to.map(t -> moveStandardToItemFluid(f, t, receiver, fluid))).orElse(0L);
+    }
+
+    /**
+     * A safe version of {@link #moveItemToItemFluid(PlatformFluidItemHandler, ItemStackHolder, PlatformFluidItemHandler, ItemStackHolder, FluidHolder)} that will not move any fluid if the
+     * {@link PlatformFluidHandler} is not present.
+     * <p>
+     * Transfers fluid from a {@link PlatformFluidHandler} to another {@link PlatformFluidHandler}.
+     * @param from The {@link PlatformFluidItemHandler} to extract fluid from.
+     * @param sender The {@link ItemStackHolder} that is sending the fluid.
+     * @param to The {@link PlatformFluidItemHandler} to transfer fluid to.
+     * @param receiver The {@link ItemStackHolder} to receive the fluid.
+     * @param fluid The {@link FluidHolder} to transfer.
+     * @return The amount of fluid transferred.
+     */
+    @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
+    public static long safeMoveItemToItem(Optional<PlatformFluidItemHandler> from, ItemStackHolder sender, Optional<PlatformFluidItemHandler> to, ItemStackHolder receiver, FluidHolder fluid) {
+        return from.flatMap(f -> to.map(t -> moveItemToItemFluid(f, sender, t, receiver, fluid))).orElse(0L);
+    }
+
 
     /**
      * Transfers fluid from an {@link BlockEntity} to another {@link BlockEntity}.
@@ -154,6 +246,41 @@ public class FluidHooks {
      */
     public static long moveBlockToBlockFluid(BlockEntity from, @Nullable Direction fromDirection, BlockEntity to, @Nullable Direction toDirection, FluidHolder fluid) {
         return safeMoveFluid(safeGetBlockFluidManager(from, fromDirection), safeGetBlockFluidManager(to, toDirection), fluid);
+    }
+
+    /**
+     * Transfers fluid from an {@link BlockEntity} to an {@link ItemStackHolder}.
+     * @param from The {@link BlockEntity} to extract fluid from.
+     * @param fromDirection The {@link Direction} that the fluid is extracted from.
+     * @param to The {@link ItemStackHolder} to transfer fluid to.
+     * @param fluid The {@link FluidHolder} to transfer.
+     * @return The amount of fluid transferred.
+     */
+    public static long moveBlockToItemFluid(BlockEntity from, @Nullable Direction fromDirection, ItemStackHolder to, FluidHolder fluid) {
+        return safeMoveStandardToItem(safeGetBlockFluidManager(from, fromDirection), safeGetItemFluidManager(to.getStack()), to, fluid);
+    }
+
+    /**
+     * Transfers fluid from an {@link ItemStackHolder} to an {@link BlockEntity}.
+     * @param from The {@link ItemStackHolder} to extract fluid from.
+     * @param to The {@link BlockEntity} to transfer fluid to.
+     * @param toDirection The {@link Direction} that the fluid is inserted into.
+     * @param fluid The {@link FluidHolder} to transfer.
+     * @return The amount of fluid transferred.
+     */
+    public static long moveItemToBlockFluid(ItemStackHolder from, BlockEntity to, @Nullable Direction toDirection, FluidHolder fluid) {
+        return safeMoveItemToStandard(safeGetItemFluidManager(from.getStack()), from, safeGetBlockFluidManager(to, toDirection), fluid);
+    }
+
+    /**
+     * Transfers fluid from an {@link ItemStackHolder} to another {@link ItemStackHolder}.
+     * @param from The {@link ItemStackHolder} to extract fluid from.
+     * @param to The {@link ItemStackHolder} to transfer fluid to.
+     * @param fluid The {@link FluidHolder} to transfer.
+     * @return The amount of fluid transferred.
+     */
+    public static long moveItemToItemFluid(ItemStackHolder from, ItemStackHolder to, FluidHolder fluid) {
+        return safeMoveItemToItem(safeGetItemFluidManager(from.getStack()), from, safeGetItemFluidManager(to.getStack()), to, fluid);
     }
 
     /**
