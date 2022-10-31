@@ -1,6 +1,7 @@
 package earth.terrarium.botarium.fabric.fluid;
 
 import earth.terrarium.botarium.api.fluid.FluidHolder;
+import earth.terrarium.botarium.api.fluid.FluidSnapshot;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.StorageView;
 import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
@@ -8,13 +9,13 @@ import net.fabricmc.fabric.api.transfer.v1.transaction.base.SnapshotParticipant;
 import org.jetbrains.annotations.Nullable;
 
 @SuppressWarnings("UnstableApiUsage")
-public class WrappedFluidHolder extends SnapshotParticipant<FluidHolder> implements StorageView<FluidVariant> {
+public class WrappedFluidHolder extends ExtendedFluidContainer implements StorageView<FluidVariant> {
 
     private FluidHolder fluidHolder;
     private final FluidExtraction extraction;
-    private final @Nullable ManualSyncing container;
+    private final ExtendedFluidContainer container;
 
-    public WrappedFluidHolder(@Nullable ManualSyncing container, FluidHolder fluidHolder, FluidExtraction extraction) {
+    public WrappedFluidHolder(ExtendedFluidContainer container, FluidHolder fluidHolder, FluidExtraction extraction) {
         this.fluidHolder = fluidHolder;
         this.extraction = extraction;
         this.container = container;
@@ -26,9 +27,7 @@ public class WrappedFluidHolder extends SnapshotParticipant<FluidHolder> impleme
 
     @Override
     public long extract(FluidVariant resource, long maxAmount, TransactionContext transaction) {
-        long apply = extraction.apply(this.fluidHolder, FabricFluidHolder.of(resource, maxAmount), () -> this.updateSnapshots(transaction));
-        container.setChanged(transaction);
-        return apply;
+        return extraction.apply(this.fluidHolder, FabricFluidHolder.of(resource, maxAmount), () -> this.updateSnapshots(transaction));
     }
 
     @Override
@@ -52,20 +51,18 @@ public class WrappedFluidHolder extends SnapshotParticipant<FluidHolder> impleme
     }
 
     @Override
-    protected FluidHolder createSnapshot() {
-        return fluidHolder.copyHolder();
+    public FluidSnapshot createSnapshot() {
+        return container.createSnapshot();
     }
 
     @Override
-    protected void readSnapshot(FluidHolder snapshot) {
-        fluidHolder = snapshot.copyHolder();
+    public void readSnapshot(FluidSnapshot snapshot) {
+        container.readSnapshot(snapshot);
     }
 
     @Override
-    protected void onFinalCommit() {
-        if(container != null) {
-            container.finalChange();
-        }
+    public void onFinalCommit() {
+        container.onFinalCommit();
     }
 
     @FunctionalInterface

@@ -15,7 +15,7 @@ import net.minecraft.world.item.ItemStack;
 import java.util.Iterator;
 
 @SuppressWarnings("UnstableApiUsage")
-public class FabricItemFluidContainer extends SnapshotParticipant<FluidSnapshot> implements Storage<FluidVariant>, ManualSyncing {
+public class FabricItemFluidContainer extends ExtendedFluidContainer implements Storage<FluidVariant>, ManualSyncing {
     private final FluidContainer container;
     private final ContainerItemContext ctx;
 
@@ -46,12 +46,16 @@ public class FabricItemFluidContainer extends SnapshotParticipant<FluidSnapshot>
     }
 
     @Override
-    protected FluidSnapshot createSnapshot() {
+    public void onFinalCommit() {
+    }
+
+    @Override
+    public FluidSnapshot createSnapshot() {
         return container.createSnapshot();
     }
 
     @Override
-    protected void readSnapshot(FluidSnapshot snapshot) {
+    public void readSnapshot(FluidSnapshot snapshot) {
         container.readSnapshot(snapshot);
     }
 

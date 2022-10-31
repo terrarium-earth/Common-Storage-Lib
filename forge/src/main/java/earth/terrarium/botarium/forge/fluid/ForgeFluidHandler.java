@@ -40,11 +40,11 @@ public record ForgeFluidHandler(IFluidHandler handler) implements PlatformFluidH
 
     @Override
     public boolean supportsInsertion() {
-        return insertFluid(getFluidInTank(0), true) > 0;
+        return true;
     }
 
     @Override
     public boolean supportsExtraction() {
-        return extractFluid(getFluidInTank(0), true).getFluidAmount() > 0;
+        return true;
     }
 }

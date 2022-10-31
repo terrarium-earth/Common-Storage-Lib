@@ -40,14 +40,12 @@ public class SimpleUpdatingFluidContainer implements UpdatingFluidContainer {
                     insertedFluid.setAmount(Mth.clamp(fluid.getFluidAmount(), 0, maxAmount.applyAsLong(i)));
                     if (simulate) return insertedFluid.getFluidAmount();
                     this.storedFluid.set(i, insertedFluid);
-                    this.update();
                     return storedFluid.get(i).getFluidAmount();
                 } else {
                     if (storedFluid.get(i).matches(fluid)) {
                         long insertedAmount = Mth.clamp(fluid.getFluidAmount(), 0, maxAmount.applyAsLong(i) - storedFluid.get(i).getFluidAmount());
                         if (simulate) return insertedAmount;
                         this.storedFluid.get(i).setAmount(storedFluid.get(i).getFluidAmount() + insertedAmount);
-                        this.update();
                         return insertedAmount;
                     }
                 }
@@ -69,7 +67,6 @@ public class SimpleUpdatingFluidContainer implements UpdatingFluidContainer {
                     if (simulate) return toExtract;
                     this.storedFluid.get(i).setAmount(storedFluid.get(i).getFluidAmount() - extractedAmount);
                     if (storedFluid.get(i).getFluidAmount() == 0) storedFluid.set(i, FluidHooks.emptyFluid());
-                    this.update();
                     return toExtract;
                 }
             }

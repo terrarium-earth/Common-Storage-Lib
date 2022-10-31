@@ -1,12 +1,14 @@
 package earth.terrarium.botarium.api.fluid;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class SimpleFluidSnapshot implements FluidSnapshot {
     public final List<FluidHolder> fluids;
 
     public SimpleFluidSnapshot(FluidContainer fluidContainer) {
-        this.fluids = fluidContainer.getFluids();
+        this.fluids = new ArrayList<>();
+        fluidContainer.getFluids().forEach(fluidHolder -> this.fluids.add(fluidHolder.copyHolder()));
     }
 
     @Override
