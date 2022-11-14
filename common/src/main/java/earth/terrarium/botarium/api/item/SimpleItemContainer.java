@@ -43,7 +43,7 @@ public class SimpleItemContainer implements SerializableContainer {
 
     @Override
     public boolean isEmpty() {
-        return items.isEmpty();
+        return items.stream().allMatch(ItemStack::isEmpty);
     }
 
     public NonNullList<ItemStack> getItems() {
