@@ -1,6 +1,8 @@
 package earth.terrarium.botarium.forge.regsitry.fluid;
 
 import earth.terrarium.botarium.api.registry.fluid.FluidProperties;
+import net.minecraft.Util;
+import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.minecraftforge.common.SoundAction;
@@ -9,7 +11,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Consumer;
 
-public class BotariumFluidType extends FluidType implements PropertiesHolder {
+public class BotariumFluidType extends FluidType {
 
     private final FluidProperties fluidProperties;
 
@@ -20,6 +22,7 @@ public class BotariumFluidType extends FluidType implements PropertiesHolder {
 
     public static BotariumFluidType of(FluidProperties fluidProperties) {
         var properties = Properties.create();
+        properties.descriptionId(Util.makeDescriptionId("fluid_type", fluidProperties.id()));
         properties.adjacentPathType(fluidProperties.adjacentPathType());
         properties.canConvertToSource(fluidProperties.canConvertToSource());
         properties.canDrown(fluidProperties.canDrown());
@@ -57,11 +60,16 @@ public class BotariumFluidType extends FluidType implements PropertiesHolder {
             public @Nullable ResourceLocation getOverlayTexture() {
                 return type.fluidProperties.overlay();
             }
-        });
-    }
 
-    @Override
-    public FluidProperties getProperties() {
-        return fluidProperties;
+            @Override
+            public @Nullable ResourceLocation getRenderOverlayTexture(Minecraft mc) {
+                return type.fluidProperties.screenOverlay();
+            }
+
+            @Override
+            public int getTintColor() {
+                return type.fluidProperties.tintColor();
+            }
+        });
     }
 }
