@@ -6,6 +6,7 @@ import earth.terrarium.botarium.api.item.ItemStackHolder;
 import net.fabricmc.fabric.api.transfer.v1.context.ContainerItemContext;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
+import net.fabricmc.fabric.api.transfer.v1.item.base.SingleStackStorage;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.world.item.ItemStack;
@@ -14,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @SuppressWarnings("UnstableApiUsage")
-public record FabricFluidItemHandler(ItemStack stack, ContainerItemContext context, Storage<FluidVariant> storage)  implements PlatformFluidItemHandler {
+public record FabricFluidItemHandler(ItemStack stack, ContainerItemContext context, ItemStackStorage storage)  implements PlatformFluidItemHandler {
 
     public FabricFluidItemHandler(ItemStack stack) {
         this(stack, ItemStackStorage.of(stack));
@@ -27,6 +28,7 @@ public record FabricFluidItemHandler(ItemStack stack, ContainerItemContext conte
     @Override
     public long insertFluid(ItemStackHolder item, FluidHolder fluid, boolean simulate) {
         try (Transaction transaction = Transaction.openOuter()) {
+            storage.
             FabricFluidHolder fabricFluidHolder = FabricFluidHolder.of(fluid);
             long inserted = storage.insert(fabricFluidHolder.toVariant(), fabricFluidHolder.getAmount(), transaction);
             if (!simulate) {
@@ -68,7 +70,7 @@ public record FabricFluidItemHandler(ItemStack stack, ContainerItemContext conte
 
     @Override
     public boolean supportsInsertion() {
-        return insertFluid(new ItemStackHolder(stack), getFluidInTank(0), true) > 0;
+        return insertFluid(new ItemStackHolder(stack).copy(), getFluidInTank(0), true) > 0;
     }
 
     @Override
