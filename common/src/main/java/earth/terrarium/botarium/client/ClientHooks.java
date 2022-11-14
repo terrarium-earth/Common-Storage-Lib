@@ -19,22 +19,22 @@ import java.util.function.Supplier;
 public class ClientHooks {
 
     @ImplementedByExtension
-    public void registerItemProperty(Item pItem, ResourceLocation pName, ClampedItemPropertyFunction pProperty) {
+    public static void registerItemProperty(Item pItem, ResourceLocation pName, ClampedItemPropertyFunction pProperty) {
         throw new NotImplementedException();
     }
 
     @ImplementedByExtension
-    public <T extends BlockEntity> void registerBlockEntityRenderers(BlockEntityType<T> type, BlockEntityRendererProvider<T> provider) {
+    public static <T extends BlockEntity> void registerBlockEntityRenderers(BlockEntityType<T> type, BlockEntityRendererProvider<T> provider) {
         throw new NotImplementedException();
     }
 
     @ImplementedByExtension
-    public <T extends Entity> void registerEntityRenderer(Supplier<EntityType<T>> entity, EntityRendererProvider<T> rendererProvider) {
+    public static <T extends Entity> void registerEntityRenderer(Supplier<? extends EntityType<? extends T>> entity, EntityRendererProvider<T> rendererProvider) {
         throw new NotImplementedException();
     }
 
     @ImplementedByExtension
-    public void setRenderLayer(Block block, RenderType type) {
+    public static void setRenderLayer(Block block, RenderType type) {
         throw new NotImplementedException();
     }
 }
