@@ -13,6 +13,9 @@
   "entrypoints": {
     "main": [
       "earth.terrarium.botarium.fabric.BotariumFabric"
+    ],
+    "client": [
+      "earth.terrarium.botarium.fabric.BotariumFabricClient"
     ]
   },
   "mixins": [
