@@ -136,7 +136,7 @@ public class FluidHooks {
      * @return The amount of fluid transferred.
      */
     public static long moveItemToStandardFluid(PlatformFluidItemHandler from, ItemStackHolder sender, PlatformFluidHandler to, FluidHolder fluid) {
-        FluidHolder extracted = from.extractFluid(sender, fluid, true);
+        FluidHolder extracted = from.extractFluid(sender.copy(), fluid, true);
         long inserted = to.insertFluid(extracted, true);
         from.extractFluid(sender, newFluidHolder(fluid.getFluid(), inserted, fluid.getCompound()), false);
         return to.insertFluid(extracted, false);
@@ -164,7 +164,7 @@ public class FluidHooks {
      * @return The amount of fluid transferred.
      */
     public static long moveItemToItemFluid(PlatformFluidItemHandler from, ItemStackHolder sender, PlatformFluidItemHandler to, ItemStackHolder receiver, FluidHolder fluid) {
-        FluidHolder extracted = from.extractFluid(sender, fluid, true);
+        FluidHolder extracted = from.extractFluid(sender.copy(), fluid, true);
         long inserted = to.insertFluid(receiver, extracted, true);
         from.extractFluid(sender, newFluidHolder(fluid.getFluid(), inserted, fluid.getCompound()), false);
         return to.insertFluid(receiver, extracted, false);

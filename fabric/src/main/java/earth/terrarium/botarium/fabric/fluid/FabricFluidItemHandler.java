@@ -68,7 +68,7 @@ public record FabricFluidItemHandler(ItemStack stack, ContainerItemContext conte
 
     @Override
     public boolean supportsInsertion() {
-        return insertFluid(new ItemStackHolder(stack), getFluidInTank(0), true) > 0;
+        return insertFluid(new ItemStackHolder(stack).copy(), getFluidInTank(0), true) > 0;
     }
 
     @Override

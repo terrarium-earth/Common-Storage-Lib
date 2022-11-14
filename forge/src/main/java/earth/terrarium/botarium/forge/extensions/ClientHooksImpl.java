@@ -18,29 +18,28 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.msrandom.extensions.annotations.ClassExtension;
 import net.msrandom.extensions.annotations.ImplementsBaseElement;
-import org.apache.commons.lang3.NotImplementedException;
 
 import java.util.function.Supplier;
 
 @ClassExtension(ClientHooks.class)
 public class ClientHooksImpl {
     @ImplementsBaseElement
-    public void registerItemProperty(Item pItem, ResourceLocation pName, ClampedItemPropertyFunction pProperty) {
+    public static void registerItemProperty(Item pItem, ResourceLocation pName, ClampedItemPropertyFunction pProperty) {
         ItemProperties.register(pItem, pName, pProperty);
     }
 
     @ImplementsBaseElement
-    public <T extends BlockEntity> void registerBlockEntityRenderers(BlockEntityType<T> type, BlockEntityRendererProvider<T> provider) {
+    public static <T extends BlockEntity> void registerBlockEntityRenderers(BlockEntityType<T> type, BlockEntityRendererProvider<T> provider) {
         BlockEntityRenderers.register(type, provider);
     }
 
     @ImplementsBaseElement
-    public <T extends Entity> void registerEntityRenderer(Supplier<EntityType<T>> entity, EntityRendererProvider<T> rendererProvider) {
+    public static <T extends Entity> void registerEntityRenderer(Supplier<? extends EntityType<? extends T>> entity, EntityRendererProvider<T> rendererProvider) {
         EntityRenderers.register(entity.get(), rendererProvider);
     }
 
     @ImplementsBaseElement
-    public void setRenderLayer(Block block, RenderType type) {
+    public static void setRenderLayer(Block block, RenderType type) {
         ItemBlockRenderTypes.setRenderLayer(block, type);
     }
 }

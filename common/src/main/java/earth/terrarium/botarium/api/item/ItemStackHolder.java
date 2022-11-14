@@ -24,4 +24,8 @@ public class ItemStackHolder {
     public boolean isDirty() {
         return isDirty;
     }
+
+    public ItemStackHolder copy() {
+        return new ItemStackHolder(stack.copy());
+    }
 }
