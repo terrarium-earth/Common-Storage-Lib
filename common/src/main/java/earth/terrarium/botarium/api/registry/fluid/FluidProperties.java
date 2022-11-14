@@ -5,7 +5,7 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.item.Rarity;
 import net.minecraft.world.level.pathfinder.BlockPathTypes;
 
-public record FluidProperties(String descriptionId,
+public record FluidProperties(ResourceLocation id,
                               double motionScale,
                               boolean canPushEntity,
                               boolean canSwim,
@@ -26,17 +26,21 @@ public record FluidProperties(String descriptionId,
                               ResourceLocation still,
                               ResourceLocation flowing,
                               ResourceLocation overlay,
-                              int tickRate,
+                              ResourceLocation screenOverlay,
+                              int tintColor,
+                              int tickDelay,
                               int slopeFindDistance,
-                              int levelDecreasePerBlock,
-                              float explosionResistance) {
+                              int dropOff,
+                              float explosionResistance,
+                              boolean canPlace
+
+) {
 
     public static Builder create() {
         return new Builder();
     }
 
     public static class Builder {
-        private String descriptionId;
         private double motionScale = 0.014;
         private boolean canPushEntity = true;
         private boolean canSwim = false;
@@ -53,21 +57,20 @@ public record FluidProperties(String descriptionId,
         private int temperature = 300;
         private int viscosity = 1000;
         private Rarity rarity = Rarity.COMMON;
-        private FluidSounds sounds = new FluidSounds();
+        private final FluidSounds sounds = new FluidSounds();
         private ResourceLocation still;
         private ResourceLocation flowing;
         private ResourceLocation overlay;
+        private ResourceLocation screenOverlay;
+        private int tintColor = -1;
         private int tickRate = 5;
         private int slopeFindDistance = 4;
-        private int levelDecreasePerBlock = 1;
+        private int dropOff = 1;
         private float explosionResistance = 100.0f;
 
-        private Builder() {
-        }
+        private boolean canPlace = true;
 
-        public Builder descriptionId(String descriptionId) {
-            this.descriptionId = descriptionId;
-            return this;
+        private Builder() {
         }
 
         public Builder motionScale(double motionScale) {
@@ -170,6 +173,16 @@ public record FluidProperties(String descriptionId,
             return this;
         }
 
+        public Builder screenOverlay(ResourceLocation screenOverlay) {
+            this.screenOverlay = screenOverlay;
+            return this;
+        }
+
+        public Builder tintColor(int tintColor) {
+            this.tintColor = tintColor;
+            return this;
+        }
+
         public Builder tickRate(int tickRate) {
             this.tickRate = tickRate;
             return this;
@@ -180,8 +193,8 @@ public record FluidProperties(String descriptionId,
             return this;
         }
 
-        public Builder levelDecreasePerBlock(int levelDecreasePerBlock) {
-            this.levelDecreasePerBlock = levelDecreasePerBlock;
+        public Builder dropOff(int dropOff) {
+            this.dropOff = dropOff;
             return this;
         }
 
@@ -190,8 +203,13 @@ public record FluidProperties(String descriptionId,
             return this;
         }
 
-        public FluidProperties build() {
-            return new FluidProperties(descriptionId, motionScale, canPushEntity, canSwim, canDrown, fallDistanceModifier, canExtinguish, canConvertToSource, supportsBloating, pathType, adjacentPathType, canHydrate, lightLevel, density, temperature, viscosity, rarity, sounds, still, flowing, overlay, tickRate, slopeFindDistance, levelDecreasePerBlock, explosionResistance);
+        public Builder disablePlacing() {
+            this.canPlace = false;
+            return this;
+        }
+
+        public FluidProperties build(ResourceLocation id) {
+            return new FluidProperties(id, motionScale, canPushEntity, canSwim, canDrown, fallDistanceModifier, canExtinguish, canConvertToSource, supportsBloating, pathType, adjacentPathType, canHydrate, lightLevel, density, temperature, viscosity, rarity, sounds, still, flowing, overlay, screenOverlay, tintColor, tickRate, slopeFindDistance, dropOff, explosionResistance, canPlace);
         }
     }
 }
