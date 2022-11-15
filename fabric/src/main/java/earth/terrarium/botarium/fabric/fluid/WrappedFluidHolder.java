@@ -5,8 +5,6 @@ import earth.terrarium.botarium.api.fluid.FluidSnapshot;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.StorageView;
 import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
-import net.fabricmc.fabric.api.transfer.v1.transaction.base.SnapshotParticipant;
-import org.jetbrains.annotations.Nullable;
 
 @SuppressWarnings("UnstableApiUsage")
 public class WrappedFluidHolder extends ExtendedFluidContainer implements StorageView<FluidVariant> {

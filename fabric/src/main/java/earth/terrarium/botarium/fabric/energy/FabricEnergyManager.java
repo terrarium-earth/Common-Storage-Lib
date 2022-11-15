@@ -1,10 +1,8 @@
 package earth.terrarium.botarium.fabric.energy;
 
 import earth.terrarium.botarium.api.energy.PlatformEnergyManager;
-import earth.terrarium.botarium.fabric.fluid.ItemStackStorage;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.core.Direction;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import org.jetbrains.annotations.ApiStatus;
 import team.reborn.energy.api.EnergyStorage;

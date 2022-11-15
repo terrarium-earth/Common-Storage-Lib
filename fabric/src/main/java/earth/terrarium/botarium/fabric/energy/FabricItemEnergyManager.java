@@ -4,7 +4,6 @@ import earth.terrarium.botarium.api.energy.PlatformItemEnergyManager;
 import earth.terrarium.botarium.api.item.ItemStackHolder;
 import earth.terrarium.botarium.fabric.fluid.ItemStackStorage;
 import net.fabricmc.fabric.api.transfer.v1.context.ContainerItemContext;
-import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.world.item.ItemStack;
 import team.reborn.energy.api.EnergyStorage;

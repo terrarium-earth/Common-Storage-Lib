@@ -11,9 +11,7 @@ import net.msrandom.extensions.annotations.ImplementedByExtension;
 import org.apache.commons.lang3.NotImplementedException;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Objects;
 import java.util.Optional;
-import java.util.function.BiFunction;
 
 public class EnergyHooks {
 

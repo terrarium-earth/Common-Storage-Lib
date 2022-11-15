@@ -2,7 +2,6 @@ package earth.terrarium.botarium.fabric.energy;
 
 import earth.terrarium.botarium.api.energy.EnergySnapshot;
 import earth.terrarium.botarium.api.energy.StatefulEnergyContainer;
-import net.fabricmc.fabric.api.transfer.v1.storage.StoragePreconditions;
 import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
 import net.fabricmc.fabric.api.transfer.v1.transaction.base.SnapshotParticipant;
 import team.reborn.energy.api.EnergyStorage;
