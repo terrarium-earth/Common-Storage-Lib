@@ -17,9 +17,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.msrandom.extensions.annotations.ClassExtension;
-import net.msrandom.extensions.annotations.ImplementedByExtension;
 import net.msrandom.extensions.annotations.ImplementsBaseElement;
-import org.apache.commons.lang3.NotImplementedException;
 
 import java.util.function.Supplier;
 

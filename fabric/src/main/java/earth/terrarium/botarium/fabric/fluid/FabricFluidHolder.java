@@ -10,7 +10,6 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.material.Fluid;
-import net.minecraft.world.level.material.Fluids;
 
 @SuppressWarnings("UnstableApiUsage")
 public class FabricFluidHolder extends SnapshotParticipant<FabricFluidHolder> implements FluidHolder, StorageView<FluidVariant> {

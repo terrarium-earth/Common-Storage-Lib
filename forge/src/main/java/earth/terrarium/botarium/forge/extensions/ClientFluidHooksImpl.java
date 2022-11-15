@@ -1,6 +1,5 @@
 package earth.terrarium.botarium.forge.extensions;
 
-import com.mojang.authlib.minecraft.client.MinecraftClient;
 import earth.terrarium.botarium.api.fluid.ClientFluidHooks;
 import earth.terrarium.botarium.api.fluid.FluidHolder;
 import earth.terrarium.botarium.forge.fluid.ForgeFluidHolder;

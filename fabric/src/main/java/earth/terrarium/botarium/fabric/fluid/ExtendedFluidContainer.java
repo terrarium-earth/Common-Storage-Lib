@@ -1,8 +1,6 @@
 package earth.terrarium.botarium.fabric.fluid;
 
 import earth.terrarium.botarium.api.fluid.FluidSnapshot;
-import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
-import net.fabricmc.fabric.api.transfer.v1.storage.StorageView;
 import net.fabricmc.fabric.api.transfer.v1.transaction.base.SnapshotParticipant;
 
 public abstract class ExtendedFluidContainer extends SnapshotParticipant<FluidSnapshot> {

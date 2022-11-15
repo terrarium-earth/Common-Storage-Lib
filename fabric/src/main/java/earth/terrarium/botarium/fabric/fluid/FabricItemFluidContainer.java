@@ -8,7 +8,6 @@ import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.fabricmc.fabric.api.transfer.v1.storage.StorageView;
 import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
-import net.fabricmc.fabric.api.transfer.v1.transaction.base.SnapshotParticipant;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
 
@@ -28,6 +27,7 @@ public class FabricItemFluidContainer extends ExtendedFluidContainer implements 
 
     @Override
     public long insert(FluidVariant resource, long maxAmount, TransactionContext transaction) {
+        updateSnapshots(transaction);
         long inserted = container.insertFluid(FabricFluidHolder.of(resource, maxAmount), false);
         setChanged(transaction);
         return inserted;
@@ -35,6 +35,7 @@ public class FabricItemFluidContainer extends ExtendedFluidContainer implements 
 
     @Override
     public long extract(FluidVariant resource, long maxAmount, TransactionContext transaction) {
+        updateSnapshots(transaction);
         long extracted = container.extractFluid(FabricFluidHolder.of(resource, maxAmount), false).getFluidAmount();
         setChanged(transaction);
         return extracted;
@@ -62,7 +63,6 @@ public class FabricItemFluidContainer extends ExtendedFluidContainer implements 
     @Override
     public void setChanged(TransactionContext transaction) {
         ItemStack stack = ctx.getItemVariant().toStack();
-        this.updateSnapshots(transaction);
         this.container.serialize(stack.getOrCreateTag());
         ctx.exchange(ItemVariant.of(stack), ctx.getAmount(), transaction);
     }
