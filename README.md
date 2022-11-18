@@ -44,7 +44,7 @@ dependencies {
 
 <i>If you use Forge Gradle, you can see how to do it [here](https://forge.gemwire.uk/wiki/Jar-in-jar).</i>
 
-<b>This library is not on CurseForge and probably won't be, so jar in jar-ing is your only option!</b>
+<b>This project is now on Curseforge! You can find it on [Modrinth](https://modrinth.com/mod/botarium) and [Curseforge](https://www.curseforge.com/minecraft/mc-mods/botarium)</b>
 
 ---
 
