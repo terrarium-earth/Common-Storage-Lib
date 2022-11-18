@@ -16,7 +16,12 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 @ClassExtension(EnergyContainer.class)
-public interface EnergyExtensions extends IEnergyStorage, AutoSerializable {
+public interface EnergyExtensions extends IEnergyStorage, AutoSerializable, ICapabilityProvider {
+
+    @Override
+    @NotNull default <T> LazyOptional<T> getCapability(@NotNull Capability<T> capability, @Nullable Direction arg) {
+        return capability == ForgeCapabilities.ENERGY && ((EnergyContainer) this).getContainer(arg) != null? LazyOptional.of(() -> (IEnergyStorage) this).cast() : LazyOptional.empty();
+    }
 
     @Override
     default int receiveEnergy(int maxAmount, boolean bl) {
