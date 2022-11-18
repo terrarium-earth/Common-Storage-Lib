@@ -1,0 +1,2 @@
+Botarium 1.7.3
+Fixed item capabilities not syncing to client properly
