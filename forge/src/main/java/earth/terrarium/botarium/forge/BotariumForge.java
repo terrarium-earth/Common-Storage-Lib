@@ -1,6 +1,7 @@
 package earth.terrarium.botarium.forge;
 
 import earth.terrarium.botarium.Botarium;
+import earth.terrarium.botarium.api.BotariumCap;
 import earth.terrarium.botarium.api.energy.EnergyBlock;
 import earth.terrarium.botarium.api.energy.EnergyItem;
 import earth.terrarium.botarium.api.fluid.FluidHoldingBlock;
@@ -25,7 +26,6 @@ public class BotariumForge {
         Botarium.init();
         IEventBus bus = MinecraftForge.EVENT_BUS;
         bus.addGenericListener(BlockEntity.class, BotariumForge::attachBlockCapabilities);
-        bus.addGenericListener(ItemStack.class, BotariumForge::attachItemCapabilities);
     }
 
     public static void attachBlockCapabilities(AttachCapabilitiesEvent<BlockEntity> event) {
@@ -39,16 +39,6 @@ public class BotariumForge {
 
         if (event.getObject() instanceof ItemContainerBlock itemContainerBlock) {
             event.addCapability(new ResourceLocation(Botarium.MOD_ID, "item"), new ItemContainerWrapper(itemContainerBlock.getContainer()));
-        }
-    }
-
-    public static void attachItemCapabilities(AttachCapabilitiesEvent<ItemStack> event) {
-        ItemStack item = event.getObject();
-        if (item.getItem() instanceof EnergyItem energyItem) {
-            event.addCapability(new ResourceLocation(Botarium.MOD_ID, "energy_item"), (ICapabilityProvider) energyItem.getEnergyStorage(item));
-        }
-        if (item.getItem() instanceof FluidHoldingItem fluidHoldingItem) {
-            event.addCapability(ForgeItemFluidContainer.FLUID_KEY, new ForgeItemFluidContainer(fluidHoldingItem.getFluidContainer(item)));
         }
     }
 }

@@ -20,6 +20,11 @@ sourceSets.main {
     )
 }
 
+jar {
+    classifier "dev"
+    archivesBaseName = "$mod_id-fabric-$minecraft_version"
+}
+
 sourceSets.test {
     def commonSourceSets = project(":common").sourceSets
     def commonTest = commonSourceSets.test

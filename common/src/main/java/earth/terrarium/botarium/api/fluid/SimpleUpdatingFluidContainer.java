@@ -13,6 +13,8 @@ import java.util.Objects;
 import java.util.function.BiPredicate;
 import java.util.function.IntToLongFunction;
 
+import static earth.terrarium.botarium.api.fluid.ItemFilteredFluidContainer.FLUID_KEY;
+
 public class SimpleUpdatingFluidContainer implements UpdatingFluidContainer {
     public NonNullList<FluidHolder> storedFluid;
     public final IntToLongFunction maxAmount;
@@ -134,7 +136,7 @@ public class SimpleUpdatingFluidContainer implements UpdatingFluidContainer {
 
     @Override
     public void deserialize(CompoundTag tag) {
-        ListTag fluids = tag.getList("StoredFluids", Tag.TAG_COMPOUND);
+        ListTag fluids = tag.getList(FLUID_KEY, Tag.TAG_COMPOUND);
         for (int i = 0; i < fluids.size(); i++) {
             CompoundTag fluid = fluids.getCompound(i);
             this.storedFluid.set(i, FluidHooks.fluidFromCompound(fluid));
@@ -143,11 +145,13 @@ public class SimpleUpdatingFluidContainer implements UpdatingFluidContainer {
 
     @Override
     public CompoundTag serialize(CompoundTag tag) {
-        ListTag tags = new ListTag();
-        for (FluidHolder fluidHolder : this.storedFluid) {
-            tags.add(fluidHolder.serialize());
+        if(!this.storedFluid.isEmpty()) {
+            ListTag tags = new ListTag();
+            for (FluidHolder fluidHolder : this.storedFluid) {
+                tags.add(fluidHolder.serialize());
+            }
+            tag.put(FLUID_KEY, tags);
         }
-        tag.put("StoredFluids", tags);
         return tag;
     }
 

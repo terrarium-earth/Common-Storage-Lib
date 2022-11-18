@@ -1,14 +1,11 @@
 package testmod;
 
-import earth.terrarium.botarium.api.energy.EnergyContainer;
-import earth.terrarium.botarium.api.energy.EnergyItem;
-import earth.terrarium.botarium.api.energy.ItemEnergyContainer;
-import earth.terrarium.botarium.api.fluid.FluidHoldingItem;
-import earth.terrarium.botarium.api.fluid.FluidHooks;
-import earth.terrarium.botarium.api.fluid.ItemFilteredFluidContainer;
-import earth.terrarium.botarium.api.fluid.ItemFluidContainer;
+import earth.terrarium.botarium.api.energy.*;
+import earth.terrarium.botarium.api.fluid.*;
 import earth.terrarium.botarium.api.item.ItemStackHolder;
+import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.Style;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
@@ -17,12 +14,13 @@ import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.material.Fluids;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.ParametersAreNonnullByDefault;
+import java.util.List;
 
-@ParametersAreNonnullByDefault
 public class TestItem extends Item implements EnergyItem, FluidHoldingItem {
     public TestItem(Properties properties) {
         super(properties);
@@ -36,6 +34,17 @@ public class TestItem extends Item implements EnergyItem, FluidHoldingItem {
     @Override
     public ItemFluidContainer getFluidContainer(ItemStack stack) {
         return new ItemFilteredFluidContainer(FluidHooks.buckets(4), 1, stack, (integer, fluidHolder) -> fluidHolder.getFluid() == Fluids.WATER);
+    }
+
+    @Override
+    public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltip, TooltipFlag tooltipFlag) {
+        PlatformFluidItemHandler itemFluidManager = FluidHooks.getItemFluidManager(stack);
+        long oxygen = itemFluidManager.getFluidInTank(0).getFluidAmount();
+        tooltip.add(Component.literal("Water: " + oxygen + "mb").setStyle(Style.EMPTY.withColor(ChatFormatting.GRAY)));
+
+        PlatformItemEnergyManager energyManager = EnergyHooks.getItemEnergyManager(stack);
+        long energy = energyManager.getStoredEnergy();
+        tooltip.add(Component.literal("Energy: " + energy + "FE").setStyle(Style.EMPTY.withColor(ChatFormatting.GRAY)));
     }
 
     /*

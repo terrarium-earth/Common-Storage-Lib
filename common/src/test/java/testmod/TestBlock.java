@@ -17,10 +17,8 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.stream.Collectors;
 
-@ParametersAreNonnullByDefault
 public class TestBlock extends BaseEntityBlock {
     public TestBlock(Properties properties) {
         super(properties);

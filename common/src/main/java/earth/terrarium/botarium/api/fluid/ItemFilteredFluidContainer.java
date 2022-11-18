@@ -17,6 +17,7 @@ public class ItemFilteredFluidContainer implements ItemFluidContainer {
     public final BiPredicate<Integer, FluidHolder> fluidFilter;
     public final long maxAmount;
     public final ItemStack containerItem;
+    public static final String FLUID_KEY = "StoredFluids";
 
     public ItemFilteredFluidContainer(long maxAmount, int size, ItemStack itemStack, BiPredicate<Integer, FluidHolder> fluidFilter) {
         this.maxAmount = maxAmount;
@@ -121,7 +122,7 @@ public class ItemFilteredFluidContainer implements ItemFluidContainer {
 
     @Override
     public void deserialize(CompoundTag tag) {
-        ListTag fluids = tag.getList("StoredFluids", Tag.TAG_COMPOUND);
+        ListTag fluids = tag.getList(FLUID_KEY, Tag.TAG_COMPOUND);
         for (int i = 0; i < fluids.size(); i++) {
             CompoundTag fluid = fluids.getCompound(i);
             this.storedFluid.set(i, FluidHooks.fluidFromCompound(fluid));
@@ -130,11 +131,13 @@ public class ItemFilteredFluidContainer implements ItemFluidContainer {
 
     @Override
     public CompoundTag serialize(CompoundTag tag) {
-        ListTag tags = new ListTag();
-        for (FluidHolder fluidHolder : this.storedFluid) {
-            tags.add(fluidHolder.serialize());
+        if(!this.storedFluid.isEmpty()) {
+            ListTag tags = new ListTag();
+            for (FluidHolder fluidHolder : this.storedFluid) {
+                tags.add(fluidHolder.serialize());
+            }
+            tag.put(FLUID_KEY, tags);
         }
-        tag.put("StoredFluids", tags);
         return tag;
     }
 

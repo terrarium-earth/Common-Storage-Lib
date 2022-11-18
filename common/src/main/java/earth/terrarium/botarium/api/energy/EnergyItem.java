@@ -1,8 +1,9 @@
 package earth.terrarium.botarium.api.energy;
 
+import earth.terrarium.botarium.api.BotariumCap;
 import net.minecraft.world.item.ItemStack;
 
-public interface EnergyItem {
+public interface EnergyItem extends BotariumCap {
 
     /**
      * Gets the {@link EnergyContainer} for the given {@link ItemStack}.

@@ -16,7 +16,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 @ClassExtension(EnergyContainer.class)
-public interface EnergyExtensions extends IEnergyStorage, ICapabilityProvider, AutoSerializable {
+public interface EnergyExtensions extends IEnergyStorage, AutoSerializable {
 
     @Override
     default int receiveEnergy(int maxAmount, boolean bl) {
@@ -56,11 +56,6 @@ public interface EnergyExtensions extends IEnergyStorage, ICapabilityProvider, A
 
     @Override
     default Serializable getSerializable() {
-        return (Serializable) this;
-    }
-
-    @Override
-    @NotNull default <T> LazyOptional<T> getCapability(@NotNull Capability<T> capability, @Nullable Direction arg) {
-        return capability == ForgeCapabilities.ENERGY && ((EnergyContainer) this).getContainer(arg) != null? LazyOptional.of(() -> (IEnergyStorage) this).cast() : LazyOptional.empty();
+        return (EnergyContainer) this;
     }
 }

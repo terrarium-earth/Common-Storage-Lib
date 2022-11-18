@@ -1,8 +1,9 @@
 package earth.terrarium.botarium.api.fluid;
 
+import earth.terrarium.botarium.api.BotariumCap;
 import net.minecraft.world.item.ItemStack;
 
-public interface FluidHoldingItem {
+public interface FluidHoldingItem extends BotariumCap {
 
     /**
      * Gets the {@link ItemFluidContainer} for the given {@link ItemStack}.

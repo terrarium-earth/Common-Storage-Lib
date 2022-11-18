@@ -17,17 +17,11 @@ import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public record ForgeItemFluidContainer(ItemFluidContainer container) implements IFluidHandlerItem, ICapabilityProvider, AutoSerializable {
-    public static final ResourceLocation FLUID_KEY = new ResourceLocation(Botarium.MOD_ID, "fluid_item");
+public record ForgeItemFluidContainer(ItemFluidContainer container) implements IFluidHandlerItem {
 
     @Override
     public @NotNull ItemStack getContainer() {
         return container.getContainerItem();
-    }
-
-    @NotNull
-    public <T> LazyOptional<T> getCapability(@NotNull Capability<T> capability, @Nullable Direction var2) {
-        return capability == ForgeCapabilities.FLUID_HANDLER_ITEM ? LazyOptional.of(() -> this).cast() : LazyOptional.empty();
     }
 
     @Override
@@ -66,10 +60,5 @@ public record ForgeItemFluidContainer(ItemFluidContainer container) implements I
         if (fluid.isEmpty()) return FluidStack.EMPTY;
         fluid.setAmount(i);
         return new ForgeFluidHolder(this.container.extractFluid(fluid, fluidAction.simulate())).getFluidStack();
-    }
-
-    @Override
-    public Serializable getSerializable() {
-        return container;
     }
 }
