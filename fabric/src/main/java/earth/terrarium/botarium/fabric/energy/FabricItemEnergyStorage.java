@@ -1,5 +1,6 @@
 package earth.terrarium.botarium.fabric.energy;
 
+import earth.terrarium.botarium.Botarium;
 import earth.terrarium.botarium.api.energy.EnergyContainer;
 import net.fabricmc.fabric.api.transfer.v1.context.ContainerItemContext;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
@@ -17,7 +18,7 @@ public class FabricItemEnergyStorage extends SnapshotParticipant<CompoundTag> im
     public FabricItemEnergyStorage(ContainerItemContext ctx, EnergyContainer container) {
         this.ctx = ctx;
         CompoundTag nbt = ctx.getItemVariant().getNbt();
-        if(nbt != null) container.deserialize(nbt);
+        if(nbt != null) container.deserialize(nbt.getCompound(Botarium.BOTARIUM_DATA));
         this.container = container;
     }
 
@@ -47,7 +48,7 @@ public class FabricItemEnergyStorage extends SnapshotParticipant<CompoundTag> im
 
     public void setChanged(TransactionContext transaction) {
         ItemStack stack = ctx.getItemVariant().toStack();
-        this.container.serialize(stack.getOrCreateTag());
+        this.container.serialize(stack.getOrCreateTagElement(Botarium.BOTARIUM_DATA));
         this.updateSnapshots(transaction);
         ctx.exchange(ItemVariant.of(stack), ctx.getAmount(), transaction);
     }

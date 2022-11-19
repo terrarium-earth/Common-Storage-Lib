@@ -17,7 +17,7 @@ import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public record ForgeItemFluidContainer(ItemFluidContainer container) implements IFluidHandlerItem {
+public record ForgeItemFluidContainer(ItemFluidContainer container, ItemStack itemStack) implements IFluidHandlerItem {
 
     @Override
     public @NotNull ItemStack getContainer() {
@@ -46,12 +46,16 @@ public record ForgeItemFluidContainer(ItemFluidContainer container) implements I
 
     @Override
     public int fill(FluidStack fluidStack, FluidAction fluidAction) {
-        return (int) this.container.insertFluid(new ForgeFluidHolder(fluidStack), fluidAction.simulate());
+        long filled = this.container.insertFluid(new ForgeFluidHolder(fluidStack), fluidAction.simulate());
+        container.update(itemStack);
+        return (int) filled;
     }
 
     @Override
     public @NotNull FluidStack drain(FluidStack fluidStack, FluidAction fluidAction) {
-        return new ForgeFluidHolder(this.container.extractFluid(new ForgeFluidHolder(fluidStack), fluidAction.simulate())).getFluidStack();
+        FluidStack drained = new ForgeFluidHolder(this.container.extractFluid(new ForgeFluidHolder(fluidStack), fluidAction.simulate())).getFluidStack();
+        container.update(itemStack);
+        return drained;
     }
 
     @Override
@@ -59,6 +63,7 @@ public record ForgeItemFluidContainer(ItemFluidContainer container) implements I
         FluidHolder fluid = this.container.getFluids().get(0).copyHolder();
         if (fluid.isEmpty()) return FluidStack.EMPTY;
         fluid.setAmount(i);
+        container.update(itemStack);
         return new ForgeFluidHolder(this.container.extractFluid(fluid, fluidAction.simulate())).getFluidStack();
     }
 }

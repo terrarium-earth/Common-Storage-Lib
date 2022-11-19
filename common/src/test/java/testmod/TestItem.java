@@ -27,8 +27,8 @@ public class TestItem extends Item implements EnergyItem, FluidHoldingItem {
     }
 
     @Override
-    public EnergyContainer getEnergyStorage(ItemStack stack) {
-        return new ItemEnergyContainer(1000000);
+    public StatefulEnergyContainer<ItemStack> getEnergyStorage(ItemStack stack) {
+        return new ItemEnergyContainer(stack, 1000000);
     }
 
     @Override

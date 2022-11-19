@@ -11,5 +11,5 @@ public interface EnergyItem extends BotariumCap {
      * @param object the {@link ItemStack} to get the {@link EnergyContainer} from.
      * @return the {@link EnergyContainer} for the given {@link ItemStack}.
      */
-    EnergyContainer getEnergyStorage(ItemStack object);
+    StatefulEnergyContainer<ItemStack> getEnergyStorage(ItemStack object);
 }

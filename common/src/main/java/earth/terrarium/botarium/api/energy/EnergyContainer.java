@@ -3,6 +3,7 @@ package earth.terrarium.botarium.api.energy;
 import earth.terrarium.botarium.api.Serializable;
 import net.minecraft.core.Direction;
 
+@Deprecated
 public interface EnergyContainer extends Serializable {
 
     /**

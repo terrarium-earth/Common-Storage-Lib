@@ -2,12 +2,12 @@ package earth.terrarium.botarium.api.energy;
 
 import net.minecraft.core.Direction;
 
-public interface StatefulEnergyContainer extends EnergyContainer {
+public interface StatefulEnergyContainer<T> extends EnergyContainer {
 
     /**
      * Called when the operation has been completed and the data has been updated.
      */
-    void update();
+    void update(T updatable);
 
     /**
      * @param direction The {@link Direction} to get the container from.

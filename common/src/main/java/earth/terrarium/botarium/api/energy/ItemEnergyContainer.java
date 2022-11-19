@@ -1,14 +1,18 @@
 package earth.terrarium.botarium.api.energy;
 
+import earth.terrarium.botarium.Botarium;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ShortTag;
 import net.minecraft.util.Mth;
+import net.minecraft.world.item.ItemStack;
 
-public class ItemEnergyContainer implements EnergyContainer {
+public class ItemEnergyContainer implements StatefulEnergyContainer<ItemStack> {
     private final long capacity;
     private long energy;
 
-    public ItemEnergyContainer(long maxCapacity) {
+    public ItemEnergyContainer(ItemStack itemStack, long maxCapacity) {
         this.capacity = maxCapacity;
+        this.deserialize(itemStack.getOrCreateTagElement(Botarium.BOTARIUM_DATA));
     }
 
     @Override
@@ -76,5 +80,10 @@ public class ItemEnergyContainer implements EnergyContainer {
     @Override
     public EnergySnapshot createSnapshot() {
         return new SimpleEnergySnapshot(this);
+    }
+
+    @Override
+    public void update(ItemStack stack) {
+        serialize(stack.getOrCreateTagElement(Botarium.BOTARIUM_DATA));
     }
 }

@@ -1,5 +1,6 @@
 package earth.terrarium.botarium.api.fluid;
 
+import earth.terrarium.botarium.Botarium;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -24,6 +25,7 @@ public class ItemFilteredFluidContainer implements ItemFluidContainer {
         this.fluidFilter = fluidFilter;
         this.storedFluid = NonNullList.withSize(size, FluidHooks.emptyFluid());
         this.containerItem = itemStack;
+        this.deserialize(itemStack.getOrCreateTagElement(Botarium.BOTARIUM_DATA));
     }
 
     @Override
@@ -159,5 +161,10 @@ public class ItemFilteredFluidContainer implements ItemFluidContainer {
     @Override
     public ItemStack getContainerItem() {
         return containerItem;
+    }
+
+    @Override
+    public void update(ItemStack itemStack) {
+        serialize(itemStack.getOrCreateTagElement(Botarium.BOTARIUM_DATA));
     }
 }

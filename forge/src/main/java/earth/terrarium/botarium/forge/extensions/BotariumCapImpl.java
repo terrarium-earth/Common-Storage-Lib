@@ -14,24 +14,6 @@ public interface BotariumCapImpl extends IForgeItem {
 
     @Override
     default @Nullable ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundTag nbt) {
-        return new BotariumItemCapabilityProvider(stack, nbt);
-    }
-
-    @Override
-    @Nullable
-    default CompoundTag getShareTag(ItemStack stack) {
-        CompoundTag shareTag = IForgeItem.super.getShareTag(stack);
-        if (shareTag == null) {
-            shareTag = new CompoundTag();
-        }
-        shareTag.put("ForgeCaps", stack.save(new CompoundTag()).getCompound("ForgeCaps"));
-        return shareTag;
-    }
-
-    @Override
-    default void readShareTag(ItemStack stack, @Nullable CompoundTag nbt) {
-        if(nbt != null) {
-            stack.deserializeNBT(nbt);
-        }
+        return new BotariumItemCapabilityProvider(stack);
     }
 }

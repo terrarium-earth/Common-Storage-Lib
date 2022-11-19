@@ -3,8 +3,9 @@ package earth.terrarium.botarium.api.energy;
 import earth.terrarium.botarium.api.Updatable;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Mth;
+import net.minecraft.world.level.block.entity.BlockEntity;
 
-public class SimpleUpdatingEnergyContainer implements StatefulEnergyContainer {
+public class SimpleUpdatingEnergyContainer implements StatefulEnergyContainer<BlockEntity> {
     protected final long energyCapacity;
     protected final Updatable updatable;
     protected long energy;
@@ -85,12 +86,12 @@ public class SimpleUpdatingEnergyContainer implements StatefulEnergyContainer {
     }
 
     @Override
-    public void update() {
-        updatable.update();
+    public EnergySnapshot createSnapshot() {
+        return new SimpleEnergySnapshot(this);
     }
 
     @Override
-    public EnergySnapshot createSnapshot() {
-        return new SimpleEnergySnapshot(this);
+    public void update(BlockEntity block) {
+        updatable.update();
     }
 }

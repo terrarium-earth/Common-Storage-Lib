@@ -6,6 +6,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.util.Mth;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.material.Fluids;
 
 import java.util.List;
@@ -15,7 +16,7 @@ import java.util.function.IntToLongFunction;
 
 import static earth.terrarium.botarium.api.fluid.ItemFilteredFluidContainer.FLUID_KEY;
 
-public class SimpleUpdatingFluidContainer implements UpdatingFluidContainer {
+public class SimpleUpdatingFluidContainer implements UpdatingFluidContainer<BlockEntity> {
     public NonNullList<FluidHolder> storedFluid;
     public final IntToLongFunction maxAmount;
     public final BiPredicate<Integer, FluidHolder> fluidFilter;
@@ -172,5 +173,10 @@ public class SimpleUpdatingFluidContainer implements UpdatingFluidContainer {
     @Override
     public FluidSnapshot createSnapshot() {
         return new SimpleFluidSnapshot(this);
+    }
+
+    @Override
+    public void update(BlockEntity block) {
+        updatable.update();
     }
 }

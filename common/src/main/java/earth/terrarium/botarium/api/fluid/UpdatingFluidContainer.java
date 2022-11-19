@@ -2,8 +2,8 @@ package earth.terrarium.botarium.api.fluid;
 
 import net.minecraft.core.Direction;
 
-public interface UpdatingFluidContainer extends FluidContainer {
-    void update();
+public interface UpdatingFluidContainer<T> extends FluidContainer {
+    void update(T updatable);
 
     @Override
     default UpdatingFluidContainer getContainer(Direction direction) {
