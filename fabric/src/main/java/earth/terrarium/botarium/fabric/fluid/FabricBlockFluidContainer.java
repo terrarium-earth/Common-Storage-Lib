@@ -6,15 +6,18 @@ import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.fabricmc.fabric.api.transfer.v1.storage.StorageView;
 import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
+import net.minecraft.world.level.block.entity.BlockEntity;
 
 import java.util.Iterator;
 
 @SuppressWarnings("UnstableApiUsage")
 public class FabricBlockFluidContainer extends ExtendedFluidContainer implements Storage<FluidVariant>, ManualSyncing {
-    private final UpdatingFluidContainer container;
+    private final UpdatingFluidContainer<BlockEntity> container;
+    private final BlockEntity block;
 
-    public FabricBlockFluidContainer(UpdatingFluidContainer container) {
+    public FabricBlockFluidContainer(UpdatingFluidContainer<BlockEntity> container, BlockEntity entity) {
         this.container = container;
+        this.block = entity;
     }
 
     @Override
@@ -46,7 +49,7 @@ public class FabricBlockFluidContainer extends ExtendedFluidContainer implements
 
     @Override
     public void onFinalCommit() {
-        container.update();
+        container.update(block);
     }
 
 }

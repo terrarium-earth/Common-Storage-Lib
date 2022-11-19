@@ -4,14 +4,17 @@ import earth.terrarium.botarium.api.energy.EnergySnapshot;
 import earth.terrarium.botarium.api.energy.StatefulEnergyContainer;
 import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
 import net.fabricmc.fabric.api.transfer.v1.transaction.base.SnapshotParticipant;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import team.reborn.energy.api.EnergyStorage;
 
 @SuppressWarnings("UnstableApiUsage")
 public class FabricBlockEnergyStorage extends SnapshotParticipant<EnergySnapshot> implements EnergyStorage {
-    private final StatefulEnergyContainer container;
+    private final StatefulEnergyContainer<BlockEntity> container;
+    private final BlockEntity block;
 
-    public FabricBlockEnergyStorage(StatefulEnergyContainer container) {
+    public FabricBlockEnergyStorage(StatefulEnergyContainer<BlockEntity> container, BlockEntity block) {
         this.container = container;
+        this.block = block;
     }
 
     @Override
@@ -60,6 +63,6 @@ public class FabricBlockEnergyStorage extends SnapshotParticipant<EnergySnapshot
 
     @Override
     protected void onFinalCommit() {
-        this.container.update();
+        this.container.update(block);
     }
 }

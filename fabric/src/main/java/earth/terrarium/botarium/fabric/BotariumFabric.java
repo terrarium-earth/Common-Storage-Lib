@@ -16,6 +16,7 @@ import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemStorage;
 import net.fabricmc.fabric.impl.transfer.item.InventoryStorageImpl;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import team.reborn.energy.api.EnergyStorage;
 
 @SuppressWarnings("UnstableApiUsage")
@@ -27,7 +28,7 @@ public class BotariumFabric implements ModInitializer {
         EnergyStorage.SIDED.registerFallback((world, pos, state, blockEntity, context) -> {
             if (blockEntity instanceof EnergyBlock energyCapable) {
                 StatefulEnergyContainer container = energyCapable.getEnergyStorage().getContainer(context);
-                return container == null ? null : new FabricBlockEnergyStorage(container);
+                return container == null ? null : new FabricBlockEnergyStorage(container, blockEntity);
             }
             return null;
         });
@@ -40,7 +41,7 @@ public class BotariumFabric implements ModInitializer {
         FluidStorage.SIDED.registerFallback((world, pos, state, blockEntity, context) -> {
             if(blockEntity instanceof FluidHoldingBlock fluidHoldingBlock) {
                 UpdatingFluidContainer container = fluidHoldingBlock.getFluidContainer().getContainer(context);
-                return container == null ? null : new FabricBlockFluidContainer(container);
+                return container == null ? null : new FabricBlockFluidContainer(container, blockEntity);
             }
             return null;
         });
