@@ -1,3 +1,2 @@
-**Botarium 1.7.4**
-
-Fixed energy capability on block entities being wrong. (Sorry Alex)
+**Botarium 1.7.6**
+> Fixed item data serialization/deserialization for fluid holding and energy holding items
