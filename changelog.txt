@@ -1,2 +1,1 @@
-**Botarium 1.7.6**
-> Fixed item data serialization/deserialization for fluid holding and energy holding items
+> Added insert only / extract only fluid containers

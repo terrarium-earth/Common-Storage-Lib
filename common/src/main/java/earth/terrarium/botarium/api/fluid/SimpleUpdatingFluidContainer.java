@@ -76,6 +76,47 @@ public class SimpleUpdatingFluidContainer implements UpdatingFluidContainer<Bloc
         return FluidHooks.emptyFluid();
     }
 
+    public long internalInsert(FluidHolder fluid, boolean simulate) {
+        for (int i = 0; i < this.storedFluid.size(); i++) {
+            if (fluidFilter.test(i, fluid)) {
+                if (storedFluid.get(i).isEmpty()) {
+                    FluidHolder insertedFluid = fluid.copyHolder();
+                    insertedFluid.setAmount(Mth.clamp(fluid.getFluidAmount(), 0, maxAmount.applyAsLong(i)));
+                    if (simulate) return insertedFluid.getFluidAmount();
+                    this.storedFluid.set(i, insertedFluid);
+                    return storedFluid.get(i).getFluidAmount();
+                } else {
+                    if (storedFluid.get(i).matches(fluid)) {
+                        long insertedAmount = Mth.clamp(fluid.getFluidAmount(), 0, maxAmount.applyAsLong(i) - storedFluid.get(i).getFluidAmount());
+                        if (simulate) return insertedAmount;
+                        this.storedFluid.get(i).setAmount(storedFluid.get(i).getFluidAmount() + insertedAmount);
+                        return insertedAmount;
+                    }
+                }
+            }
+        }
+        return 0;
+    }
+
+    public FluidHolder internalExtract(FluidHolder fluid, boolean simulate) {
+        for (int i = 0; i < this.storedFluid.size(); i++) {
+            if (fluidFilter.test(i, fluid)) {
+                FluidHolder toExtract = fluid.copyHolder();
+                if (storedFluid.isEmpty()) {
+                    return FluidHooks.emptyFluid();
+                } else if (storedFluid.get(i).matches(fluid)) {
+                    long extractedAmount = Mth.clamp(fluid.getFluidAmount(), 0, storedFluid.get(i).getFluidAmount());
+                    toExtract.setAmount(extractedAmount);
+                    if (simulate) return toExtract;
+                    this.storedFluid.get(i).setAmount(storedFluid.get(i).getFluidAmount() - extractedAmount);
+                    if (storedFluid.get(i).getFluidAmount() == 0) storedFluid.set(i, FluidHooks.emptyFluid());
+                    return toExtract;
+                }
+            }
+        }
+        return FluidHooks.emptyFluid();
+    }
+
     public long extractFromSlot(FluidHolder fluidHolder, FluidHolder toInsert, Runnable snapshot) {
         if (Objects.equals(fluidHolder.getCompound(), toInsert.getCompound()) && fluidHolder.getFluid().isSame(toInsert.getFluid())) {
             long extracted = Mth.clamp(toInsert.getFluidAmount(), 0, fluidHolder.getFluidAmount());
