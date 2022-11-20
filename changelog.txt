@@ -1,1 +1,1 @@
-> Added getBurnTime method to common hooks
+> fix burntime impl mistake on fabric

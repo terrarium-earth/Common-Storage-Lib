@@ -59,12 +59,15 @@ tasks.register("generateDiscordEmbed") {
                          ]],
                 username: env.WEBHOOK_USERNAME,
                 avatar_url: env.WEBHOOK_AVATAR,
-                attatchments: []
+                attatchments: [],
+                footer: [
+                        text: "Want to support us? Check out our Ko-fi! http://kofi.terrarium.earth",
+                        icon_url: "https://cdn.discordapp.com/attachments/881367981463072809/1044025688719626250/61e1116779fc0a9bd5bdbcc7_Frame_6.png"
+                ]
         ])
-
         new File(projectDir, "embed.json").write(json)
     }
-}
+}oh
 
 subprojects {
     apply plugin: "jvm-class-extensions"

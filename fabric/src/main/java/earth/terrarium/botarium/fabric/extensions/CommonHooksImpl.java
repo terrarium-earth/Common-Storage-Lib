@@ -21,6 +21,7 @@ public class CommonHooksImpl {
 
     @ImplementsBaseElement
     public static int getBurnTime(ItemStack burnable) {
-        return Optional.of(FuelRegistry.INSTANCE.get(burnable.getItem())).orElse(0);
+        Integer burnTime = FuelRegistry.INSTANCE.get(burnable.getItem());
+        return burnTime == null ? 0 : burnTime;
     }
 }
