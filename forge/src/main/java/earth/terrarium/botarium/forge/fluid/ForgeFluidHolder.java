@@ -100,7 +100,7 @@ public class ForgeFluidHolder implements FluidHolder {
 
     @Override
     public boolean isEmpty() {
-        return this.getFluid() == Fluids.EMPTY || this.getFluidAmount() == 0;
+        return fluidStack.isEmpty();
     }
 
     public static FluidStack toStack(FluidHolder holder) {
