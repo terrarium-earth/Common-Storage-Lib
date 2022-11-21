@@ -67,7 +67,7 @@ tasks.register("generateDiscordEmbed") {
         ])
         new File(projectDir, "embed.json").write(json)
     }
-}oh
+}
 
 subprojects {
     apply plugin: "jvm-class-extensions"
