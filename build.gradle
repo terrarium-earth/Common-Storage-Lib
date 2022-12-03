@@ -55,15 +55,15 @@ tasks.register("generateDiscordEmbed") {
                                  title: archives_base_name,
                                  color: Integer.parseInt(env.EMBED_COLOR, 16),
                                  fields: fields,
-                                 thumbnail: [url: env.WEBHOOK_THUMBNAIL]
+                                 thumbnail: [url: env.WEBHOOK_THUMBNAIL],
+                                 footer: [
+                                         text: "Want to support us? Check out our Ko-fi! https://kofi.terrarium.earth",
+                                         icon_url: "https://cdn.discordapp.com/attachments/881367981463072809/1044025688719626250/61e1116779fc0a9bd5bdbcc7_Frame_6.png"
+                                 ]
                          ]],
                 username: env.WEBHOOK_USERNAME,
                 avatar_url: env.WEBHOOK_AVATAR,
-                attatchments: [],
-                footer: [
-                        text: "Want to support us? Check out our Ko-fi! http://kofi.terrarium.earth",
-                        icon_url: "https://cdn.discordapp.com/attachments/881367981463072809/1044025688719626250/61e1116779fc0a9bd5bdbcc7_Frame_6.png"
-                ]
+                attatchments: []
         ])
         new File(projectDir, "embed.json").write(json)
     }
