@@ -32,6 +32,11 @@ public record ForgeFluidItemHandler(IFluidHandlerItem handler) implements Platfo
     }
 
     @Override
+    public long getTankCapacity(int tank) {
+        return handler.getTankCapacity(tank);
+    }
+
+    @Override
     public boolean supportsInsertion() {
         return insertFluid(new ItemStackHolder(handler.getContainer()), getFluidInTank(0), true) > 0;
     }

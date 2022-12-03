@@ -14,6 +14,8 @@ public interface PlatformFluidHandler {
 
     List<FluidHolder> getFluidTanks();
 
+    long getTankCapacity(int tank);
+
     /**
      * @return If the handler supports insertion.
      */

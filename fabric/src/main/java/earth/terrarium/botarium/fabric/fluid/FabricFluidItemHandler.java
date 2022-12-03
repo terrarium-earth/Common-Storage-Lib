@@ -1,16 +1,19 @@
 package earth.terrarium.botarium.fabric.fluid;
 
 import earth.terrarium.botarium.api.fluid.FluidHolder;
+import earth.terrarium.botarium.api.fluid.FluidHooks;
 import earth.terrarium.botarium.api.fluid.PlatformFluidItemHandler;
 import earth.terrarium.botarium.api.item.ItemStackHolder;
 import net.fabricmc.fabric.api.transfer.v1.context.ContainerItemContext;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
+import net.fabricmc.fabric.api.transfer.v1.storage.StorageView;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 @SuppressWarnings("UnstableApiUsage")
@@ -44,16 +47,16 @@ public record FabricFluidItemHandler(ItemStack stack, ContainerItemContext conte
             long extracted = storage.extract(fabricFluidHolder.toVariant(), fabricFluidHolder.getAmount(), transaction);
             if (!simulate) {
                 transaction.commit();
+                item.setStack(context.getItemVariant().toStack());
             }
-            item.setStack(context.getItemVariant().toStack());
-            return extracted == 0 ? FabricFluidHolder.of(fabricFluidHolder.toVariant(), extracted) : fluid;
+            return extracted == 0 ? FluidHooks.emptyFluid() : FabricFluidHolder.of(fabricFluidHolder.toVariant(), extracted);
         }
     }
 
     @Override
     public int getTankAmount() {
         int size = 0;
-        while (storage.iterator().hasNext()) {
+        for (StorageView<FluidVariant> ignored : storage) {
             size++;
         }
         return size;
@@ -64,6 +67,13 @@ public record FabricFluidItemHandler(ItemStack stack, ContainerItemContext conte
         List<FluidHolder> fluids = new ArrayList<>();
         storage.iterator().forEachRemaining(variant -> fluids.add(FabricFluidHolder.of(variant.getResource(), variant.getAmount())));
         return fluids.get(tank);
+    }
+
+    @Override
+    public long getTankCapacity(int tank) {
+        List<StorageView<FluidVariant>> fluids = new ArrayList<>();
+        storage.iterator().forEachRemaining(fluids::add);
+        return fluids.get(tank).getCapacity();
     }
 
     @Override

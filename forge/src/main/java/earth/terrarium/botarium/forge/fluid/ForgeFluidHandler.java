@@ -39,6 +39,11 @@ public record ForgeFluidHandler(IFluidHandler handler) implements PlatformFluidH
     }
 
     @Override
+    public long getTankCapacity(int tank) {
+        return handler.getTankCapacity(tank);
+    }
+
+    @Override
     public boolean supportsInsertion() {
         return true;
     }

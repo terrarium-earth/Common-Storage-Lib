@@ -257,4 +257,9 @@ public class EnergyHooks {
     public static <T extends BlockEntity & EnergyBlock> void distributeEnergyNearby(T energyBlock) {
         distributeEnergyNearby(energyBlock, -1);
     }
+
+    public static int toDurabilityBar(EnergyItem energyItem, ItemStack stack) {
+        StatefulEnergyContainer<ItemStack> energyStorage = energyItem.getEnergyStorage(stack);
+        return (int) (((double) energyStorage.getStoredEnergy() / energyStorage.getMaxCapacity()) * 13);
+    }
 }

@@ -4,8 +4,10 @@ import earth.terrarium.botarium.api.energy.*;
 import earth.terrarium.botarium.api.fluid.*;
 import earth.terrarium.botarium.api.item.ItemStackHolder;
 import net.minecraft.ChatFormatting;
+import net.minecraft.core.Registry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
@@ -33,7 +35,7 @@ public class TestItem extends Item implements EnergyItem, FluidHoldingItem {
 
     @Override
     public ItemFluidContainer getFluidContainer(ItemStack stack) {
-        return new ItemFilteredFluidContainer(FluidHooks.buckets(4), 1, stack, (integer, fluidHolder) -> fluidHolder.getFluid() == Fluids.WATER);
+        return new ItemFilteredFluidContainer(FluidHooks.buckets(4), 1, stack, (integer, fluidHolder) -> true);
     }
 
     @Override
@@ -68,7 +70,7 @@ public class TestItem extends Item implements EnergyItem, FluidHoldingItem {
 
             player.displayClientMessage(Component.literal("To: " + toFluidHolder.getFluidAmount()), true);
 
-            if (FluidHooks.moveItemToItemFluid(from, to, FluidHooks.newFluidHolder(Fluids.WATER, FluidHooks.buckets(1) / 1000, fromFluidHolder.getCompound())) > 0) {
+            if (FluidHooks.moveItemToItemFluid(from, to, FluidHooks.newFluidHolder(Registry.FLUID.get(new ResourceLocation("ad_astra", "oxygen")), FluidHooks.buckets(1), fromFluidHolder.getCompound())) > 0) {
                 if (from.isDirty()) player.setItemInHand(interactionHand, from.getStack());
                 if (to.isDirty()) player.setItemSlot(EquipmentSlot.OFFHAND, to.getStack());
                 level.playSound(null, player.blockPosition(), SoundEvents.GENERIC_DRINK, SoundSource.PLAYERS, 1, 1);

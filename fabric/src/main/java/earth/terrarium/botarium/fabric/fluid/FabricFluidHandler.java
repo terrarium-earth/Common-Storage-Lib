@@ -4,6 +4,7 @@ import earth.terrarium.botarium.api.fluid.FluidHolder;
 import earth.terrarium.botarium.api.fluid.PlatformFluidHandler;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
+import net.fabricmc.fabric.api.transfer.v1.storage.StorageView;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 
 import java.util.ArrayList;
@@ -39,7 +40,7 @@ public record FabricFluidHandler(Storage<FluidVariant> storage) implements Platf
     @Override
     public int getTankAmount() {
         int size = 0;
-        while (storage.iterator().hasNext()) {
+        for (StorageView<FluidVariant> ignored : storage) {
             size++;
         }
         return size;
@@ -57,6 +58,13 @@ public record FabricFluidHandler(Storage<FluidVariant> storage) implements Platf
         List<FluidHolder> fluids = new ArrayList<>();
         storage.iterator().forEachRemaining(variant -> fluids.add(FabricFluidHolder.of(variant.getResource(), variant.getAmount())));
         return fluids;
+    }
+
+    @Override
+    public long getTankCapacity(int tank) {
+        List<StorageView<FluidVariant>> fluids = new ArrayList<>();
+        storage.iterator().forEachRemaining(fluids::add);
+        return fluids.get(tank).getCapacity();
     }
 
     @Override

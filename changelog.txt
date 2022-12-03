@@ -1,1 +1,2 @@
-> fix burntime impl mistake on fabric
+> Fixed fluid extracting wrong amount
+> Added fluid capacity to platform fluid container

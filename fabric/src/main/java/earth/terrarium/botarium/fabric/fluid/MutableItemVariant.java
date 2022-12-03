@@ -27,7 +27,7 @@ public class MutableItemVariant implements ItemVariant {
 
     @Override
     public @Nullable CompoundTag getNbt() {
-        return stack.getOrCreateTag();
+        return stack.getTag();
     }
 
     @Override
