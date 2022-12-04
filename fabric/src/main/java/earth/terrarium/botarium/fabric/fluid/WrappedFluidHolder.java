@@ -12,11 +12,13 @@ public class WrappedFluidHolder extends ExtendedFluidContainer implements Storag
     private FluidHolder fluidHolder;
     private final FluidExtraction extraction;
     private final ExtendedFluidContainer container;
+    private final long capacity;
 
-    public WrappedFluidHolder(ExtendedFluidContainer container, FluidHolder fluidHolder, FluidExtraction extraction) {
+    public WrappedFluidHolder(ExtendedFluidContainer container, FluidHolder fluidHolder, FluidExtraction extraction, long capacity) {
         this.fluidHolder = fluidHolder;
         this.extraction = extraction;
         this.container = container;
+        this.capacity = capacity;
     }
 
     public FluidVariant fluidVariant() {
@@ -45,7 +47,7 @@ public class WrappedFluidHolder extends ExtendedFluidContainer implements Storag
 
     @Override
     public long getCapacity() {
-        return Integer.MAX_VALUE;
+        return this.capacity;
     }
 
     @Override

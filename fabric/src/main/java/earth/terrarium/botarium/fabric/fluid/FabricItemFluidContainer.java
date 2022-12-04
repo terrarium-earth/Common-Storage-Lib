@@ -2,6 +2,7 @@ package earth.terrarium.botarium.fabric.fluid;
 
 import earth.terrarium.botarium.Botarium;
 import earth.terrarium.botarium.api.fluid.FluidContainer;
+import earth.terrarium.botarium.api.fluid.FluidHolder;
 import earth.terrarium.botarium.api.fluid.FluidSnapshot;
 import net.fabricmc.fabric.api.transfer.v1.context.ContainerItemContext;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
@@ -13,6 +14,8 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.Iterator;
+import java.util.List;
+import java.util.stream.IntStream;
 
 @SuppressWarnings("UnstableApiUsage")
 public class FabricItemFluidContainer extends ExtendedFluidContainer implements Storage<FluidVariant>, ManualSyncing {
@@ -44,7 +47,8 @@ public class FabricItemFluidContainer extends ExtendedFluidContainer implements 
 
     @Override
     public Iterator<StorageView<FluidVariant>> iterator() {
-        return container.getFluids().stream().map(holder -> new WrappedFluidHolder(this, holder, container::extractFromSlot)).map(holder -> (StorageView<FluidVariant>) holder).iterator();
+        List<FluidHolder> fluids = container.getFluids();
+        return IntStream.range(0, fluids.size()).mapToObj(index -> new WrappedFluidHolder(this, fluids.get(index), container::extractFromSlot, container.getTankCapacity(index))).map(holder -> (StorageView<FluidVariant>) holder).iterator();
     }
 
     @Override
