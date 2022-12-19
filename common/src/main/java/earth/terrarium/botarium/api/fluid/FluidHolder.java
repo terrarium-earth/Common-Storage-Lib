@@ -16,9 +16,9 @@ public interface FluidHolder {
 
     Codec<FluidHolder> CODEC = RecordCodecBuilder.create(instance -> instance.group(
                 Registry.FLUID.byNameCodec().fieldOf("fluid").forGetter(FluidHolder::getFluid),
-                Codec.LONG.fieldOf("amount").forGetter(FluidHolder::getFluidAmount),
+                Codec.FLOAT.fieldOf("buckets").orElse(1f).forGetter(fluidHolder -> (float) fluidHolder.getFluidAmount() / FluidHooks.getBucketAmount()),
                 CompoundTag.CODEC.optionalFieldOf("tag").forGetter(fluidHolder -> Optional.ofNullable(fluidHolder.getCompound()))
-        ).apply(instance, (fluid, aLong, compoundTag) -> FluidHooks.newFluidHolder(fluid, aLong, compoundTag.orElse(null))));
+        ).apply(instance, (fluid, buckets, compoundTag) -> FluidHooks.newFluidHolder(fluid, FluidHooks.buckets(buckets), compoundTag.orElse(null))));
 
     /**
      * @return The {@link Fluid} in the holder.

@@ -56,11 +56,6 @@ public class FluidHooksImpl {
     }
 
     @ImplementsBaseElement
-    public static long buckets(int buckets) {
-        return (long) FluidType.BUCKET_VOLUME * buckets;
-    }
-
-    @ImplementsBaseElement
     public static long toMillibuckets(long amount) {
         return amount;
     }

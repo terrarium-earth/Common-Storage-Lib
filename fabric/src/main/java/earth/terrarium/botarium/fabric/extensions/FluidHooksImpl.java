@@ -41,11 +41,6 @@ public class FluidHooksImpl {
     }
 
     @ImplementsBaseElement
-    public static long buckets(int buckets) {
-        return FluidConstants.BUCKET * buckets;
-    }
-
-    @ImplementsBaseElement
     public static PlatformFluidItemHandler getItemFluidManager(ItemStack stack) {
         return new FabricFluidItemHandler(stack);
     }

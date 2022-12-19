@@ -1,1 +1,1 @@
-> Added fluid codec
+> Modified fluid codec to use buckets instead of platform specific amounts

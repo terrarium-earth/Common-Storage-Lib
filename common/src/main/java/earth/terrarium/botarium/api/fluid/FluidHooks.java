@@ -46,8 +46,8 @@ public class FluidHooks {
      * @return The number of fluid values in the given number of buckets.
      */
     @ImplementedByExtension
-    public static long buckets(int buckets) {
-        throw new NotImplementedException();
+    public static long buckets(float buckets) {
+        return (long) buckets * getBucketAmount();
     }
 
     /**
