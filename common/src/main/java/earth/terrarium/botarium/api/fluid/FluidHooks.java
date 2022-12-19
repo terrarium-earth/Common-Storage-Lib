@@ -50,6 +50,11 @@ public class FluidHooks {
         return (long) (buckets * getBucketAmount());
     }
 
+    @Deprecated
+    public static long buckets(int buckets) {
+        return buckets((double) buckets);
+    }
+
     /**
      * Gets the {@link PlatformFluidHandler} for an {@link ItemStack}.
      * @param stack The {@link ItemStack} to get the {@link PlatformFluidHandler} from.

@@ -1,1 +1,1 @@
-> Probably fixed crash
+> Bytecode is funky. Pretty sure this fixes the crash
