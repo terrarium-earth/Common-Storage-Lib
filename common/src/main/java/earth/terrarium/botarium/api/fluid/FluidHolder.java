@@ -1,13 +1,24 @@
 package earth.terrarium.botarium.api.fluid;
 
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.material.Fluid;
+
+import java.util.Optional;
 
 /**
  * An object that holds a fluid with an amount and a tag.
  * Similar to {@link net.minecraft.world.item.ItemStack}, but for fluids.
  */
 public interface FluidHolder {
+
+    Codec<FluidHolder> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+                Registry.FLUID.byNameCodec().fieldOf("fluid").forGetter(FluidHolder::getFluid),
+                Codec.LONG.fieldOf("amount").forGetter(FluidHolder::getFluidAmount),
+                CompoundTag.CODEC.optionalFieldOf("tag").forGetter(fluidHolder -> Optional.ofNullable(fluidHolder.getCompound()))
+        ).apply(instance, (fluid, aLong, compoundTag) -> FluidHooks.newFluidHolder(fluid, aLong, compoundTag.orElse(null))));
 
     /**
      * @return The {@link Fluid} in the holder.

@@ -1,2 +1,1 @@
-> Fixed fluid extracting wrong amount
-> Added fluid capacity to platform fluid container
+> Added fluid codec
