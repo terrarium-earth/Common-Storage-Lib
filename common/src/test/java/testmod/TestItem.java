@@ -70,6 +70,7 @@ public class TestItem extends Item implements EnergyItem, FluidHoldingItem {
 
             player.displayClientMessage(Component.literal("To: " + toFluidHolder.getFluidAmount()), true);
 
+
             if (FluidHooks.moveItemToItemFluid(from, to, FluidHooks.newFluidHolder(Registry.FLUID.get(new ResourceLocation("ad_astra", "oxygen")), FluidHooks.buckets(1), fromFluidHolder.getCompound())) > 0) {
                 if (from.isDirty()) player.setItemInHand(interactionHand, from.getStack());
                 if (to.isDirty()) player.setItemSlot(EquipmentSlot.OFFHAND, to.getStack());
