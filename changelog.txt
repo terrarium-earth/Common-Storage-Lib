@@ -1,1 +1,1 @@
-> Introducing the Fluid Ingredient! Gives you a much easier time creating recipes with fluids using the new Fluid ingredient codec.
+> Added helper methods to the fluid class
