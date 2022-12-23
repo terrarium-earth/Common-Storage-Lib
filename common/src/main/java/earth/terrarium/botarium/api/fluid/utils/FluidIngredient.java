@@ -17,15 +17,43 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class FluidIngredient implements Predicate<FluidHolder> {
-    public static final Codec<FluidIngredient> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+    private static final Codec<FluidIngredient> NEW_CODEC = Codec.either(FluidValue.CODEC, TagValue.CODEC)
+            .listOf()
+            .xmap(FluidIngredient::new, FluidIngredient::getRawValues);
+    private static final Codec<FluidIngredient> OLD_CODEC = RecordCodecBuilder.create(instance -> instance.group(
             Codec.either(FluidValue.CODEC, TagValue.CODEC).listOf().fieldOf("fluids").forGetter(FluidIngredient::getRawValues)
     ).apply(instance, FluidIngredient::new));
+    public static final Codec<FluidIngredient> CODEC = Codec.either(NEW_CODEC, OLD_CODEC).xmap(p -> p.map(a -> a, b -> b), Either::left);
 
     private final List<Either<FluidValue, TagValue>> values;
     private List<FluidHolder> cachedFluids;
 
     private FluidIngredient(List<Either<FluidValue, TagValue>> stream) {
         this.values = stream;
+    }
+
+    public static FluidIngredient of() {
+        return new FluidIngredient(List.of());
+    }
+
+    public static FluidIngredient of(Fluid... fluids) {
+        return FluidIngredient.of(Arrays.stream(fluids).map(FluidHolder::of));
+    }
+
+    public static FluidIngredient of(FluidHolder... fluids) {
+        return FluidIngredient.of(Arrays.stream(fluids));
+    }
+
+    public static FluidIngredient of(Stream<FluidHolder> fluids) {
+        List<Either<FluidValue, TagValue>> values = new ArrayList<>();
+        for (FluidHolder fluid : fluids.filter(Predicate.not(FluidHolder::isEmpty)).toList()) {
+            values.add(Either.left(new FluidValue(fluid)));
+        }
+        return new FluidIngredient(values);
+    }
+
+    public static FluidIngredient of(TagKey<Fluid> tag) {
+        return new FluidIngredient(List.of(Either.right(new TagValue(tag))));
     }
 
     @Override
@@ -65,9 +93,12 @@ public class FluidIngredient implements Predicate<FluidHolder> {
     }
 
     public record FluidValue(FluidHolder fluid) implements Value {
-        public static final Codec<FluidValue> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+        private static final Codec<FluidValue> NEW_CODEC = FluidHolder.CODEC.orElse(FluidHooks.emptyFluid())
+                .xmap(FluidValue::new, FluidValue::fluid);
+        private static final Codec<FluidValue> OLD_CODEC = RecordCodecBuilder.create(instance -> instance.group(
                 FluidHolder.CODEC.fieldOf("fluid").orElse(FluidHooks.emptyFluid()).forGetter(FluidValue::fluid)
         ).apply(instance, FluidValue::new));
+        public static final Codec<FluidValue> CODEC = Codec.either(NEW_CODEC, OLD_CODEC).xmap(p -> p.map(a -> a, b -> b), Either::left);
 
         @Override
         public Collection<FluidHolder> getFluids() {
@@ -85,7 +116,7 @@ public class FluidIngredient implements Predicate<FluidHolder> {
             List<FluidHolder> list = Lists.newArrayList();
 
             for (Holder<Fluid> holder : Registry.FLUID.getTagOrEmpty(this.tag)) {
-                list.add(FluidHooks.newFluidHolder(holder.value(), 1, null));
+                list.add(FluidHolder.of(holder.value()));
             }
 
             return list;

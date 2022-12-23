@@ -15,10 +15,18 @@ import java.util.Optional;
 public interface FluidHolder {
 
     Codec<FluidHolder> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-                Registry.FLUID.byNameCodec().fieldOf("fluid").forGetter(FluidHolder::getFluid),
-                Codec.FLOAT.fieldOf("buckets").orElse(1f).forGetter(fluidHolder -> (float) fluidHolder.getFluidAmount() / FluidHooks.getBucketAmount()),
-                CompoundTag.CODEC.optionalFieldOf("tag").forGetter(fluidHolder -> Optional.ofNullable(fluidHolder.getCompound()))
-        ).apply(instance, (fluid, buckets, compoundTag) -> FluidHooks.newFluidHolder(fluid, FluidHooks.buckets(buckets), compoundTag.orElse(null))));
+            Registry.FLUID.byNameCodec().fieldOf("fluid").forGetter(FluidHolder::getFluid),
+            Codec.FLOAT.fieldOf("buckets").orElse(1f).forGetter(fluidHolder -> (float) fluidHolder.getFluidAmount() / FluidHooks.getBucketAmount()),
+            CompoundTag.CODEC.optionalFieldOf("tag").forGetter(fluidHolder -> Optional.ofNullable(fluidHolder.getCompound()))
+    ).apply(instance, (fluid, buckets, compoundTag) -> FluidHooks.newFluidHolder(fluid, FluidHooks.buckets(buckets), compoundTag.orElse(null))));
+
+    static FluidHolder of(Fluid fluid) {
+        return FluidHooks.newFluidHolder(fluid, FluidHooks.buckets(1D), null);
+    }
+
+    static FluidHolder of(Fluid fluid, double buckets, CompoundTag tag) {
+        return FluidHooks.newFluidHolder(fluid, FluidHooks.buckets(buckets), tag);
+    }
 
     /**
      * @return The {@link Fluid} in the holder.
@@ -80,4 +88,15 @@ public interface FluidHolder {
      * @param tag The {@link CompoundTag} to deserialize from.
      */
     void deserialize(CompoundTag tag);
+
+    /**
+     * Does not set amount if the holder is empty.
+     * @param amount The amount to set in the copy.
+     * @return A copy of the {@link FluidHolder} with the given amount.
+     */
+    default FluidHolder copyWithAmount(long amount) {
+        FluidHolder copy = copyHolder();
+        if (!copy.isEmpty()) copy.setAmount(amount);
+        return copy;
+    }
 }
