@@ -1,7 +1,7 @@
 package earth.terrarium.botarium.forge.regsitry.fluid;
 
-import earth.terrarium.botarium.api.registry.fluid.FluidData;
-import earth.terrarium.botarium.api.registry.fluid.FluidProperties;
+import earth.terrarium.botarium.common.registry.fluid.FluidData;
+import earth.terrarium.botarium.common.registry.fluid.FluidProperties;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.LiquidBlock;
 import net.minecraft.world.level.material.FlowingFluid;

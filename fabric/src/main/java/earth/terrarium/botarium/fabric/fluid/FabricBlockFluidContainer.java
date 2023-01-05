@@ -1,8 +1,9 @@
 package earth.terrarium.botarium.fabric.fluid;
 
-import earth.terrarium.botarium.api.fluid.FluidHolder;
-import earth.terrarium.botarium.api.fluid.FluidSnapshot;
-import earth.terrarium.botarium.api.fluid.UpdatingFluidContainer;
+import earth.terrarium.botarium.common.fluid.base.FluidContainer;
+import earth.terrarium.botarium.common.fluid.base.FluidHolder;
+import earth.terrarium.botarium.common.fluid.base.FluidSnapshot;
+import earth.terrarium.botarium.util.Updatable;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.fabricmc.fabric.api.transfer.v1.storage.StorageView;
@@ -14,11 +15,11 @@ import java.util.List;
 import java.util.stream.IntStream;
 
 @SuppressWarnings("UnstableApiUsage")
-public class FabricBlockFluidContainer extends ExtendedFluidContainer implements Storage<FluidVariant>, ManualSyncing {
-    private final UpdatingFluidContainer<BlockEntity> container;
+public class FabricBlockFluidContainer<T extends FluidContainer & Updatable> extends ExtendedFluidContainer implements Storage<FluidVariant>, ManualSyncing {
+    private final T container;
     private final BlockEntity block;
 
-    public FabricBlockFluidContainer(UpdatingFluidContainer<BlockEntity> container, BlockEntity entity) {
+    public FabricBlockFluidContainer(T container, BlockEntity entity) {
         this.container = container;
         this.block = entity;
     }
@@ -53,7 +54,7 @@ public class FabricBlockFluidContainer extends ExtendedFluidContainer implements
 
     @Override
     public void onFinalCommit() {
-        container.update(block);
+        container.update();
     }
 
 }

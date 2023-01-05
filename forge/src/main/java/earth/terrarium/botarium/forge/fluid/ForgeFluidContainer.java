@@ -1,8 +1,8 @@
 package earth.terrarium.botarium.forge.fluid;
 
-import earth.terrarium.botarium.api.Serializable;
-import earth.terrarium.botarium.api.fluid.FluidContainer;
-import earth.terrarium.botarium.api.fluid.FluidHolder;
+import earth.terrarium.botarium.util.Serializable;
+import earth.terrarium.botarium.common.fluid.base.FluidContainer;
+import earth.terrarium.botarium.common.fluid.base.FluidHolder;
 import earth.terrarium.botarium.forge.AutoSerializable;
 import net.minecraft.core.Direction;
 import net.minecraftforge.common.capabilities.Capability;

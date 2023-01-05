@@ -1,6 +1,6 @@
 package earth.terrarium.botarium.forge.extensions;
 
-import earth.terrarium.botarium.api.BotariumCap;
+import earth.terrarium.botarium.util.BotariumAttachment;
 import earth.terrarium.botarium.forge.BotariumItemCapabilityProvider;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
@@ -9,7 +9,7 @@ import net.minecraftforge.common.extensions.IForgeItem;
 import net.msrandom.extensions.annotations.ClassExtension;
 import org.jetbrains.annotations.Nullable;
 
-@ClassExtension(BotariumCap.class)
+@ClassExtension(BotariumAttachment.class)
 public interface BotariumCapImpl extends IForgeItem {
 
     @Override

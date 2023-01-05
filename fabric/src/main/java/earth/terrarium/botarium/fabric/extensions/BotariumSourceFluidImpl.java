@@ -1,7 +1,7 @@
 package earth.terrarium.botarium.fabric.extensions;
 
-import earth.terrarium.botarium.api.registry.fluid.BotariumSourceFluid;
-import earth.terrarium.botarium.api.registry.fluid.FluidData;
+import earth.terrarium.botarium.common.registry.fluid.BotariumSourceFluid;
+import earth.terrarium.botarium.common.registry.fluid.FluidData;
 import net.minecraft.world.level.material.FlowingFluid;
 import net.msrandom.extensions.annotations.ClassExtension;
 import net.msrandom.extensions.annotations.ExtensionInjectedElement;

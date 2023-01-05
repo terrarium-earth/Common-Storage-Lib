@@ -1,12 +1,11 @@
 package earth.terrarium.botarium.forge;
 
-import earth.terrarium.botarium.api.energy.EnergyContainer;
-import earth.terrarium.botarium.api.energy.EnergyItem;
-import earth.terrarium.botarium.api.fluid.FluidHoldingItem;
+import earth.terrarium.botarium.common.menu.base.EnergyAttachment;
+import earth.terrarium.botarium.common.fluid.base.FluidAttachment;
+import earth.terrarium.botarium.common.fluid.base.ItemFluidContainer;
 import earth.terrarium.botarium.forge.energy.ForgeItemEnergyContainer;
 import earth.terrarium.botarium.forge.fluid.ForgeItemFluidContainer;
 import net.minecraft.core.Direction;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
@@ -20,16 +19,32 @@ public class BotariumItemCapabilityProvider implements ICapabilityProvider {
     private final LazyOptional<ForgeItemEnergyContainer> energyStorage;
 
     public BotariumItemCapabilityProvider(ItemStack item) {
-        if(item.getItem() instanceof FluidHoldingItem fluidHoldingItem) {
-            fluidHandler = LazyOptional.of(() -> new ForgeItemFluidContainer(fluidHoldingItem.getFluidContainer(item), item));
-        } else {
-            fluidHandler = LazyOptional.empty();
+        fluidHandler = getFluidContainer(item);
+        energyStorage = getEnergyContainer(item);
+    }
+
+    @SuppressWarnings("unchecked")
+    private static LazyOptional<ForgeItemFluidContainer> getFluidContainer(ItemStack item) {
+        if(item.getItem() instanceof FluidAttachment<?, ?> fluidHoldingItem) {
+            if(fluidHoldingItem.getHolderType() == ItemStack.class) {
+                FluidAttachment<ItemStack, ?> fluidAttachment = (FluidAttachment<ItemStack, ?>) fluidHoldingItem;
+                if(fluidAttachment.getFluidContainer() instanceof ItemFluidContainer container) {
+                    return LazyOptional.of(() -> new ForgeItemFluidContainer(container, item));
+                }
+            }
         }
-        if(item.getItem() instanceof EnergyItem energyItem) {
-            energyStorage = LazyOptional.of(() -> new ForgeItemEnergyContainer(energyItem.getEnergyStorage(item), item));
-        } else {
-            energyStorage = LazyOptional.empty();
+        return LazyOptional.empty();
+    }
+
+    @SuppressWarnings("unchecked")
+    private static LazyOptional<ForgeItemEnergyContainer> getEnergyContainer(ItemStack item) {
+        if(item.getItem() instanceof EnergyAttachment<?, ?> energyItem) {
+            if(energyItem.getHolderType() == ItemStack.class) {
+                EnergyAttachment<ItemStack, ?> energyAttachment = (EnergyAttachment<ItemStack, ?>) energyItem;
+                return LazyOptional.of(() -> new ForgeItemEnergyContainer(energyAttachment.getEnergyStorage(), item));
+            }
         }
+        return LazyOptional.empty();
     }
 
     @Override

@@ -1,7 +1,7 @@
 package earth.terrarium.botarium.forge.extensions;
 
-import earth.terrarium.botarium.api.fluid.ClientFluidHooks;
-import earth.terrarium.botarium.api.fluid.FluidHolder;
+import earth.terrarium.botarium.common.fluid.utils.ClientFluidHooks;
+import earth.terrarium.botarium.common.fluid.base.FluidHolder;
 import earth.terrarium.botarium.forge.fluid.ForgeFluidHolder;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.TextureAtlas;

@@ -1,7 +1,7 @@
 package earth.terrarium.botarium.fabric.energy;
 
-import earth.terrarium.botarium.api.energy.PlatformItemEnergyManager;
-import earth.terrarium.botarium.api.item.ItemStackHolder;
+import earth.terrarium.botarium.common.menu.base.PlatformItemEnergyManager;
+import earth.terrarium.botarium.common.item.ItemStackHolder;
 import earth.terrarium.botarium.fabric.fluid.ItemStackStorage;
 import net.fabricmc.fabric.api.transfer.v1.context.ContainerItemContext;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;

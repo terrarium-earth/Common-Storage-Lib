@@ -1,19 +1,22 @@
 package earth.terrarium.botarium.fabric.energy;
 
-import earth.terrarium.botarium.api.energy.EnergySnapshot;
-import earth.terrarium.botarium.api.energy.StatefulEnergyContainer;
+import earth.terrarium.botarium.common.menu.base.EnergySnapshot;
+import earth.terrarium.botarium.common.menu.base.EnergyContainer;
+import earth.terrarium.botarium.util.Updatable;
 import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
 import net.fabricmc.fabric.api.transfer.v1.transaction.base.SnapshotParticipant;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import team.reborn.energy.api.EnergyStorage;
 
 @SuppressWarnings("UnstableApiUsage")
-public class FabricBlockEnergyStorage extends SnapshotParticipant<EnergySnapshot> implements EnergyStorage {
-    private final StatefulEnergyContainer<BlockEntity> container;
+public class FabricBlockEnergyStorage<T extends EnergyContainer & Updatable<BlockEntity>> extends SnapshotParticipant<EnergySnapshot> implements EnergyStorage {
+    private final T container;
+    private final Updatable<BlockEntity> updatable;
     private final BlockEntity block;
 
-    public FabricBlockEnergyStorage(StatefulEnergyContainer<BlockEntity> container, BlockEntity block) {
+    public FabricBlockEnergyStorage(T container, BlockEntity block) {
         this.container = container;
+        this.updatable = container;
         this.block = block;
     }
 

@@ -1,6 +1,6 @@
 package earth.terrarium.botarium.forge.extensions;
 
-import earth.terrarium.botarium.api.registry.RegistryHelpers;
+import earth.terrarium.botarium.common.registry.RegistryHelpers;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.level.block.Block;

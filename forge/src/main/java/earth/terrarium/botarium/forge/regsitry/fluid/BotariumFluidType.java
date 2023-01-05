@@ -1,6 +1,6 @@
 package earth.terrarium.botarium.forge.regsitry.fluid;
 
-import earth.terrarium.botarium.api.registry.fluid.FluidProperties;
+import earth.terrarium.botarium.common.registry.fluid.FluidProperties;
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;

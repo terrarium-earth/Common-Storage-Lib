@@ -1,6 +1,6 @@
 package earth.terrarium.botarium.fabric.extensions;
 
-import earth.terrarium.botarium.api.registry.RegistryHelpers;
+import earth.terrarium.botarium.common.registry.RegistryHelpers;
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerType;
 import net.minecraft.world.inventory.AbstractContainerMenu;

@@ -1,9 +1,9 @@
 package earth.terrarium.botarium.forge.energy;
 
-import earth.terrarium.botarium.api.Serializable;
-import earth.terrarium.botarium.api.energy.EnergyContainer;
-import earth.terrarium.botarium.api.energy.StatefulEnergyContainer;
+import earth.terrarium.botarium.util.Serializable;
+import earth.terrarium.botarium.common.menu.base.EnergyContainer;
 import earth.terrarium.botarium.forge.AutoSerializable;
+import earth.terrarium.botarium.util.Updatable;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.common.capabilities.Capability;
@@ -14,7 +14,7 @@ import net.minecraftforge.energy.IEnergyStorage;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public record ForgeEnergyContainer(StatefulEnergyContainer<BlockEntity> container, BlockEntity entity) implements IEnergyStorage, AutoSerializable, ICapabilityProvider {
+public record ForgeEnergyContainer<T extends EnergyContainer & Updatable<BlockEntity>>(T container, BlockEntity entity) implements IEnergyStorage, AutoSerializable, ICapabilityProvider {
 
     @Override
     @NotNull

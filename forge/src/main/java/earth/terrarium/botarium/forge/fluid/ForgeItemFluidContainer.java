@@ -1,21 +1,11 @@
 package earth.terrarium.botarium.forge.fluid;
 
-import earth.terrarium.botarium.Botarium;
-import earth.terrarium.botarium.api.Serializable;
-import earth.terrarium.botarium.api.fluid.FluidHolder;
-import earth.terrarium.botarium.api.fluid.ItemFluidContainer;
-import earth.terrarium.botarium.forge.AutoSerializable;
-import net.minecraft.core.Direction;
-import net.minecraft.resources.ResourceLocation;
+import earth.terrarium.botarium.common.fluid.base.FluidHolder;
+import earth.terrarium.botarium.common.fluid.base.ItemFluidContainer;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.common.capabilities.ICapabilityProvider;
-import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 public record ForgeItemFluidContainer(ItemFluidContainer container, ItemStack itemStack) implements IFluidHandlerItem {
 

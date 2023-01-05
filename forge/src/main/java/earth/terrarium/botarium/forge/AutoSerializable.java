@@ -1,6 +1,6 @@
 package earth.terrarium.botarium.forge;
 
-import earth.terrarium.botarium.api.Serializable;
+import earth.terrarium.botarium.util.Serializable;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraftforge.common.util.INBTSerializable;
 

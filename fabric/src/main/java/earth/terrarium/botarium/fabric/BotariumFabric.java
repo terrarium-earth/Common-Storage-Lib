@@ -1,13 +1,14 @@
 package earth.terrarium.botarium.fabric;
 
 import earth.terrarium.botarium.Botarium;
-import earth.terrarium.botarium.api.energy.EnergyBlock;
-import earth.terrarium.botarium.api.energy.EnergyItem;
-import earth.terrarium.botarium.api.energy.StatefulEnergyContainer;
-import earth.terrarium.botarium.api.fluid.FluidHoldingBlock;
-import earth.terrarium.botarium.api.fluid.FluidHoldingItem;
-import earth.terrarium.botarium.api.fluid.UpdatingFluidContainer;
-import earth.terrarium.botarium.api.item.ItemContainerBlock;
+import earth.terrarium.botarium.common.menu.base.EnergyAttachment;
+import earth.terrarium.botarium.common.energy.base.EnergyItem;
+import earth.terrarium.botarium.common.menu.base.EnergyContainer;
+import earth.terrarium.botarium.common.fluid.base.FluidContainer;
+import earth.terrarium.botarium.common.fluid.base.FluidAttachment;
+import earth.terrarium.botarium.common.fluid.base.FluidHoldingItem;
+import earth.terrarium.botarium.fluid.base.UpdatingFluidContainer;
+import earth.terrarium.botarium.common.item.ItemContainerBlock;
 import earth.terrarium.botarium.fabric.energy.FabricBlockEnergyStorage;
 import earth.terrarium.botarium.fabric.energy.FabricItemEnergyStorage;
 import earth.terrarium.botarium.fabric.fluid.FabricBlockFluidContainer;
@@ -16,7 +17,6 @@ import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemStorage;
 import net.fabricmc.fabric.impl.transfer.item.InventoryStorageImpl;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import team.reborn.energy.api.EnergyStorage;
 
 @SuppressWarnings("UnstableApiUsage")
@@ -26,8 +26,8 @@ public class BotariumFabric implements ModInitializer {
     public void onInitialize() {
         Botarium.init();
         EnergyStorage.SIDED.registerFallback((world, pos, state, blockEntity, context) -> {
-            if (blockEntity instanceof EnergyBlock energyCapable) {
-                StatefulEnergyContainer container = energyCapable.getEnergyStorage().getContainer(context);
+            if (blockEntity instanceof EnergyAttachment energyCapable) {
+                EnergyContainer container = energyCapable.getEnergyStorage().getContainer(context);
                 return container == null ? null : new FabricBlockEnergyStorage(container, blockEntity);
             }
             return null;
@@ -39,8 +39,8 @@ public class BotariumFabric implements ModInitializer {
             return null;
         });
         FluidStorage.SIDED.registerFallback((world, pos, state, blockEntity, context) -> {
-            if(blockEntity instanceof FluidHoldingBlock fluidHoldingBlock) {
-                UpdatingFluidContainer container = fluidHoldingBlock.getFluidContainer().getContainer(context);
+            if(blockEntity instanceof FluidAttachment fluidHoldingBlock) {
+                FluidContainer container = fluidHoldingBlock.getFluidContainer().getContainer(context);
                 return container == null ? null : new FabricBlockFluidContainer(container, blockEntity);
             }
             return null;

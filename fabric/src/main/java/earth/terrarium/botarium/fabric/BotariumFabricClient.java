@@ -1,6 +1,6 @@
 package earth.terrarium.botarium.fabric;
 
-import earth.terrarium.botarium.api.registry.fluid.FluidProperties;
+import earth.terrarium.botarium.common.registry.fluid.FluidProperties;
 import earth.terrarium.botarium.fabric.client.BoatriumFluidRenderHandler;
 import earth.terrarium.botarium.fabric.registry.fluid.FabricFluidData;
 import net.fabricmc.api.ClientModInitializer;

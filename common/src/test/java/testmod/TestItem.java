@@ -1,8 +1,16 @@
 package testmod;
 
-import earth.terrarium.botarium.api.energy.*;
-import earth.terrarium.botarium.api.fluid.*;
-import earth.terrarium.botarium.api.item.ItemStackHolder;
+import earth.terrarium.botarium.common.energy.base.EnergyItem;
+import earth.terrarium.botarium.common.menu.base.PlatformItemEnergyManager;
+import earth.terrarium.botarium.common.energy.impl.SimpleEnergyContainer;
+import earth.terrarium.botarium.common.energy.util.EnergyHooks;
+import earth.terrarium.botarium.common.fluid.base.FluidHoldingItem;
+import earth.terrarium.botarium.common.fluid.base.ItemFluidContainer;
+import earth.terrarium.botarium.common.fluid.base.PlatformFluidItemHandler;
+import earth.terrarium.botarium.common.fluid.impl.SimpleFluidContainer;
+import earth.terrarium.botarium.common.fluid.impl.WrappedItemFluidContainer;
+import earth.terrarium.botarium.common.fluid.utils.FluidHooks;
+import earth.terrarium.botarium.common.item.ItemStackHolder;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.Registry;
 import net.minecraft.network.chat.Component;
@@ -18,7 +26,6 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.material.Fluids;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -29,13 +36,13 @@ public class TestItem extends Item implements EnergyItem, FluidHoldingItem {
     }
 
     @Override
-    public StatefulEnergyContainer<ItemStack> getEnergyStorage(ItemStack stack) {
-        return new ItemEnergyContainer(stack, 1000000);
+    public SimpleEnergyContainer getEnergyStorage(ItemStack stack) {
+        return new SimpleEnergyContainer(1000000);
     }
 
     @Override
     public ItemFluidContainer getFluidContainer(ItemStack stack) {
-        return new ItemFilteredFluidContainer(FluidHooks.buckets(4), 1, stack, (integer, fluidHolder) -> true);
+        return new WrappedItemFluidContainer(stack, new SimpleFluidContainer(1, 1, (integer, fluidHolder) -> true));
     }
 
     @Override

@@ -1,21 +1,15 @@
 package earth.terrarium.botarium.forge;
 
 import earth.terrarium.botarium.Botarium;
-import earth.terrarium.botarium.api.BotariumCap;
-import earth.terrarium.botarium.api.energy.EnergyBlock;
-import earth.terrarium.botarium.api.energy.EnergyItem;
-import earth.terrarium.botarium.api.fluid.FluidHoldingBlock;
-import earth.terrarium.botarium.api.fluid.FluidHoldingItem;
-import earth.terrarium.botarium.api.item.ItemContainerBlock;
+import earth.terrarium.botarium.common.menu.base.EnergyAttachment;
+import earth.terrarium.botarium.common.fluid.base.FluidAttachment;
+import earth.terrarium.botarium.common.item.ItemContainerBlock;
 import earth.terrarium.botarium.forge.energy.ForgeEnergyContainer;
 import earth.terrarium.botarium.forge.fluid.ForgeFluidContainer;
-import earth.terrarium.botarium.forge.fluid.ForgeItemFluidContainer;
 import earth.terrarium.botarium.forge.item.ItemContainerWrapper;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
@@ -30,11 +24,11 @@ public class BotariumForge {
     }
 
     public static void attachBlockCapabilities(AttachCapabilitiesEvent<BlockEntity> event) {
-        if (event.getObject() instanceof EnergyBlock energyBlock) {
+        if (event.getObject() instanceof EnergyAttachment energyBlock) {
             event.addCapability(new ResourceLocation(Botarium.MOD_ID, "energy"), new ForgeEnergyContainer(energyBlock.getEnergyStorage(), event.getObject()));
         }
 
-        if (event.getObject() instanceof FluidHoldingBlock fluidHoldingBlock) {
+        if (event.getObject() instanceof FluidAttachment fluidHoldingBlock) {
             event.addCapability(new ResourceLocation(Botarium.MOD_ID, "fluid"), new ForgeFluidContainer(fluidHoldingBlock.getFluidContainer()));
         }
 

@@ -1,6 +1,6 @@
 package earth.terrarium.botarium.fabric.menu;
 
-import earth.terrarium.botarium.api.menu.ExtraDataMenuProvider;
+import earth.terrarium.botarium.common.menu.ExtraDataMenuProvider;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
