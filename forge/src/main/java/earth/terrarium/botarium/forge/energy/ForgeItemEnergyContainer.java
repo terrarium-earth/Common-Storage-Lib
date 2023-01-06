@@ -12,7 +12,7 @@ import net.minecraftforge.energy.IEnergyStorage;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public record ForgeItemEnergyContainer(EnergyContainer container, Updatable<ItemStack> updatable, ItemStack entity) implements IEnergyStorage, ICapabilityProvider {
+public record ForgeItemEnergyContainer<T extends EnergyContainer & Updatable<ItemStack>>(T container, ItemStack entity) implements IEnergyStorage, ICapabilityProvider {
 
     @Override
     @NotNull
@@ -25,7 +25,7 @@ public record ForgeItemEnergyContainer(EnergyContainer container, Updatable<Item
     public int receiveEnergy(int maxAmount, boolean bl) {
         if(maxAmount <= 0) return 0;
         int inserted = (int) container.insertEnergy(Math.min(maxAmount, container.maxInsert()), bl);
-        updatable.update(entity);
+        container.update(entity);
         return inserted;
     }
 
@@ -33,7 +33,7 @@ public record ForgeItemEnergyContainer(EnergyContainer container, Updatable<Item
     public int extractEnergy(int maxAmount, boolean bl) {
         if(maxAmount <= 0) return 0;
         int extracted = (int) container.extractEnergy(Math.min(maxAmount, container.maxExtract()), bl);
-        updatable.update(entity);
+        container.update(entity);
         return extracted;
     }
 

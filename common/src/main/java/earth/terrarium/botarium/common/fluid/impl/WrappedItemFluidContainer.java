@@ -13,21 +13,17 @@ import java.util.List;
 public record WrappedItemFluidContainer(ItemStack stack, FluidContainer container) implements ItemFluidContainer, Updatable<ItemStack> {
 
     public WrappedItemFluidContainer {
-        if (stack.hasTag()) container.deserialize(stack.getTag());
+        container.deserialize(stack.getOrCreateTag());
     }
 
     @Override
     public long insertFluid(FluidHolder fluid, boolean simulate) {
-        long insert = container.insertFluid(fluid, simulate);
-        if (!simulate) update(stack);
-        return insert;
+        return container.insertFluid(fluid, simulate);
     }
 
     @Override
     public FluidHolder extractFluid(FluidHolder fluid, boolean simulate) {
-        FluidHolder extract = container.extractFluid(fluid, simulate);
-        if (!simulate) update(stack);
-        return extract;
+        return container.extractFluid(fluid, simulate);
     }
 
     @Override
@@ -64,14 +60,11 @@ public record WrappedItemFluidContainer(ItemStack stack, FluidContainer containe
     @Override
     public void fromContainer(FluidContainer container) {
         this.container.fromContainer(container);
-        update(stack);
     }
 
     @Override
     public long extractFromSlot(FluidHolder fluidHolder, FluidHolder toInsert, Runnable snapshot) {
-        long extract = container.extractFromSlot(fluidHolder, toInsert, snapshot);
-        update(stack);
-        return extract;
+        return container.extractFromSlot(fluidHolder, toInsert, snapshot);
     }
 
     @Override

@@ -12,22 +12,17 @@ import java.util.List;
 public record WrappedBlockFluidContainer(BlockEntity block, FluidContainer container) implements FluidContainer, Updatable<BlockEntity> {
     @Override
     public long insertFluid(FluidHolder fluid, boolean simulate) {
-        long insert = container.insertFluid(fluid, simulate);
-        if (!simulate) update(block);
-        return insert;
+        return container.insertFluid(fluid, simulate);
     }
 
     @Override
     public FluidHolder extractFluid(FluidHolder fluid, boolean simulate) {
-        FluidHolder extract = container.extractFluid(fluid, simulate);
-        if (!simulate) update(block);
-        return extract;
+        return container.extractFluid(fluid, simulate);
     }
 
     @Override
     public void setFluid(int slot, FluidHolder fluid) {
         container.setFluid(slot, fluid);
-        update(block);
     }
 
     @Override
@@ -58,7 +53,6 @@ public record WrappedBlockFluidContainer(BlockEntity block, FluidContainer conta
     @Override
     public void fromContainer(FluidContainer container) {
         this.container.fromContainer(container);
-        update(block);
     }
 
     @Override

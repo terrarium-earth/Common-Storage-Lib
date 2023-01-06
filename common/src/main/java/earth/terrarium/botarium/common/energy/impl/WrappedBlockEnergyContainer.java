@@ -10,22 +10,17 @@ public record WrappedBlockEnergyContainer(BlockEntity blockEntity, EnergyContain
 
     @Override
     public long insertEnergy(long energy, boolean simulate) {
-        long insert = container.insertEnergy(energy, simulate);
-        if (!simulate) update(blockEntity);
-        return insert;
+        return container.insertEnergy(energy, simulate);
     }
 
     @Override
     public long extractEnergy(long energy, boolean simulate) {
-        long extract = container.extractEnergy(energy, simulate);
-        if (!simulate) update(blockEntity);
-        return extract;
+        return container.extractEnergy(energy, simulate);
     }
 
     @Override
     public void setEnergy(long energy) {
         container.setEnergy(energy);
-        update(blockEntity);
     }
 
     @Override
@@ -66,7 +61,6 @@ public record WrappedBlockEnergyContainer(BlockEntity blockEntity, EnergyContain
     @Override
     public void deserialize(CompoundTag nbt) {
         container.deserialize(nbt);
-        update(blockEntity);
     }
 
     @Override

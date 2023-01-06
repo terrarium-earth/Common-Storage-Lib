@@ -5,6 +5,7 @@ import earth.terrarium.botarium.common.energy.base.EnergyContainer;
 import earth.terrarium.botarium.forge.AutoSerializable;
 import earth.terrarium.botarium.util.Updatable;
 import net.minecraft.core.Direction;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
@@ -14,7 +15,7 @@ import net.minecraftforge.energy.IEnergyStorage;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public record ForgeEnergyContainer(EnergyContainer container, Updatable<BlockEntity> updatable, BlockEntity entity) implements IEnergyStorage, AutoSerializable, ICapabilityProvider {
+public record ForgeEnergyContainer<T extends EnergyContainer & Updatable<BlockEntity>>(T container, BlockEntity entity) implements IEnergyStorage, AutoSerializable, ICapabilityProvider {
 
     @Override
     @NotNull
@@ -27,7 +28,7 @@ public record ForgeEnergyContainer(EnergyContainer container, Updatable<BlockEnt
     public int receiveEnergy(int maxAmount, boolean bl) {
         if(maxAmount <= 0) return 0;
         int inserted = (int) container.insertEnergy(Math.min(maxAmount, container.maxInsert()), bl);
-        updatable.update(entity);
+        container.update(entity);
         return inserted;
     }
 
@@ -35,7 +36,7 @@ public record ForgeEnergyContainer(EnergyContainer container, Updatable<BlockEnt
     public int extractEnergy(int maxAmount, boolean bl) {
         if(maxAmount <= 0) return 0;
         int extracted = (int) container.extractEnergy(Math.min(maxAmount, container.maxExtract()), bl);
-        updatable.update(entity);
+        container.update(entity);
         return extracted;
     }
 

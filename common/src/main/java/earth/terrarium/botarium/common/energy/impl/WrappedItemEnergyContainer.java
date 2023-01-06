@@ -9,27 +9,22 @@ import net.minecraft.world.item.ItemStack;
 public record WrappedItemEnergyContainer(ItemStack stack, EnergyContainer container) implements EnergyContainer, Updatable<ItemStack> {
 
     public WrappedItemEnergyContainer {
-        if(stack.hasTag()) container.deserialize(stack.getTag());
+        container.deserialize(stack.getOrCreateTag());
     }
 
     @Override
     public long insertEnergy(long energy, boolean simulate) {
-        long insert = container.insertEnergy(energy, simulate);
-        if (!simulate) update(stack);
-        return insert;
+        return container.insertEnergy(energy, simulate);
     }
 
     @Override
     public long extractEnergy(long energy, boolean simulate) {
-        long extract = container.extractEnergy(energy, simulate);
-        if (!simulate) update(stack);
-        return extract;
+        return container.extractEnergy(energy, simulate);
     }
 
     @Override
     public void setEnergy(long energy) {
         container.setEnergy(energy);
-        update(stack);
     }
 
     @Override
@@ -70,7 +65,6 @@ public record WrappedItemEnergyContainer(ItemStack stack, EnergyContainer contai
     @Override
     public void deserialize(CompoundTag nbt) {
         container.deserialize(nbt);
-        update(stack);
     }
 
     @Override

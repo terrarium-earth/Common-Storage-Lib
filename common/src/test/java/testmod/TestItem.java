@@ -47,15 +47,19 @@ public class TestItem extends Item implements EnergyAttachment.Item, FluidAttach
 
     @Override
     public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltip, TooltipFlag tooltipFlag) {
-        PlatformFluidItemHandler itemFluidManager = FluidHooks.getItemFluidManager(stack);
-        long oxygen = itemFluidManager.getFluidInTank(0).getFluidAmount();
-        long oxygenCapacity = itemFluidManager.getTankCapacity(0);
-        tooltip.add(Component.literal("Water: " + oxygen + "mb / "+ oxygenCapacity + "mb").setStyle(Style.EMPTY.withColor(ChatFormatting.GRAY)));
+        if (FluidHooks.isFluidContainingItem(stack)) {
+            PlatformFluidItemHandler itemFluidManager = FluidHooks.getItemFluidManager(stack);
+            long oxygen = itemFluidManager.getFluidInTank(0).getFluidAmount();
+            long oxygenCapacity = itemFluidManager.getTankCapacity(0);
+            tooltip.add(Component.literal("Water: " + oxygen + "mb / " + oxygenCapacity + "mb").setStyle(Style.EMPTY.withColor(ChatFormatting.GRAY)));
+        }
 
-        PlatformItemEnergyManager energyManager = EnergyHooks.getItemEnergyManager(stack);
-        long energy = energyManager.getStoredEnergy();
-        long energyCapacity = energyManager.getCapacity();
-        tooltip.add(Component.literal("Energy: " + energy + "FE / "+ energyCapacity + "FE").setStyle(Style.EMPTY.withColor(ChatFormatting.GRAY)));
+        if (EnergyHooks.isEnergyItem(stack)) {
+            PlatformItemEnergyManager energyManager = EnergyHooks.getItemEnergyManager(stack);
+            long energy = energyManager.getStoredEnergy();
+            long energyCapacity = energyManager.getCapacity();
+            tooltip.add(Component.literal("Energy: " + energy + "FE / " + energyCapacity + "FE").setStyle(Style.EMPTY.withColor(ChatFormatting.GRAY)));
+        }
     }
 
     /*
