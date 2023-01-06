@@ -3,6 +3,7 @@ package earth.terrarium.botarium.forge.fluid;
 import earth.terrarium.botarium.api.fluid.FluidHolder;
 import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
@@ -101,6 +102,16 @@ public class ForgeFluidHolder implements FluidHolder {
     @Override
     public boolean isEmpty() {
         return fluidStack.isEmpty();
+    }
+
+    @Override
+    public Component getTranslationName() {
+        return this.fluidStack.getDisplayName();
+    }
+
+    @Override
+    public String getTranslationKey() {
+        return this.fluidStack.getTranslationKey();
     }
 
     public static FluidStack toStack(FluidHolder holder) {

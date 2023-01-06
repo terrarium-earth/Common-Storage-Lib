@@ -41,9 +41,11 @@ public class TestItem extends Item implements EnergyItem, FluidHoldingItem {
     @Override
     public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltip, TooltipFlag tooltipFlag) {
         PlatformFluidItemHandler itemFluidManager = FluidHooks.getItemFluidManager(stack);
-        long oxygen = itemFluidManager.getFluidInTank(0).getFluidAmount();
-        long oxygenCapacity = itemFluidManager.getTankCapacity(0);
-        tooltip.add(Component.literal("Water: " + oxygen + "mb / "+ oxygenCapacity + "mb").setStyle(Style.EMPTY.withColor(ChatFormatting.GRAY)));
+        FluidHolder fluidInTank = itemFluidManager.getFluidInTank(0);
+        Component fluidName = fluidInTank.getTranslationName();
+        long fluidAmount = fluidInTank.getFluidAmount();
+        long fluidCapacity = itemFluidManager.getTankCapacity(0);
+        tooltip.add(Component.translatable("Fluid: %s: %s mb / %s mb", fluidName, fluidAmount, fluidCapacity).setStyle(Style.EMPTY.withColor(ChatFormatting.GRAY)));
 
         PlatformItemEnergyManager energyManager = EnergyHooks.getItemEnergyManager(stack);
         long energy = energyManager.getStoredEnergy();
