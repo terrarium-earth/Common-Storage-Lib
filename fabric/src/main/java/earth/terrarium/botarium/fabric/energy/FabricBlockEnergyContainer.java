@@ -9,14 +9,14 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import team.reborn.energy.api.EnergyStorage;
 
 @SuppressWarnings("UnstableApiUsage")
-public class FabricBlockEnergyStorage<T extends EnergyContainer & Updatable<BlockEntity>> extends SnapshotParticipant<EnergySnapshot> implements EnergyStorage {
-    private final T container;
+public class FabricBlockEnergyContainer extends SnapshotParticipant<EnergySnapshot> implements EnergyStorage {
+    private final EnergyContainer container;
     private final Updatable<BlockEntity> updatable;
     private final BlockEntity block;
 
-    public FabricBlockEnergyStorage(T container, BlockEntity block) {
+    public FabricBlockEnergyContainer(EnergyContainer container, Updatable<BlockEntity> updatable, BlockEntity block) {
         this.container = container;
-        this.updatable = container;
+        this.updatable = updatable;
         this.block = block;
     }
 
@@ -66,6 +66,6 @@ public class FabricBlockEnergyStorage<T extends EnergyContainer & Updatable<Bloc
 
     @Override
     protected void onFinalCommit() {
-        this.container.update(block);
+        this.updatable.update(block);
     }
 }

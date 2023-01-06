@@ -11,7 +11,7 @@ public interface FluidAttachment<U, T extends FluidContainer & Updatable<U>> {
     /**
      * @return The {@link ItemFluidContainer} for the block.
      */
-    T getFluidContainer();
+    T getFluidContainer(U holder);
 
     Class<U> getHolderType();
 

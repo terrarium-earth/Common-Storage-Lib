@@ -1,4 +1,4 @@
-package earth.terrarium.botarium.fabric.fluid;
+package earth.terrarium.botarium.fabric.fluid.storage;
 
 import earth.terrarium.botarium.common.fluid.base.FluidSnapshot;
 import net.fabricmc.fabric.api.transfer.v1.transaction.base.SnapshotParticipant;

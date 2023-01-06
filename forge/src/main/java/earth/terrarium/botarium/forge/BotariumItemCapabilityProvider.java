@@ -5,6 +5,7 @@ import earth.terrarium.botarium.common.fluid.base.FluidAttachment;
 import earth.terrarium.botarium.common.fluid.base.ItemFluidContainer;
 import earth.terrarium.botarium.forge.energy.ForgeItemEnergyContainer;
 import earth.terrarium.botarium.forge.fluid.ForgeItemFluidContainer;
+import earth.terrarium.botarium.util.Updatable;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.capabilities.Capability;
@@ -28,8 +29,9 @@ public class BotariumItemCapabilityProvider implements ICapabilityProvider {
         if(item.getItem() instanceof FluidAttachment<?, ?> fluidHoldingItem) {
             if(fluidHoldingItem.getHolderType() == ItemStack.class) {
                 FluidAttachment<ItemStack, ?> fluidAttachment = (FluidAttachment<ItemStack, ?>) fluidHoldingItem;
-                if(fluidAttachment.getFluidContainer() instanceof ItemFluidContainer container) {
-                    return LazyOptional.of(() -> new ForgeItemFluidContainer(container, item));
+                if(fluidAttachment.getFluidContainer(item) instanceof ItemFluidContainer container && container instanceof Updatable<?> updatable) {
+                    Updatable<ItemStack> updatableItem = (Updatable<ItemStack>) updatable;
+                    return LazyOptional.of(() -> new ForgeItemFluidContainer(container, updatableItem, item));
                 }
             }
         }
@@ -41,7 +43,7 @@ public class BotariumItemCapabilityProvider implements ICapabilityProvider {
         if(item.getItem() instanceof EnergyAttachment<?, ?> energyItem) {
             if(energyItem.getHolderType() == ItemStack.class) {
                 EnergyAttachment<ItemStack, ?> energyAttachment = (EnergyAttachment<ItemStack, ?>) energyItem;
-                return LazyOptional.of(() -> new ForgeItemEnergyContainer(energyAttachment.getEnergyStorage(), item));
+                return LazyOptional.of(() -> new ForgeItemEnergyContainer(energyAttachment.getEnergyStorage(item),  energyAttachment.getEnergyStorage(item), item));
             }
         }
         return LazyOptional.empty();

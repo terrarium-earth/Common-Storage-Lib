@@ -11,7 +11,7 @@ public interface EnergyAttachment<U, T extends EnergyContainer & Updatable<U>> {
     /**
      * @return The {@link EnergyContainer} for the block.
      */
-    T getEnergyStorage();
+    T getEnergyStorage(U holder);
 
     Class<U> getHolderType();
 

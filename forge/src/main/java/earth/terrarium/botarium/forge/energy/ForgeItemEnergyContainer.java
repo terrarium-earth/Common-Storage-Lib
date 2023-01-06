@@ -1,6 +1,7 @@
 package earth.terrarium.botarium.forge.energy;
 
 import earth.terrarium.botarium.common.menu.base.EnergyContainer;
+import earth.terrarium.botarium.util.Updatable;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.capabilities.Capability;
@@ -11,7 +12,7 @@ import net.minecraftforge.energy.IEnergyStorage;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public record ForgeItemEnergyContainer(EnergyContainer container, ItemStack entity) implements IEnergyStorage, ICapabilityProvider {
+public record ForgeItemEnergyContainer(EnergyContainer container, Updatable<ItemStack> updatable, ItemStack entity) implements IEnergyStorage, ICapabilityProvider {
 
     @Override
     @NotNull
@@ -23,14 +24,19 @@ public record ForgeItemEnergyContainer(EnergyContainer container, ItemStack enti
     @Override
     public int receiveEnergy(int maxAmount, boolean bl) {
         if(maxAmount <= 0) return 0;
-        return (int) container.insertEnergy(Math.min(maxAmount, container.maxInsert()), bl);
+        int inserted = (int) container.insertEnergy(Math.min(maxAmount, container.maxInsert()), bl);
+        updatable.update(entity);
+        return inserted;
     }
 
     @Override
     public int extractEnergy(int maxAmount, boolean bl) {
         if(maxAmount <= 0) return 0;
-        return (int) container.extractEnergy(Math.min(maxAmount, container.maxExtract()), bl);
+        int extracted = (int) container.extractEnergy(Math.min(maxAmount, container.maxExtract()), bl);
+        updatable.update(entity);
+        return extracted;
     }
+
 
     @Override
     public int getEnergyStored() {

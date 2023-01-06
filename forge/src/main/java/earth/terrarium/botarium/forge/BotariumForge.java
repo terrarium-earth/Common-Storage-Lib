@@ -7,6 +7,7 @@ import earth.terrarium.botarium.common.item.ItemContainerBlock;
 import earth.terrarium.botarium.forge.energy.ForgeEnergyContainer;
 import earth.terrarium.botarium.forge.fluid.ForgeFluidContainer;
 import earth.terrarium.botarium.forge.item.ItemContainerWrapper;
+import earth.terrarium.botarium.util.Updatable;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.common.MinecraftForge;
@@ -24,12 +25,12 @@ public class BotariumForge {
     }
 
     public static void attachBlockCapabilities(AttachCapabilitiesEvent<BlockEntity> event) {
-        if (event.getObject() instanceof EnergyAttachment energyBlock) {
-            event.addCapability(new ResourceLocation(Botarium.MOD_ID, "energy"), new ForgeEnergyContainer(energyBlock.getEnergyStorage(), event.getObject()));
+        if (event.getObject() instanceof EnergyAttachment energyBlock && energyBlock.getHolderType() == BlockEntity.class) {
+            event.addCapability(new ResourceLocation(Botarium.MOD_ID, "energy"), new ForgeEnergyContainer(energyBlock.getEnergyStorage(event.getObject()), (Updatable<BlockEntity>) energyBlock.getEnergyStorage(event.getObject()), event.getObject()));
         }
 
-        if (event.getObject() instanceof FluidAttachment fluidHoldingBlock) {
-            event.addCapability(new ResourceLocation(Botarium.MOD_ID, "fluid"), new ForgeFluidContainer(fluidHoldingBlock.getFluidContainer()));
+        if (event.getObject() instanceof FluidAttachment fluidHoldingBlock && fluidHoldingBlock.getHolderType() == BlockEntity.class) {
+            event.addCapability(new ResourceLocation(Botarium.MOD_ID, "fluid"), new ForgeFluidContainer(fluidHoldingBlock.getFluidContainer(event.getObject())));
         }
 
         if (event.getObject() instanceof ItemContainerBlock itemContainerBlock) {

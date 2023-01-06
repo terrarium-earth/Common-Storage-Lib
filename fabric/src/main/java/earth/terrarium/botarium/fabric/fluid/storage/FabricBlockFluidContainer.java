@@ -1,8 +1,11 @@
-package earth.terrarium.botarium.fabric.fluid;
+package earth.terrarium.botarium.fabric.fluid.storage;
 
 import earth.terrarium.botarium.common.fluid.base.FluidContainer;
 import earth.terrarium.botarium.common.fluid.base.FluidHolder;
 import earth.terrarium.botarium.common.fluid.base.FluidSnapshot;
+import earth.terrarium.botarium.fabric.fluid.holder.FabricFluidHolder;
+import earth.terrarium.botarium.fabric.fluid.holder.ManualSyncing;
+import earth.terrarium.botarium.fabric.fluid.holder.WrappedFluidHolder;
 import earth.terrarium.botarium.util.Updatable;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
@@ -15,12 +18,14 @@ import java.util.List;
 import java.util.stream.IntStream;
 
 @SuppressWarnings("UnstableApiUsage")
-public class FabricBlockFluidContainer<T extends FluidContainer & Updatable> extends ExtendedFluidContainer implements Storage<FluidVariant>, ManualSyncing {
-    private final T container;
+public class FabricBlockFluidContainer extends ExtendedFluidContainer implements Storage<FluidVariant>, ManualSyncing {
+    private final FluidContainer container;
+    private final Updatable<BlockEntity> blockEntity;
     private final BlockEntity block;
 
-    public FabricBlockFluidContainer(T container, BlockEntity entity) {
+    public FabricBlockFluidContainer(FluidContainer container, Updatable<BlockEntity> updatable, BlockEntity entity) {
         this.container = container;
+        this.blockEntity = updatable;
         this.block = entity;
     }
 
@@ -54,7 +59,7 @@ public class FabricBlockFluidContainer<T extends FluidContainer & Updatable> ext
 
     @Override
     public void onFinalCommit() {
-        container.update();
+        blockEntity.update(block);
     }
 
 }

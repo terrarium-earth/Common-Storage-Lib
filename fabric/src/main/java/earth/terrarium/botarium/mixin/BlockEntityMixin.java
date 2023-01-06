@@ -16,10 +16,10 @@ public class BlockEntityMixin {
     @Inject(method = "load", at = @At("TAIL"))
     public void deserializeData(CompoundTag compoundTag, CallbackInfo ci) {
         if (this instanceof EnergyAttachment energyBlock) {
-            energyBlock.getEnergyStorage().deserialize(compoundTag);
+            energyBlock.getEnergyStorage(this).deserialize(compoundTag);
         }
         if (this instanceof FluidAttachment fluidHoldingBlock) {
-            fluidHoldingBlock.getFluidContainer().deserialize(compoundTag);
+            fluidHoldingBlock.getFluidContainer(this).deserialize(compoundTag);
         }
         if (this instanceof ItemContainerBlock itemContainerBlock) {
             itemContainerBlock.getContainer().deserialize(compoundTag);
@@ -29,10 +29,10 @@ public class BlockEntityMixin {
     @Inject(method = "saveAdditional", at = @At("TAIL"))
     public void serializeData(CompoundTag compoundTag, CallbackInfo ci) {
         if (this instanceof EnergyAttachment energyBlock) {
-            energyBlock.getEnergyStorage().serialize(compoundTag);
+            energyBlock.getEnergyStorage(this).serialize(compoundTag);
         }
         if (this instanceof FluidAttachment fluidHoldingBlock) {
-            fluidHoldingBlock.getFluidContainer().serialize(compoundTag);
+            fluidHoldingBlock.getFluidContainer(this).serialize(compoundTag);
         }
         if (this instanceof ItemContainerBlock itemContainerBlock) {
             itemContainerBlock.getContainer().serialize(compoundTag);

@@ -1,4 +1,4 @@
-package earth.terrarium.botarium.fabric.fluid;
+package earth.terrarium.botarium.fabric.fluid.holder;
 
 import earth.terrarium.botarium.common.fluid.base.FluidHolder;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
