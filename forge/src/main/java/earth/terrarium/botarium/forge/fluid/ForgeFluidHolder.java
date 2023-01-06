@@ -54,7 +54,7 @@ public class ForgeFluidHolder implements FluidHolder {
 
     @Override
     public void setAmount(long amount) {
-        this.fluidStack.setAmount((int) amount);
+        this.fluidStack = new FluidStack(this.fluidStack.getFluid(), (int) amount, this.fluidStack.getTag());
     }
 
     @Override
