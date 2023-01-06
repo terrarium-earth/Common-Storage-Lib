@@ -7,6 +7,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import earth.terrarium.botarium.common.fluid.base.FluidHolder;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.material.Fluid;
 
@@ -107,14 +108,14 @@ public class FluidIngredient implements Predicate<FluidHolder> {
 
     public record TagValue(TagKey<Fluid> tag) implements Value {
         public static final Codec<TagValue> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-                TagKey.codec(Registry.FLUID.key()).fieldOf("tag").forGetter(TagValue::tag)
+                TagKey.codec(BuiltInRegistries.FLUID.key()).fieldOf("tag").forGetter(TagValue::tag)
         ).apply(instance, TagValue::new));
 
         @Override
         public Collection<FluidHolder> getFluids() {
             List<FluidHolder> list = Lists.newArrayList();
 
-            for (Holder<Fluid> holder : Registry.FLUID.getTagOrEmpty(this.tag)) {
+            for (Holder<Fluid> holder : BuiltInRegistries.FLUID.getTagOrEmpty(this.tag)) {
                 list.add(FluidHolder.of(holder.value()));
             }
 

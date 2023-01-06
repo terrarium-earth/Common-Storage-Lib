@@ -1,6 +1,6 @@
 package earth.terrarium.botarium.fabric.energy;
 
-import earth.terrarium.botarium.common.menu.base.PlatformEnergyManager;
+import earth.terrarium.botarium.common.energy.base.PlatformEnergyManager;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.entity.BlockEntity;

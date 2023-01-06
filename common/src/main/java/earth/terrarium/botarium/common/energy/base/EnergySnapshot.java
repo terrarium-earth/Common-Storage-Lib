@@ -1,4 +1,4 @@
-package earth.terrarium.botarium.common.menu.base;
+package earth.terrarium.botarium.common.energy.base;
 
 /**
  * A snapshot of a {@link EnergyContainer} that can be loaded into another container or used to restore a container to a previous state.

@@ -1,4 +1,4 @@
-package earth.terrarium.botarium.common.menu.base;
+package earth.terrarium.botarium.common.energy.base;
 
 import earth.terrarium.botarium.util.Serializable;
 import net.minecraft.core.Direction;

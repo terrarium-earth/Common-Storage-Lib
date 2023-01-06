@@ -1,12 +1,10 @@
 package earth.terrarium.botarium.common.energy.util;
 
 import com.mojang.datafixers.util.Pair;
-import earth.terrarium.botarium.common.energy.base.*;
-import earth.terrarium.botarium.common.menu.base.EnergyAttachment;
-import earth.terrarium.botarium.common.menu.base.EnergyContainer;
-import earth.terrarium.botarium.common.menu.base.PlatformEnergyManager;
-import earth.terrarium.botarium.common.menu.base.PlatformItemEnergyManager;
-import earth.terrarium.botarium.energy.base.*;
+import earth.terrarium.botarium.common.energy.base.EnergyAttachment;
+import earth.terrarium.botarium.common.energy.base.EnergyContainer;
+import earth.terrarium.botarium.common.energy.base.PlatformEnergyManager;
+import earth.terrarium.botarium.common.energy.base.PlatformItemEnergyManager;
 import earth.terrarium.botarium.common.item.ItemStackHolder;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -251,7 +249,7 @@ public class EnergyHooks {
             .forEach(pair -> {
                 PlatformEnergyManager externalEnergy = pair.getFirst().get();
                 safeGetBlockEnergyManager(energyBlock, pair.getSecond().getOpposite())
-                    .ifPresent(platformEnergyManager -> moveEnergy(platformEnergyManager, externalEnergy, amount == -1 ? energyBlock.getEnergyStorage().getStoredEnergy() : amount));
+                    .ifPresent(platformEnergyManager -> moveEnergy(platformEnergyManager, externalEnergy, amount == -1 ? energyBlock.getEnergyStorage(energyBlock).getStoredEnergy() : amount));
             });
     }
 
@@ -264,8 +262,8 @@ public class EnergyHooks {
         distributeEnergyNearby(energyBlock, -1);
     }
 
-    public static int toDurabilityBar(EnergyItem energyItem, ItemStack stack) {
-        EnergyContainer<ItemStack> energyStorage = energyItem.getEnergyStorage(stack);
+    public static int toDurabilityBar(EnergyAttachment energyItem, ItemStack stack) {
+        EnergyContainer energyStorage = energyItem.getEnergyStorage(stack);
         return (int) (((double) energyStorage.getStoredEnergy() / energyStorage.getMaxCapacity()) * 13);
     }
 }

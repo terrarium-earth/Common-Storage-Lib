@@ -1,7 +1,7 @@
 package earth.terrarium.botarium.forge;
 
 import earth.terrarium.botarium.Botarium;
-import earth.terrarium.botarium.common.menu.base.EnergyAttachment;
+import earth.terrarium.botarium.common.energy.base.EnergyAttachment;
 import earth.terrarium.botarium.common.fluid.base.FluidAttachment;
 import earth.terrarium.botarium.common.item.ItemContainerBlock;
 import earth.terrarium.botarium.forge.energy.ForgeEnergyContainer;
@@ -25,11 +25,11 @@ public class BotariumForge {
     }
 
     public static void attachBlockCapabilities(AttachCapabilitiesEvent<BlockEntity> event) {
-        if (event.getObject() instanceof EnergyAttachment energyBlock && energyBlock.getHolderType() == BlockEntity.class) {
+        if (event.getObject() instanceof EnergyAttachment energyBlock && energyBlock.getEnergyHolderType() == BlockEntity.class) {
             event.addCapability(new ResourceLocation(Botarium.MOD_ID, "energy"), new ForgeEnergyContainer(energyBlock.getEnergyStorage(event.getObject()), (Updatable<BlockEntity>) energyBlock.getEnergyStorage(event.getObject()), event.getObject()));
         }
 
-        if (event.getObject() instanceof FluidAttachment fluidHoldingBlock && fluidHoldingBlock.getHolderType() == BlockEntity.class) {
+        if (event.getObject() instanceof FluidAttachment fluidHoldingBlock && fluidHoldingBlock.getFluidHolderType() == BlockEntity.class) {
             event.addCapability(new ResourceLocation(Botarium.MOD_ID, "fluid"), new ForgeFluidContainer(fluidHoldingBlock.getFluidContainer(event.getObject())));
         }
 

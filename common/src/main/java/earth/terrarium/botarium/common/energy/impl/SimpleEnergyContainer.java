@@ -1,7 +1,8 @@
 package earth.terrarium.botarium.common.energy.impl;
 
-import earth.terrarium.botarium.common.menu.base.EnergyContainer;
-import earth.terrarium.botarium.common.menu.base.EnergySnapshot;
+import earth.terrarium.botarium.Botarium;
+import earth.terrarium.botarium.common.energy.base.EnergyContainer;
+import earth.terrarium.botarium.common.energy.base.EnergySnapshot;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Mth;
 
@@ -63,13 +64,16 @@ public class SimpleEnergyContainer implements EnergyContainer {
     }
 
     @Override
-    public CompoundTag serialize(CompoundTag tag) {
+    public CompoundTag serialize(CompoundTag root) {
+        CompoundTag tag = root.getCompound(Botarium.BOTARIUM_DATA);
         tag.putLong("Energy", this.energy);
-        return tag;
+        root.put(Botarium.BOTARIUM_DATA, tag);
+        return root;
     }
 
     @Override
-    public void deserialize(CompoundTag tag) {
+    public void deserialize(CompoundTag root) {
+        CompoundTag tag = root.getCompound(Botarium.BOTARIUM_DATA);
         this.energy = tag.getLong("Energy");
     }
 
@@ -86,5 +90,10 @@ public class SimpleEnergyContainer implements EnergyContainer {
     @Override
     public EnergySnapshot createSnapshot() {
         return new SimpleEnergySnapshot(this);
+    }
+
+    @Override
+    public void clearContent() {
+        this.energy = 0;
     }
 }

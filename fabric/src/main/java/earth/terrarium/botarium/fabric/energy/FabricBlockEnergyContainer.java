@@ -1,7 +1,7 @@
 package earth.terrarium.botarium.fabric.energy;
 
-import earth.terrarium.botarium.common.menu.base.EnergySnapshot;
-import earth.terrarium.botarium.common.menu.base.EnergyContainer;
+import earth.terrarium.botarium.common.energy.base.EnergySnapshot;
+import earth.terrarium.botarium.common.energy.base.EnergyContainer;
 import earth.terrarium.botarium.util.Updatable;
 import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
 import net.fabricmc.fabric.api.transfer.v1.transaction.base.SnapshotParticipant;

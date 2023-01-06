@@ -2,6 +2,7 @@ package earth.terrarium.botarium.forge.fluid;
 
 import earth.terrarium.botarium.common.fluid.base.FluidHolder;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.material.Fluid;
@@ -29,7 +30,7 @@ public class ForgeFluidHolder implements FluidHolder {
     }
 
     public static ForgeFluidHolder fromCompound(CompoundTag compound) {
-        Fluid fluid = Registry.FLUID.get(new ResourceLocation(compound.getString("Fluid")));
+        Fluid fluid = BuiltInRegistries.FLUID.get(new ResourceLocation(compound.getString("Fluid")));
         int amount = (int) compound.getLong("Amount");
         CompoundTag nbt = null;
         if (compound.contains("Nbt")) nbt = compound.getCompound("Nbt");
@@ -53,7 +54,7 @@ public class ForgeFluidHolder implements FluidHolder {
 
     @Override
     public void setAmount(long amount) {
-        this.fluidStack.setAmount((int) amount);
+        this.fluidStack = new FluidStack(this.fluidStack.getFluid(), (int) amount, this.fluidStack.getTag());
     }
 
     @Override
@@ -79,7 +80,7 @@ public class ForgeFluidHolder implements FluidHolder {
     @Override
     public CompoundTag serialize() {
         CompoundTag compoundTag = new CompoundTag();
-        compoundTag.putString("Fluid", Registry.FLUID.getKey(getFluid()).toString());
+        compoundTag.putString("Fluid", BuiltInRegistries.FLUID.getKey(getFluid()).toString());
         compoundTag.putLong("Amount", getFluidAmount());
         if(this.getCompound() != null) {
             compoundTag.put("Nbt", getCompound());
@@ -94,7 +95,7 @@ public class ForgeFluidHolder implements FluidHolder {
         if(compound.contains("Nbt")) {
             tag = compound.getCompound("Nbt");
         }
-        this.fluidStack = new FluidStack(Registry.FLUID.get(new ResourceLocation(compound.getString("Fluid"))), (int) amount, tag);
+        this.fluidStack = new FluidStack(BuiltInRegistries.FLUID.get(new ResourceLocation(compound.getString("Fluid"))), (int) amount, tag);
     }
 
     @Override

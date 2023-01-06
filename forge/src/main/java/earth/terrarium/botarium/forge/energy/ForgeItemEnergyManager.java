@@ -1,6 +1,6 @@
 package earth.terrarium.botarium.forge.energy;
 
-import earth.terrarium.botarium.common.menu.base.PlatformItemEnergyManager;
+import earth.terrarium.botarium.common.energy.base.PlatformItemEnergyManager;
 import earth.terrarium.botarium.common.item.ItemStackHolder;
 import net.minecraftforge.common.capabilities.CapabilityProvider;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;

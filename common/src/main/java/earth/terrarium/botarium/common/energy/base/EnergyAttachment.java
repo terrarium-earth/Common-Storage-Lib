@@ -1,4 +1,4 @@
-package earth.terrarium.botarium.common.menu.base;
+package earth.terrarium.botarium.common.energy.base;
 
 import earth.terrarium.botarium.common.energy.impl.WrappedBlockEnergyContainer;
 import earth.terrarium.botarium.common.energy.impl.WrappedItemEnergyContainer;
@@ -13,17 +13,17 @@ public interface EnergyAttachment<U, T extends EnergyContainer & Updatable<U>> {
      */
     T getEnergyStorage(U holder);
 
-    Class<U> getHolderType();
+    Class<U> getEnergyHolderType();
 
     interface Item extends EnergyAttachment<ItemStack, WrappedItemEnergyContainer> {
         @Override
-        default Class<ItemStack> getHolderType() {
+        default Class<ItemStack> getEnergyHolderType() {
             return ItemStack.class;
         }
     }
     interface Block extends EnergyAttachment<BlockEntity, WrappedBlockEnergyContainer> {
         @Override
-        default Class<BlockEntity> getHolderType() {
+        default Class<BlockEntity> getEnergyHolderType() {
             return BlockEntity.class;
         }
     }

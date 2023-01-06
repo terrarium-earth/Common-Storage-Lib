@@ -1,6 +1,6 @@
 package earth.terrarium.botarium.mixin;
 
-import earth.terrarium.botarium.common.menu.base.EnergyAttachment;
+import earth.terrarium.botarium.common.energy.base.EnergyAttachment;
 import earth.terrarium.botarium.common.fluid.base.FluidAttachment;
 import earth.terrarium.botarium.common.item.ItemContainerBlock;
 import net.minecraft.nbt.CompoundTag;

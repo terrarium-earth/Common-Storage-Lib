@@ -35,7 +35,7 @@ public class TestBlock extends BaseEntityBlock {
 
         if (player.isShiftKeyDown()
                 && level.getBlockEntity(blockPos) instanceof TestBlockEntity testBlockEntity
-                && testBlockEntity.getFluidContainer().container() instanceof SimpleFluidContainer fluidContainer
+                && testBlockEntity.getFluidContainer(testBlockEntity).container() instanceof SimpleFluidContainer fluidContainer
         ) {
             fluidContainer.clear();
         }
@@ -47,7 +47,7 @@ public class TestBlock extends BaseEntityBlock {
             ).getStoredEnergy()));
 
             if (level.getBlockEntity(blockPos) instanceof TestBlockEntity testBlockEntity) {
-                player.sendSystemMessage(Component.literal("Fluid: " + testBlockEntity.getFluidContainer().getFluids().stream()
+                player.sendSystemMessage(Component.literal("Fluid: " + testBlockEntity.getFluidContainer(testBlockEntity).getFluids().stream()
                         .mapToLong(FluidHolder::getFluidAmount)
                         .mapToObj(Long::toString)
                         .collect(Collectors.joining(", "))

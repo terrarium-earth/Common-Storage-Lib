@@ -1,6 +1,6 @@
 package earth.terrarium.botarium.forge;
 
-import earth.terrarium.botarium.common.menu.base.EnergyAttachment;
+import earth.terrarium.botarium.common.energy.base.EnergyAttachment;
 import earth.terrarium.botarium.common.fluid.base.FluidAttachment;
 import earth.terrarium.botarium.common.fluid.base.ItemFluidContainer;
 import earth.terrarium.botarium.forge.energy.ForgeItemEnergyContainer;
@@ -27,7 +27,7 @@ public class BotariumItemCapabilityProvider implements ICapabilityProvider {
     @SuppressWarnings("unchecked")
     private static LazyOptional<ForgeItemFluidContainer> getFluidContainer(ItemStack item) {
         if(item.getItem() instanceof FluidAttachment<?, ?> fluidHoldingItem) {
-            if(fluidHoldingItem.getHolderType() == ItemStack.class) {
+            if(fluidHoldingItem.getFluidHolderType() == ItemStack.class) {
                 FluidAttachment<ItemStack, ?> fluidAttachment = (FluidAttachment<ItemStack, ?>) fluidHoldingItem;
                 if(fluidAttachment.getFluidContainer(item) instanceof ItemFluidContainer container && container instanceof Updatable<?> updatable) {
                     Updatable<ItemStack> updatableItem = (Updatable<ItemStack>) updatable;
@@ -41,7 +41,7 @@ public class BotariumItemCapabilityProvider implements ICapabilityProvider {
     @SuppressWarnings("unchecked")
     private static LazyOptional<ForgeItemEnergyContainer> getEnergyContainer(ItemStack item) {
         if(item.getItem() instanceof EnergyAttachment<?, ?> energyItem) {
-            if(energyItem.getHolderType() == ItemStack.class) {
+            if(energyItem.getEnergyHolderType() == ItemStack.class) {
                 EnergyAttachment<ItemStack, ?> energyAttachment = (EnergyAttachment<ItemStack, ?>) energyItem;
                 return LazyOptional.of(() -> new ForgeItemEnergyContainer(energyAttachment.getEnergyStorage(item),  energyAttachment.getEnergyStorage(item), item));
             }

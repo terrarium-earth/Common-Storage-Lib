@@ -1,8 +1,8 @@
 package earth.terrarium.botarium.fabric.extensions;
 
 import earth.terrarium.botarium.common.energy.util.EnergyHooks;
-import earth.terrarium.botarium.common.menu.base.PlatformEnergyManager;
-import earth.terrarium.botarium.common.menu.base.PlatformItemEnergyManager;
+import earth.terrarium.botarium.common.energy.base.PlatformEnergyManager;
+import earth.terrarium.botarium.common.energy.base.PlatformItemEnergyManager;
 import earth.terrarium.botarium.fabric.energy.FabricEnergyManager;
 import earth.terrarium.botarium.fabric.energy.FabricItemEnergyManager;
 import net.minecraft.core.Direction;

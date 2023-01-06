@@ -1,6 +1,6 @@
 package testmod;
 
-import earth.terrarium.botarium.common.menu.base.EnergyAttachment;
+import earth.terrarium.botarium.common.energy.base.EnergyAttachment;
 import earth.terrarium.botarium.common.energy.impl.SimpleEnergyContainer;
 import earth.terrarium.botarium.common.energy.impl.WrappedBlockEnergyContainer;
 import earth.terrarium.botarium.common.fluid.base.FluidAttachment;
@@ -30,12 +30,12 @@ public class TestBlockEntity extends BlockEntity implements EnergyAttachment.Blo
     }
 
     @Override
-    public final WrappedBlockEnergyContainer getEnergyStorage() {
+    public final WrappedBlockEnergyContainer getEnergyStorage(BlockEntity holder) {
         return energyContainer == null ? this.energyContainer = new WrappedBlockEnergyContainer(this, new SimpleEnergyContainer(1000000)) : this.energyContainer;
     }
 
     @Override
-    public WrappedBlockFluidContainer getFluidContainer() {
+    public WrappedBlockFluidContainer getFluidContainer(BlockEntity holder) {
         return fluidContainer == null ? this.fluidContainer = new WrappedBlockFluidContainer(this, new SimpleFluidContainer(FluidHooks.buckets(2), 1, (i, fluidHolder) -> true)) : this.fluidContainer;
     }
 

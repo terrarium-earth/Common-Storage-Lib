@@ -1,18 +1,18 @@
 package testmod;
 
-import earth.terrarium.botarium.common.energy.base.EnergyItem;
-import earth.terrarium.botarium.common.menu.base.PlatformItemEnergyManager;
+import earth.terrarium.botarium.common.energy.base.EnergyAttachment;
+import earth.terrarium.botarium.common.energy.base.PlatformItemEnergyManager;
 import earth.terrarium.botarium.common.energy.impl.SimpleEnergyContainer;
+import earth.terrarium.botarium.common.energy.impl.WrappedItemEnergyContainer;
 import earth.terrarium.botarium.common.energy.util.EnergyHooks;
-import earth.terrarium.botarium.common.fluid.base.FluidHoldingItem;
-import earth.terrarium.botarium.common.fluid.base.ItemFluidContainer;
+import earth.terrarium.botarium.common.fluid.base.FluidAttachment;
 import earth.terrarium.botarium.common.fluid.base.PlatformFluidItemHandler;
 import earth.terrarium.botarium.common.fluid.impl.SimpleFluidContainer;
 import earth.terrarium.botarium.common.fluid.impl.WrappedItemFluidContainer;
 import earth.terrarium.botarium.common.fluid.utils.FluidHooks;
 import earth.terrarium.botarium.common.item.ItemStackHolder;
 import net.minecraft.ChatFormatting;
-import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraft.resources.ResourceLocation;
@@ -30,18 +30,18 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class TestItem extends Item implements EnergyItem, FluidHoldingItem {
+public class TestItem extends Item implements EnergyAttachment.Item, FluidAttachment.Item {
     public TestItem(Properties properties) {
         super(properties);
     }
 
     @Override
-    public SimpleEnergyContainer getEnergyStorage(ItemStack stack) {
-        return new SimpleEnergyContainer(1000000);
+    public WrappedItemEnergyContainer getEnergyStorage(ItemStack stack) {
+        return new WrappedItemEnergyContainer(stack, new SimpleEnergyContainer(1000000));
     }
 
     @Override
-    public ItemFluidContainer getFluidContainer(ItemStack stack) {
+    public WrappedItemFluidContainer getFluidContainer(ItemStack stack) {
         return new WrappedItemFluidContainer(stack, new SimpleFluidContainer(1, 1, (integer, fluidHolder) -> true));
     }
 
@@ -80,7 +80,7 @@ public class TestItem extends Item implements EnergyItem, FluidHoldingItem {
             player.displayClientMessage(Component.literal("To: " + toFluidHolder.getFluidAmount()), true);
 
 
-            if (FluidHooks.moveItemToItemFluid(from, to, FluidHooks.newFluidHolder(Registry.FLUID.get(new ResourceLocation("ad_astra", "oxygen")), FluidHooks.buckets(1), fromFluidHolder.getCompound())) > 0) {
+            if (FluidHooks.moveItemToItemFluid(from, to, FluidHooks.newFluidHolder(BuiltInRegistries.FLUID.get(new ResourceLocation("ad_astra", "oxygen")), FluidHooks.buckets(1), fromFluidHolder.getCompound())) > 0) {
                 if (from.isDirty()) player.setItemInHand(interactionHand, from.getStack());
                 if (to.isDirty()) player.setItemSlot(EquipmentSlot.OFFHAND, to.getStack());
                 level.playSound(null, player.blockPosition(), SoundEvents.GENERIC_DRINK, SoundSource.PLAYERS, 1, 1);

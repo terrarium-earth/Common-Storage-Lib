@@ -18,7 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @SuppressWarnings("UnstableApiUsage")
-public record FabricFluidItemHandler(ItemStack stack, ContainerItemContext context, Storage<FluidVariant> storage)  implements PlatformFluidItemHandler {
+public record FabricFluidItemHandler(ItemStack stack, ContainerItemContext context, Storage<FluidVariant> storage) implements PlatformFluidItemHandler {
 
     public FabricFluidItemHandler(ItemStack stack) {
         this(stack, ItemStackStorage.of(stack));

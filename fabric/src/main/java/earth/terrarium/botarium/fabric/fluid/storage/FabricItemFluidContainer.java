@@ -71,7 +71,7 @@ public class FabricItemFluidContainer extends ExtendedFluidContainer implements 
     @Override
     public void setChanged(TransactionContext transaction) {
         ItemStack stack = ctx.getItemVariant().toStack();
-        this.container.serialize(stack.getOrCreateTagElement(Botarium.BOTARIUM_DATA));
+        this.container.serialize(stack.getOrCreateTag());
         ctx.exchange(ItemVariant.of(stack), ctx.getAmount(), transaction);
     }
 }

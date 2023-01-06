@@ -1,5 +1,6 @@
 package earth.terrarium.botarium.common.fluid.impl;
 
+import earth.terrarium.botarium.Botarium;
 import earth.terrarium.botarium.common.fluid.base.FluidSnapshot;
 import earth.terrarium.botarium.common.fluid.base.FluidContainer;
 import earth.terrarium.botarium.common.fluid.base.FluidHolder;
@@ -143,7 +144,8 @@ public class SimpleFluidContainer implements FluidContainer {
     }
 
     @Override
-    public void deserialize(CompoundTag tag) {
+    public void deserialize(CompoundTag root) {
+        CompoundTag tag = root.getCompound(Botarium.BOTARIUM_DATA);
         ListTag fluids = tag.getList(FLUID_KEY, Tag.TAG_COMPOUND);
         for (int i = 0; i < fluids.size(); i++) {
             CompoundTag fluid = fluids.getCompound(i);
@@ -152,7 +154,8 @@ public class SimpleFluidContainer implements FluidContainer {
     }
 
     @Override
-    public CompoundTag serialize(CompoundTag tag) {
+    public CompoundTag serialize(CompoundTag root) {
+        CompoundTag tag = root.getCompound(Botarium.BOTARIUM_DATA);
         if(!this.storedFluid.isEmpty()) {
             ListTag tags = new ListTag();
             for (FluidHolder fluidHolder : this.storedFluid) {
@@ -160,7 +163,8 @@ public class SimpleFluidContainer implements FluidContainer {
             }
             tag.put(FLUID_KEY, tags);
         }
-        return tag;
+        root.put(Botarium.BOTARIUM_DATA, tag);
+        return root;
     }
 
     @Override

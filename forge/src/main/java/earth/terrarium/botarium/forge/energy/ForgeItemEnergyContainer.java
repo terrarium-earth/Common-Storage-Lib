@@ -1,6 +1,6 @@
 package earth.terrarium.botarium.forge.energy;
 
-import earth.terrarium.botarium.common.menu.base.EnergyContainer;
+import earth.terrarium.botarium.common.energy.base.EnergyContainer;
 import earth.terrarium.botarium.util.Updatable;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemStack;

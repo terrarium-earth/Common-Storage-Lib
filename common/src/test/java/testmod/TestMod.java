@@ -4,6 +4,7 @@ import earth.terrarium.botarium.common.registry.RegistryHelpers;
 import earth.terrarium.botarium.common.registry.RegistryHolder;
 import earth.terrarium.botarium.common.registry.fluid.*;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.item.BlockItem;
@@ -19,11 +20,11 @@ import java.util.function.Supplier;
 public class TestMod {
     public static final String MOD_ID = "testmod";
 
-    public static final RegistryHolder<BlockEntityType<?>> BLOCK_ENTITIES = new RegistryHolder<>(Registry.BLOCK_ENTITY_TYPE, MOD_ID);
-    public static final RegistryHolder<Block> BLOCKS = new RegistryHolder<>(Registry.BLOCK, MOD_ID);
-    public static final RegistryHolder<Item> ITEMS = new RegistryHolder<>(Registry.ITEM, MOD_ID);
+    public static final RegistryHolder<BlockEntityType<?>> BLOCK_ENTITIES = new RegistryHolder<>(BuiltInRegistries.BLOCK_ENTITY_TYPE, MOD_ID);
+    public static final RegistryHolder<Block> BLOCKS = new RegistryHolder<>(BuiltInRegistries.BLOCK, MOD_ID);
+    public static final RegistryHolder<Item> ITEMS = new RegistryHolder<>(BuiltInRegistries.ITEM, MOD_ID);
 
-    public static final RegistryHolder<Fluid> FLUIDS = new RegistryHolder<>(Registry.FLUID, MOD_ID);
+    public static final RegistryHolder<Fluid> FLUIDS = new RegistryHolder<>(BuiltInRegistries.FLUID, MOD_ID);
     public static final FluidRegistry FLUID_TYPES = new FluidRegistry(MOD_ID);
 
 

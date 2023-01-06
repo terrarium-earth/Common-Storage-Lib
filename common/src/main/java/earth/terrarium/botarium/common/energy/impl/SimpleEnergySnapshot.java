@@ -1,7 +1,7 @@
 package earth.terrarium.botarium.common.energy.impl;
 
-import earth.terrarium.botarium.common.menu.base.EnergyContainer;
-import earth.terrarium.botarium.common.menu.base.EnergySnapshot;
+import earth.terrarium.botarium.common.energy.base.EnergyContainer;
+import earth.terrarium.botarium.common.energy.base.EnergySnapshot;
 
 public class SimpleEnergySnapshot implements EnergySnapshot {
     private final long energy;

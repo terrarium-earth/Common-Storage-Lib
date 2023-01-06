@@ -6,6 +6,7 @@ import net.fabricmc.fabric.api.transfer.v1.storage.StorageView;
 import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
 import net.fabricmc.fabric.api.transfer.v1.transaction.base.SnapshotParticipant;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
@@ -117,7 +118,7 @@ public class FabricFluidHolder extends SnapshotParticipant<FabricFluidHolder> im
     @Override
     public CompoundTag serialize() {
         CompoundTag compoundTag = new CompoundTag();
-        compoundTag.putString("Fluid", Registry.FLUID.getKey(getFluid()).toString());
+        compoundTag.putString("Fluid", BuiltInRegistries.FLUID.getKey(getFluid()).toString());
         compoundTag.putLong("Amount", getFluidAmount());
         if (this.getCompound() != null) {
             compoundTag.put("Nbt", getCompound());
@@ -132,7 +133,7 @@ public class FabricFluidHolder extends SnapshotParticipant<FabricFluidHolder> im
         if (compound.contains("Nbt")) {
             tag = compound.getCompound("Nbt");
         }
-        this.fluidVariant = FluidVariant.of(Registry.FLUID.get(new ResourceLocation(compound.getString("Fluid"))), tag);
+        this.fluidVariant = FluidVariant.of(BuiltInRegistries.FLUID.get(new ResourceLocation(compound.getString("Fluid"))), tag);
     }
 
     @Override

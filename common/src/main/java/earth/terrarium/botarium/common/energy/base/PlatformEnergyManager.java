@@ -1,10 +1,9 @@
-package earth.terrarium.botarium.common.menu.base;
+package earth.terrarium.botarium.common.energy.base;
 
-import earth.terrarium.botarium.common.item.ItemStackHolder;
 import org.jetbrains.annotations.ApiStatus;
 
 @ApiStatus.NonExtendable
-public interface PlatformItemEnergyManager {
+public interface PlatformEnergyManager {
 
     /**
      * @return The current amount of stored energy.
@@ -23,7 +22,7 @@ public interface PlatformItemEnergyManager {
      * @param simulate If true, the extraction will only be simulated.
      * @return The amount of energy that was extracted.
      */
-    long extract(ItemStackHolder holder, long amount, boolean simulate);
+    long extract(long amount, boolean simulate);
 
     /**
      * Inserts an amount of energy from the manager.
@@ -32,7 +31,7 @@ public interface PlatformItemEnergyManager {
      * @param simulate If true, the insertion will only be simulated.
      * @return The amount of energy that was inserted.
      */
-    long insert(ItemStackHolder holder, long amount, boolean simulate);
+    long insert(long amount, boolean simulate);
 
     /**
      * @return If the manager supports insertion.
