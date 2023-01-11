@@ -77,10 +77,12 @@ public class SimpleFluidContainer implements FluidContainer {
         return FluidHooks.emptyFluid();
     }
 
+    @Override
     public long internalInsert(FluidHolder fluid, boolean simulate) {
         return insertFluid(fluid, simulate);
     }
 
+    @Override
     public FluidHolder internalExtract(FluidHolder fluid, boolean simulate) {
         return extractFluid(fluid, simulate);
     }

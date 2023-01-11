@@ -16,6 +16,10 @@ public interface FluidContainer extends Serializable, Clearable {
      */
     long insertFluid(FluidHolder fluid, boolean simulate);
 
+    default long internalInsert(FluidHolder fluids, boolean simulate) {
+        return insertFluid(fluids, simulate);
+    }
+
     /**
      * Extracts a {@link FluidHolder} from the container.
      * @param fluid The {@link FluidHolder} to be extracted from the container.
@@ -23,6 +27,10 @@ public interface FluidContainer extends Serializable, Clearable {
      * @return The {@link FluidHolder} that was extracted from the container.
      */
     FluidHolder extractFluid(FluidHolder fluid, boolean simulate);
+
+    default FluidHolder internalExtract(FluidHolder fluid, boolean simulate) {
+        return extractFluid(fluid, simulate);
+    }
 
     /**
      * Sets a given {@link FluidHolder} to a slot in the container.

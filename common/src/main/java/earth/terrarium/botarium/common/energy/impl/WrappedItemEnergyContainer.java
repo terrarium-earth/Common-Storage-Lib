@@ -23,6 +23,20 @@ public record WrappedItemEnergyContainer(ItemStack stack, EnergyContainer contai
     }
 
     @Override
+    public long internalInsert(long amount, boolean simulate) {
+        long l = container.internalInsert(amount, simulate);
+        if (!simulate) update(stack);
+        return l;
+    }
+
+    @Override
+    public long internalExtract(long amount, boolean simulate) {
+        long extracted = container.internalExtract(amount, simulate);
+        if (!simulate) update(stack);
+        return extracted;
+    }
+
+    @Override
     public void setEnergy(long energy) {
         container.setEnergy(energy);
     }

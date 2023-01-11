@@ -22,8 +22,22 @@ public record WrappedItemFluidContainer(ItemStack stack, FluidContainer containe
     }
 
     @Override
+    public long internalInsert(FluidHolder fluids, boolean simulate) {
+        long inserted = container.internalInsert(fluids, simulate);
+        if (!simulate) update(stack);
+        return inserted;
+    }
+
+    @Override
     public FluidHolder extractFluid(FluidHolder fluid, boolean simulate) {
         return container.extractFluid(fluid, simulate);
+    }
+
+    @Override
+    public FluidHolder internalExtract(FluidHolder fluid, boolean simulate) {
+        FluidHolder extracted = container.internalExtract(fluid, simulate);
+        if (!simulate) update(stack);
+        return extracted;
     }
 
     @Override

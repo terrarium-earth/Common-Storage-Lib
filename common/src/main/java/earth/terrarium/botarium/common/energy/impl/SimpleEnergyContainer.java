@@ -30,10 +30,12 @@ public class SimpleEnergyContainer implements EnergyContainer {
         return extracted;
     }
 
+    @Override
     public long internalInsert(long maxAmount, boolean simulate) {
         return insertEnergy(maxAmount, simulate);
     }
 
+    @Override
     public long internalExtract(long maxAmount, boolean simulate) {
         return extractEnergy(maxAmount, simulate);
     }

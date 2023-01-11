@@ -8,7 +8,7 @@ import java.util.function.BiPredicate;
 import java.util.function.IntToLongFunction;
 
 public class ExtractOnlyFluidContainer extends SimpleFluidContainer {
-    public ExtractOnlyFluidContainer(Updatable updatable, IntToLongFunction maxAmount, int tanks, BiPredicate<Integer, FluidHolder> fluidFilter) {
+    public ExtractOnlyFluidContainer(IntToLongFunction maxAmount, int tanks, BiPredicate<Integer, FluidHolder> fluidFilter) {
         super(maxAmount, tanks, fluidFilter);
     }
 

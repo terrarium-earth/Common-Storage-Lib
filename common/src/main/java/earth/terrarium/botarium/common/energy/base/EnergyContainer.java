@@ -22,6 +22,10 @@ public interface EnergyContainer extends Serializable, Clearable {
      */
     long insertEnergy(long maxAmount, boolean simulate);
 
+    default long internalInsert(long amount, boolean simulate) {
+        return insertEnergy(amount, simulate);
+    }
+
     /**
      * Extracts a given amount of energy into the container.
      * @param maxAmount The amount to be extracted from the container.
@@ -29,6 +33,10 @@ public interface EnergyContainer extends Serializable, Clearable {
      * @return The amount of energy that was removed from the container.
      */
     long extractEnergy(long maxAmount, boolean simulate);
+
+    default long internalExtract(long amount, boolean simulate) {
+        return extractEnergy(amount, simulate);
+    }
 
     /**
      * Sets a given amount of energy in the container.

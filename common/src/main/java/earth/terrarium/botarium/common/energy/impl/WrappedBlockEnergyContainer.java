@@ -4,6 +4,7 @@ import earth.terrarium.botarium.common.energy.base.EnergyContainer;
 import earth.terrarium.botarium.common.energy.base.EnergySnapshot;
 import earth.terrarium.botarium.util.Updatable;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
 public record WrappedBlockEnergyContainer(BlockEntity blockEntity, EnergyContainer container) implements EnergyContainer, Updatable<BlockEntity> {
@@ -16,6 +17,20 @@ public record WrappedBlockEnergyContainer(BlockEntity blockEntity, EnergyContain
     @Override
     public long extractEnergy(long energy, boolean simulate) {
         return container.extractEnergy(energy, simulate);
+    }
+
+    @Override
+    public long internalInsert(long amount, boolean simulate) {
+        long inserted = container.internalInsert(amount, simulate);
+        if (!simulate) update(blockEntity);
+        return inserted;
+    }
+
+    @Override
+    public long internalExtract(long amount, boolean simulate) {
+        long l = container.internalExtract(amount, simulate);
+        if (!simulate) update(blockEntity);
+        return l;
     }
 
     @Override
@@ -71,6 +86,7 @@ public record WrappedBlockEnergyContainer(BlockEntity blockEntity, EnergyContain
     @Override
     public void update(BlockEntity object) {
         object.setChanged();
+        object.getLevel().sendBlockUpdated(object.getBlockPos(), object.getBlockState(), object.getBlockState(), Block.UPDATE_ALL);
     }
 
     @Override

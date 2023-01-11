@@ -5,6 +5,7 @@ import earth.terrarium.botarium.common.fluid.base.FluidHolder;
 import earth.terrarium.botarium.common.fluid.base.FluidSnapshot;
 import earth.terrarium.botarium.util.Updatable;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
 import java.util.List;
@@ -16,8 +17,22 @@ public record WrappedBlockFluidContainer(BlockEntity block, FluidContainer conta
     }
 
     @Override
+    public long internalInsert(FluidHolder fluids, boolean simulate) {
+        long inserted = container.internalInsert(fluids, simulate);
+        if (!simulate) update(block);
+        return inserted;
+    }
+
+    @Override
     public FluidHolder extractFluid(FluidHolder fluid, boolean simulate) {
         return container.extractFluid(fluid, simulate);
+    }
+
+    @Override
+    public FluidHolder internalExtract(FluidHolder fluid, boolean simulate) {
+        FluidHolder extracted = container.internalExtract(fluid, simulate);
+        if (!simulate) update(block);
+        return extracted;
     }
 
     @Override
@@ -90,6 +105,7 @@ public record WrappedBlockFluidContainer(BlockEntity block, FluidContainer conta
     @Override
     public void update(BlockEntity block) {
         block.setChanged();
+        block.getLevel().sendBlockUpdated(block.getBlockPos(), block.getBlockState(), block.getBlockState(), Block.UPDATE_ALL);
     }
 
     @Override
