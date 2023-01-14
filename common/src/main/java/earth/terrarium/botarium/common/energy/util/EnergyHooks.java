@@ -129,8 +129,8 @@ public class EnergyHooks {
      * @return The amount of energy transferred.
      */
     public static long moveItemToItemEnergy(PlatformItemEnergyManager from, ItemStackHolder sender, PlatformItemEnergyManager to, ItemStackHolder receiver, long amount) {
-        long extracted = from.extract(sender, amount, true);
-        long inserted = to.insert(receiver, extracted, true);
+        long extracted = from.extract(sender.copy(), amount, true);
+        long inserted = to.insert(receiver.copy(), extracted, true);
         from.extract(sender, inserted, false);
         return to.insert(receiver, inserted, false);
     }
@@ -146,7 +146,7 @@ public class EnergyHooks {
      */
     public static long moveStandardToItemEnergy(PlatformEnergyManager from, PlatformItemEnergyManager to, ItemStackHolder receiver, long amount) {
         long extracted = from.extract(amount, true);
-        long inserted = to.insert(receiver, extracted, true);
+        long inserted = to.insert(receiver.copy(), extracted, true);
         from.extract(inserted, false);
         return to.insert(receiver, inserted, false);
     }
@@ -161,7 +161,7 @@ public class EnergyHooks {
      * @return The amount of energy transferred.
      */
     public static long moveItemToStandardEnergy(PlatformItemEnergyManager from, ItemStackHolder sender, PlatformEnergyManager to, long amount) {
-        long extracted = from.extract(sender, amount, true);
+        long extracted = from.extract(sender.copy(), amount, true);
         long inserted = to.insert(extracted, true);
         from.extract(sender, inserted, false);
         return to.insert(inserted, false);

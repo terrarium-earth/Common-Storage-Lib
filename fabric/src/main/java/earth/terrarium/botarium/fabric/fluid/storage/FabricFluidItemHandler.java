@@ -35,8 +35,8 @@ public record FabricFluidItemHandler(ItemStack stack, ContainerItemContext conte
             long inserted = storage.insert(fabricFluidHolder.toVariant(), fabricFluidHolder.getAmount(), transaction);
             if (!simulate) {
                 transaction.commit();
+                item.setStack(context.getItemVariant().toStack());
             }
-            item.setStack(context.getItemVariant().toStack());
             return inserted;
         }
     }

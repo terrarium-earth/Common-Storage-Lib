@@ -33,9 +33,11 @@ public record FabricItemEnergyManager(ItemStack stack, ContainerItemContext cont
     public long extract(ItemStackHolder holder, long amount, boolean simulate) {
         try (Transaction txn = Transaction.openOuter()) {
             long extract = energy.extract(amount, txn);
-            if(simulate) txn.abort();
-            else txn.commit();
-            holder.setStack(context.getItemVariant().toStack());
+            if (simulate) txn.abort();
+            else {
+                txn.commit();
+                holder.setStack(context.getItemVariant().toStack());
+            }
             return extract;
         }
     }
@@ -45,8 +47,10 @@ public record FabricItemEnergyManager(ItemStack stack, ContainerItemContext cont
         try (Transaction txn = Transaction.openOuter()) {
             long insert = energy.insert(amount, txn);
             if(simulate) txn.abort();
-            else txn.commit();
-            holder.setStack(context.getItemVariant().toStack());
+            else {
+                txn.commit();
+                holder.setStack(context.getItemVariant().toStack());
+            }
             return insert;
         }
     }
