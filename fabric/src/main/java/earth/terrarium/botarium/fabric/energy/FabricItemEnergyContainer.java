@@ -23,6 +23,7 @@ public class FabricItemEnergyContainer extends SnapshotParticipant<CompoundTag> 
 
     @Override
     public long insert(long maxAmount, TransactionContext transaction) {
+        this.updateSnapshots(transaction);
         long inserted = container.insertEnergy(maxAmount, false);
         setChanged(transaction);
         return inserted;
@@ -30,6 +31,7 @@ public class FabricItemEnergyContainer extends SnapshotParticipant<CompoundTag> 
 
     @Override
     public long extract(long maxAmount, TransactionContext transaction) {
+        this.updateSnapshots(transaction);
         long l = container.extractEnergy(maxAmount, false);
         setChanged(transaction);
         return l;
@@ -48,7 +50,6 @@ public class FabricItemEnergyContainer extends SnapshotParticipant<CompoundTag> 
     public void setChanged(TransactionContext transaction) {
         ItemStack stack = ctx.getItemVariant().toStack();
         this.container.serialize(stack.getOrCreateTag());
-        this.updateSnapshots(transaction);
         ctx.exchange(ItemVariant.of(stack), ctx.getAmount(), transaction);
     }
 
