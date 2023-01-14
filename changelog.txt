@@ -1,4 +1,1 @@
-> Added Internal Insert to base fluid containers
-> Fixed update method
-> Fixed client register of block entity renderers
-> Removed Unnecessary Updatable from Insert/Extract only containers
+> Fixed energy transfer issues
