@@ -15,12 +15,15 @@ public interface EnergyAttachment<U, T extends EnergyContainer & Updatable<U>> {
 
     Class<U> getEnergyHolderType();
 
+    @Deprecated
     interface Item extends EnergyAttachment<ItemStack, WrappedItemEnergyContainer> {
         @Override
         default Class<ItemStack> getEnergyHolderType() {
             return ItemStack.class;
         }
     }
+
+    @Deprecated
     interface Block extends EnergyAttachment<BlockEntity, WrappedBlockEnergyContainer> {
         @Override
         default Class<BlockEntity> getEnergyHolderType() {

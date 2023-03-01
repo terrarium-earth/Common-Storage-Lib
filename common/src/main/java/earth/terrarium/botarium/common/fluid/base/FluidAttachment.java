@@ -15,12 +15,15 @@ public interface FluidAttachment<U, T extends FluidContainer & Updatable<U>> {
 
     Class<U> getFluidHolderType();
 
+    @Deprecated
     interface Item extends FluidAttachment<ItemStack, WrappedItemFluidContainer> {
         @Override
         default Class<ItemStack> getFluidHolderType() {
             return ItemStack.class;
         }
     }
+
+    @Deprecated
     interface Block extends FluidAttachment<BlockEntity, WrappedBlockFluidContainer> {
         @Override
         default Class<BlockEntity> getFluidHolderType() {
