@@ -24,7 +24,7 @@ public class ExtractOnlyEnergyContainer extends SimpleEnergyContainer {
 
     @Override
     public long internalInsert(long maxAmount, boolean simulate) {
-        long inserted = Mth.clamp(maxAmount, 0, getMaxCapacity() - getStoredEnergy());
+        long inserted = (long) Mth.clamp(maxAmount, 0, getMaxCapacity() - getStoredEnergy());
         if(simulate) return inserted;
         this.setEnergy(getStoredEnergy() + inserted);
         return inserted;

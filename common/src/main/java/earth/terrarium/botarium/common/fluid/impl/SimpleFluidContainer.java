@@ -40,13 +40,13 @@ public class SimpleFluidContainer implements FluidContainer {
             if (fluidFilter.test(i, fluid)) {
                 if (storedFluid.get(i).isEmpty()) {
                     FluidHolder insertedFluid = fluid.copyHolder();
-                    insertedFluid.setAmount(Mth.clamp(fluid.getFluidAmount(), 0, maxAmount.applyAsLong(i)));
+                    insertedFluid.setAmount((long) Mth.clamp(fluid.getFluidAmount(), 0, maxAmount.applyAsLong(i)));
                     if (simulate) return insertedFluid.getFluidAmount();
                     this.storedFluid.set(i, insertedFluid);
                     return storedFluid.get(i).getFluidAmount();
                 } else {
                     if (storedFluid.get(i).matches(fluid)) {
-                        long insertedAmount = Mth.clamp(fluid.getFluidAmount(), 0, maxAmount.applyAsLong(i) - storedFluid.get(i).getFluidAmount());
+                        long insertedAmount = (long) Mth.clamp(fluid.getFluidAmount(), 0, maxAmount.applyAsLong(i) - storedFluid.get(i).getFluidAmount());
                         if (simulate) return insertedAmount;
                         this.storedFluid.get(i).setAmount(storedFluid.get(i).getFluidAmount() + insertedAmount);
                         return insertedAmount;
@@ -65,7 +65,7 @@ public class SimpleFluidContainer implements FluidContainer {
                 if (storedFluid.isEmpty()) {
                     return FluidHooks.emptyFluid();
                 } else if (storedFluid.get(i).matches(fluid)) {
-                    long extractedAmount = Mth.clamp(fluid.getFluidAmount(), 0, storedFluid.get(i).getFluidAmount());
+                    long extractedAmount = (long) Mth.clamp(fluid.getFluidAmount(), 0, storedFluid.get(i).getFluidAmount());
                     toExtract.setAmount(extractedAmount);
                     if (simulate) return toExtract;
                     this.storedFluid.get(i).setAmount(storedFluid.get(i).getFluidAmount() - extractedAmount);
@@ -89,7 +89,7 @@ public class SimpleFluidContainer implements FluidContainer {
 
     public long extractFromSlot(FluidHolder fluidHolder, FluidHolder toInsert, Runnable snapshot) {
         if (Objects.equals(fluidHolder.getCompound(), toInsert.getCompound()) && fluidHolder.getFluid().isSame(toInsert.getFluid())) {
-            long extracted = Mth.clamp(toInsert.getFluidAmount(), 0, fluidHolder.getFluidAmount());
+            long extracted = (long) Mth.clamp(toInsert.getFluidAmount(), 0, fluidHolder.getFluidAmount());
             snapshot.run();
             fluidHolder.setAmount(fluidHolder.getFluidAmount() - extracted);
             if(fluidHolder.getFluidAmount() == 0) fluidHolder.setFluid(Fluids.EMPTY);

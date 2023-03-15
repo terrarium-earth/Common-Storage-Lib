@@ -16,7 +16,7 @@ public class SimpleEnergyContainer implements EnergyContainer {
 
     @Override
     public long insertEnergy(long maxAmount, boolean simulate) {
-        long inserted = Mth.clamp(maxAmount, 0, getMaxCapacity() - getStoredEnergy());
+        long inserted = (long) Mth.clamp(maxAmount, 0, getMaxCapacity() - getStoredEnergy());
         if(simulate) return inserted;
         this.setEnergy(this.energy + inserted);
         return inserted;
@@ -24,7 +24,7 @@ public class SimpleEnergyContainer implements EnergyContainer {
 
     @Override
     public long extractEnergy(long maxAmount, boolean simulate) {
-        long extracted = Mth.clamp(maxAmount, 0, getStoredEnergy());
+        long extracted = (long) Mth.clamp(maxAmount, 0, getStoredEnergy());
         if(simulate) return extracted;
         this.setEnergy(this.energy - extracted);
         return extracted;

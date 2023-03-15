@@ -23,13 +23,13 @@ public class ExtractOnlyFluidContainer extends SimpleFluidContainer {
             if (fluidFilter.test(i, fluid)) {
                 if (storedFluid.get(i).isEmpty()) {
                     FluidHolder insertedFluid = fluid.copyHolder();
-                    insertedFluid.setAmount(Mth.clamp(fluid.getFluidAmount(), 0, maxAmount.applyAsLong(i)));
+                    insertedFluid.setAmount((long) Mth.clamp(fluid.getFluidAmount(), 0, maxAmount.applyAsLong(i)));
                     if (simulate) return insertedFluid.getFluidAmount();
                     this.storedFluid.set(i, insertedFluid);
                     return storedFluid.get(i).getFluidAmount();
                 } else {
                     if (storedFluid.get(i).matches(fluid)) {
-                        long insertedAmount = Mth.clamp(fluid.getFluidAmount(), 0, maxAmount.applyAsLong(i) - storedFluid.get(i).getFluidAmount());
+                        long insertedAmount = (long) Mth.clamp(fluid.getFluidAmount(), 0, maxAmount.applyAsLong(i) - storedFluid.get(i).getFluidAmount());
                         if (simulate) return insertedAmount;
                         this.storedFluid.get(i).setAmount(storedFluid.get(i).getFluidAmount() + insertedAmount);
                         return insertedAmount;

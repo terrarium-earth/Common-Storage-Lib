@@ -52,7 +52,7 @@ public class FabricFluidHolder extends SnapshotParticipant<FabricFluidHolder> im
     @Override
     public long extract(FluidVariant resource, long maxAmount, TransactionContext transaction) {
         if (this.fluidVariant.nbtMatches(resource.getNbt()) && this.fluidVariant.isOf(resource.getFluid())) {
-            long extracted = Mth.clamp(maxAmount, 0, this.getFluidAmount());
+            long extracted = (long) Mth.clamp(maxAmount, 0, this.getFluidAmount());
             this.updateSnapshots(transaction);
             this.amount -= extracted;
             return extracted;

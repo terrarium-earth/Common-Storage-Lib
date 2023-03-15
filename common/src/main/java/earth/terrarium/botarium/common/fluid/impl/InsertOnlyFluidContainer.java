@@ -26,7 +26,7 @@ public class InsertOnlyFluidContainer extends SimpleFluidContainer {
                 if (storedFluid.isEmpty()) {
                     return FluidHooks.emptyFluid();
                 } else if (storedFluid.get(i).matches(fluid)) {
-                    long extractedAmount = Mth.clamp(fluid.getFluidAmount(), 0, storedFluid.get(i).getFluidAmount());
+                    long extractedAmount = (long) Mth.clamp(fluid.getFluidAmount(), 0, storedFluid.get(i).getFluidAmount());
                     toExtract.setAmount(extractedAmount);
                     if (simulate) return toExtract;
                     this.storedFluid.get(i).setAmount(storedFluid.get(i).getFluidAmount() - extractedAmount);
