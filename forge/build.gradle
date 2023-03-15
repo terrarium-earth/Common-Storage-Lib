@@ -24,7 +24,7 @@ dependencies {
 
     compileOnly(project(path: ":common")) { transitive false }
     testCompileOnly(project(path: ":common", configuration: "testApiElements")) { transitive false }
-    modRuntimeOnly("curse.maven:energizedpower-782147:4303813")
+    modRuntimeOnly("curse.maven:energizedpower-782147:4438975")
 }
 
 processResources {
