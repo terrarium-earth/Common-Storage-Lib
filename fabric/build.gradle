@@ -46,8 +46,8 @@ dependencies {
     }
     compileOnly(project(path: ":common")) { transitive false }
     testCompileOnly(project(path: ":common", configuration: "testApiElements")) { transitive false }
-    modRuntimeOnly 'RebornCore:RebornCore-1.19:5.6.0'
-    modRuntimeOnly 'TechReborn:TechReborn-1.19:5.6.0'
+    modLocalRuntime 'RebornCore:RebornCore-1.19:5.6.0'
+    modLocalRuntime 'TechReborn:TechReborn-1.19:5.6.0'
 }
 
 processResources {
