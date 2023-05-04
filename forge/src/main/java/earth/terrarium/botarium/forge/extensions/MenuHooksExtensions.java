@@ -12,6 +12,6 @@ public class MenuHooksExtensions {
 
     @ImplementsBaseElement
     public static void openMenu(ServerPlayer player, ExtraDataMenuProvider provider) {
-        NetworkHooks.openScreen(player, provider, (data) -> provider.writeExtraData(player, data));
+        NetworkHooks.openGui(player, provider, (data) -> provider.writeExtraData(player, data));
     }
 }

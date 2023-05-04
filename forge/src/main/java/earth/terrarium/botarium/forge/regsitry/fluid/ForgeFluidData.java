@@ -15,15 +15,9 @@ public class ForgeFluidData implements FluidData {
     private Supplier<? extends Item> bucket;
     private Supplier<? extends LiquidBlock> block;
     private final FluidProperties properties;
-    private final Supplier<BotariumFluidType> type;
 
-    public ForgeFluidData(Supplier<BotariumFluidType> type, FluidProperties properties) {
-        this.type = type;
+    public ForgeFluidData(FluidProperties properties) {
         this.properties = properties;
-    }
-
-    public Supplier<BotariumFluidType> getType() {
-        return type;
     }
 
     @Override

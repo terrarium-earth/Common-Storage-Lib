@@ -49,7 +49,7 @@ public class FabricItemFluidContainer extends ExtendedFluidContainer implements 
     }
 
     @Override
-    public Iterator<StorageView<FluidVariant>> iterator() {
+    public Iterator<StorageView<FluidVariant>> iterator(TransactionContext context) {
         List<FluidHolder> fluids = container.getFluids();
         return IntStream.range(0, fluids.size()).mapToObj(index -> new WrappedFluidHolder(this, fluids.get(index), container::extractFromSlot, container.getTankCapacity(index))).map(holder -> (StorageView<FluidVariant>) holder).iterator();
     }

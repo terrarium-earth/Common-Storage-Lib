@@ -12,9 +12,10 @@ import earth.terrarium.botarium.common.fluid.impl.WrappedItemFluidContainer;
 import earth.terrarium.botarium.common.fluid.utils.FluidHooks;
 import earth.terrarium.botarium.common.item.ItemStackHolder;
 import net.minecraft.ChatFormatting;
-import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.Registry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
+import net.minecraft.network.chat.TextComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -51,14 +52,14 @@ public class TestItem extends Item implements EnergyAttachment.Item, FluidAttach
             PlatformFluidItemHandler itemFluidManager = FluidHooks.getItemFluidManager(stack);
             long oxygen = itemFluidManager.getFluidInTank(0).getFluidAmount();
             long oxygenCapacity = itemFluidManager.getTankCapacity(0);
-            tooltip.add(Component.literal("Water: " + oxygen + "mb / " + oxygenCapacity + "mb").setStyle(Style.EMPTY.withColor(ChatFormatting.GRAY)));
+            tooltip.add(new TextComponent("Water: " + oxygen + "mb / " + oxygenCapacity + "mb").setStyle(Style.EMPTY.withColor(ChatFormatting.GRAY)));
         }
 
         if (EnergyHooks.isEnergyItem(stack)) {
             PlatformItemEnergyManager energyManager = EnergyHooks.getItemEnergyManager(stack);
             long energy = energyManager.getStoredEnergy();
             long energyCapacity = energyManager.getCapacity();
-            tooltip.add(Component.literal("Energy: " + energy + "FE / " + energyCapacity + "FE").setStyle(Style.EMPTY.withColor(ChatFormatting.GRAY)));
+            tooltip.add(new TextComponent("Energy: " + energy + "FE / " + energyCapacity + "FE").setStyle(Style.EMPTY.withColor(ChatFormatting.GRAY)));
         }
     }
 
@@ -81,10 +82,10 @@ public class TestItem extends Item implements EnergyAttachment.Item, FluidAttach
             if (fromFluidHolder == null) InteractionResultHolder.success(player.getMainHandItem());
             if (toFluidHolder == null) InteractionResultHolder.success(player.getMainHandItem());
 
-            player.displayClientMessage(Component.literal("To: " + toFluidHolder.getFluidAmount()), true);
+            player.displayClientMessage(new TextComponent("To: " + toFluidHolder.getFluidAmount()), true);
 
 
-            if (FluidHooks.moveItemToItemFluid(from, to, FluidHooks.newFluidHolder(BuiltInRegistries.FLUID.get(new ResourceLocation("ad_astra", "oxygen")), FluidHooks.buckets(1), fromFluidHolder.getCompound())) > 0) {
+            if (FluidHooks.moveItemToItemFluid(from, to, FluidHooks.newFluidHolder(Registry.FLUID.get(new ResourceLocation("ad_astra", "oxygen")), FluidHooks.buckets(1), fromFluidHolder.getCompound())) > 0) {
                 if (from.isDirty()) player.setItemInHand(interactionHand, from.getStack());
                 if (to.isDirty()) player.setItemSlot(EquipmentSlot.OFFHAND, to.getStack());
                 level.playSound(null, player.blockPosition(), SoundEvents.GENERIC_DRINK, SoundSource.PLAYERS, 1, 1);

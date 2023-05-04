@@ -3,7 +3,7 @@ package earth.terrarium.botarium.forge.energy;
 import earth.terrarium.botarium.common.energy.base.PlatformEnergyManager;
 import net.minecraft.core.Direction;
 import net.minecraftforge.common.capabilities.CapabilityProvider;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
+import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
 import org.jetbrains.annotations.ApiStatus;
 
@@ -12,7 +12,7 @@ public record ForgeEnergyManager(IEnergyStorage energy) implements PlatformEnerg
 
     @SuppressWarnings("UnstableApiUsage")
     public ForgeEnergyManager(CapabilityProvider<?> energyItem, Direction direction) {
-        this(energyItem.getCapability(ForgeCapabilities.ENERGY, direction).orElseThrow(IllegalArgumentException::new));
+        this(energyItem.getCapability(CapabilityEnergy.ENERGY, direction).orElseThrow(IllegalArgumentException::new));
     }
 
     @Override

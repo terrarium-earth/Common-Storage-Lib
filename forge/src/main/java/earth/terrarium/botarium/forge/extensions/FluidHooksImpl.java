@@ -12,8 +12,8 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.material.Fluid;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.fluids.FluidType;
+import net.minecraftforge.fluids.FluidAttributes;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.msrandom.extensions.annotations.ClassExtension;
 import net.msrandom.extensions.annotations.ImplementsBaseElement;
 import org.jetbrains.annotations.Nullable;
@@ -32,22 +32,22 @@ public class FluidHooksImpl {
 
     @ImplementsBaseElement
     public static PlatformFluidItemHandler getItemFluidManager(ItemStack stack) {
-        return new ForgeFluidItemHandler(stack.getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM).orElseThrow(IllegalArgumentException::new));
+        return new ForgeFluidItemHandler(stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY).orElseThrow(IllegalArgumentException::new));
     }
 
     @ImplementsBaseElement
     public static PlatformFluidHandler getBlockFluidManager(BlockEntity entity, @Nullable Direction direction) {
-        return new ForgeFluidHandler(entity.getCapability(ForgeCapabilities.FLUID_HANDLER, direction).orElseThrow(IllegalArgumentException::new));
+        return new ForgeFluidHandler(entity.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, direction).orElseThrow(IllegalArgumentException::new));
     }
 
     @ImplementsBaseElement
     public static boolean isFluidContainingBlock(BlockEntity entity, @Nullable Direction direction) {
-        return entity.getCapability(ForgeCapabilities.FLUID_HANDLER, direction).isPresent();
+        return entity.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, direction).isPresent();
     }
 
     @ImplementsBaseElement
     public static boolean isFluidContainingItem(ItemStack stack) {
-        return stack.getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM).isPresent();
+        return stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY).isPresent();
     }
 
     @ImplementsBaseElement
@@ -62,17 +62,17 @@ public class FluidHooksImpl {
 
     @ImplementsBaseElement
     public static long getBucketAmount() {
-        return FluidType.BUCKET_VOLUME;
+        return FluidAttributes.BUCKET_VOLUME;
     }
 
     @ImplementsBaseElement
     public static long getBottleAmount() {
-        return FluidType.BUCKET_VOLUME / 4;
+        return FluidAttributes.BUCKET_VOLUME / 4;
     }
 
     @ImplementsBaseElement
     public static long getBlockAmount() {
-        return FluidType.BUCKET_VOLUME;
+        return FluidAttributes.BUCKET_VOLUME;
     }
 
     @ImplementsBaseElement

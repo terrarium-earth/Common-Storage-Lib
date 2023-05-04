@@ -5,6 +5,7 @@ import earth.terrarium.botarium.common.fluid.base.FluidHolder;
 import earth.terrarium.botarium.common.fluid.impl.SimpleFluidContainer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -41,17 +42,17 @@ public class TestBlock extends BaseEntityBlock {
         }
 
         if (!level.isClientSide()) {
-            player.sendSystemMessage(Component.literal("Energy: " + EnergyHooks.getBlockEnergyManager(
+            player.sendMessage(new TextComponent("Energy: " + EnergyHooks.getBlockEnergyManager(
                     level.getBlockEntity(blockPos),
                     blockHitResult.getDirection()
-            ).getStoredEnergy()));
+            ).getStoredEnergy()), player.getUUID());
 
             if (level.getBlockEntity(blockPos) instanceof TestBlockEntity testBlockEntity) {
-                player.sendSystemMessage(Component.literal("Fluid: " + testBlockEntity.getFluidContainer(testBlockEntity).getFluids().stream()
+                player.sendMessage(new TextComponent("Fluid: " + testBlockEntity.getFluidContainer(testBlockEntity).getFluids().stream()
                         .mapToLong(FluidHolder::getFluidAmount)
                         .mapToObj(Long::toString)
                         .collect(Collectors.joining(", "))
-                ));
+                ), player.getUUID());
             }
         }
 

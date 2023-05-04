@@ -15,6 +15,7 @@ import net.msrandom.extensions.annotations.ImplementedByExtension;
 import org.apache.commons.lang3.NotImplementedException;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Arrays;
 import java.util.Optional;
 
 public class EnergyHooks {
@@ -241,7 +242,7 @@ public class EnergyHooks {
         BlockPos blockPos = energyBlock.getBlockPos();
         Level level = energyBlock.getLevel();
         if (level == null) return;
-        Direction.stream()
+        Arrays.stream(Direction.values())
             .map(direction -> Pair.of(direction, level.getBlockEntity(blockPos.relative(direction))))
             .filter(pair -> pair.getSecond() != null)
             .map(pair -> Pair.of(safeGetBlockEnergyManager(pair.getSecond(), pair.getFirst()), pair.getFirst()))

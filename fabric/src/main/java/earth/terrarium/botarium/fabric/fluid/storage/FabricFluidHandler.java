@@ -41,8 +41,11 @@ public record FabricFluidHandler(Storage<FluidVariant> storage) implements Platf
     @Override
     public int getTankAmount() {
         int size = 0;
-        for (StorageView<FluidVariant> ignored : storage) {
-            size++;
+        try(Transaction transaction = Transaction.openOuter()){
+            for (StorageView<FluidVariant> ignored : storage.iterable(transaction)) {
+                size++;
+            }
+            transaction.abort();
         }
         return size;
     }
@@ -50,21 +53,30 @@ public record FabricFluidHandler(Storage<FluidVariant> storage) implements Platf
     @Override
     public FluidHolder getFluidInTank(int tank) {
         List<FluidHolder> fluids = new ArrayList<>();
-        storage.iterator().forEachRemaining(variant -> fluids.add(FabricFluidHolder.of(variant.getResource(), variant.getAmount())));
+        try(Transaction transaction = Transaction.openOuter()){
+            storage.iterator(transaction).forEachRemaining(variant -> fluids.add(FabricFluidHolder.of(variant.getResource(), variant.getAmount())));
+            transaction.abort();
+        }
         return fluids.get(tank);
     }
 
     @Override
     public List<FluidHolder> getFluidTanks() {
         List<FluidHolder> fluids = new ArrayList<>();
-        storage.iterator().forEachRemaining(variant -> fluids.add(FabricFluidHolder.of(variant.getResource(), variant.getAmount())));
+        try(Transaction transaction = Transaction.openOuter()){
+            storage.iterator(transaction).forEachRemaining(variant -> fluids.add(FabricFluidHolder.of(variant.getResource(), variant.getAmount())));
+            transaction.abort();
+        }
         return fluids;
     }
 
     @Override
     public long getTankCapacity(int tank) {
         List<StorageView<FluidVariant>> fluids = new ArrayList<>();
-        storage.iterator().forEachRemaining(fluids::add);
+        try(Transaction transaction = Transaction.openOuter()) {
+            storage.iterator(transaction).forEachRemaining(fluids::add);
+            transaction.abort();
+        }
         return fluids.get(tank).getCapacity();
     }
 
