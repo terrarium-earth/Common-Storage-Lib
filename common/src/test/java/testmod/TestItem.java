@@ -12,7 +12,7 @@ import earth.terrarium.botarium.common.fluid.impl.WrappedItemFluidContainer;
 import earth.terrarium.botarium.common.fluid.utils.FluidHooks;
 import earth.terrarium.botarium.common.item.ItemStackHolder;
 import net.minecraft.ChatFormatting;
-import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.Registry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraft.resources.ResourceLocation;
@@ -84,7 +84,7 @@ public class TestItem extends Item implements EnergyAttachment.Item, FluidAttach
             player.displayClientMessage(Component.literal("To: " + toFluidHolder.getFluidAmount()), true);
 
 
-            if (FluidHooks.moveItemToItemFluid(from, to, FluidHooks.newFluidHolder(BuiltInRegistries.FLUID.get(new ResourceLocation("ad_astra", "oxygen")), FluidHooks.buckets(1), fromFluidHolder.getCompound())) > 0) {
+            if (FluidHooks.moveItemToItemFluid(from, to, FluidHooks.newFluidHolder(Registry.FLUID.get(new ResourceLocation("ad_astra", "oxygen")), FluidHooks.buckets(1), fromFluidHolder.getCompound())) > 0) {
                 if (from.isDirty()) player.setItemInHand(interactionHand, from.getStack());
                 if (to.isDirty()) player.setItemSlot(EquipmentSlot.OFFHAND, to.getStack());
                 level.playSound(null, player.blockPosition(), SoundEvents.GENERIC_DRINK, SoundSource.PLAYERS, 1, 1);

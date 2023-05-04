@@ -47,7 +47,7 @@ public class BotariumSourceFluid extends FlowingFluid {
     }
 
     @Override
-    protected boolean canConvertToSource(Level level) {
+    protected boolean canConvertToSource() {
         return getData().getProperties().canConvertToSource();
     }
 
