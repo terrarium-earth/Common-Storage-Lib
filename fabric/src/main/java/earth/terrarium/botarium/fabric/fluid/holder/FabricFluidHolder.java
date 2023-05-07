@@ -2,11 +2,13 @@ package earth.terrarium.botarium.fabric.fluid.holder;
 
 import earth.terrarium.botarium.common.fluid.base.FluidHolder;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariantAttributes;
 import net.fabricmc.fabric.api.transfer.v1.storage.StorageView;
 import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
 import net.fabricmc.fabric.api.transfer.v1.transaction.base.SnapshotParticipant;
 import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.material.Fluid;
@@ -144,6 +146,16 @@ public class FabricFluidHolder extends SnapshotParticipant<FabricFluidHolder> im
     protected void readSnapshot(FabricFluidHolder snapshot) {
         this.fluidVariant = FluidVariant.of(snapshot.getFluid(), snapshot.getCompound());
         this.setAmount(snapshot.getFluidAmount());
+    }
+
+    @Override
+    public Component getTranslationName() {
+        return FluidVariantAttributes.getName(this.fluidVariant);
+    }
+
+    @Override
+    public String getTranslationKey() {
+        return this.getFluid().defaultFluidState().createLegacyBlock().getBlock().getDescriptionId();
     }
 
     public static FabricFluidHolder empty() {
