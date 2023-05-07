@@ -5,6 +5,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import earth.terrarium.botarium.common.fluid.utils.FluidHooks;
 import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.material.Fluid;
 
 import java.util.Optional;
@@ -100,4 +101,8 @@ public interface FluidHolder {
         if (!copy.isEmpty()) copy.setAmount(amount);
         return copy;
     }
+
+    Component getTranslationName();
+
+    String getTranslationKey();
 }
