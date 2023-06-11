@@ -1,26 +1,27 @@
 package earth.terrarium.botarium.forge.energy;
 
-import earth.terrarium.botarium.api.Serializable;
-import earth.terrarium.botarium.api.energy.EnergyContainer;
-import earth.terrarium.botarium.api.energy.StatefulEnergyContainer;
+import earth.terrarium.botarium.util.Serializable;
+import earth.terrarium.botarium.common.energy.base.EnergyContainer;
 import earth.terrarium.botarium.forge.AutoSerializable;
+import earth.terrarium.botarium.util.Updatable;
 import net.minecraft.core.Direction;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public record ForgeEnergyContainer(StatefulEnergyContainer<BlockEntity> container, BlockEntity entity) implements IEnergyStorage, AutoSerializable, ICapabilityProvider {
+public record ForgeEnergyContainer<T extends EnergyContainer & Updatable<BlockEntity>>(T container, BlockEntity entity) implements IEnergyStorage, AutoSerializable, ICapabilityProvider {
 
     @Override
     @NotNull
     public  <T> LazyOptional<T> getCapability(@NotNull Capability<T> capability, @Nullable Direction arg) {
         LazyOptional<IEnergyStorage> of = LazyOptional.of(container.getContainer(arg) != null ? () -> this : null);
-        return capability.orEmpty(ForgeCapabilities.ENERGY, of.cast()).cast();
+        return capability.orEmpty(CapabilityEnergy.ENERGY, of.cast()).cast();
     }
 
     @Override

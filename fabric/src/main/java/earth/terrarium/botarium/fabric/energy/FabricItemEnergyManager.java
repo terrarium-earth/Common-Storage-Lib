@@ -1,8 +1,8 @@
 package earth.terrarium.botarium.fabric.energy;
 
-import earth.terrarium.botarium.api.energy.PlatformItemEnergyManager;
-import earth.terrarium.botarium.api.item.ItemStackHolder;
-import earth.terrarium.botarium.fabric.fluid.ItemStackStorage;
+import earth.terrarium.botarium.common.energy.base.PlatformItemEnergyManager;
+import earth.terrarium.botarium.common.item.ItemStackHolder;
+import earth.terrarium.botarium.fabric.fluid.holder.ItemStackStorage;
 import net.fabricmc.fabric.api.transfer.v1.context.ContainerItemContext;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.world.item.ItemStack;
@@ -33,9 +33,11 @@ public record FabricItemEnergyManager(ItemStack stack, ContainerItemContext cont
     public long extract(ItemStackHolder holder, long amount, boolean simulate) {
         try (Transaction txn = Transaction.openOuter()) {
             long extract = energy.extract(amount, txn);
-            if(simulate) txn.abort();
-            else txn.commit();
-            holder.setStack(context.getItemVariant().toStack());
+            if (simulate) txn.abort();
+            else {
+                txn.commit();
+                holder.setStack(context.getItemVariant().toStack());
+            }
             return extract;
         }
     }
@@ -45,8 +47,10 @@ public record FabricItemEnergyManager(ItemStack stack, ContainerItemContext cont
         try (Transaction txn = Transaction.openOuter()) {
             long insert = energy.insert(amount, txn);
             if(simulate) txn.abort();
-            else txn.commit();
-            holder.setStack(context.getItemVariant().toStack());
+            else {
+                txn.commit();
+                holder.setStack(context.getItemVariant().toStack());
+            }
             return insert;
         }
     }

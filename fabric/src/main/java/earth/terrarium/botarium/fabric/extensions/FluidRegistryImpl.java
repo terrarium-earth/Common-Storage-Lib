@@ -1,8 +1,8 @@
 package earth.terrarium.botarium.fabric.extensions;
 
-import earth.terrarium.botarium.api.registry.fluid.FluidData;
-import earth.terrarium.botarium.api.registry.fluid.FluidProperties;
-import earth.terrarium.botarium.api.registry.fluid.FluidRegistry;
+import earth.terrarium.botarium.common.registry.fluid.FluidData;
+import earth.terrarium.botarium.common.registry.fluid.FluidProperties;
+import earth.terrarium.botarium.common.registry.fluid.FluidRegistry;
 import earth.terrarium.botarium.fabric.BotariumFabricClient;
 import earth.terrarium.botarium.fabric.registry.fluid.FabricFluidData;
 import net.fabricmc.api.EnvType;

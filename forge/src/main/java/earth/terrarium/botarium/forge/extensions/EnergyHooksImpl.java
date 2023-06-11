@@ -1,14 +1,14 @@
 package earth.terrarium.botarium.forge.extensions;
 
-import earth.terrarium.botarium.api.energy.EnergyHooks;
-import earth.terrarium.botarium.api.energy.PlatformEnergyManager;
-import earth.terrarium.botarium.api.energy.PlatformItemEnergyManager;
+import earth.terrarium.botarium.common.energy.util.EnergyHooks;
+import earth.terrarium.botarium.common.energy.base.PlatformEnergyManager;
+import earth.terrarium.botarium.common.energy.base.PlatformItemEnergyManager;
 import earth.terrarium.botarium.forge.energy.ForgeEnergyManager;
 import earth.terrarium.botarium.forge.energy.ForgeItemEnergyManager;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
+import net.minecraftforge.energy.CapabilityEnergy;
 import net.msrandom.extensions.annotations.ClassExtension;
 import net.msrandom.extensions.annotations.ImplementedByExtension;
 import net.msrandom.extensions.annotations.ImplementsBaseElement;
@@ -28,11 +28,11 @@ public class EnergyHooksImpl {
 
     @ImplementsBaseElement
     public static boolean isEnergyItem(ItemStack stack) {
-        return stack.getCapability(ForgeCapabilities.ENERGY).isPresent();
+        return stack.getCapability(CapabilityEnergy.ENERGY).isPresent();
     }
 
     @ImplementedByExtension
     public static boolean isEnergyContainer(BlockEntity block, Direction direction) {
-        return block.getCapability(ForgeCapabilities.ENERGY, direction).isPresent();
+        return block.getCapability(CapabilityEnergy.ENERGY, direction).isPresent();
     }
 }

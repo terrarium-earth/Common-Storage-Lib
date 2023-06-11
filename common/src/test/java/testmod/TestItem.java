@@ -1,12 +1,21 @@
 package testmod;
 
-import earth.terrarium.botarium.api.energy.*;
-import earth.terrarium.botarium.api.fluid.*;
-import earth.terrarium.botarium.api.item.ItemStackHolder;
+import earth.terrarium.botarium.common.energy.base.EnergyAttachment;
+import earth.terrarium.botarium.common.energy.base.PlatformItemEnergyManager;
+import earth.terrarium.botarium.common.energy.impl.SimpleEnergyContainer;
+import earth.terrarium.botarium.common.energy.impl.WrappedItemEnergyContainer;
+import earth.terrarium.botarium.common.energy.util.EnergyHooks;
+import earth.terrarium.botarium.common.fluid.base.FluidAttachment;
+import earth.terrarium.botarium.common.fluid.base.PlatformFluidItemHandler;
+import earth.terrarium.botarium.common.fluid.impl.SimpleFluidContainer;
+import earth.terrarium.botarium.common.fluid.impl.WrappedItemFluidContainer;
+import earth.terrarium.botarium.common.fluid.utils.FluidHooks;
+import earth.terrarium.botarium.common.item.ItemStackHolder;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.Registry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
+import net.minecraft.network.chat.TextComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -18,39 +27,40 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.material.Fluids;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class TestItem extends Item implements EnergyItem, FluidHoldingItem {
+public class TestItem extends Item implements EnergyAttachment.Item, FluidAttachment.Item {
     public TestItem(Properties properties) {
         super(properties);
     }
 
     @Override
-    public StatefulEnergyContainer<ItemStack> getEnergyStorage(ItemStack stack) {
-        return new ItemEnergyContainer(stack, 1000000);
+    public WrappedItemEnergyContainer getEnergyStorage(ItemStack stack) {
+        return new WrappedItemEnergyContainer(stack, new SimpleEnergyContainer(1000000));
     }
 
     @Override
-    public ItemFluidContainer getFluidContainer(ItemStack stack) {
-        return new ItemFilteredFluidContainer(FluidHooks.buckets(4), 1, stack, (integer, fluidHolder) -> true);
+    public WrappedItemFluidContainer getFluidContainer(ItemStack stack) {
+        return new WrappedItemFluidContainer(stack, new SimpleFluidContainer(1, 1, (integer, fluidHolder) -> true));
     }
 
     @Override
     public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltip, TooltipFlag tooltipFlag) {
-        PlatformFluidItemHandler itemFluidManager = FluidHooks.getItemFluidManager(stack);
-        FluidHolder fluidInTank = itemFluidManager.getFluidInTank(0);
-        Component fluidName = fluidInTank.getTranslationName();
-        long fluidAmount = fluidInTank.getFluidAmount();
-        long fluidCapacity = itemFluidManager.getTankCapacity(0);
-        tooltip.add(Component.translatable("Fluid: %s: %s mb / %s mb", fluidName, fluidAmount, fluidCapacity).setStyle(Style.EMPTY.withColor(ChatFormatting.GRAY)));
+        if (FluidHooks.isFluidContainingItem(stack)) {
+            PlatformFluidItemHandler itemFluidManager = FluidHooks.getItemFluidManager(stack);
+            long oxygen = itemFluidManager.getFluidInTank(0).getFluidAmount();
+            long oxygenCapacity = itemFluidManager.getTankCapacity(0);
+            tooltip.add(new TextComponent("Water: " + oxygen + "mb / " + oxygenCapacity + "mb").setStyle(Style.EMPTY.withColor(ChatFormatting.GRAY)));
+        }
 
-        PlatformItemEnergyManager energyManager = EnergyHooks.getItemEnergyManager(stack);
-        long energy = energyManager.getStoredEnergy();
-        long energyCapacity = energyManager.getCapacity();
-        tooltip.add(Component.literal("Energy: " + energy + "FE / "+ energyCapacity + "FE").setStyle(Style.EMPTY.withColor(ChatFormatting.GRAY)));
+        if (EnergyHooks.isEnergyItem(stack)) {
+            PlatformItemEnergyManager energyManager = EnergyHooks.getItemEnergyManager(stack);
+            long energy = energyManager.getStoredEnergy();
+            long energyCapacity = energyManager.getCapacity();
+            tooltip.add(new TextComponent("Energy: " + energy + "FE / " + energyCapacity + "FE").setStyle(Style.EMPTY.withColor(ChatFormatting.GRAY)));
+        }
     }
 
     /*
@@ -72,7 +82,7 @@ public class TestItem extends Item implements EnergyItem, FluidHoldingItem {
             if (fromFluidHolder == null) InteractionResultHolder.success(player.getMainHandItem());
             if (toFluidHolder == null) InteractionResultHolder.success(player.getMainHandItem());
 
-            player.displayClientMessage(Component.literal("To: " + toFluidHolder.getFluidAmount()), true);
+            player.displayClientMessage(new TextComponent("To: " + toFluidHolder.getFluidAmount()), true);
 
 
             if (FluidHooks.moveItemToItemFluid(from, to, FluidHooks.newFluidHolder(Registry.FLUID.get(new ResourceLocation("ad_astra", "oxygen")), FluidHooks.buckets(1), fromFluidHolder.getCompound())) > 0) {

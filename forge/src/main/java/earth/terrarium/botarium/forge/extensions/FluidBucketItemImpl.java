@@ -1,6 +1,7 @@
 package earth.terrarium.botarium.forge.extensions;
 
-import earth.terrarium.botarium.api.registry.fluid.FluidData;
+import earth.terrarium.botarium.common.registry.fluid.FluidBucketItem;
+import earth.terrarium.botarium.common.registry.fluid.FluidData;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.item.ItemStack;
@@ -12,7 +13,7 @@ import net.msrandom.extensions.annotations.ImplementsBaseElement;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-@ClassExtension(earth.terrarium.botarium.api.registry.fluid.FluidBucketItem.class)
+@ClassExtension(FluidBucketItem.class)
 public class FluidBucketItemImpl extends BucketItem {
 
     @ExtensionInjectedElement

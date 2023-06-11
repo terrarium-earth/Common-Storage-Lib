@@ -24,7 +24,7 @@ public class ClientHooks {
     }
 
     @ImplementedByExtension
-    public static <T extends BlockEntity> void registerBlockEntityRenderers(BlockEntityType<T> type, BlockEntityRendererProvider<T> provider) {
+    public static <T extends BlockEntity> void registerBlockEntityRenderers(BlockEntityType<? extends T> type, BlockEntityRendererProvider<T> provider) {
         throw new NotImplementedException();
     }
 

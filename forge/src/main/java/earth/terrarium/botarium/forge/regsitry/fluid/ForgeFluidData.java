@@ -1,7 +1,7 @@
 package earth.terrarium.botarium.forge.regsitry.fluid;
 
-import earth.terrarium.botarium.api.registry.fluid.FluidData;
-import earth.terrarium.botarium.api.registry.fluid.FluidProperties;
+import earth.terrarium.botarium.common.registry.fluid.FluidData;
+import earth.terrarium.botarium.common.registry.fluid.FluidProperties;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.LiquidBlock;
 import net.minecraft.world.level.material.FlowingFluid;
@@ -15,15 +15,9 @@ public class ForgeFluidData implements FluidData {
     private Supplier<? extends Item> bucket;
     private Supplier<? extends LiquidBlock> block;
     private final FluidProperties properties;
-    private final Supplier<BotariumFluidType> type;
 
-    public ForgeFluidData(Supplier<BotariumFluidType> type, FluidProperties properties) {
-        this.type = type;
+    public ForgeFluidData(FluidProperties properties) {
         this.properties = properties;
-    }
-
-    public Supplier<BotariumFluidType> getType() {
-        return type;
     }
 
     @Override

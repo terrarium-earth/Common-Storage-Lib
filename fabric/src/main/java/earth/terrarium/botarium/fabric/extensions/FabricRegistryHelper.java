@@ -1,7 +1,7 @@
 package earth.terrarium.botarium.fabric.extensions;
 
 import com.google.common.base.Suppliers;
-import earth.terrarium.botarium.api.registry.RegistryHolder;
+import earth.terrarium.botarium.common.registry.RegistryHolder;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.msrandom.extensions.annotations.ClassExtension;

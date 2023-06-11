@@ -1,8 +1,8 @@
 package testmod;
 
-import earth.terrarium.botarium.api.registry.RegistryHelpers;
-import earth.terrarium.botarium.api.registry.RegistryHolder;
-import earth.terrarium.botarium.api.registry.fluid.*;
+import earth.terrarium.botarium.common.registry.RegistryHelpers;
+import earth.terrarium.botarium.common.registry.RegistryHolder;
+import earth.terrarium.botarium.common.registry.fluid.*;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;

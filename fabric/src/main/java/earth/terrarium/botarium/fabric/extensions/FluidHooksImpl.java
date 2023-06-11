@@ -1,13 +1,13 @@
 package earth.terrarium.botarium.fabric.extensions;
 
-import earth.terrarium.botarium.api.fluid.FluidHolder;
-import earth.terrarium.botarium.api.fluid.FluidHooks;
-import earth.terrarium.botarium.api.fluid.PlatformFluidHandler;
-import earth.terrarium.botarium.api.fluid.PlatformFluidItemHandler;
-import earth.terrarium.botarium.fabric.fluid.FabricFluidHandler;
-import earth.terrarium.botarium.fabric.fluid.FabricFluidHolder;
-import earth.terrarium.botarium.fabric.fluid.FabricFluidItemHandler;
-import earth.terrarium.botarium.fabric.fluid.ItemStackStorage;
+import earth.terrarium.botarium.common.fluid.base.FluidHolder;
+import earth.terrarium.botarium.common.fluid.utils.FluidHooks;
+import earth.terrarium.botarium.common.fluid.base.PlatformFluidHandler;
+import earth.terrarium.botarium.common.fluid.base.PlatformFluidItemHandler;
+import earth.terrarium.botarium.fabric.fluid.storage.FabricFluidHandler;
+import earth.terrarium.botarium.fabric.fluid.holder.FabricFluidHolder;
+import earth.terrarium.botarium.fabric.fluid.storage.FabricFluidItemHandler;
+import earth.terrarium.botarium.fabric.fluid.holder.ItemStackStorage;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
 import net.minecraft.core.Direction;

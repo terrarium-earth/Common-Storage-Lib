@@ -1,21 +1,21 @@
 package earth.terrarium.botarium.fabric;
 
 import earth.terrarium.botarium.Botarium;
-import earth.terrarium.botarium.api.energy.EnergyBlock;
-import earth.terrarium.botarium.api.energy.EnergyItem;
-import earth.terrarium.botarium.api.energy.StatefulEnergyContainer;
-import earth.terrarium.botarium.api.fluid.FluidHoldingBlock;
-import earth.terrarium.botarium.api.fluid.FluidHoldingItem;
-import earth.terrarium.botarium.api.fluid.UpdatingFluidContainer;
-import earth.terrarium.botarium.api.item.ItemContainerBlock;
-import earth.terrarium.botarium.fabric.energy.FabricBlockEnergyStorage;
-import earth.terrarium.botarium.fabric.energy.FabricItemEnergyStorage;
-import earth.terrarium.botarium.fabric.fluid.FabricBlockFluidContainer;
-import earth.terrarium.botarium.fabric.fluid.FabricItemFluidContainer;
+import earth.terrarium.botarium.common.energy.base.EnergyAttachment;
+import earth.terrarium.botarium.common.energy.base.EnergyContainer;
+import earth.terrarium.botarium.common.fluid.base.FluidContainer;
+import earth.terrarium.botarium.common.fluid.base.FluidAttachment;
+import earth.terrarium.botarium.common.item.ItemContainerBlock;
+import earth.terrarium.botarium.fabric.energy.FabricBlockEnergyContainer;
+import earth.terrarium.botarium.fabric.energy.FabricItemEnergyContainer;
+import earth.terrarium.botarium.fabric.fluid.storage.FabricBlockFluidContainer;
+import earth.terrarium.botarium.fabric.fluid.storage.FabricItemFluidContainer;
+import earth.terrarium.botarium.util.Updatable;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemStorage;
 import net.fabricmc.fabric.impl.transfer.item.InventoryStorageImpl;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import team.reborn.energy.api.EnergyStorage;
 
@@ -26,28 +26,28 @@ public class BotariumFabric implements ModInitializer {
     public void onInitialize() {
         Botarium.init();
         EnergyStorage.SIDED.registerFallback((world, pos, state, blockEntity, context) -> {
-            if (blockEntity instanceof EnergyBlock energyCapable) {
-                StatefulEnergyContainer container = energyCapable.getEnergyStorage().getContainer(context);
-                return container == null ? null : new FabricBlockEnergyStorage(container, blockEntity);
+            if (blockEntity instanceof EnergyAttachment attachment && attachment.getEnergyHolderType() == BlockEntity.class) {
+                EnergyContainer container = attachment.getEnergyStorage(blockEntity).getContainer(context);
+                return container == null ? null : new FabricBlockEnergyContainer(container, (Updatable<BlockEntity>) attachment.getEnergyStorage(blockEntity), blockEntity);
             }
             return null;
         });
         EnergyStorage.ITEM.registerFallback((itemStack, context) -> {
-            if(itemStack.getItem() instanceof EnergyItem energyCapable) {
-                return new FabricItemEnergyStorage(context, energyCapable.getEnergyStorage(itemStack));
+            if(itemStack.getItem() instanceof EnergyAttachment attachment && attachment.getEnergyHolderType() == ItemStack.class) {
+                return new FabricItemEnergyContainer(context, attachment.getEnergyStorage(itemStack));
             }
             return null;
         });
         FluidStorage.SIDED.registerFallback((world, pos, state, blockEntity, context) -> {
-            if(blockEntity instanceof FluidHoldingBlock fluidHoldingBlock) {
-                UpdatingFluidContainer container = fluidHoldingBlock.getFluidContainer().getContainer(context);
-                return container == null ? null : new FabricBlockFluidContainer(container, blockEntity);
+            if(blockEntity instanceof FluidAttachment attachment && attachment.getFluidHolderType() == BlockEntity.class) {
+                FluidContainer container = attachment.getFluidContainer(blockEntity).getContainer(context);
+                return container == null ? null : new FabricBlockFluidContainer(container, (Updatable<BlockEntity>) attachment.getFluidContainer(blockEntity), blockEntity);
             }
             return null;
         });
         FluidStorage.ITEM.registerFallback((itemStack, context) -> {
-            if(itemStack.getItem() instanceof FluidHoldingItem fluidHoldingBlock) {
-                return new FabricItemFluidContainer(context, fluidHoldingBlock.getFluidContainer(itemStack));
+            if(itemStack.getItem() instanceof FluidAttachment attachment && attachment.getFluidHolderType() == ItemStack.class) {
+                return new FabricItemFluidContainer(context, attachment.getFluidContainer(itemStack));
             }
             return null;
         });

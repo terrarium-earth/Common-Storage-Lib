@@ -1,8 +1,8 @@
 package earth.terrarium.botarium.mixin;
 
-import earth.terrarium.botarium.api.energy.EnergyBlock;
-import earth.terrarium.botarium.api.fluid.FluidHoldingBlock;
-import earth.terrarium.botarium.api.item.ItemContainerBlock;
+import earth.terrarium.botarium.common.energy.base.EnergyAttachment;
+import earth.terrarium.botarium.common.fluid.base.FluidAttachment;
+import earth.terrarium.botarium.common.item.ItemContainerBlock;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import org.spongepowered.asm.mixin.Mixin;
@@ -15,11 +15,11 @@ public class BlockEntityMixin {
 
     @Inject(method = "load", at = @At("TAIL"))
     public void deserializeData(CompoundTag compoundTag, CallbackInfo ci) {
-        if (this instanceof EnergyBlock energyBlock) {
-            energyBlock.getEnergyStorage().deserialize(compoundTag);
+        if (this instanceof EnergyAttachment energyBlock) {
+            energyBlock.getEnergyStorage(this).deserialize(compoundTag);
         }
-        if (this instanceof FluidHoldingBlock fluidHoldingBlock) {
-            fluidHoldingBlock.getFluidContainer().deserialize(compoundTag);
+        if (this instanceof FluidAttachment fluidHoldingBlock) {
+            fluidHoldingBlock.getFluidContainer(this).deserialize(compoundTag);
         }
         if (this instanceof ItemContainerBlock itemContainerBlock) {
             itemContainerBlock.getContainer().deserialize(compoundTag);
@@ -28,11 +28,11 @@ public class BlockEntityMixin {
 
     @Inject(method = "saveAdditional", at = @At("TAIL"))
     public void serializeData(CompoundTag compoundTag, CallbackInfo ci) {
-        if (this instanceof EnergyBlock energyBlock) {
-            energyBlock.getEnergyStorage().serialize(compoundTag);
+        if (this instanceof EnergyAttachment energyBlock) {
+            energyBlock.getEnergyStorage(this).serialize(compoundTag);
         }
-        if (this instanceof FluidHoldingBlock fluidHoldingBlock) {
-            fluidHoldingBlock.getFluidContainer().serialize(compoundTag);
+        if (this instanceof FluidAttachment fluidHoldingBlock) {
+            fluidHoldingBlock.getFluidContainer(this).serialize(compoundTag);
         }
         if (this instanceof ItemContainerBlock itemContainerBlock) {
             itemContainerBlock.getContainer().serialize(compoundTag);

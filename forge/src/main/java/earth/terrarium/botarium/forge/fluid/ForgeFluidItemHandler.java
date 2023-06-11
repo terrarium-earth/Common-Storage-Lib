@@ -1,8 +1,8 @@
 package earth.terrarium.botarium.forge.fluid;
 
-import earth.terrarium.botarium.api.fluid.FluidHolder;
-import earth.terrarium.botarium.api.fluid.PlatformFluidItemHandler;
-import earth.terrarium.botarium.api.item.ItemStackHolder;
+import earth.terrarium.botarium.common.fluid.base.FluidHolder;
+import earth.terrarium.botarium.common.fluid.base.PlatformFluidItemHandler;
+import earth.terrarium.botarium.common.item.ItemStackHolder;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 
