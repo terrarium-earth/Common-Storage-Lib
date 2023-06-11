@@ -7,7 +7,8 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
-public record WrappedBlockEnergyContainer(BlockEntity blockEntity, EnergyContainer container) implements EnergyContainer, Updatable<BlockEntity> {
+public record WrappedBlockEnergyContainer(BlockEntity blockEntity,
+                                          EnergyContainer container) implements EnergyContainer, Updatable<BlockEntity> {
 
     @Override
     public long insertEnergy(long energy, boolean simulate) {

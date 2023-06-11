@@ -1,7 +1,6 @@
 package earth.terrarium.botarium.forge.fluid;
 
 import earth.terrarium.botarium.common.fluid.base.FluidHolder;
-import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
@@ -82,7 +81,7 @@ public class ForgeFluidHolder implements FluidHolder {
         CompoundTag compoundTag = new CompoundTag();
         compoundTag.putString("Fluid", BuiltInRegistries.FLUID.getKey(getFluid()).toString());
         compoundTag.putLong("Amount", getFluidAmount());
-        if(this.getCompound() != null) {
+        if (this.getCompound() != null) {
             compoundTag.put("Nbt", getCompound());
         }
         return compoundTag;
@@ -92,7 +91,7 @@ public class ForgeFluidHolder implements FluidHolder {
     public void deserialize(CompoundTag compound) {
         long amount = compound.getLong("Amount");
         CompoundTag tag = null;
-        if(compound.contains("Nbt")) {
+        if (compound.contains("Nbt")) {
             tag = compound.getCompound("Nbt");
         }
         this.fluidStack = new FluidStack(BuiltInRegistries.FLUID.get(new ResourceLocation(compound.getString("Fluid"))), (int) amount, tag);

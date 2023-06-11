@@ -34,23 +34,23 @@ public class TestBlock extends BaseEntityBlock {
     public InteractionResult use(BlockState blockState, Level level, BlockPos blockPos, Player player, InteractionHand interactionHand, BlockHitResult blockHitResult) {
 
         if (player.isShiftKeyDown()
-                && level.getBlockEntity(blockPos) instanceof TestBlockEntity testBlockEntity
-                && testBlockEntity.getFluidContainer(testBlockEntity).container() instanceof SimpleFluidContainer fluidContainer
+            && level.getBlockEntity(blockPos) instanceof TestBlockEntity testBlockEntity
+            && testBlockEntity.getFluidContainer(testBlockEntity).container() instanceof SimpleFluidContainer fluidContainer
         ) {
             fluidContainer.clear();
         }
 
         if (!level.isClientSide()) {
             player.sendSystemMessage(Component.literal("Energy: " + EnergyHooks.getBlockEnergyManager(
-                    level.getBlockEntity(blockPos),
-                    blockHitResult.getDirection()
+                level.getBlockEntity(blockPos),
+                blockHitResult.getDirection()
             ).getStoredEnergy()));
 
             if (level.getBlockEntity(blockPos) instanceof TestBlockEntity testBlockEntity) {
                 player.sendSystemMessage(Component.literal("Fluid: " + testBlockEntity.getFluidContainer(testBlockEntity).getFluids().stream()
-                        .mapToLong(FluidHolder::getFluidAmount)
-                        .mapToObj(Long::toString)
-                        .collect(Collectors.joining(", "))
+                    .mapToLong(FluidHolder::getFluidAmount)
+                    .mapToObj(Long::toString)
+                    .collect(Collectors.joining(", "))
                 ));
             }
         }

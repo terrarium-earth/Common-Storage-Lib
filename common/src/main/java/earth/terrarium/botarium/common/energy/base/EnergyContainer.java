@@ -16,8 +16,9 @@ public interface EnergyContainer extends Serializable, Clearable {
 
     /**
      * Inserts a given amount of energy into the container.
+     *
      * @param maxAmount The amount to be inserted into the container.
-     * @param simulate If true, the container will not be modified.
+     * @param simulate  If true, the container will not be modified.
      * @return The amount of energy that was added to the container.
      */
     long insertEnergy(long maxAmount, boolean simulate);
@@ -28,8 +29,9 @@ public interface EnergyContainer extends Serializable, Clearable {
 
     /**
      * Extracts a given amount of energy into the container.
+     *
      * @param maxAmount The amount to be extracted from the container.
-     * @param simulate If true, the container will not be modified.
+     * @param simulate  If true, the container will not be modified.
      * @return The amount of energy that was removed from the container.
      */
     long extractEnergy(long maxAmount, boolean simulate);
@@ -40,6 +42,7 @@ public interface EnergyContainer extends Serializable, Clearable {
 
     /**
      * Sets a given amount of energy in the container.
+     *
      * @param energy The amount of energy to set in the container.
      */
     void setEnergy(long energy);
@@ -81,6 +84,7 @@ public interface EnergyContainer extends Serializable, Clearable {
 
     /**
      * Sets the {@link EnergyContainer} with the given state of {@link EnergySnapshot}.
+     *
      * @param snapshot The {@link EnergySnapshot} to set the {@link EnergyContainer} to.
      */
     default void readSnapshot(EnergySnapshot snapshot) {

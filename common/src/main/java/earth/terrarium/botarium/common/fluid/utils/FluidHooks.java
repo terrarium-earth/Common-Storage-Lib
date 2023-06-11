@@ -17,9 +17,9 @@ import java.util.Optional;
 
 public class FluidHooks {
     /**
-     * @param fluid The fluid to create the holder for.
+     * @param fluid  The fluid to create the holder for.
      * @param amount The amount of fluid in the holder.
-     * @param tag The tag of the holder.
+     * @param tag    The tag of the holder.
      * @return A {@link FluidHolder} for the given fluid, amount, and tag.
      */
     @ImplementedByExtension
@@ -55,6 +55,7 @@ public class FluidHooks {
 
     /**
      * Gets the {@link PlatformFluidHandler} for an {@link ItemStack}.
+     *
      * @param stack The {@link ItemStack} to get the {@link PlatformFluidHandler} from.
      * @return The {@link PlatformFluidHandler} for the {@link ItemStack}.
      * @throws IllegalArgumentException If the {@link ItemStack} does not have a {@link PlatformFluidHandler}.
@@ -66,7 +67,8 @@ public class FluidHooks {
 
     /**
      * Gets the {@link PlatformFluidHandler} for a {@link BlockEntity}.
-     * @param entity The {@link BlockEntity} to get the {@link PlatformFluidHandler} from.
+     *
+     * @param entity    The {@link BlockEntity} to get the {@link PlatformFluidHandler} from.
      * @param direction The {@link Direction} to get the {@link PlatformFluidHandler} from on the {@link BlockEntity}.
      * @return The {@link PlatformFluidHandler} for the {@link BlockEntity} and {@link Direction}.
      * @throws IllegalArgumentException If the {@link BlockEntity} does not have a {@link PlatformFluidHandler}.
@@ -77,7 +79,7 @@ public class FluidHooks {
     }
 
     /**
-     * @param entity The {@link BlockEntity} to check if it is a fluid container.
+     * @param entity    The {@link BlockEntity} to check if it is a fluid container.
      * @param direction The {@link Direction} to check on the {@link BlockEntity} for a fluid container.
      * @return True if the {@link BlockEntity} is a fluid container.
      */
@@ -99,7 +101,8 @@ public class FluidHooks {
 
     /**
      * Safely gets the {@link PlatformFluidHandler} for a given {@link BlockEntity}.
-     * @param entity The {@link BlockEntity} to get the {@link PlatformFluidHandler} from.
+     *
+     * @param entity    The {@link BlockEntity} to get the {@link PlatformFluidHandler} from.
      * @param direction The {@link Direction} to get the {@link PlatformFluidHandler} from on the {@link BlockEntity}.
      * @return An optional containing the {@link PlatformFluidHandler} if the {@link BlockEntity} is a fluid container, otherwise empty.
      */
@@ -110,6 +113,7 @@ public class FluidHooks {
 
     /**
      * Safely gets the {@link PlatformFluidHandler} for a given {@link ItemStack}.
+     *
      * @param stack The {@link ItemStack} to get the {@link PlatformFluidHandler} from.
      * @return An optional containing the {@link PlatformFluidHandler} if the item is a fluid container, otherwise empty.
      */
@@ -119,8 +123,9 @@ public class FluidHooks {
 
     /**
      * Transfers fluid from a {@link PlatformFluidHandler} to another {@link PlatformFluidHandler}.
-     * @param from The {@link PlatformFluidHandler} to extract fluid from.
-     * @param to The {@link PlatformFluidHandler} to transfer fluid to.
+     *
+     * @param from  The {@link PlatformFluidHandler} to extract fluid from.
+     * @param to    The {@link PlatformFluidHandler} to transfer fluid to.
      * @param fluid The {@link FluidHolder} to transfer.
      * @return The amount of fluid transferred.
      */
@@ -133,8 +138,9 @@ public class FluidHooks {
 
     /**
      * Transfers fluid from a {@link PlatformFluidHandler} to another {@link PlatformFluidHandler}.
-     * @param from The {@link PlatformFluidHandler} to extract fluid from.
-     * @param to The {@link PlatformFluidHandler} to transfer fluid to.
+     *
+     * @param from  The {@link PlatformFluidHandler} to extract fluid from.
+     * @param to    The {@link PlatformFluidHandler} to transfer fluid to.
      * @param fluid The {@link FluidHolder} to transfer.
      * @return The amount of fluid transferred.
      */
@@ -147,8 +153,9 @@ public class FluidHooks {
 
     /**
      * Transfers fluid from a {@link PlatformFluidHandler} to another {@link PlatformFluidHandler}.
-     * @param from The {@link PlatformFluidHandler} to extract fluid from.
-     * @param to The {@link PlatformFluidHandler} to transfer fluid to.
+     *
+     * @param from  The {@link PlatformFluidHandler} to extract fluid from.
+     * @param to    The {@link PlatformFluidHandler} to transfer fluid to.
      * @param fluid The {@link FluidHolder} to transfer.
      * @return The amount of fluid transferred.
      */
@@ -161,8 +168,9 @@ public class FluidHooks {
 
     /**
      * Transfers fluid from a {@link PlatformFluidHandler} to another {@link PlatformFluidHandler}.
-     * @param from The {@link PlatformFluidHandler} to extract fluid from.
-     * @param to The {@link PlatformFluidHandler} to transfer fluid to.
+     *
+     * @param from  The {@link PlatformFluidHandler} to extract fluid from.
+     * @param to    The {@link PlatformFluidHandler} to transfer fluid to.
      * @param fluid The {@link FluidHolder} to transfer.
      * @return The amount of fluid transferred.
      */
@@ -178,8 +186,9 @@ public class FluidHooks {
      * {@link PlatformFluidHandler} is not present.
      * <p>
      * Transfers fluid from a {@link PlatformFluidHandler} to another {@link PlatformFluidHandler}.
-     * @param from The {@link PlatformFluidHandler} to extract fluid from.
-     * @param to The {@link PlatformFluidHandler} to transfer fluid to.
+     *
+     * @param from  The {@link PlatformFluidHandler} to extract fluid from.
+     * @param to    The {@link PlatformFluidHandler} to transfer fluid to.
      * @param fluid The {@link FluidHolder} to transfer.
      * @return The amount of fluid transferred.
      */
@@ -193,10 +202,11 @@ public class FluidHooks {
      * {@link PlatformFluidHandler} is not present.
      * <p>
      * Transfers fluid from a {@link PlatformFluidItemHandler} to another {@link PlatformFluidHandler}.
-     * @param from The {@link PlatformFluidItemHandler} to extract fluid from.
+     *
+     * @param from   The {@link PlatformFluidItemHandler} to extract fluid from.
      * @param sender The {@link ItemStackHolder} that is sending the fluid.
-     * @param to The {@link PlatformFluidHandler} to transfer fluid to.
-     * @param fluid The {@link FluidHolder} to transfer.
+     * @param to     The {@link PlatformFluidHandler} to transfer fluid to.
+     * @param fluid  The {@link FluidHolder} to transfer.
      * @return The amount of fluid transferred.
      */
     @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
@@ -209,10 +219,11 @@ public class FluidHooks {
      * {@link PlatformFluidHandler} is not present.
      * <p>
      * Transfers fluid from a {@link PlatformFluidHandler} to another {@link PlatformFluidItemHandler}.
-     * @param from The {@link PlatformFluidHandler} to extract fluid from.
-     * @param to The {@link PlatformFluidItemHandler} to transfer fluid to.
+     *
+     * @param from     The {@link PlatformFluidHandler} to extract fluid from.
+     * @param to       The {@link PlatformFluidItemHandler} to transfer fluid to.
      * @param receiver The {@link ItemStackHolder} to receive the fluid.
-     * @param fluid The {@link FluidHolder} to transfer.
+     * @param fluid    The {@link FluidHolder} to transfer.
      * @return The amount of fluid transferred.
      */
     @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
@@ -225,11 +236,12 @@ public class FluidHooks {
      * {@link PlatformFluidHandler} is not present.
      * <p>
      * Transfers fluid from a {@link PlatformFluidHandler} to another {@link PlatformFluidHandler}.
-     * @param from The {@link PlatformFluidItemHandler} to extract fluid from.
-     * @param sender The {@link ItemStackHolder} that is sending the fluid.
-     * @param to The {@link PlatformFluidItemHandler} to transfer fluid to.
+     *
+     * @param from     The {@link PlatformFluidItemHandler} to extract fluid from.
+     * @param sender   The {@link ItemStackHolder} that is sending the fluid.
+     * @param to       The {@link PlatformFluidItemHandler} to transfer fluid to.
      * @param receiver The {@link ItemStackHolder} to receive the fluid.
-     * @param fluid The {@link FluidHolder} to transfer.
+     * @param fluid    The {@link FluidHolder} to transfer.
      * @return The amount of fluid transferred.
      */
     @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
@@ -240,11 +252,12 @@ public class FluidHooks {
 
     /**
      * Transfers fluid from an {@link BlockEntity} to another {@link BlockEntity}.
-     * @param from The {@link BlockEntity} to extract fluid from.
+     *
+     * @param from          The {@link BlockEntity} to extract fluid from.
      * @param fromDirection The {@link Direction} that the fluid is extracted from.
-     * @param to The {@link BlockEntity} to transfer fluid to.
-     * @param toDirection The {@link Direction} that the fluid is inserted into.
-     * @param fluid The {@link FluidHolder} to transfer.
+     * @param to            The {@link BlockEntity} to transfer fluid to.
+     * @param toDirection   The {@link Direction} that the fluid is inserted into.
+     * @param fluid         The {@link FluidHolder} to transfer.
      * @return The amount of fluid transferred.
      */
     public static long moveBlockToBlockFluid(BlockEntity from, @Nullable Direction fromDirection, BlockEntity to, @Nullable Direction toDirection, FluidHolder fluid) {
@@ -253,10 +266,11 @@ public class FluidHooks {
 
     /**
      * Transfers fluid from an {@link BlockEntity} to an {@link ItemStackHolder}.
-     * @param from The {@link BlockEntity} to extract fluid from.
+     *
+     * @param from          The {@link BlockEntity} to extract fluid from.
      * @param fromDirection The {@link Direction} that the fluid is extracted from.
-     * @param to The {@link ItemStackHolder} to transfer fluid to.
-     * @param fluid The {@link FluidHolder} to transfer.
+     * @param to            The {@link ItemStackHolder} to transfer fluid to.
+     * @param fluid         The {@link FluidHolder} to transfer.
      * @return The amount of fluid transferred.
      */
     public static long moveBlockToItemFluid(BlockEntity from, @Nullable Direction fromDirection, ItemStackHolder to, FluidHolder fluid) {
@@ -265,10 +279,11 @@ public class FluidHooks {
 
     /**
      * Transfers fluid from an {@link ItemStackHolder} to an {@link BlockEntity}.
-     * @param from The {@link ItemStackHolder} to extract fluid from.
-     * @param to The {@link BlockEntity} to transfer fluid to.
+     *
+     * @param from        The {@link ItemStackHolder} to extract fluid from.
+     * @param to          The {@link BlockEntity} to transfer fluid to.
      * @param toDirection The {@link Direction} that the fluid is inserted into.
-     * @param fluid The {@link FluidHolder} to transfer.
+     * @param fluid       The {@link FluidHolder} to transfer.
      * @return The amount of fluid transferred.
      */
     public static long moveItemToBlockFluid(ItemStackHolder from, BlockEntity to, @Nullable Direction toDirection, FluidHolder fluid) {
@@ -277,8 +292,9 @@ public class FluidHooks {
 
     /**
      * Transfers fluid from an {@link ItemStackHolder} to another {@link ItemStackHolder}.
-     * @param from The {@link ItemStackHolder} to extract fluid from.
-     * @param to The {@link ItemStackHolder} to transfer fluid to.
+     *
+     * @param from  The {@link ItemStackHolder} to extract fluid from.
+     * @param to    The {@link ItemStackHolder} to transfer fluid to.
      * @param fluid The {@link FluidHolder} to transfer.
      * @return The amount of fluid transferred.
      */

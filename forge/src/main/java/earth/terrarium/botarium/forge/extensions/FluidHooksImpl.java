@@ -1,9 +1,9 @@
 package earth.terrarium.botarium.forge.extensions;
 
 import earth.terrarium.botarium.common.fluid.base.FluidHolder;
-import earth.terrarium.botarium.common.fluid.utils.FluidHooks;
 import earth.terrarium.botarium.common.fluid.base.PlatformFluidHandler;
 import earth.terrarium.botarium.common.fluid.base.PlatformFluidItemHandler;
+import earth.terrarium.botarium.common.fluid.utils.FluidHooks;
 import earth.terrarium.botarium.forge.fluid.ForgeFluidHandler;
 import earth.terrarium.botarium.forge.fluid.ForgeFluidHolder;
 import earth.terrarium.botarium.forge.fluid.ForgeFluidItemHandler;

@@ -21,7 +21,7 @@ sourceSets.main {
 }
 
 jar {
-    classifier "dev"
+    archiveClassifier.set "dev"
     archivesBaseName = "$mod_id-fabric-$minecraft_version"
 }
 
@@ -46,8 +46,8 @@ dependencies {
     }
     compileOnly(project(path: ":common")) { transitive false }
     testCompileOnly(project(path: ":common", configuration: "testApiElements")) { transitive false }
-    modLocalRuntime 'RebornCore:RebornCore-1.19:5.6.0'
-    modLocalRuntime 'TechReborn:TechReborn-1.19:5.6.0'
+    modLocalRuntime 'RebornCore:RebornCore-1.20:5.8.0'
+    modLocalRuntime 'TechReborn:TechReborn-1.20:5.8.0'
 }
 
 processResources {

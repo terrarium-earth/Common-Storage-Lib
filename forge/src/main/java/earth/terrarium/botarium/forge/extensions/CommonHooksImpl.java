@@ -7,8 +7,6 @@ import net.minecraftforge.fml.ModList;
 import net.msrandom.extensions.annotations.ClassExtension;
 import net.msrandom.extensions.annotations.ImplementsBaseElement;
 
-import java.util.Optional;
-
 @ClassExtension(CommonHooks.class)
 public class CommonHooksImpl {
 

@@ -10,7 +10,8 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 
 import java.util.List;
 
-public record WrappedBlockFluidContainer(BlockEntity block, FluidContainer container) implements FluidContainer, Updatable<BlockEntity> {
+public record WrappedBlockFluidContainer(BlockEntity block,
+                                         FluidContainer container) implements FluidContainer, Updatable<BlockEntity> {
     @Override
     public long insertFluid(FluidHolder fluid, boolean simulate) {
         return container.insertFluid(fluid, simulate);

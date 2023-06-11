@@ -11,7 +11,7 @@ public class MenuHooks {
      * {@link ExtraDataMenuProvider#writeExtraData} method on the provider and
      * will send an open menu packet with the extra data.
      *
-     * @param player The player to open the menu for.
+     * @param player   The player to open the menu for.
      * @param provider The provider to create the menu from.
      */
     @ImplementedByExtension

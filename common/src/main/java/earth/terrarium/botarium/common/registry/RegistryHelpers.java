@@ -17,7 +17,7 @@ public class RegistryHelpers {
 
     /**
      * @param factory The factory to create the block entity.
-     * @param blocks The blocks that the block entity can be attached to.
+     * @param blocks  The blocks that the block entity can be attached to.
      * @return The created block entity type instance for the given factory.
      */
     @ImplementedByExtension
@@ -38,7 +38,7 @@ public class RegistryHelpers {
     public interface BlockEntityFactory<T extends BlockEntity> {
 
         /**
-         * @param blockPos The position of the block entity.
+         * @param blockPos   The position of the block entity.
          * @param blockState The state of the block the {@link BlockEntity} will be attached to.
          * @return The created block entity.
          */
@@ -49,9 +49,9 @@ public class RegistryHelpers {
     public interface MenuFactory<T extends AbstractContainerMenu> {
 
         /**
-         * @param syncId The internal id for the menu.
+         * @param syncId    The internal id for the menu.
          * @param inventory The inventory of the player.
-         * @param byteBuf The extra packet data for the menu.
+         * @param byteBuf   The extra packet data for the menu.
          * @return The created menu instance.
          */
         T create(int syncId, Inventory inventory, FriendlyByteBuf byteBuf);

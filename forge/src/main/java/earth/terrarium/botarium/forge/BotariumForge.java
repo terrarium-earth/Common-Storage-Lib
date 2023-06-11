@@ -10,7 +10,6 @@ import earth.terrarium.botarium.forge.energy.ForgeItemEnergyContainer;
 import earth.terrarium.botarium.forge.fluid.ForgeFluidContainer;
 import earth.terrarium.botarium.forge.fluid.ForgeItemFluidContainer;
 import earth.terrarium.botarium.forge.item.ItemContainerWrapper;
-import earth.terrarium.botarium.util.Updatable;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
