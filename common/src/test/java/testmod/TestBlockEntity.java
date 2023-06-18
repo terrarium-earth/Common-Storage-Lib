@@ -1,9 +1,9 @@
 package testmod;
 
-import earth.terrarium.botarium.common.energy.base.EnergyAttachment;
+import earth.terrarium.botarium.common.energy.base.BotariumEnergyBlock;
 import earth.terrarium.botarium.common.energy.impl.SimpleEnergyContainer;
 import earth.terrarium.botarium.common.energy.impl.WrappedBlockEnergyContainer;
-import earth.terrarium.botarium.common.fluid.base.FluidAttachment;
+import earth.terrarium.botarium.common.fluid.base.BotariumFluidBlock;
 import earth.terrarium.botarium.common.fluid.impl.SimpleFluidContainer;
 import earth.terrarium.botarium.common.fluid.impl.WrappedBlockFluidContainer;
 import earth.terrarium.botarium.common.fluid.utils.FluidHooks;
@@ -16,7 +16,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
-public class TestBlockEntity extends BlockEntity implements EnergyAttachment.Block, FluidAttachment.Block, ItemContainerBlock {
+public class TestBlockEntity extends BlockEntity implements BotariumEnergyBlock<WrappedBlockEnergyContainer>, BotariumFluidBlock<WrappedBlockFluidContainer>, ItemContainerBlock {
     public WrappedBlockFluidContainer fluidContainer;
     private SimpleItemContainer itemContainer;
     private WrappedBlockEnergyContainer energyContainer;
@@ -30,12 +30,12 @@ public class TestBlockEntity extends BlockEntity implements EnergyAttachment.Blo
     }
 
     @Override
-    public final WrappedBlockEnergyContainer getEnergyStorage(BlockEntity holder) {
+    public final WrappedBlockEnergyContainer getEnergyStorage() {
         return energyContainer == null ? this.energyContainer = new WrappedBlockEnergyContainer(this, new SimpleEnergyContainer(1000000)) : this.energyContainer;
     }
 
     @Override
-    public WrappedBlockFluidContainer getFluidContainer(BlockEntity holder) {
+    public WrappedBlockFluidContainer getFluidContainer() {
         return fluidContainer == null ? this.fluidContainer = new WrappedBlockFluidContainer(this, new SimpleFluidContainer(FluidHooks.buckets(2), 1, (i, fluidHolder) -> true)) : this.fluidContainer;
     }
 

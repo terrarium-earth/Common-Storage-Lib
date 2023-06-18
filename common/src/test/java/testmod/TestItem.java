@@ -1,11 +1,11 @@
 package testmod;
 
-import earth.terrarium.botarium.common.energy.base.EnergyAttachment;
+import earth.terrarium.botarium.common.energy.base.BotariumEnergyItem;
 import earth.terrarium.botarium.common.energy.base.PlatformItemEnergyManager;
 import earth.terrarium.botarium.common.energy.impl.SimpleEnergyContainer;
 import earth.terrarium.botarium.common.energy.impl.WrappedItemEnergyContainer;
 import earth.terrarium.botarium.common.energy.util.EnergyHooks;
-import earth.terrarium.botarium.common.fluid.base.FluidAttachment;
+import earth.terrarium.botarium.common.fluid.base.BotariumFluidItem;
 import earth.terrarium.botarium.common.fluid.base.PlatformFluidItemHandler;
 import earth.terrarium.botarium.common.fluid.impl.SimpleFluidContainer;
 import earth.terrarium.botarium.common.fluid.impl.WrappedItemFluidContainer;
@@ -30,7 +30,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class TestItem extends Item implements EnergyAttachment.Item, FluidAttachment.Item {
+public class TestItem extends Item implements BotariumEnergyItem<WrappedItemEnergyContainer>, BotariumFluidItem<WrappedItemFluidContainer> {
     public TestItem(Properties properties) {
         super(properties);
     }
@@ -78,11 +78,10 @@ public class TestItem extends Item implements EnergyAttachment.Item, FluidAttach
 
             var fromFluidHolder = FluidHooks.getItemFluidManager(from.getStack()).getFluidInTank(0);
             var toFluidHolder = FluidHooks.getItemFluidManager(to.getStack()).getFluidInTank(0);
-            if (fromFluidHolder == null) InteractionResultHolder.success(player.getMainHandItem());
-            if (toFluidHolder == null) InteractionResultHolder.success(player.getMainHandItem());
+            if (fromFluidHolder == null) return InteractionResultHolder.success(player.getMainHandItem());
+            if (toFluidHolder == null) return InteractionResultHolder.success(player.getMainHandItem());
 
             player.displayClientMessage(Component.literal("To: " + toFluidHolder.getFluidAmount()), true);
-
 
             if (FluidHooks.moveItemToItemFluid(from, to, FluidHooks.newFluidHolder(BuiltInRegistries.FLUID.get(new ResourceLocation("ad_astra", "oxygen")), FluidHooks.buckets(1), fromFluidHolder.getCompound())) > 0) {
                 if (from.isDirty()) player.setItemInHand(interactionHand, from.getStack());

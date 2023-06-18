@@ -1,10 +1,7 @@
 package earth.terrarium.botarium.common.energy.util;
 
 import com.mojang.datafixers.util.Pair;
-import earth.terrarium.botarium.common.energy.base.EnergyAttachment;
-import earth.terrarium.botarium.common.energy.base.EnergyContainer;
-import earth.terrarium.botarium.common.energy.base.PlatformEnergyManager;
-import earth.terrarium.botarium.common.energy.base.PlatformItemEnergyManager;
+import earth.terrarium.botarium.common.energy.base.*;
 import earth.terrarium.botarium.common.item.ItemStackHolder;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -236,10 +233,10 @@ public class EnergyHooks {
     /**
      * Automatically transfers energy from an energy block to surrounding blocks
      *
-     * @param energyBlock A block entity that is an instance of {@link EnergyAttachment}
+     * @param energyBlock A block entity that is an instance of {@link BotariumEnergyBlock}
      * @param amount      The amount it will transfer to each side (if possible)
      */
-    public static <T extends BlockEntity & EnergyAttachment> void distributeEnergyNearby(T energyBlock, long amount) {
+    public static <T extends BlockEntity & BotariumEnergyBlock<?>> void distributeEnergyNearby(T energyBlock, long amount) {
         BlockPos blockPos = energyBlock.getBlockPos();
         Level level = energyBlock.getLevel();
         if (level == null) return;
@@ -251,7 +248,7 @@ public class EnergyHooks {
             .forEach(pair -> {
                 PlatformEnergyManager externalEnergy = pair.getFirst().get();
                 safeGetBlockEnergyManager(energyBlock, pair.getSecond().getOpposite())
-                    .ifPresent(platformEnergyManager -> moveEnergy(platformEnergyManager, externalEnergy, amount == -1 ? energyBlock.getEnergyStorage(energyBlock).getStoredEnergy() : amount));
+                    .ifPresent(platformEnergyManager -> moveEnergy(platformEnergyManager, externalEnergy, amount == -1 ? energyBlock.getEnergyStorage().getStoredEnergy() : amount));
             });
     }
 
@@ -259,13 +256,13 @@ public class EnergyHooks {
      * Automatically transfers energy from an energy block to surrounding blocks.
      * Will transfer as much energy as it can.
      *
-     * @param energyBlock A block entity that is an instance of {@link EnergyAttachment}
+     * @param energyBlock A block entity that is an instance of {@link BotariumEnergyBlock}
      */
-    public static <T extends BlockEntity & EnergyAttachment> void distributeEnergyNearby(T energyBlock) {
+    public static <T extends BlockEntity & BotariumEnergyBlock<?>> void distributeEnergyNearby(T energyBlock) {
         distributeEnergyNearby(energyBlock, -1);
     }
 
-    public static int toDurabilityBar(EnergyAttachment energyItem, ItemStack stack) {
+    public static int toDurabilityBar(BotariumEnergyItem<?> energyItem, ItemStack stack) {
         EnergyContainer energyStorage = energyItem.getEnergyStorage(stack);
         return (int) (((double) energyStorage.getStoredEnergy() / energyStorage.getMaxCapacity()) * 13);
     }
