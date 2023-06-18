@@ -1,9 +1,9 @@
 package earth.terrarium.botarium.forge.fluid;
 
-import earth.terrarium.botarium.util.Serializable;
 import earth.terrarium.botarium.common.fluid.base.FluidContainer;
 import earth.terrarium.botarium.common.fluid.base.FluidHolder;
 import earth.terrarium.botarium.forge.AutoSerializable;
+import earth.terrarium.botarium.util.Serializable;
 import net.minecraft.core.Direction;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
@@ -14,7 +14,8 @@ import net.minecraftforge.fluids.capability.IFluidHandler;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public record ForgeFluidContainer(FluidContainer container) implements IFluidHandler, ICapabilityProvider, AutoSerializable {
+public record ForgeFluidContainer(
+    FluidContainer container) implements IFluidHandler, ICapabilityProvider, AutoSerializable {
 
     @Override
     public int getTanks() {

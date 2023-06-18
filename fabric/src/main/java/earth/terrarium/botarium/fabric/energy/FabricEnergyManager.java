@@ -29,7 +29,7 @@ public record FabricEnergyManager(EnergyStorage energy) implements PlatformEnerg
     public long extract(long amount, boolean simulate) {
         try (Transaction txn = Transaction.openOuter()) {
             long extract = energy.extract(amount, txn);
-            if(simulate) txn.abort();
+            if (simulate) txn.abort();
             else txn.commit();
             return extract;
         }
@@ -39,7 +39,7 @@ public record FabricEnergyManager(EnergyStorage energy) implements PlatformEnerg
     public long insert(long amount, boolean simulate) {
         try (Transaction txn = Transaction.openOuter()) {
             long insert = energy.insert(amount, txn);
-            if(simulate) txn.abort();
+            if (simulate) txn.abort();
             else txn.commit();
             return insert;
         }

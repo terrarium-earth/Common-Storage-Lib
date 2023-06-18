@@ -6,7 +6,6 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import earth.terrarium.botarium.common.fluid.base.FluidHolder;
 import net.minecraft.core.Holder;
-import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.material.Fluid;
@@ -18,10 +17,10 @@ import java.util.stream.Stream;
 
 public class FluidIngredient implements Predicate<FluidHolder> {
     private static final Codec<FluidIngredient> NEW_CODEC = Codec.either(FluidValue.CODEC, TagValue.CODEC)
-            .listOf()
-            .xmap(FluidIngredient::new, FluidIngredient::getRawValues);
+        .listOf()
+        .xmap(FluidIngredient::new, FluidIngredient::getRawValues);
     private static final Codec<FluidIngredient> OLD_CODEC = RecordCodecBuilder.create(instance -> instance.group(
-            Codec.either(FluidValue.CODEC, TagValue.CODEC).listOf().fieldOf("fluids").forGetter(FluidIngredient::getRawValues)
+        Codec.either(FluidValue.CODEC, TagValue.CODEC).listOf().fieldOf("fluids").forGetter(FluidIngredient::getRawValues)
     ).apply(instance, FluidIngredient::new));
     public static final Codec<FluidIngredient> CODEC = Codec.either(NEW_CODEC, OLD_CODEC).xmap(p -> p.map(a -> a, b -> b), Either::left);
 
@@ -78,8 +77,8 @@ public class FluidIngredient implements Predicate<FluidHolder> {
     public void dissolve() {
         if (this.cachedFluids == null) {
             this.cachedFluids = this.values.stream().flatMap(either -> either.map(
-                    fluidValue -> Stream.of(fluidValue.fluid()),
-                    tagValue -> tagValue.getFluids().stream()
+                fluidValue -> Stream.of(fluidValue.fluid()),
+                tagValue -> tagValue.getFluids().stream()
             )).collect(Collectors.toList());
         }
     }
@@ -94,9 +93,9 @@ public class FluidIngredient implements Predicate<FluidHolder> {
 
     public record FluidValue(FluidHolder fluid) implements Value {
         private static final Codec<FluidValue> NEW_CODEC = FluidHolder.CODEC.orElse(FluidHooks.emptyFluid())
-                .xmap(FluidValue::new, FluidValue::fluid);
+            .xmap(FluidValue::new, FluidValue::fluid);
         private static final Codec<FluidValue> OLD_CODEC = RecordCodecBuilder.create(instance -> instance.group(
-                FluidHolder.CODEC.fieldOf("fluid").orElse(FluidHooks.emptyFluid()).forGetter(FluidValue::fluid)
+            FluidHolder.CODEC.fieldOf("fluid").orElse(FluidHooks.emptyFluid()).forGetter(FluidValue::fluid)
         ).apply(instance, FluidValue::new));
         public static final Codec<FluidValue> CODEC = Codec.either(NEW_CODEC, OLD_CODEC).xmap(p -> p.map(a -> a, b -> b), Either::left);
 
@@ -108,7 +107,7 @@ public class FluidIngredient implements Predicate<FluidHolder> {
 
     public record TagValue(TagKey<Fluid> tag) implements Value {
         public static final Codec<TagValue> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-                TagKey.codec(BuiltInRegistries.FLUID.key()).fieldOf("tag").forGetter(TagValue::tag)
+            TagKey.codec(BuiltInRegistries.FLUID.key()).fieldOf("tag").forGetter(TagValue::tag)
         ).apply(instance, TagValue::new));
 
         @Override

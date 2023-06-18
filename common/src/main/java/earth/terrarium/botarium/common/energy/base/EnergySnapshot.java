@@ -7,6 +7,7 @@ public interface EnergySnapshot {
 
     /**
      * Loads the snapshot into the given container.
+     *
      * @param container The container to load the snapshot into.
      */
     void loadSnapshot(EnergyContainer container);

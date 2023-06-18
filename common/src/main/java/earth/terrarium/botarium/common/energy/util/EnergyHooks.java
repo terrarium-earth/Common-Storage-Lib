@@ -118,14 +118,15 @@ public class EnergyHooks {
     }
 
     //Moves energy from PlatformItemEnergyManager to another PlatformItemEnergyManager into javadoc
+
     /**
      * Transfers energy from a {@link PlatformItemEnergyManager} to another {@link PlatformItemEnergyManager}.
      *
-     * @param from   The {@link PlatformItemEnergyManager} to extract energy from.
-     * @param sender The {@link ItemStackHolder} that is sending the energy.
-     * @param to     The {@link PlatformItemEnergyManager} to transfer energy to.
+     * @param from     The {@link PlatformItemEnergyManager} to extract energy from.
+     * @param sender   The {@link ItemStackHolder} that is sending the energy.
+     * @param to       The {@link PlatformItemEnergyManager} to transfer energy to.
      * @param receiver The {@link ItemStackHolder} that is receiving the energy.
-     * @param amount The amount to transfer.
+     * @param amount   The amount to transfer.
      * @return The amount of energy transferred.
      */
     public static long moveItemToItemEnergy(PlatformItemEnergyManager from, ItemStackHolder sender, PlatformItemEnergyManager to, ItemStackHolder receiver, long amount) {
@@ -138,10 +139,10 @@ public class EnergyHooks {
     /**
      * Transfers energy from a {@link PlatformEnergyManager} to another {@link PlatformItemEnergyManager}.
      *
-     * @param from   The {@link PlatformEnergyManager} to extract energy from.
-     * @param to     The {@link PlatformItemEnergyManager} to transfer energy to.
+     * @param from     The {@link PlatformEnergyManager} to extract energy from.
+     * @param to       The {@link PlatformItemEnergyManager} to transfer energy to.
      * @param receiver The {@link ItemStackHolder} that is receiving the energy.
-     * @param amount The amount to transfer.
+     * @param amount   The amount to transfer.
      * @return The amount of energy transferred.
      */
     public static long moveStandardToItemEnergy(PlatformEnergyManager from, PlatformItemEnergyManager to, ItemStackHolder receiver, long amount) {
@@ -171,8 +172,8 @@ public class EnergyHooks {
      * Safely transfers energy from a {@link ItemStackHolder} to another {@link ItemStackHolder} if both items
      * are energy containers.
      *
-     * @param from The {@link ItemStackHolder} that is sending the energy.
-     * @param to The {@link ItemStackHolder} that is receiving the energy.
+     * @param from   The {@link ItemStackHolder} that is sending the energy.
+     * @param to     The {@link ItemStackHolder} that is receiving the energy.
      * @param amount The amount to transfer.
      * @return The amount of energy transferred.
      */
@@ -183,10 +184,10 @@ public class EnergyHooks {
     /**
      * Safely transfers energy from a {@link ItemStackHolder} to a {@link BlockEntity} if both are energy containers.
      *
-     * @param from The {@link ItemStackHolder} that is sending the energy.
-     * @param to The {@link BlockEntity} that is receiving the energy.
+     * @param from      The {@link ItemStackHolder} that is sending the energy.
+     * @param to        The {@link BlockEntity} that is receiving the energy.
      * @param direction The {@link Direction} to get the {@link PlatformEnergyManager} from on the {@link BlockEntity}.
-     * @param amount The amount to transfer.
+     * @param amount    The amount to transfer.
      * @return The amount of energy transferred.
      */
     public static long safeMoveItemToBlockEnergy(ItemStackHolder from, BlockEntity to, @Nullable Direction direction, long amount) {
@@ -196,10 +197,10 @@ public class EnergyHooks {
     /**
      * Safely transfers energy from a {@link BlockEntity} to a {@link ItemStackHolder} if both are energy containers.
      *
-     * @param from The {@link BlockEntity} that is sending the energy.
+     * @param from      The {@link BlockEntity} that is sending the energy.
      * @param direction The {@link Direction} to get the {@link PlatformEnergyManager} from on the {@link BlockEntity}.
-     * @param to The {@link ItemStackHolder} that is receiving the energy.
-     * @param amount The amount to transfer.
+     * @param to        The {@link ItemStackHolder} that is receiving the energy.
+     * @param amount    The amount to transfer.
      * @return The amount of energy transferred.
      */
     public static long safeMoveBlockToItemEnergy(BlockEntity from, @Nullable Direction direction, ItemStackHolder to, long amount) {
@@ -234,8 +235,9 @@ public class EnergyHooks {
 
     /**
      * Automatically transfers energy from an energy block to surrounding blocks
+     *
      * @param energyBlock A block entity that is an instance of {@link EnergyAttachment}
-     * @param amount The amount it will transfer to each side (if possible)
+     * @param amount      The amount it will transfer to each side (if possible)
      */
     public static <T extends BlockEntity & EnergyAttachment> void distributeEnergyNearby(T energyBlock, long amount) {
         BlockPos blockPos = energyBlock.getBlockPos();
@@ -256,6 +258,7 @@ public class EnergyHooks {
     /**
      * Automatically transfers energy from an energy block to surrounding blocks.
      * Will transfer as much energy as it can.
+     *
      * @param energyBlock A block entity that is an instance of {@link EnergyAttachment}
      */
     public static <T extends BlockEntity & EnergyAttachment> void distributeEnergyNearby(T energyBlock) {

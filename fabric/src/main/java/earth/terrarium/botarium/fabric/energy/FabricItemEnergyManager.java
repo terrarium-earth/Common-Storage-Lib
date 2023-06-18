@@ -9,7 +9,8 @@ import net.minecraft.world.item.ItemStack;
 import team.reborn.energy.api.EnergyStorage;
 
 @SuppressWarnings("UnstableApiUsage")
-public record FabricItemEnergyManager(ItemStack stack, ContainerItemContext context, EnergyStorage energy) implements PlatformItemEnergyManager {
+public record FabricItemEnergyManager(ItemStack stack, ContainerItemContext context,
+                                      EnergyStorage energy) implements PlatformItemEnergyManager {
 
     public FabricItemEnergyManager(ItemStack stack) {
         this(stack, ItemStackStorage.of(stack));
@@ -46,7 +47,7 @@ public record FabricItemEnergyManager(ItemStack stack, ContainerItemContext cont
     public long insert(ItemStackHolder holder, long amount, boolean simulate) {
         try (Transaction txn = Transaction.openOuter()) {
             long insert = energy.insert(amount, txn);
-            if(simulate) txn.abort();
+            if (simulate) txn.abort();
             else {
                 txn.commit();
                 holder.setStack(context.getItemVariant().toStack());

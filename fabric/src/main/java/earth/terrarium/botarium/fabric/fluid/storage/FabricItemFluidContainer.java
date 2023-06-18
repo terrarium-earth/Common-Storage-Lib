@@ -1,6 +1,5 @@
 package earth.terrarium.botarium.fabric.fluid.storage;
 
-import earth.terrarium.botarium.Botarium;
 import earth.terrarium.botarium.common.fluid.base.FluidContainer;
 import earth.terrarium.botarium.common.fluid.base.FluidHolder;
 import earth.terrarium.botarium.common.fluid.base.FluidSnapshot;
@@ -29,7 +28,7 @@ public class FabricItemFluidContainer extends ExtendedFluidContainer implements 
         this.container = container;
         this.ctx = ctx;
         CompoundTag nbt = ctx.getItemVariant().getNbt();
-        if(nbt != null) container.deserialize(nbt);
+        if (nbt != null) container.deserialize(nbt);
     }
 
     @Override

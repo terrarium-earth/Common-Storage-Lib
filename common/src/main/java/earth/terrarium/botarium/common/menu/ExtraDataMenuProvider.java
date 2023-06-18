@@ -11,6 +11,7 @@ public interface ExtraDataMenuProvider extends MenuProvider {
 
     /**
      * Writes the extra data to the buffer to be sent to the client when the menu is opened.
+     *
      * @param player The player that is opening the menu.
      * @param buffer The buffer to write the data to.
      */

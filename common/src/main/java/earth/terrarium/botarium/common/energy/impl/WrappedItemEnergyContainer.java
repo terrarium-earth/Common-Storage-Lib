@@ -6,7 +6,8 @@ import earth.terrarium.botarium.util.Updatable;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
 
-public record WrappedItemEnergyContainer(ItemStack stack, EnergyContainer container) implements EnergyContainer, Updatable<ItemStack> {
+public record WrappedItemEnergyContainer(ItemStack stack,
+                                         EnergyContainer container) implements EnergyContainer, Updatable<ItemStack> {
 
     public WrappedItemEnergyContainer {
         container.deserialize(stack.getOrCreateTag());

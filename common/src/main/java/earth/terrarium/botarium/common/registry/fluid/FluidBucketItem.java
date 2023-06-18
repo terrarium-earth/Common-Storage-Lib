@@ -33,7 +33,7 @@ public class FluidBucketItem extends BucketItem {
 
     @Override
     public InteractionResultHolder<ItemStack> use(@NotNull Level level, @NotNull Player player, @NotNull InteractionHand hand) {
-        if (getData().getProperties().canPlace()){
+        if (getData().getProperties().canPlace()) {
             return super.use(level, player, hand);
         }
         return InteractionResultHolder.fail(player.getItemInHand(hand));

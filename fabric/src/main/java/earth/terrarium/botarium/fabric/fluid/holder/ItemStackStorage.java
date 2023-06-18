@@ -8,6 +8,7 @@ import net.minecraft.world.item.ItemStack;
 @SuppressWarnings("UnstableApiUsage")
 public class ItemStackStorage extends SingleStackStorage {
     private ItemStack stack;
+
     public ItemStackStorage(ItemStack stack) {
         this.stack = stack;
     }

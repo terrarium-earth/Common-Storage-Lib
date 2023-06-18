@@ -1,6 +1,5 @@
 package earth.terrarium.botarium.forge.fluid;
 
-import earth.terrarium.botarium.common.energy.base.EnergyContainer;
 import earth.terrarium.botarium.common.fluid.base.FluidHolder;
 import earth.terrarium.botarium.common.fluid.base.ItemFluidContainer;
 import earth.terrarium.botarium.util.Updatable;
@@ -10,13 +9,13 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.energy.IEnergyStorage;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public record ForgeItemFluidContainer<T extends ItemFluidContainer & Updatable<ItemStack>>(T container, ItemStack itemStack) implements IFluidHandlerItem, ICapabilityProvider {
+public record ForgeItemFluidContainer<T extends ItemFluidContainer & Updatable<ItemStack>>(T container,
+                                                                                           ItemStack itemStack) implements IFluidHandlerItem, ICapabilityProvider {
 
     @Override
     public @NotNull ItemStack getContainer() {

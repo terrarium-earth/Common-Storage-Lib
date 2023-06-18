@@ -2,7 +2,6 @@ package earth.terrarium.botarium.common.fluid.impl;
 
 import earth.terrarium.botarium.common.fluid.base.FluidHolder;
 import earth.terrarium.botarium.common.fluid.utils.FluidHooks;
-import earth.terrarium.botarium.util.Updatable;
 import net.minecraft.util.Mth;
 
 import java.util.function.BiPredicate;

@@ -1,7 +1,7 @@
 package earth.terrarium.botarium.fabric.energy;
 
-import earth.terrarium.botarium.common.energy.base.EnergySnapshot;
 import earth.terrarium.botarium.common.energy.base.EnergyContainer;
+import earth.terrarium.botarium.common.energy.base.EnergySnapshot;
 import earth.terrarium.botarium.util.Updatable;
 import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
 import net.fabricmc.fabric.api.transfer.v1.transaction.base.SnapshotParticipant;
@@ -22,14 +22,14 @@ public class FabricBlockEnergyContainer extends SnapshotParticipant<EnergySnapsh
 
     @Override
     public long insert(long maxAmount, TransactionContext transaction) {
-        if(maxAmount <= 0) return 0;
+        if (maxAmount <= 0) return 0;
         this.updateSnapshots(transaction);
         return container.insertEnergy(Math.min(maxAmount, this.container.maxInsert()), false);
     }
 
     @Override
     public long extract(long maxAmount, TransactionContext transaction) {
-        if(maxAmount <= 0) return 0;
+        if (maxAmount <= 0) return 0;
         this.updateSnapshots(transaction);
         return container.extractEnergy(Math.min(maxAmount, this.container.maxExtract()), false);
     }

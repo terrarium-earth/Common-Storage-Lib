@@ -1,7 +1,7 @@
 package testmod;
 
-import earth.terrarium.botarium.common.fluid.utils.FluidHooks;
 import earth.terrarium.botarium.common.fluid.base.PlatformFluidHandler;
+import earth.terrarium.botarium.common.fluid.utils.FluidHooks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.entity.BlockEntity;

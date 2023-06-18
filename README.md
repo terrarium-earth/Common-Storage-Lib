@@ -14,7 +14,7 @@ repositories {
   maven {
     // Location of the maven that hosts Mine and Team Resourceful's files.
     name = "Resourceful Bees Maven"
-    url = "https://nexus.resourcefulbees.com/repository/maven-public/"
+    url = "https://maven.resourcefulbees.com/repository/maven-public/"
   }
 }
 ```
@@ -48,11 +48,11 @@ dependencies {
 
 <div align="center">
 
-![Common](https://img.shields.io/maven-metadata/v?label=Common%20Version&metadataUrl=https%3A%2F%2Fnexus.resourcefulbees.com%2Frepository%2Fmaven-public%2Fearth%2Fterrarium%2Fbotarium-common-1.19.3%2Fmaven-metadata.xml)
+![Common](https://img.shields.io/maven-metadata/v?label=Common%20Version&metadataUrl=https%3A%2F%2Fmaven.resourcefulbees.com%2Frepository%2Fmaven-public%2Fearth%2Fterrarium%2Fbotarium-common-1.19.3%2Fmaven-metadata.xml)
 &nbsp;&nbsp;&nbsp;&nbsp;
-![Fabric](https://img.shields.io/maven-metadata/v?label=Fabric%20Version&metadataUrl=https%3A%2F%2Fnexus.resourcefulbees.com%2Frepository%2Fmaven-public%2Fearth%2Fterrarium%2Fbotarium-fabric-1.19.3%2Fmaven-metadata.xml)
+![Fabric](https://img.shields.io/maven-metadata/v?label=Fabric%20Version&metadataUrl=https%3A%2F%2Fmaven.resourcefulbees.com%2Frepository%2Fmaven-public%2Fearth%2Fterrarium%2Fbotarium-fabric-1.19.3%2Fmaven-metadata.xml)
 &nbsp;&nbsp;&nbsp;&nbsp;
-![Forge](https://img.shields.io/maven-metadata/v?label=Forge%20Version&metadataUrl=https%3A%2F%2Fnexus.resourcefulbees.com%2Frepository%2Fmaven-public%2Fearth%2Fterrarium%2Fbotarium-forge-1.19.3%2Fmaven-metadata.xml)
+![Forge](https://img.shields.io/maven-metadata/v?label=Forge%20Version&metadataUrl=https%3A%2F%2Fmaven.resourcefulbees.com%2Frepository%2Fmaven-public%2Fearth%2Fterrarium%2Fbotarium-forge-1.19.3%2Fmaven-metadata.xml)
 
 </div>
 

@@ -15,7 +15,7 @@ loom {
 }
 
 jar {
-    classifier "dev"
+    archiveClassifier.set "dev"
     archivesBaseName = "$mod_id-forge-$minecraft_version"
 }
 
@@ -24,7 +24,7 @@ dependencies {
 
     compileOnly(project(path: ":common")) { transitive false }
     testCompileOnly(project(path: ":common", configuration: "testApiElements")) { transitive false }
-    modLocalRuntime("curse.maven:energizedpower-782147:4438975")
+    modLocalRuntime("curse.maven:energizedpower-782147:4573938")
 }
 
 processResources {

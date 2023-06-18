@@ -10,7 +10,8 @@ public interface FluidContainer extends Serializable, Clearable {
 
     /**
      * Inserts a {@link FluidHolder} into the container.
-     * @param fluid The {@link FluidHolder} to be inserted into the container.
+     *
+     * @param fluid    The {@link FluidHolder} to be inserted into the container.
      * @param simulate If true, the container will not be modified.
      * @return The amount of fluid that was added to the container.
      */
@@ -22,7 +23,8 @@ public interface FluidContainer extends Serializable, Clearable {
 
     /**
      * Extracts a {@link FluidHolder} from the container.
-     * @param fluid The {@link FluidHolder} to be extracted from the container.
+     *
+     * @param fluid    The {@link FluidHolder} to be extracted from the container.
      * @param simulate If true, the container will not be modified.
      * @return The {@link FluidHolder} that was extracted from the container.
      */
@@ -34,7 +36,8 @@ public interface FluidContainer extends Serializable, Clearable {
 
     /**
      * Sets a given {@link FluidHolder} to a slot in the container.
-     * @param slot The slot to set the fluid in.
+     *
+     * @param slot  The slot to set the fluid in.
      * @param fluid The {@link FluidHolder} to set in the slot.
      */
     void setFluid(int slot, FluidHolder fluid);
@@ -67,15 +70,17 @@ public interface FluidContainer extends Serializable, Clearable {
 
     /**
      * Sets the container to the same values as the given container.
+     *
      * @param container The container to copy the fluids from.
      */
     void fromContainer(FluidContainer container);
 
     /**
      * Extracts a fluid from one {@link FluidHolder} into another.
+     *
      * @param fluidHolder The {@link FluidHolder} to extract from.
-     * @param toInsert The {@link FluidHolder} to insert into. With amount clamped between 0-fluid.getFluidAmount().
-     * @param snapshot A runnable that will be called before the extraction happens.
+     * @param toInsert    The {@link FluidHolder} to insert into. With amount clamped between 0-fluid.getFluidAmount().
+     * @param snapshot    A runnable that will be called before the extraction happens.
      * @return The amount of fluid that was extracted.
      */
     long extractFromSlot(FluidHolder fluidHolder, FluidHolder toInsert, Runnable snapshot);
@@ -105,6 +110,7 @@ public interface FluidContainer extends Serializable, Clearable {
 
     /**
      * Sets the {@link FluidContainer} with the given state of {@link FluidSnapshot}.
+     *
      * @param snapshot The {@link FluidSnapshot} to set the {@link FluidContainer} to.
      */
     default void readSnapshot(FluidSnapshot snapshot) {

@@ -10,7 +10,8 @@ import net.minecraft.world.item.ItemStack;
 
 import java.util.List;
 
-public record WrappedItemFluidContainer(ItemStack stack, FluidContainer container) implements ItemFluidContainer, Updatable<ItemStack> {
+public record WrappedItemFluidContainer(ItemStack stack,
+                                        FluidContainer container) implements ItemFluidContainer, Updatable<ItemStack> {
 
     public WrappedItemFluidContainer {
         container.deserialize(stack.getOrCreateTag());

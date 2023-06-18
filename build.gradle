@@ -165,7 +165,7 @@ allprojects {
                 includeGroup "curse.maven"
             }
         }
-        maven { url = "https://nexus.resourcefulbees.com/repository/maven-public/"}
+        maven { url = "https://maven.resourcefulbees.com/repository/maven-public/"}
         maven { url = "https://maven.msrandom.net/repository/root/"}
     }
 

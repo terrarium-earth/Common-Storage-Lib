@@ -17,7 +17,7 @@ public class FabricItemEnergyContainer extends SnapshotParticipant<CompoundTag> 
     public FabricItemEnergyContainer(ContainerItemContext ctx, EnergyContainer container) {
         this.ctx = ctx;
         CompoundTag nbt = ctx.getItemVariant().getNbt();
-        if(nbt != null) container.deserialize(nbt);
+        if (nbt != null) container.deserialize(nbt);
         this.container = container;
     }
 

@@ -1,9 +1,9 @@
 package earth.terrarium.botarium.common.fluid.impl;
 
 import earth.terrarium.botarium.Botarium;
-import earth.terrarium.botarium.common.fluid.base.FluidSnapshot;
 import earth.terrarium.botarium.common.fluid.base.FluidContainer;
 import earth.terrarium.botarium.common.fluid.base.FluidHolder;
+import earth.terrarium.botarium.common.fluid.base.FluidSnapshot;
 import earth.terrarium.botarium.common.fluid.utils.FluidHooks;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
@@ -92,7 +92,7 @@ public class SimpleFluidContainer implements FluidContainer {
             long extracted = (long) Mth.clamp(toInsert.getFluidAmount(), 0, fluidHolder.getFluidAmount());
             snapshot.run();
             fluidHolder.setAmount(fluidHolder.getFluidAmount() - extracted);
-            if(fluidHolder.getFluidAmount() == 0) fluidHolder.setFluid(Fluids.EMPTY);
+            if (fluidHolder.getFluidAmount() == 0) fluidHolder.setFluid(Fluids.EMPTY);
             return extracted;
         }
         return 0;
@@ -158,7 +158,7 @@ public class SimpleFluidContainer implements FluidContainer {
     @Override
     public CompoundTag serialize(CompoundTag root) {
         CompoundTag tag = root.getCompound(Botarium.BOTARIUM_DATA);
-        if(!this.storedFluid.isEmpty()) {
+        if (!this.storedFluid.isEmpty()) {
             ListTag tags = new ListTag();
             for (FluidHolder fluidHolder : this.storedFluid) {
                 tags.add(fluidHolder.serialize());

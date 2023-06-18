@@ -1,8 +1,8 @@
 package earth.terrarium.botarium.forge.item;
 
-import earth.terrarium.botarium.util.Serializable;
 import earth.terrarium.botarium.common.item.SerializableContainer;
 import earth.terrarium.botarium.forge.AutoSerializable;
+import earth.terrarium.botarium.util.Serializable;
 import net.minecraft.core.Direction;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;

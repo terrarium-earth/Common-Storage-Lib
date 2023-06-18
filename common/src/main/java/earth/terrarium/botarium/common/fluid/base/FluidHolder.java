@@ -3,7 +3,6 @@ package earth.terrarium.botarium.common.fluid.base;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import earth.terrarium.botarium.common.fluid.utils.FluidHooks;
-import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.material.Fluid;
@@ -17,9 +16,9 @@ import java.util.Optional;
 public interface FluidHolder {
 
     Codec<FluidHolder> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-            BuiltInRegistries.FLUID.byNameCodec().fieldOf("fluid").forGetter(FluidHolder::getFluid),
-            Codec.FLOAT.fieldOf("buckets").orElse(1f).forGetter(fluidHolder -> (float) fluidHolder.getFluidAmount() / FluidHooks.getBucketAmount()),
-            CompoundTag.CODEC.optionalFieldOf("tag").forGetter(fluidHolder -> Optional.ofNullable(fluidHolder.getCompound()))
+        BuiltInRegistries.FLUID.byNameCodec().fieldOf("fluid").forGetter(FluidHolder::getFluid),
+        Codec.FLOAT.fieldOf("buckets").orElse(1f).forGetter(fluidHolder -> (float) fluidHolder.getFluidAmount() / FluidHooks.getBucketAmount()),
+        CompoundTag.CODEC.optionalFieldOf("tag").forGetter(fluidHolder -> Optional.ofNullable(fluidHolder.getCompound()))
     ).apply(instance, (fluid, buckets, compoundTag) -> FluidHooks.newFluidHolder(fluid, FluidHooks.buckets(buckets), compoundTag.orElse(null))));
 
     static FluidHolder of(Fluid fluid) {
@@ -37,6 +36,7 @@ public interface FluidHolder {
 
     /**
      * Sets the {@link Fluid} in the holder.
+     *
      * @param fluid The {@link Fluid} to set in the holder.
      */
     void setFluid(Fluid fluid);
@@ -48,6 +48,7 @@ public interface FluidHolder {
 
     /**
      * Sets the amount of fluid in the holder.
+     *
      * @param amount The amount of fluid to set in the holder.
      */
     void setAmount(long amount);
@@ -59,6 +60,7 @@ public interface FluidHolder {
 
     /**
      * Sets the {@link CompoundTag} in the holder.
+     *
      * @param tag The {@link CompoundTag} to set in the holder.
      */
     void setCompound(CompoundTag tag);
@@ -70,6 +72,7 @@ public interface FluidHolder {
 
     /**
      * Compares the {@link FluidHolder} to another {@link FluidHolder} ignoring the amount.
+     *
      * @param fluidHolder The {@link FluidHolder} to compare to.
      * @return True if the given holder is equal to this holder, false otherwise.
      */
@@ -87,12 +90,14 @@ public interface FluidHolder {
 
     /**
      * Deserializes a {@link FluidHolder} from a given {@link CompoundTag}.
+     *
      * @param tag The {@link CompoundTag} to deserialize from.
      */
     void deserialize(CompoundTag tag);
 
     /**
      * Does not set amount if the holder is empty.
+     *
      * @param amount The amount to set in the copy.
      * @return A copy of the {@link FluidHolder} with the given amount.
      */

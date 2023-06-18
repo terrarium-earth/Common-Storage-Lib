@@ -1,8 +1,8 @@
 package earth.terrarium.botarium.fabric.fluid.storage;
 
 import earth.terrarium.botarium.common.fluid.base.FluidHolder;
-import earth.terrarium.botarium.common.fluid.utils.FluidHooks;
 import earth.terrarium.botarium.common.fluid.base.PlatformFluidItemHandler;
+import earth.terrarium.botarium.common.fluid.utils.FluidHooks;
 import earth.terrarium.botarium.common.item.ItemStackHolder;
 import earth.terrarium.botarium.fabric.fluid.holder.FabricFluidHolder;
 import earth.terrarium.botarium.fabric.fluid.holder.ItemStackStorage;
@@ -18,7 +18,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 @SuppressWarnings("UnstableApiUsage")
-public record FabricFluidItemHandler(ItemStack stack, ContainerItemContext context, Storage<FluidVariant> storage) implements PlatformFluidItemHandler {
+public record FabricFluidItemHandler(ItemStack stack, ContainerItemContext context,
+                                     Storage<FluidVariant> storage) implements PlatformFluidItemHandler {
 
     public FabricFluidItemHandler(ItemStack stack) {
         this(stack, ItemStackStorage.of(stack));

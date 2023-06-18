@@ -1,8 +1,8 @@
 package earth.terrarium.botarium.common.fluid.impl;
 
 import earth.terrarium.botarium.common.fluid.base.FluidContainer;
-import earth.terrarium.botarium.common.fluid.base.FluidSnapshot;
 import earth.terrarium.botarium.common.fluid.base.FluidHolder;
+import earth.terrarium.botarium.common.fluid.base.FluidSnapshot;
 
 import java.util.ArrayList;
 import java.util.List;

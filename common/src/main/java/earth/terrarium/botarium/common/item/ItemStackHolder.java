@@ -15,7 +15,7 @@ public class ItemStackHolder {
     }
 
     public void setStack(ItemStack stack) {
-        if(!ItemStack.matches(stack, this.stack)) {
+        if (!ItemStack.matches(stack, this.stack)) {
             this.stack = stack;
             isDirty = true;
         }
