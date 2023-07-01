@@ -3,12 +3,22 @@ package earth.terrarium.botarium.common.registry.fluid;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.LiquidBlock;
 import net.minecraft.world.level.material.FlowingFluid;
+import org.jetbrains.annotations.ApiStatus;
 
 import java.util.Optional;
 import java.util.function.Supplier;
 
 public interface FluidData {
+
+    /**
+     * @deprecated Use {@link #getInformation()} instead, this method will be removed in the future.
+     * @return The properties of this fluid.
+     */
+    @Deprecated
+    @ApiStatus.ScheduledForRemoval(inVersion = "1.21")
     FluidProperties getProperties();
+
+    FluidInformation getInformation();
 
     Supplier<? extends FlowingFluid> getStillFluid();
 

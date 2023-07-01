@@ -1,6 +1,6 @@
 package earth.terrarium.botarium.fabric;
 
-import earth.terrarium.botarium.common.registry.fluid.FluidProperties;
+import earth.terrarium.botarium.common.registry.fluid.FluidInformation;
 import earth.terrarium.botarium.fabric.client.BoatriumFluidRenderHandler;
 import earth.terrarium.botarium.fabric.registry.fluid.FabricFluidData;
 import net.fabricmc.api.ClientModInitializer;
@@ -17,10 +17,10 @@ public class BotariumFabricClient implements ClientModInitializer {
     public void onInitializeClient() {
         FluidRenderHandlerRegistry instance = FluidRenderHandlerRegistry.INSTANCE;
         for (FabricFluidData holder : FLUIDS_TO_RENDER) {
-            FluidProperties properties = holder.getProperties();
+            FluidInformation info = holder.getInformation();
 
-            holder.getOptionalFlowingFluid().ifPresent(fluid -> instance.register(fluid, new BoatriumFluidRenderHandler(properties)));
-            holder.getOptionalStillFluid().ifPresent(fluid -> instance.register(fluid, new BoatriumFluidRenderHandler(properties)));
+            holder.getOptionalFlowingFluid().ifPresent(fluid -> instance.register(fluid, new BoatriumFluidRenderHandler(info)));
+            holder.getOptionalStillFluid().ifPresent(fluid -> instance.register(fluid, new BoatriumFluidRenderHandler(info)));
         }
     }
 

@@ -1,6 +1,7 @@
 package earth.terrarium.botarium.fabric.registry.fluid;
 
 import earth.terrarium.botarium.common.registry.fluid.FluidData;
+import earth.terrarium.botarium.common.registry.fluid.FluidInformation;
 import earth.terrarium.botarium.common.registry.fluid.FluidProperties;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.LiquidBlock;
@@ -14,15 +15,24 @@ public class FabricFluidData implements FluidData {
     private Supplier<? extends FlowingFluid> flowingFluid;
     private Supplier<? extends Item> bucket;
     private Supplier<? extends LiquidBlock> block;
-    private final FluidProperties properties;
+    private final FluidInformation information;
 
     public FabricFluidData(FluidProperties properties) {
-        this.properties = properties;
+        this.information = properties;
+    }
+
+    public FabricFluidData(FluidInformation information) {
+        this.information = information;
     }
 
     @Override
     public FluidProperties getProperties() {
-        return this.properties;
+        return this.information.toProperties();
+    }
+
+    @Override
+    public FluidInformation getInformation() {
+        return this.information;
     }
 
     @Override

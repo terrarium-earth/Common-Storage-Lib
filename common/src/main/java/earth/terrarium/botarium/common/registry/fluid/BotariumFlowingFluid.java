@@ -48,7 +48,7 @@ public class BotariumFlowingFluid extends FlowingFluid {
 
     @Override
     protected boolean canConvertToSource(Level level) {
-        return getData().getProperties().canConvertToSource();
+        return getData().getInformation().canConvertToSource();
     }
 
     @Override
@@ -58,12 +58,12 @@ public class BotariumFlowingFluid extends FlowingFluid {
 
     @Override
     protected int getSlopeFindDistance(@NotNull LevelReader level) {
-        return getData().getProperties().slopeFindDistance();
+        return getData().getInformation().slopeFindDistance();
     }
 
     @Override
     protected int getDropOff(@NotNull LevelReader level) {
-        return getData().getProperties().dropOff();
+        return getData().getInformation().dropOff();
     }
 
     @Override
@@ -78,12 +78,12 @@ public class BotariumFlowingFluid extends FlowingFluid {
 
     @Override
     public int getTickDelay(@NotNull LevelReader level) {
-        return getData().getProperties().tickDelay();
+        return getData().getInformation().tickDelay();
     }
 
     @Override
     protected float getExplosionResistance() {
-        return getData().getProperties().explosionResistance();
+        return getData().getInformation().explosionResistance();
     }
 
     @Override
@@ -117,7 +117,7 @@ public class BotariumFlowingFluid extends FlowingFluid {
 
     @Override
     public Optional<SoundEvent> getPickupSound() {
-        SoundEvent event = getData().getProperties().sounds().getSound("bucket_fill");
+        SoundEvent event = getData().getInformation().sounds().getSound("bucket_fill");
         if (event == null) event = SoundEvents.BUCKET_FILL;
         return Optional.ofNullable(event);
     }

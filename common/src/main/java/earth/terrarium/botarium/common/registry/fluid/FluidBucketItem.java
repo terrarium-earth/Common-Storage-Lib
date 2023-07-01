@@ -33,7 +33,7 @@ public class FluidBucketItem extends BucketItem {
 
     @Override
     public InteractionResultHolder<ItemStack> use(@NotNull Level level, @NotNull Player player, @NotNull InteractionHand hand) {
-        if (getData().getProperties().canPlace()) {
+        if (getData().getInformation().canPlace()) {
             return super.use(level, player, hand);
         }
         return InteractionResultHolder.fail(player.getItemInHand(hand));
@@ -41,7 +41,7 @@ public class FluidBucketItem extends BucketItem {
 
     @Override
     protected void playEmptySound(@Nullable Player player, @NotNull LevelAccessor level, @NotNull BlockPos pos) {
-        SoundEvent event = getData().getProperties().sounds().getSound("bucket_empty");
+        SoundEvent event = getData().getInformation().sounds().getSound("bucket_empty");
         if (event == null) event = SoundEvents.BUCKET_EMPTY;
         level.playSound(player, pos, event, SoundSource.BLOCKS, 1.0F, 1.0F);
         level.gameEvent(player, GameEvent.FLUID_PLACE, pos);

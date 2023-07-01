@@ -4,8 +4,6 @@ import earth.terrarium.botarium.common.registry.RegistryHelpers;
 import earth.terrarium.botarium.common.registry.RegistryHolder;
 import earth.terrarium.botarium.common.registry.fluid.*;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
@@ -36,15 +34,7 @@ public class TestMod {
     public static final Supplier<BlockEntityType<?>> EXAMPLE_PIPE_ENTITY = BLOCK_ENTITIES.register("pipe", () -> RegistryHelpers.createBlockEntityType(ExampleN2SPipeBlockEntity::new, EXAMPLE_PIPE.get()));
     public static final Supplier<BlockItem> EXAMPLE_PIPE_ITEM = ITEMS.register("pipe", () -> new BlockItem(EXAMPLE_PIPE.get(), new Item.Properties()));
 
-    public static final FluidData TEST_FLUID = FLUID_TYPES.register("test", FluidProperties.create()
-        .still(new ResourceLocation("minecraft:block/water_still"))
-        .flowing(new ResourceLocation("minecraft:block/water_flow"))
-        .overlay(new ResourceLocation("minecraft:block/water_overlay"))
-        .screenOverlay(new ResourceLocation("textures/misc/underwater.png"))
-        .tintColor(0x00FF00)
-        .sounds("bucket_empty", SoundEvents.AXE_STRIP)
-        .sounds("bucket_fill", SoundEvents.GLASS_BREAK)
-    );
+    public static final FluidData TEST_FLUID = FLUID_TYPES.register(new TestFluidInformation());
 
     public static final Supplier<Fluid> TEST_FLUID_SOURCE = FLUIDS.register("test_fluid", () -> new BotariumSourceFluid(TEST_FLUID));
     public static final Supplier<Fluid> TEST_FLUID_FLOWING = FLUIDS.register("test_fluid_flowing", () -> new BotariumFlowingFluid(TEST_FLUID));

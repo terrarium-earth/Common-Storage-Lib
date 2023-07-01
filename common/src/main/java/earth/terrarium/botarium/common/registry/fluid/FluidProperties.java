@@ -34,7 +34,12 @@ public record FluidProperties(ResourceLocation id,
                               float explosionResistance,
                               boolean canPlace
 
-) {
+) implements FluidInformation {
+
+    @Override
+    public FluidProperties toProperties() {
+        return this;
+    }
 
     public static Builder create() {
         return new Builder();
