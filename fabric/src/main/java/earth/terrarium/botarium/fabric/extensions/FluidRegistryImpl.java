@@ -1,6 +1,7 @@
 package earth.terrarium.botarium.fabric.extensions;
 
 import earth.terrarium.botarium.common.registry.fluid.FluidData;
+import earth.terrarium.botarium.common.registry.fluid.FluidInformation;
 import earth.terrarium.botarium.common.registry.fluid.FluidProperties;
 import earth.terrarium.botarium.common.registry.fluid.FluidRegistry;
 import earth.terrarium.botarium.fabric.BotariumFabricClient;
@@ -27,6 +28,15 @@ public class FluidRegistryImpl {
     @ImplementsBaseElement
     public FluidData register(FluidProperties properties) {
         FabricFluidData holder = new FabricFluidData(properties);
+        if (EnvType.CLIENT == FabricLoader.getInstance().getEnvironmentType()) {
+            BotariumFabricClient.registerRenderedFluid(holder);
+        }
+        return holder;
+    }
+
+    @ImplementedByExtension
+    public FluidData register(FluidInformation information) {
+        FabricFluidData holder = new FabricFluidData(information);
         if (EnvType.CLIENT == FabricLoader.getInstance().getEnvironmentType()) {
             BotariumFabricClient.registerRenderedFluid(holder);
         }

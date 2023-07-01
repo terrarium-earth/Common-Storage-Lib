@@ -1,6 +1,7 @@
 package earth.terrarium.botarium.forge.extensions;
 
 import earth.terrarium.botarium.common.registry.fluid.FluidData;
+import earth.terrarium.botarium.common.registry.fluid.FluidInformation;
 import earth.terrarium.botarium.common.registry.fluid.FluidProperties;
 import earth.terrarium.botarium.common.registry.fluid.FluidRegistry;
 import earth.terrarium.botarium.forge.regsitry.fluid.BotariumFluidType;
@@ -15,6 +16,7 @@ import net.msrandom.extensions.annotations.ClassExtension;
 import net.msrandom.extensions.annotations.ExtensionInjectedElement;
 import net.msrandom.extensions.annotations.ImplementedByExtension;
 import net.msrandom.extensions.annotations.ImplementsBaseElement;
+import org.apache.commons.lang3.NotImplementedException;
 
 @ClassExtension(FluidRegistry.class)
 public class FluidRegistryImpl {
@@ -35,6 +37,12 @@ public class FluidRegistryImpl {
     public FluidData register(FluidProperties properties) {
         RegistryObject<BotariumFluidType> type = registry.register(properties.id().getPath(), () -> BotariumFluidType.of(properties));
         return new ForgeFluidData(type, properties);
+    }
+
+    @ImplementedByExtension
+    public FluidData register(FluidInformation information) {
+        RegistryObject<BotariumFluidType> type = registry.register(information.id().getPath(), () -> BotariumFluidType.create(information));
+        return new ForgeFluidData(type, information);
     }
 
     @ImplementedByExtension

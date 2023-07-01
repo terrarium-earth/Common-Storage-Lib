@@ -16,6 +16,11 @@ public class FluidRegistry {
     }
 
     @ImplementedByExtension
+    public FluidData register(FluidInformation information) {
+        throw new NotImplementedException();
+    }
+
+    @ImplementedByExtension
     public FluidData register(String id, FluidProperties.Builder properties) {
         throw new NotImplementedException();
     }
