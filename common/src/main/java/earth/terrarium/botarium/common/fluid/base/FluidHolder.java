@@ -3,11 +3,14 @@ package earth.terrarium.botarium.common.fluid.base;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import earth.terrarium.botarium.common.fluid.utils.FluidHooks;
+import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.material.Fluid;
 
 import java.util.Optional;
+import java.util.function.Predicate;
 
 /**
  * An object that holds a fluid with an amount and a tag.
@@ -106,4 +109,27 @@ public interface FluidHolder {
         if (!copy.isEmpty()) copy.setAmount(amount);
         return copy;
     }
+
+    @SuppressWarnings("deprecation")
+    default Holder<Fluid> getFluidHolder() {
+        return getFluid().builtInRegistryHolder();
+    }
+
+    @SuppressWarnings("deprecation")
+    default boolean is(TagKey<Fluid> tagKey) {
+        return getFluid().is(tagKey);
+    }
+
+    default boolean is(Fluid fluid) {
+        return getFluid() == fluid;
+    }
+
+    default boolean is(Predicate<Holder<Fluid>> predicate) {
+        return predicate.test(getFluidHolder());
+    }
+
+    default boolean is(Holder<Fluid> fluid) {
+        return getFluidHolder() == fluid;
+    }
+
 }

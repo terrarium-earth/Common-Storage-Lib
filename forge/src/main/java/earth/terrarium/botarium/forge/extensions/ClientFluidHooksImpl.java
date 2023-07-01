@@ -17,13 +17,13 @@ public class ClientFluidHooksImpl {
     @ImplementsBaseElement
     public static TextureAtlasSprite getFluidSprite(FluidHolder fluid) {
         IClientFluidTypeExtensions extension = IClientFluidTypeExtensions.of(fluid.getFluid());
-        ResourceLocation resourceLocation = extension.getStillTexture(new ForgeFluidHolder(fluid).getFluidStack());
+        ResourceLocation resourceLocation = extension.getStillTexture(ForgeFluidHolder.toStack(fluid));
         return Minecraft.getInstance().getTextureAtlas(TextureAtlas.LOCATION_BLOCKS).apply(resourceLocation);
     }
 
     @ImplementsBaseElement
     public static int getFluidColor(FluidHolder fluid) {
         IClientFluidTypeExtensions extension = IClientFluidTypeExtensions.of(fluid.getFluid());
-        return extension.getTintColor(new ForgeFluidHolder(fluid).getFluidStack());
+        return extension.getTintColor(ForgeFluidHolder.toStack(fluid));
     }
 }
