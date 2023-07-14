@@ -1,4 +1,4 @@
-Copyright (c) 2022 CodexAdrian
+Copyright (c) 2023 CodexAdrian
 
 MIT License
 
