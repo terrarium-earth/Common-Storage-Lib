@@ -1,1 +1,2 @@
-Target release build on 1.20.1
+New and improved Fluid and Energy API for transfering fluids and energy
+New lookup API for registering fluid and energy containers onto blocks and items
