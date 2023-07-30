@@ -9,6 +9,7 @@ import earth.terrarium.botarium.common.energy.impl.WrappedItemEnergyContainer;
 import earth.terrarium.botarium.common.energy.util.EnergyHooks;
 import earth.terrarium.botarium.common.fluid.FluidApi;
 import earth.terrarium.botarium.common.fluid.base.BotariumFluidItem;
+import earth.terrarium.botarium.common.fluid.base.FluidHolder;
 import earth.terrarium.botarium.common.fluid.base.ItemFluidContainer;
 import earth.terrarium.botarium.common.fluid.base.PlatformFluidItemHandler;
 import earth.terrarium.botarium.common.fluid.impl.SimpleFluidContainer;
@@ -30,6 +31,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.material.Fluids;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -65,26 +67,31 @@ public class TestNonInterfaceItem extends Item {
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand interactionHand) {
         if (level.isClientSide) {
             return InteractionResultHolder.success(player.getItemInHand(interactionHand));
-        }
-        try {
-            ItemStackHolder from = new ItemStackHolder(player.getMainHandItem());
-            ItemStackHolder to = new ItemStackHolder(player.getOffhandItem());
+        } else if (interactionHand == InteractionHand.MAIN_HAND) {
+            try {
+                ItemStackHolder from = new ItemStackHolder(player.getMainHandItem());
+                ItemStackHolder to = new ItemStackHolder(player.getOffhandItem());
 
-            var fromFluidHolder = FluidHooks.getItemFluidManager(from.getStack()).getFluidInTank(0);
-            var toFluidHolder = FluidHooks.getItemFluidManager(to.getStack()).getFluidInTank(0);
-            if (fromFluidHolder == null) return InteractionResultHolder.success(player.getMainHandItem());
-            if (toFluidHolder == null) return InteractionResultHolder.success(player.getMainHandItem());
+                PlatformFluidItemHandler itemFluidManager = FluidHooks.getItemFluidManager(from.getStack());
 
-            player.displayClientMessage(Component.literal("To: " + toFluidHolder.getFluidAmount()), true);
-
-            if (FluidHooks.moveItemToItemFluid(from, to, FluidHooks.newFluidHolder(BuiltInRegistries.FLUID.get(new ResourceLocation("minecraft", "water")), FluidHooks.buckets(1), fromFluidHolder.getCompound())) > 0) {
-                if (from.isDirty()) player.setItemInHand(interactionHand, from.getStack());
-                if (to.isDirty()) player.setItemSlot(EquipmentSlot.OFFHAND, to.getStack());
-                level.playSound(null, player.blockPosition(), SoundEvents.GENERIC_DRINK, SoundSource.PLAYERS, 1, 1);
-                return InteractionResultHolder.consume(player.getMainHandItem());
+                if (player.isShiftKeyDown()) {
+                    if (FluidApi.moveFluid(to, from, FluidHooks.newFluidHolder(BuiltInRegistries.FLUID.get(new ResourceLocation("minecraft", "water")), FluidHooks.buckets(1), null), false) > 0) {
+                        level.playSound(null, player.blockPosition(), SoundEvents.GENERIC_DRINK, SoundSource.PLAYERS, 1, 1);
+                        if (from.isDirty()) player.setItemInHand(interactionHand, from.getStack());
+                        if (to.isDirty()) player.setItemSlot(EquipmentSlot.OFFHAND, to.getStack());
+                        return InteractionResultHolder.consume(player.getMainHandItem());
+                    }
+                } else {
+                    if (FluidApi.moveFluid(from, to, FluidHooks.newFluidHolder(BuiltInRegistries.FLUID.get(new ResourceLocation("minecraft", "water")), FluidHooks.buckets(1), null), false) > 0) {
+                        if (from.isDirty()) player.setItemInHand(interactionHand, from.getStack());
+                        if (to.isDirty()) player.setItemSlot(EquipmentSlot.OFFHAND, to.getStack());
+                        level.playSound(null, player.blockPosition(), SoundEvents.GENERIC_DRINK, SoundSource.PLAYERS, 1, 1);
+                        return InteractionResultHolder.consume(player.getMainHandItem());
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-        } catch (Exception e) {
-            e.printStackTrace();
         }
 
         return InteractionResultHolder.success(player.getMainHandItem());

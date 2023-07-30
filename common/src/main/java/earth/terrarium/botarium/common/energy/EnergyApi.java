@@ -188,7 +188,8 @@ public class EnergyApi {
     public static long moveEnergy(EnergyContainer from, EnergyContainer to, long amount, boolean simulate) {
         long extracted = from.extractEnergy(amount, true);
         long inserted = to.insertEnergy(extracted, true);
-        if (!simulate && inserted > 0) {
+        long simulatedExtraction = from.extractEnergy(inserted, true);
+        if (!simulate && inserted > 0 && simulatedExtraction == inserted) {
             from.extractEnergy(inserted, false);
             to.insertEnergy(inserted, false);
         }

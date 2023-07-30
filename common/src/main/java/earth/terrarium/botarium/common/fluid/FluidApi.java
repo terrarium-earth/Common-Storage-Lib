@@ -1,10 +1,10 @@
 package earth.terrarium.botarium.common.fluid;
 
 import earth.terrarium.botarium.common.fluid.base.FluidContainer;
+import earth.terrarium.botarium.common.fluid.base.FluidHolder;
 import earth.terrarium.botarium.common.fluid.base.ItemFluidContainer;
 import earth.terrarium.botarium.common.fluid.base.PlatformFluidHandler;
-import earth.terrarium.botarium.common.fluid.impl.WrappedBlockFluidContainer;
-import earth.terrarium.botarium.common.fluid.impl.WrappedItemFluidContainer;
+import earth.terrarium.botarium.common.fluid.utils.FluidHooks;
 import earth.terrarium.botarium.common.item.ItemStackHolder;
 import earth.terrarium.botarium.util.Updatable;
 import net.minecraft.core.BlockPos;
@@ -133,6 +133,86 @@ public class FluidApi {
     @ImplementedByExtension
     public static boolean isFluidContainingItem(ItemStack stack) {
         throw new NotImplementedException();
+    }
+
+    /**
+     * Moves energy from one energy container to another
+     *
+     * @param from   The energy container to move energy from
+     * @param to     The energy container to move energy to
+     * @param amount The amount of energy to move
+     * @return The amount of energy that was moved
+     */
+    public static long moveFluid(FluidContainer from, FluidContainer to, FluidHolder amount, boolean simulate) {
+        FluidHolder extracted = from.extractFluid(amount, true);
+        long inserted = to.insertFluid(extracted, true);
+        FluidHolder toInsert = FluidHooks.newFluidHolder(amount.getFluid(), inserted, amount.getCompound());
+        FluidHolder simulatedExtraction = from.extractFluid(toInsert, true);
+        if (!simulate && inserted > 0 && simulatedExtraction.getFluidAmount() == inserted) {
+            from.extractFluid(toInsert, false);
+            to.insertFluid(toInsert, false);
+        }
+        return Math.max(0, inserted);
+    }
+
+    /**
+     * Moves energy from one energy container to another
+     *
+     * @param from   The energy container to move energy from
+     * @param to     The energy container to move energy to
+     * @param fluidHolder The fluidHolder to move
+     * @return The amount of fluid that was moved
+     */
+    public static long moveFluid(ItemStackHolder from, ItemStackHolder to, FluidHolder fluidHolder, boolean simulate) {
+        if (!isFluidContainingItem(from.getStack()) || !isFluidContainingItem(to.getStack())) return 0;
+        FluidContainer fromFluid = getItemFluidContainer(from);
+        FluidContainer toFluid = getItemFluidContainer(to);
+        return moveFluid(fromFluid, toFluid, fluidHolder, simulate);
+    }
+
+    /**
+     * Moves energy from one energy container to another
+     *
+     * @param from   The energy container to move energy from
+     * @param to     The energy container to move energy to
+     * @param fluidHolder The amount of energy to move
+     * @return The amount of energy that was moved
+     */
+    public static long moveFluid(BlockEntity from, BlockEntity to, FluidHolder fluidHolder, boolean simulate) {
+        if (!isFluidContainingBlock(from, null) || !isFluidContainingBlock(to, null)) return 0;
+        FluidContainer fromFluid = getBlockFluidContainer(from, null);
+        FluidContainer toFluid = getBlockFluidContainer(to, null);
+        return moveFluid(fromFluid, toFluid, fluidHolder, simulate);
+    }
+
+    /**
+     * Moves energy from one energy container to another
+     *
+     * @param from   The energy container to move energy from
+     * @param to     The energy container to move energy to
+     * @param fluidHolder The amount of energy to move
+     * @return The amount of energy that was moved
+     */
+    public static long moveFluid(BlockEntity from, Direction direction, ItemStackHolder to, FluidHolder fluidHolder, boolean simulate) {
+        if (!isFluidContainingBlock(from, direction) || !isFluidContainingItem(to.getStack())) return 0;
+        FluidContainer fromFluid = getBlockFluidContainer(from, direction);
+        FluidContainer toFluid = getItemFluidContainer(to);
+        return moveFluid(fromFluid, toFluid, fluidHolder, simulate);
+    }
+
+    /**
+     * Moves energy from one energy container to another
+     *
+     * @param from   The energy container to move energy from
+     * @param to     The energy container to move energy to
+     * @param fluidHolder The amount of energy to move
+     * @return The amount of energy that was moved
+     */
+    public static long moveFluid(ItemStackHolder from, BlockEntity to, Direction direction, FluidHolder fluidHolder, boolean simulate) {
+        if (!isFluidContainingItem(from.getStack()) || !isFluidContainingBlock(to, direction)) return 0;
+        FluidContainer fromFluid = getItemFluidContainer(from);
+        FluidContainer toFluid = getBlockFluidContainer(to, direction);
+        return moveFluid(fromFluid, toFluid, fluidHolder, simulate);
     }
 
     @FunctionalInterface
