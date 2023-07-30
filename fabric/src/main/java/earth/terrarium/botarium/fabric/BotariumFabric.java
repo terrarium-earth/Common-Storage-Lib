@@ -79,8 +79,11 @@ public class BotariumFabric implements ModInitializer {
         FluidStorage.ITEM.registerFallback((itemStack, context) -> {
             if (itemStack.getItem() instanceof BotariumFluidItem<?> attachment) {
                 return new FabricItemFluidContainer(context, attachment.getFluidContainer(itemStack));
+            } else {
+                FluidApi.ItemFluidGetter<?> itemFluidGetter = FluidApi.ITEM_LOOKUP_MAP.get(itemStack.getItem());
+                var container = itemFluidGetter.getFluidContainer(itemStack);
+                return container == null ? null : new FabricItemFluidContainer(context, container);
             }
-            return null;
         });
 
         ItemStorage.SIDED.registerFallback((world, pos, state, blockEntity, context) -> {

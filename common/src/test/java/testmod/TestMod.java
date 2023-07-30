@@ -1,5 +1,9 @@
 package testmod;
 
+import earth.terrarium.botarium.common.energy.EnergyApi;
+import earth.terrarium.botarium.common.energy.impl.SimpleEnergyContainer;
+import earth.terrarium.botarium.common.fluid.FluidApi;
+import earth.terrarium.botarium.common.fluid.impl.SimpleFluidContainer;
 import earth.terrarium.botarium.common.registry.RegistryHelpers;
 import earth.terrarium.botarium.common.registry.RegistryHolder;
 import earth.terrarium.botarium.common.registry.fluid.*;
@@ -29,6 +33,7 @@ public class TestMod {
     public static final Supplier<BlockEntityType<?>> EXAMPLE_BLOCK_ENTITY = BLOCK_ENTITIES.register("block", () -> RegistryHelpers.createBlockEntityType(TestBlockEntity::new, EXAMPLE_BLOCK.get()));
     public static final Supplier<BlockItem> EXAMPLE_BLOCK_ITEM = ITEMS.register("block", () -> new BlockItem(EXAMPLE_BLOCK.get(), new Item.Properties()));
     public static final Supplier<Item> EXAMPLE_ITEM = ITEMS.register("item", () -> new TestItem(new Item.Properties().stacksTo(1)));
+    public static final Supplier<Item> EXAMPLE_ITEM_NO_INTERFACE = ITEMS.register("item_two", () -> new TestNonInterfaceItem(new Item.Properties().stacksTo(1)));
 
     public static final Supplier<Block> EXAMPLE_PIPE = BLOCKS.register("pipe", () -> new ExamplePipe(BlockBehaviour.Properties.copy(Blocks.STONE)));
     public static final Supplier<BlockEntityType<?>> EXAMPLE_PIPE_ENTITY = BLOCK_ENTITIES.register("pipe", () -> RegistryHelpers.createBlockEntityType(ExampleN2SPipeBlockEntity::new, EXAMPLE_PIPE.get()));
@@ -48,5 +53,8 @@ public class TestMod {
 
         FLUID_TYPES.initialize();
         FLUIDS.initialize();
+
+        FluidApi.registerDefaultFluidItem(EXAMPLE_ITEM_NO_INTERFACE.get(), new SimpleFluidContainer(1, 1, (integer, fluidHolder) -> true));
+        EnergyApi.registerDefaultEnergyItem(EXAMPLE_ITEM_NO_INTERFACE.get(), new SimpleEnergyContainer(100000));
     }
 }

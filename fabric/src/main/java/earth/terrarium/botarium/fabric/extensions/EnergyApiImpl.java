@@ -26,7 +26,7 @@ public class EnergyApiImpl {
      */
     @ImplementsBaseElement
     @Nullable
-    public static EnergyContainer getItemEnergy(ItemStackHolder stack) {
+    public static EnergyContainer getItemEnergyContainer(ItemStackHolder stack) {
         return EnergyApi.isEnergyItem(stack.getStack()) ? new PlatformItemEnergyManager(stack) : null;
     }
 
@@ -40,7 +40,7 @@ public class EnergyApiImpl {
      */
     @ImplementsBaseElement
     @Nullable
-    public static EnergyContainer getBlockEnergy(BlockEntity entity, @Nullable Direction direction) {
+    public static EnergyContainer getBlockEnergyContainer(BlockEntity entity, @Nullable Direction direction) {
         return EnergyApi.isEnergyBlock(entity, direction) ? new PlatformEnergyManager(entity, direction) : null;
     }
 

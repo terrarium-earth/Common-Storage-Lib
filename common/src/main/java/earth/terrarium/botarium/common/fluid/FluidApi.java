@@ -28,58 +28,58 @@ public class FluidApi {
     public static final Map<Block, BlockFluidGetter<?>> BLOCK_LOOKUP_MAP = new HashMap<>();
     public static final Map<Item, ItemFluidGetter<?>> ITEM_LOOKUP_MAP = new HashMap<>();
 
-    public static void registerEnergyBlock(BlockEntityType<?> block, BlockFluidGetter<?> getter) {
+    public static void registerFluidBlock(BlockEntityType<?> block, BlockFluidGetter<?> getter) {
         BLOCK_ENTITY_LOOKUP_MAP.put(block, getter);
     }
 
-    public static void registerEnergyBlock(BlockFluidGetter<?> getter, BlockEntityType<?>... blocks) {
+    public static void registerFluidBlock(BlockFluidGetter<?> getter, BlockEntityType<?>... blocks) {
         for (BlockEntityType<?> block : blocks) {
             BLOCK_ENTITY_LOOKUP_MAP.put(block, getter);
         }
     }
 
-    public static void registerEnergyBlock(Block block, BlockFluidGetter<?> getter) {
+    public static void registerFluidBlock(Block block, BlockFluidGetter<?> getter) {
         BLOCK_LOOKUP_MAP.put(block, getter);
     }
 
-    public static void registerEnergyBlock(BlockFluidGetter<?> getter, Block... blocks) {
+    public static void registerFluidBlock(BlockFluidGetter<?> getter, Block... blocks) {
         for (Block block : blocks) {
             BLOCK_LOOKUP_MAP.put(block, getter);
         }
     }
 
-    public static void registerDefaultEnergyBlock(Block block, FluidContainer container) {
-        registerEnergyBlock(block, (level, pos, state, entity, direction) -> new WrappedBlockFluidContainer(entity, container));
+    public static void registerDefaultFluidBlock(Block block, FluidContainer container) {
+        registerFluidBlock(block, (level, pos, state, entity, direction) -> new WrappedBlockFluidContainer(entity, container));
     }
 
-    public static void registerDefaultEnergyBlock(FluidContainer container, Block... blocks) {
-        registerEnergyBlock((level, pos, state, entity, direction) -> new WrappedBlockFluidContainer(entity, container), blocks);
+    public static void registerDefaultFluidBlock(FluidContainer container, Block... blocks) {
+        registerFluidBlock((level, pos, state, entity, direction) -> new WrappedBlockFluidContainer(entity, container), blocks);
     }
 
-    public static void registerDefaultEnergyBlock(BlockEntityType<?> block, FluidContainer container) {
-        registerEnergyBlock(block, (level, pos, state, entity, direction) -> new WrappedBlockFluidContainer(entity, container));
+    public static void registerDefaultFluidBlock(BlockEntityType<?> block, FluidContainer container) {
+        registerFluidBlock(block, (level, pos, state, entity, direction) -> new WrappedBlockFluidContainer(entity, container));
     }
 
-    public static void registerDefaultEnergyBlock(FluidContainer container, BlockEntityType<?>... blocks) {
-        registerEnergyBlock((level, pos, state, entity, direction) -> new WrappedBlockFluidContainer(entity, container), blocks);
+    public static void registerDefaultFluidBlock(FluidContainer container, BlockEntityType<?>... blocks) {
+        registerFluidBlock((level, pos, state, entity, direction) -> new WrappedBlockFluidContainer(entity, container), blocks);
     }
 
-    public static void registerEnergyItem(Item item, ItemFluidGetter<?> getter) {
+    public static void registerFluidItem(Item item, ItemFluidGetter<?> getter) {
         ITEM_LOOKUP_MAP.put(item, getter);
     }
 
-    public static void registerEnergyItem(ItemFluidGetter<?> getter, Item... items) {
+    public static void registerFluidItem(ItemFluidGetter<?> getter, Item... items) {
         for (Item item : items) {
             ITEM_LOOKUP_MAP.put(item, getter);
         }
     }
 
-    public static void registerDefaultEnergyItem(Item item, FluidContainer container) {
-        registerEnergyItem(item, stack -> new WrappedItemFluidContainer(stack, container));
+    public static void registerDefaultFluidItem(Item item, FluidContainer container) {
+        registerFluidItem(item, stack -> new WrappedItemFluidContainer(stack, container));
     }
 
-    public static void registerDefaultEnergyItem(FluidContainer container, Item... items) {
-        registerEnergyItem(stack -> new WrappedItemFluidContainer(stack, container), items);
+    public static void registerDefaultFluidItem(FluidContainer container, Item... items) {
+        registerFluidItem(stack -> new WrappedItemFluidContainer(stack, container), items);
     }
 
     /**

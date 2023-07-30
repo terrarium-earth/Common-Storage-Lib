@@ -41,13 +41,13 @@ sourceSets.test {
 dependencies {
     modImplementation "net.fabricmc:fabric-loader:${rootProject.fabric_loader_version}"
     modApi "net.fabricmc.fabric-api:fabric-api:${rootProject.fabric_api_version}"
-    include modApi('teamreborn:energy:2.2.0') {
+    include modApi('teamreborn:energy:3.0.0') {
         exclude(group: "net.fabricmc.fabric-api")
     }
     compileOnly(project(path: ":common")) { transitive false }
     testCompileOnly(project(path: ":common", configuration: "testApiElements")) { transitive false }
-    modLocalRuntime 'RebornCore:RebornCore-1.20:5.8.0'
-    modLocalRuntime 'TechReborn:TechReborn-1.20:5.8.0'
+    modLocalRuntime("curse.maven:reborncore-237903:4652960")
+    modLocalRuntime("curse.maven:techreborn-233564:4652961")
 }
 
 processResources {
