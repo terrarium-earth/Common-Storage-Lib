@@ -5,6 +5,7 @@ import earth.terrarium.botarium.common.energy.base.BotariumEnergyBlock;
 import earth.terrarium.botarium.common.energy.base.EnergyContainer;
 import earth.terrarium.botarium.common.energy.impl.WrappedBlockEnergyContainer;
 import earth.terrarium.botarium.common.energy.impl.WrappedItemEnergyContainer;
+import earth.terrarium.botarium.common.fluid.FluidApi;
 import earth.terrarium.botarium.common.item.ItemStackHolder;
 import earth.terrarium.botarium.util.Updatable;
 import net.minecraft.core.BlockPos;
@@ -25,64 +26,76 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Supplier;
 
 public class EnergyApi {
-    public static final Map<BlockEntityType<?>, BlockEnergyGetter<?>> BLOCK_ENTITY_LOOKUP_MAP = new HashMap<>();
-    public static final Map<Block, BlockEnergyGetter<?>> BLOCK_LOOKUP_MAP = new HashMap<>();
-    public static final Map<Item, ItemEnergyGetter<?>> ITEM_LOOKUP_MAP = new HashMap<>();
+    private static final Map<Supplier<BlockEntityType<?>>, BlockEnergyGetter<?>> BLOCK_ENTITY_LOOKUP_MAP = new HashMap<>();
+    private static final Map<Supplier<Block>, BlockEnergyGetter<?>> BLOCK_LOOKUP_MAP = new HashMap<>();
+    private static final Map<Supplier<Item>, ItemEnergyGetter<?>> ITEM_LOOKUP_MAP = new HashMap<>();
 
-    public static void registerEnergyBlock(BlockEntityType<?> block, BlockEnergyGetter<?> getter) {
+    public static final Map<BlockEntityType<?>, BlockEnergyGetter<?>> FINALIZED_BLOCK_ENTITY_LOOKUP_MAP = new HashMap<>();
+    public static final Map<Block, BlockEnergyGetter<?>> FINALIZED_BLOCK_LOOKUP_MAP = new HashMap<>();
+    public static boolean blocksFinalized = false;
+    public static final Map<Item, ItemEnergyGetter<?>> FINALIZED_ITEM_LOOKUP_MAP = new HashMap<>();
+    public static boolean itemsFinalized = false;
+
+    public static void finalizeBlockRegistration() {
+        if (!blocksFinalized) {
+            System.out.println("Finalizing energy block registration");
+            for (Map.Entry<Supplier<BlockEntityType<?>>, BlockEnergyGetter<?>> entry : BLOCK_ENTITY_LOOKUP_MAP.entrySet()) {
+                FINALIZED_BLOCK_ENTITY_LOOKUP_MAP.put(entry.getKey().get(), entry.getValue());
+            }
+
+            for (Map.Entry<Supplier<Block>, BlockEnergyGetter<?>> entry : BLOCK_LOOKUP_MAP.entrySet()) {
+                FINALIZED_BLOCK_LOOKUP_MAP.put(entry.getKey().get(), entry.getValue());
+            }
+
+            blocksFinalized = true;
+        }
+    }
+
+    public static void finalizeItemRegistration() {
+        if (!itemsFinalized) {
+            System.out.println("Finalizing energy item registration");
+            for (Map.Entry<Supplier<Item>, ItemEnergyGetter<?>> entry : ITEM_LOOKUP_MAP.entrySet()) {
+                FINALIZED_ITEM_LOOKUP_MAP.put(entry.getKey().get(), entry.getValue());
+            }
+
+            itemsFinalized = true;
+        }
+    }
+
+    public static void registerEnergyBlockEntity(Supplier<BlockEntityType<?>> block, BlockEnergyGetter<?> getter) {
         BLOCK_ENTITY_LOOKUP_MAP.put(block, getter);
     }
 
-    public static void registerEnergyBlock(BlockEnergyGetter<?> getter, BlockEntityType<?>... blocks) {
-        for (BlockEntityType<?> block : blocks) {
+    @SafeVarargs
+    public static void registerEnergyBlockEntity(BlockEnergyGetter<?> getter, Supplier<BlockEntityType<?>>... blocks) {
+        for (Supplier<BlockEntityType<?>> block : blocks) {
             BLOCK_ENTITY_LOOKUP_MAP.put(block, getter);
         }
     }
 
-    public static void registerEnergyBlock(Block block, BlockEnergyGetter<?> getter) {
+    public static void registerEnergyBlock(Supplier<Block> block, BlockEnergyGetter<?> getter) {
         BLOCK_LOOKUP_MAP.put(block, getter);
     }
 
-    public static void registerEnergyBlock(BlockEnergyGetter<?> getter, Block... blocks) {
-        for (Block block : blocks) {
+    @SafeVarargs
+    public static void registerEnergyBlock(BlockEnergyGetter<?> getter, Supplier<Block>... blocks) {
+        for (Supplier<Block> block : blocks) {
             BLOCK_LOOKUP_MAP.put(block, getter);
         }
     }
 
-    public static void registerDefaultEnergyBlock(Block block, EnergyContainer container) {
-        registerEnergyBlock(block, (level, pos, state, entity, direction) -> new WrappedBlockEnergyContainer(entity, container));
-    }
-
-    public static void registerDefaultEnergyBlock(EnergyContainer container, Block... blocks) {
-        registerEnergyBlock((level, pos, state, entity, direction) -> new WrappedBlockEnergyContainer(entity, container), blocks);
-    }
-
-    public static void registerDefaultEnergyBlock(BlockEntityType<?> block, EnergyContainer container) {
-        registerEnergyBlock(block, (level, pos, state, entity, direction) -> new WrappedBlockEnergyContainer(entity, container));
-    }
-
-    public static void registerDefaultEnergyBlock(EnergyContainer container, BlockEntityType<?>... blocks) {
-        registerEnergyBlock((level, pos, state, entity, direction) -> new WrappedBlockEnergyContainer(entity, container), blocks);
-    }
-
-    public static void registerEnergyItem(Item item, ItemEnergyGetter<?> getter) {
+    public static void registerEnergyItem(Supplier<Item> item, ItemEnergyGetter<?> getter) {
         ITEM_LOOKUP_MAP.put(item, getter);
     }
 
-    public static void registerEnergyItem(ItemEnergyGetter<?> getter, Item... items) {
-        for (Item item : items) {
+    @SafeVarargs
+    public static void registerEnergyItem(ItemEnergyGetter<?> getter, Supplier<Item>... items) {
+        for (Supplier<Item> item : items) {
             ITEM_LOOKUP_MAP.put(item, getter);
         }
-    }
-
-    public static void registerDefaultEnergyItem(Item item, EnergyContainer container) {
-        registerEnergyItem(item, stack -> new WrappedItemEnergyContainer(stack, container));
-    }
-
-    public static void registerDefaultEnergyItem(EnergyContainer container, Item... items) {
-        registerEnergyItem(stack -> new WrappedItemEnergyContainer(stack, container), items);
     }
 
     /**

@@ -22,64 +22,73 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Supplier;
 
 public class FluidApi {
-    public static final Map<BlockEntityType<?>, BlockFluidGetter<?>> BLOCK_ENTITY_LOOKUP_MAP = new HashMap<>();
-    public static final Map<Block, BlockFluidGetter<?>> BLOCK_LOOKUP_MAP = new HashMap<>();
-    public static final Map<Item, ItemFluidGetter<?>> ITEM_LOOKUP_MAP = new HashMap<>();
+    private static final Map<Supplier<BlockEntityType<?>>, BlockFluidGetter<?>> BLOCK_ENTITY_LOOKUP_MAP = new HashMap<>();
+    private static final Map<Supplier<Block>, BlockFluidGetter<?>> BLOCK_LOOKUP_MAP = new HashMap<>();
+    private static final Map<Supplier<Item>, ItemFluidGetter<?>> ITEM_LOOKUP_MAP = new HashMap<>();
 
-    public static void registerFluidBlock(BlockEntityType<?> block, BlockFluidGetter<?> getter) {
+    public static final Map<BlockEntityType<?>, BlockFluidGetter<?>> FINALIZED_BLOCK_ENTITY_LOOKUP_MAP = new HashMap<>();
+    public static final Map<Block, BlockFluidGetter<?>> FINALIZED_BLOCK_LOOKUP_MAP = new HashMap<>();
+    public static boolean blocksFinalized = false;
+    public static final Map<Item, ItemFluidGetter<?>> FINALIZED_ITEM_LOOKUP_MAP = new HashMap<>();
+    public static boolean itemsFinalized = false;
+
+    public static void finalizeBlockRegistration() {
+        if (!blocksFinalized) {
+            System.out.println("Finalizing fluid block registration");
+            for (Map.Entry<Supplier<BlockEntityType<?>>, BlockFluidGetter<?>> entry : BLOCK_ENTITY_LOOKUP_MAP.entrySet()) {
+                FINALIZED_BLOCK_ENTITY_LOOKUP_MAP.put(entry.getKey().get(), entry.getValue());
+            }
+            for (Map.Entry<Supplier<Block>, BlockFluidGetter<?>> entry : BLOCK_LOOKUP_MAP.entrySet()) {
+                FINALIZED_BLOCK_LOOKUP_MAP.put(entry.getKey().get(), entry.getValue());
+            }
+            blocksFinalized = true;
+        }
+    }
+
+    public static void finalizeItemRegistration() {
+        if (!itemsFinalized) {
+            System.out.println("Finalizing fluid item registration");
+            for (Map.Entry<Supplier<Item>, ItemFluidGetter<?>> entry : ITEM_LOOKUP_MAP.entrySet()) {
+                FINALIZED_ITEM_LOOKUP_MAP.put(entry.getKey().get(), entry.getValue());
+            }
+            itemsFinalized = true;
+        }
+    }
+
+    public static void registerFluidBlockEntity(Supplier<BlockEntityType<?>> block, BlockFluidGetter<?> getter) {
         BLOCK_ENTITY_LOOKUP_MAP.put(block, getter);
     }
 
-    public static void registerFluidBlock(BlockFluidGetter<?> getter, BlockEntityType<?>... blocks) {
-        for (BlockEntityType<?> block : blocks) {
+    @SafeVarargs
+    public static void registerFluidBlockEntity(BlockFluidGetter<?> getter, Supplier<BlockEntityType<?>>... blocks) {
+        for (Supplier<BlockEntityType<?>> block : blocks) {
             BLOCK_ENTITY_LOOKUP_MAP.put(block, getter);
         }
     }
 
-    public static void registerFluidBlock(Block block, BlockFluidGetter<?> getter) {
+    public static void registerFluidBlock(Supplier<Block> block, BlockFluidGetter<?> getter) {
         BLOCK_LOOKUP_MAP.put(block, getter);
     }
 
-    public static void registerFluidBlock(BlockFluidGetter<?> getter, Block... blocks) {
-        for (Block block : blocks) {
+    @SafeVarargs
+    public static void registerFluidBlock(BlockFluidGetter<?> getter, Supplier<Block>... blocks) {
+        for (Supplier<Block> block : blocks) {
             BLOCK_LOOKUP_MAP.put(block, getter);
         }
     }
 
-    public static void registerDefaultFluidBlock(Block block, FluidContainer container) {
-        registerFluidBlock(block, (level, pos, state, entity, direction) -> new WrappedBlockFluidContainer(entity, container));
-    }
-
-    public static void registerDefaultFluidBlock(FluidContainer container, Block... blocks) {
-        registerFluidBlock((level, pos, state, entity, direction) -> new WrappedBlockFluidContainer(entity, container), blocks);
-    }
-
-    public static void registerDefaultFluidBlock(BlockEntityType<?> block, FluidContainer container) {
-        registerFluidBlock(block, (level, pos, state, entity, direction) -> new WrappedBlockFluidContainer(entity, container));
-    }
-
-    public static void registerDefaultFluidBlock(FluidContainer container, BlockEntityType<?>... blocks) {
-        registerFluidBlock((level, pos, state, entity, direction) -> new WrappedBlockFluidContainer(entity, container), blocks);
-    }
-
-    public static void registerFluidItem(Item item, ItemFluidGetter<?> getter) {
+    public static void registerFluidItem(Supplier<Item> item, ItemFluidGetter<?> getter) {
         ITEM_LOOKUP_MAP.put(item, getter);
     }
 
-    public static void registerFluidItem(ItemFluidGetter<?> getter, Item... items) {
-        for (Item item : items) {
+    @SafeVarargs
+    public static void registerFluidItem(ItemFluidGetter<?> getter, Supplier<Item>... items) {
+        for (Supplier<Item> item : items) {
             ITEM_LOOKUP_MAP.put(item, getter);
         }
-    }
-
-    public static void registerDefaultFluidItem(Item item, FluidContainer container) {
-        registerFluidItem(item, stack -> new WrappedItemFluidContainer(stack, container));
-    }
-
-    public static void registerDefaultFluidItem(FluidContainer container, Item... items) {
-        registerFluidItem(stack -> new WrappedItemFluidContainer(stack, container), items);
     }
 
     /**

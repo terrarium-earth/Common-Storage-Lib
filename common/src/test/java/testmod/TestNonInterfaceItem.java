@@ -41,18 +41,17 @@ public class TestNonInterfaceItem extends Item {
 
     @Override
     public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltip, TooltipFlag tooltipFlag) {
-        ItemStackHolder holder = new ItemStackHolder(stack);
-        if (FluidApi.isFluidContainingItem(stack)) {
-            ItemFluidContainer itemFluidManager = FluidApi.getItemFluidContainer(holder);
-            long oxygen = itemFluidManager.getFluids().get(0).getFluidAmount();
+        if (FluidHooks.isFluidContainingItem(stack)) {
+            PlatformFluidItemHandler itemFluidManager = FluidHooks.getItemFluidManager(stack);
+            long oxygen = itemFluidManager.getFluidInTank(0).getFluidAmount();
             long oxygenCapacity = itemFluidManager.getTankCapacity(0);
             tooltip.add(Component.literal("Water: " + oxygen + "mb / " + oxygenCapacity + "mb").setStyle(Style.EMPTY.withColor(ChatFormatting.GRAY)));
         }
 
-        if (EnergyApi.isEnergyItem(stack)) {
-            EnergyContainer energyManager = EnergyApi.getItemEnergyContainer(holder);
+        if (EnergyHooks.isEnergyItem(stack)) {
+            PlatformItemEnergyManager energyManager = EnergyHooks.getItemEnergyManager(stack);
             long energy = energyManager.getStoredEnergy();
-            long energyCapacity = energyManager.getMaxCapacity();
+            long energyCapacity = energyManager.getCapacity();
             tooltip.add(Component.literal("Energy: " + energy + "FE / " + energyCapacity + "FE").setStyle(Style.EMPTY.withColor(ChatFormatting.GRAY)));
         }
     }
@@ -78,7 +77,7 @@ public class TestNonInterfaceItem extends Item {
 
             player.displayClientMessage(Component.literal("To: " + toFluidHolder.getFluidAmount()), true);
 
-            if (FluidHooks.moveItemToItemFluid(from, to, FluidHooks.newFluidHolder(BuiltInRegistries.FLUID.get(new ResourceLocation("ad_astra", "oxygen")), FluidHooks.buckets(1), fromFluidHolder.getCompound())) > 0) {
+            if (FluidHooks.moveItemToItemFluid(from, to, FluidHooks.newFluidHolder(BuiltInRegistries.FLUID.get(new ResourceLocation("minecraft", "water")), FluidHooks.buckets(1), fromFluidHolder.getCompound())) > 0) {
                 if (from.isDirty()) player.setItemInHand(interactionHand, from.getStack());
                 if (to.isDirty()) player.setItemSlot(EquipmentSlot.OFFHAND, to.getStack());
                 level.playSound(null, player.blockPosition(), SoundEvents.GENERIC_DRINK, SoundSource.PLAYERS, 1, 1);
