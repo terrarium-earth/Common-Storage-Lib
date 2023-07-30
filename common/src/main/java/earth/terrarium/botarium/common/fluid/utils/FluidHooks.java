@@ -5,7 +5,9 @@ import earth.terrarium.botarium.common.fluid.base.PlatformFluidHandler;
 import earth.terrarium.botarium.common.fluid.base.PlatformFluidItemHandler;
 import earth.terrarium.botarium.common.item.ItemStackHolder;
 import net.minecraft.core.Direction;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.material.Fluid;
@@ -349,5 +351,23 @@ public class FluidHooks {
     @ImplementedByExtension
     public static long getNuggetAmount() {
         throw new NotImplementedException();
+    }
+
+    public static void writeToBuffer(FluidHolder holder, FriendlyByteBuf buffer) {
+        if (holder.isEmpty()) {
+            buffer.writeBoolean(false);
+        } else {
+            buffer.writeBoolean(true);
+            buffer.writeVarInt(BuiltInRegistries.FLUID.getId(holder.getFluid()));
+            buffer.writeVarLong(holder.getFluidAmount());
+            buffer.writeNbt(holder.getCompound());
+        }
+    }
+
+    public static FluidHolder readFromBuffer(FriendlyByteBuf buffer) {
+        if (!buffer.readBoolean()) return FluidHooks.emptyFluid();
+        Fluid fluid = BuiltInRegistries.FLUID.byId(buffer.readVarInt());
+        long amount = buffer.readVarLong();
+        return FluidHolder.of(fluid, amount, buffer.readNbt());
     }
 }

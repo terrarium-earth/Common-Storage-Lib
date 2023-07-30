@@ -1,8 +1,15 @@
 package earth.terrarium.botarium.common.energy.base;
 
+import earth.terrarium.botarium.common.energy.EnergyApi;
+import net.minecraft.core.Direction;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import org.jetbrains.annotations.ApiStatus;
 
+/**
+ * @deprecated Use {@link EnergyApi#getBlockEnergyContainer(BlockEntity, Direction)} instead.
+ */
 @ApiStatus.NonExtendable
+@Deprecated
 public interface PlatformEnergyManager {
 
     /**

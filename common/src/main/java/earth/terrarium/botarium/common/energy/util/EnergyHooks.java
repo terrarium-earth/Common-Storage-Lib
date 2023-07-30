@@ -1,6 +1,7 @@
 package earth.terrarium.botarium.common.energy.util;
 
 import com.mojang.datafixers.util.Pair;
+import earth.terrarium.botarium.common.energy.EnergyApi;
 import earth.terrarium.botarium.common.energy.base.*;
 import earth.terrarium.botarium.common.item.ItemStackHolder;
 import net.minecraft.core.BlockPos;
@@ -14,6 +15,12 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 
+
+/**
+ * A utility class for the old Energy Api. You should not use these utilities.
+ * Instead use the functions found in {@link EnergyApi}.
+ */
+@Deprecated
 public class EnergyHooks {
 
     /**

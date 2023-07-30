@@ -23,6 +23,12 @@ public interface EnergyContainer extends Serializable, Clearable {
      */
     long insertEnergy(long maxAmount, boolean simulate);
 
+    /**
+     * An internal version of {@link #insertEnergy(long, boolean)} that is used by mod authors
+     * looking to directly interact with their own containers.
+     * <p>
+     * You should not call this method for other mod's containers, instead use {@link #insertEnergy(long, boolean)}.
+     */
     default long internalInsert(long amount, boolean simulate) {
         return insertEnergy(amount, simulate);
     }
@@ -36,6 +42,12 @@ public interface EnergyContainer extends Serializable, Clearable {
      */
     long extractEnergy(long maxAmount, boolean simulate);
 
+    /**
+     * An internal version of {@link #extractEnergy(long, boolean)} that is used by mod authors
+     * looking to directly interact with their own containers.
+     * <p>
+     * You should not call this method for other mod's containers, instead use {@link #extractEnergy(long, boolean)}.
+     */
     default long internalExtract(long amount, boolean simulate) {
         return extractEnergy(amount, simulate);
     }

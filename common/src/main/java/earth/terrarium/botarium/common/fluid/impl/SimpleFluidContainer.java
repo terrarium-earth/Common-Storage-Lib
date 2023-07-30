@@ -122,6 +122,7 @@ public class SimpleFluidContainer implements FluidContainer {
      * Clears the container of all fluids.
      * <br />
      * <u>Meant only for internal use!</u>
+     * @deprecated
      */
     public void clear() {
         this.storedFluid.clear();

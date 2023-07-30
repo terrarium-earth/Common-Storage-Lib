@@ -1,9 +1,14 @@
 package earth.terrarium.botarium.common.energy.base;
 
+import earth.terrarium.botarium.common.energy.EnergyApi;
 import earth.terrarium.botarium.common.item.ItemStackHolder;
 import org.jetbrains.annotations.ApiStatus;
 
+/**
+ * @deprecated Use {@link EnergyApi#getItemEnergyContainer(ItemStackHolder)} instead.
+ */
 @ApiStatus.NonExtendable
+@Deprecated
 public interface PlatformItemEnergyManager {
 
     /**

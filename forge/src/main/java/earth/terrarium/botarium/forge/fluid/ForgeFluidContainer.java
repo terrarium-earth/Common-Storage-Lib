@@ -4,7 +4,9 @@ import earth.terrarium.botarium.common.fluid.base.FluidContainer;
 import earth.terrarium.botarium.common.fluid.base.FluidHolder;
 import earth.terrarium.botarium.forge.AutoSerializable;
 import earth.terrarium.botarium.util.Serializable;
+import earth.terrarium.botarium.util.Updatable;
 import net.minecraft.core.Direction;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
@@ -14,8 +16,8 @@ import net.minecraftforge.fluids.capability.IFluidHandler;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public record ForgeFluidContainer(
-    FluidContainer container) implements IFluidHandler, ICapabilityProvider, AutoSerializable {
+public record ForgeFluidContainer<T extends FluidContainer & Updatable<BlockEntity>>(
+        T container, BlockEntity entity) implements IFluidHandler, ICapabilityProvider, AutoSerializable {
 
     @Override
     public int getTanks() {
@@ -39,12 +41,16 @@ public record ForgeFluidContainer(
 
     @Override
     public int fill(FluidStack fluidStack, FluidAction fluidAction) {
-        return (int) this.container.insertFluid(new ForgeFluidHolder(fluidStack), fluidAction.simulate());
+        int i = (int) this.container.insertFluid(new ForgeFluidHolder(fluidStack), fluidAction.simulate());
+        if (i > 0 && fluidAction.execute()) this.container.update(entity);
+        return i;
     }
 
     @Override
     public @NotNull FluidStack drain(FluidStack fluidStack, FluidAction fluidAction) {
-        return new ForgeFluidHolder(this.container.extractFluid(new ForgeFluidHolder(fluidStack), fluidAction.simulate())).getFluidStack();
+        FluidStack fluidStack1 = new ForgeFluidHolder(this.container.extractFluid(new ForgeFluidHolder(fluidStack), fluidAction.simulate())).getFluidStack();
+        if(!fluidStack1.isEmpty() && fluidAction.execute()) this.container.update(entity);
+        return fluidStack1;
     }
 
     @Override
@@ -52,7 +58,9 @@ public record ForgeFluidContainer(
         FluidHolder fluid = this.container.getFluids().get(0).copyHolder();
         if (fluid.isEmpty()) return FluidStack.EMPTY;
         fluid.setAmount(i);
-        return new ForgeFluidHolder(this.container.extractFluid(fluid, fluidAction.simulate())).getFluidStack();
+        FluidStack fluidStack = new ForgeFluidHolder(this.container.extractFluid(fluid, fluidAction.simulate())).getFluidStack();
+        if(!fluidStack.isEmpty() && fluidAction.execute()) this.container.update(entity);
+        return fluidStack;
     }
 
     @Override

@@ -17,6 +17,12 @@ public interface FluidContainer extends Serializable, Clearable {
      */
     long insertFluid(FluidHolder fluid, boolean simulate);
 
+    /**
+     * An internal version of {@link #insertFluid(FluidHolder, boolean)} that is used by mod authors
+     * looking to directly interact with their own containers.
+     * <p>
+     * You should not call this method for other mod's containers, instead use {@link #insertFluid(FluidHolder, boolean)}.
+     */
     default long internalInsert(FluidHolder fluids, boolean simulate) {
         return insertFluid(fluids, simulate);
     }
@@ -30,6 +36,12 @@ public interface FluidContainer extends Serializable, Clearable {
      */
     FluidHolder extractFluid(FluidHolder fluid, boolean simulate);
 
+    /**
+     * An internal version of {@link #extractFluid(FluidHolder, boolean)} that is used by mod authors
+     * looking to directly interact with their own containers.
+     * <p>
+     * You should not call this method for other mod's containers, instead use {@link #extractFluid(FluidHolder, boolean)}.
+     */
     default FluidHolder internalExtract(FluidHolder fluid, boolean simulate) {
         return extractFluid(fluid, simulate);
     }
