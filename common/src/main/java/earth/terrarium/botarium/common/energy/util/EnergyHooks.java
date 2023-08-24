@@ -18,7 +18,7 @@ import java.util.Optional;
 
 /**
  * A utility class for the old Energy Api. You should not use these utilities.
- * Instead use the functions found in {@link EnergyApi}.
+ * @deprecated Use the functions found in {@link EnergyApi} instead.
  */
 @Deprecated
 public class EnergyHooks {
