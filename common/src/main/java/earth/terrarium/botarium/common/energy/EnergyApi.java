@@ -163,8 +163,8 @@ public class EnergyApi {
         List<EnergyContainer> list = Direction.stream()
                 .map(direction -> Pair.of(direction, level.getBlockEntity(blockPos.relative(direction))))
                 .filter(pair -> pair.getSecond() != null)
-                .filter(pair -> isEnergyBlock(pair.getSecond(), pair.getFirst().getOpposite()))
                 .map(pair -> getBlockEnergyContainer(pair.getSecond(), pair.getFirst()))
+                .filter(energy -> energy != null)
                 .sorted(Comparator.comparingLong(energy -> energy.insertEnergy(amount, true)))
                 .toList();
         int receiverCount = list.size();
