@@ -1,6 +1,7 @@
 <div align="center">
 
 # Botarium
+
 <code>~ Tiny lil library mod for cross-platform stuff! ~</code>
 
 </div>
@@ -9,40 +10,32 @@
 
 To add this library to your project, do the following:
 
+Kotlin DSL:
+```kotlin
+repositories {
+    maven(url = "https://maven.resourcefulbees.com/repository/maven-public/")
+}
+
+dependencies {
+    "modApi"(group = "earth.terrarium.botarium", name = "botarium-$modLoader-$minecraftVersion", version = botariumVersion)
+}
+```
+
+Groovy DSL:
 ```groovy
 repositories {
-  maven {
-    // Location of the maven that hosts Mine and Team Resourceful's files.
-    name = "Resourceful Bees Maven"
-    url = "https://maven.resourcefulbees.com/repository/maven-public/"
-  }
+    maven {
+        url "https://maven.resourcefulbees.com/repository/maven-public/"
+    }
 }
-```
 
-In an Architectury project, you would implement it like so:
-
-Common
-```groovy
 dependencies {
-  modImplementation "earth.terrarium:botarium-common-{minecraft_version}:{botarium_version}"
+    "modApi" group: "earth.terrarium.botarium", name: "botarium-$modLoader-$minecraftVersion", version: botariumVersion
 }
 ```
 
-Fabric
-```groovy
-dependencies {
-  modApi "earth.terrarium:botarium-fabric-{minecraft_version}:{botarium_version}"
-}
-```
-
-Forge
-```groovy
-dependencies {
-    modApi "earth.terrarium:botarium-forge-{minecraft_version}:{botarium_version}"
-}
-```
-
-<b>This project is now on Curseforge! You can find it on [Modrinth](https://modrinth.com/mod/botarium) and [Curseforge](https://www.curseforge.com/minecraft/mc-mods/botarium)</b>
+<b>This project is now on Curseforge! You can find it on [Modrinth](https://modrinth.com/mod/botarium)
+and [Curseforge](https://www.curseforge.com/minecraft/mc-mods/botarium)</b>
 
 ---
 
