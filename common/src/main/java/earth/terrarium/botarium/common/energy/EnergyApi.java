@@ -3,9 +3,6 @@ package earth.terrarium.botarium.common.energy;
 import com.mojang.datafixers.util.Pair;
 import earth.terrarium.botarium.common.energy.base.BotariumEnergyBlock;
 import earth.terrarium.botarium.common.energy.base.EnergyContainer;
-import earth.terrarium.botarium.common.energy.impl.WrappedBlockEnergyContainer;
-import earth.terrarium.botarium.common.energy.impl.WrappedItemEnergyContainer;
-import earth.terrarium.botarium.common.fluid.FluidApi;
 import earth.terrarium.botarium.common.item.ItemStackHolder;
 import earth.terrarium.botarium.util.Updatable;
 import net.minecraft.core.BlockPos;
@@ -22,10 +19,7 @@ import org.apache.commons.lang3.NotImplementedException;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Supplier;
 
 public class EnergyApi {
@@ -163,8 +157,8 @@ public class EnergyApi {
         List<EnergyContainer> list = Direction.stream()
                 .map(direction -> Pair.of(direction, level.getBlockEntity(blockPos.relative(direction))))
                 .filter(pair -> pair.getSecond() != null)
-                .filter(pair -> isEnergyBlock(pair.getSecond(), pair.getFirst().getOpposite()))
                 .map(pair -> getBlockEnergyContainer(pair.getSecond(), pair.getFirst()))
+                .filter(Objects::nonNull)
                 .sorted(Comparator.comparingLong(energy -> energy.insertEnergy(amount, true)))
                 .toList();
         int receiverCount = list.size();
