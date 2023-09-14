@@ -9,6 +9,12 @@ architectury {
     common()
 }
 
+jar {
+    manifest {
+        attributes 'Fabric-Loom-Remap': true
+    }
+}
+
 java {
     registerFeature(sourceSets.test.name) {
         usingSourceSet(sourceSets.test)
