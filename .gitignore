@@ -53,9 +53,6 @@ hs_err_pid*
 .AppleDouble
 .LSOverride
 
-# Icon must end with two \r
-Icon
-
 # Thumbnails
 ._*
 
@@ -117,9 +114,5 @@ run/
 # Avoid ignoring Gradle wrapper jar file (.jar files are usually ignored)
 !gradle-wrapper.jar
 
-# Visual Studio Code
-.settings/
-.vscode/
-bin/
-.classpath
-.project
+# Architectury Garbage
+*.architectury-transformer
