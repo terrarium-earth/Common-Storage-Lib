@@ -1,1 +1,1 @@
-Add Fabric-Loom-Remap to manifest
+Fixed issue with energy api
