@@ -93,5 +93,6 @@ public record WrappedBlockEnergyContainer(BlockEntity blockEntity,
     @Override
     public void clearContent() {
         container.clearContent();
+        update(blockEntity);
     }
 }

@@ -136,7 +136,7 @@ public class EnergyApi {
      */
     @Contract(pure = true)
     @ImplementedByExtension
-    public static boolean isEnergyBlock(BlockEntity stack, @Nullable Direction direction) {
+    public static boolean isEnergyBlock(BlockEntity blockEntity, @Nullable Direction direction) {
         throw new NotImplementedException("Energy item check not Implemented");
     }
 

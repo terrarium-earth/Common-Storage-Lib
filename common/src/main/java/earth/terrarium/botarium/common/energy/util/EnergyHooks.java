@@ -65,7 +65,7 @@ public class EnergyHooks {
      * @return Whether the given {@link BlockEntity} is an energy container.
      */
     @ImplementedByExtension
-    public static boolean isEnergyContainer(BlockEntity stack, @Nullable Direction direction) {
+    public static boolean isEnergyContainer(BlockEntity blockEntity, @Nullable Direction direction) {
         throw new NotImplementedException("Energy item check not Implemented");
     }
 

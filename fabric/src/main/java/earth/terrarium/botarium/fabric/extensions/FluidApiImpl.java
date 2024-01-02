@@ -8,6 +8,8 @@ import earth.terrarium.botarium.fabric.fluid.holder.ItemStackStorage;
 import earth.terrarium.botarium.fabric.fluid.storage.PlatformFluidContainer;
 import earth.terrarium.botarium.fabric.fluid.storage.PlatformFluidItemHandler;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
+import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -20,12 +22,13 @@ import org.jetbrains.annotations.Nullable;
 public class FluidApiImpl {
     @ImplementsBaseElement
     public static ItemFluidContainer getItemFluidContainer(ItemStackHolder stack) {
-        return new PlatformFluidItemHandler(stack);
+        return isFluidContainingItem(stack.getStack().copy()) ? new PlatformFluidItemHandler(stack) : null;
     }
 
     @ImplementsBaseElement
     public static FluidContainer getBlockFluidContainer(BlockEntity entity, @Nullable Direction direction) {
-        return new PlatformFluidContainer(FluidStorage.SIDED.find(entity.getLevel(), entity.getBlockPos(), direction));
+        Storage<FluidVariant> storage = FluidStorage.SIDED.find(entity.getLevel(), entity.getBlockPos(), direction);
+        return storage == null ? null : new PlatformFluidContainer(storage);
     }
 
     @ImplementsBaseElement

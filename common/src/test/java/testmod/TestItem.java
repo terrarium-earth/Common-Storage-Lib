@@ -1,6 +1,8 @@
 package testmod;
 
+import earth.terrarium.botarium.common.energy.EnergyApi;
 import earth.terrarium.botarium.common.energy.base.BotariumEnergyItem;
+import earth.terrarium.botarium.common.energy.base.EnergyContainer;
 import earth.terrarium.botarium.common.energy.base.PlatformItemEnergyManager;
 import earth.terrarium.botarium.common.energy.impl.SimpleEnergyContainer;
 import earth.terrarium.botarium.common.energy.impl.WrappedItemEnergyContainer;
@@ -54,10 +56,11 @@ public class TestItem extends Item implements BotariumEnergyItem<WrappedItemEner
             tooltip.add(Component.literal("Water: " + oxygen + "mb / " + oxygenCapacity + "mb").setStyle(Style.EMPTY.withColor(ChatFormatting.GRAY)));
         }
 
-        if (EnergyHooks.isEnergyItem(stack)) {
-            PlatformItemEnergyManager energyManager = EnergyHooks.getItemEnergyManager(stack);
+        if (EnergyApi.isEnergyItem(stack)) {
+            ItemStackHolder holder = new ItemStackHolder(stack);
+            EnergyContainer energyManager = EnergyApi.getItemEnergyContainer(holder);
             long energy = energyManager.getStoredEnergy();
-            long energyCapacity = energyManager.getCapacity();
+            long energyCapacity = energyManager.getMaxCapacity();
             tooltip.add(Component.literal("Energy: " + energy + "FE / " + energyCapacity + "FE").setStyle(Style.EMPTY.withColor(ChatFormatting.GRAY)));
         }
     }
@@ -71,27 +74,18 @@ public class TestItem extends Item implements BotariumEnergyItem<WrappedItemEner
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand interactionHand) {
         if (level.isClientSide) {
             return InteractionResultHolder.success(player.getItemInHand(interactionHand));
-        }
-        try {
-            ItemStackHolder from = new ItemStackHolder(player.getMainHandItem());
-            ItemStackHolder to = new ItemStackHolder(player.getOffhandItem());
-
-            var fromFluidHolder = FluidHooks.getItemFluidManager(from.getStack()).getFluidInTank(0);
-            var toFluidHolder = FluidHooks.getItemFluidManager(to.getStack()).getFluidInTank(0);
-            if (fromFluidHolder == null) return InteractionResultHolder.success(player.getMainHandItem());
-            if (toFluidHolder == null) return InteractionResultHolder.success(player.getMainHandItem());
-
-            player.displayClientMessage(Component.literal("To: " + toFluidHolder.getFluidAmount()), true);
-
-            if (FluidHooks.moveItemToItemFluid(from, to, FluidHooks.newFluidHolder(BuiltInRegistries.FLUID.get(new ResourceLocation("ad_astra", "oxygen")), FluidHooks.buckets(1), fromFluidHolder.getCompound())) > 0) {
-                if (from.isDirty()) player.setItemInHand(interactionHand, from.getStack());
-                if (to.isDirty()) player.setItemSlot(EquipmentSlot.OFFHAND, to.getStack());
-                level.playSound(null, player.blockPosition(), SoundEvents.GENERIC_DRINK, SoundSource.PLAYERS, 1, 1);
-                return InteractionResultHolder.consume(player.getMainHandItem());
+        } else {
+            ItemStack stack = player.getItemInHand(interactionHand);
+            if (EnergyApi.isEnergyItem(stack)) {
+                ItemStackHolder holder = new ItemStackHolder(stack);
+                EnergyContainer energyManager = EnergyApi.getItemEnergyContainer(holder);
+                energyManager.setEnergy(100000);
+                if (holder.isDirty()) {
+                    player.setItemInHand(interactionHand, holder.getStack());
+                }
             }
-        } catch (Exception e) {
-            e.printStackTrace();
         }
+
 
         return InteractionResultHolder.success(player.getMainHandItem());
     }

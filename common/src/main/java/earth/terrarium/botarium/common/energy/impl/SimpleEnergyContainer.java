@@ -8,15 +8,23 @@ import net.minecraft.util.Mth;
 
 public class SimpleEnergyContainer implements EnergyContainer {
     private final long capacity;
+    private final long maxInsert;
+    private final long maxExtract;
     private long energy;
 
     public SimpleEnergyContainer(long maxCapacity) {
+        this(maxCapacity, 1024, 1024);
+    }
+
+    public SimpleEnergyContainer(long maxCapacity, long maxExtract, long maxInsert) {
         this.capacity = maxCapacity;
+        this.maxExtract = maxExtract;
+        this.maxInsert = maxInsert;
     }
 
     @Override
     public long insertEnergy(long maxAmount, boolean simulate) {
-        long inserted = (long) Mth.clamp(maxAmount, 0, getMaxCapacity() - getStoredEnergy());
+        long inserted = (long) Mth.clamp(maxAmount, 0, maxInsert());
         if (simulate) return inserted;
         this.setEnergy(this.energy + inserted);
         return inserted;
@@ -24,7 +32,7 @@ public class SimpleEnergyContainer implements EnergyContainer {
 
     @Override
     public long extractEnergy(long maxAmount, boolean simulate) {
-        long extracted = (long) Mth.clamp(maxAmount, 0, getStoredEnergy());
+        long extracted = (long) Mth.clamp(maxAmount, 0, maxExtract());
         if (simulate) return extracted;
         this.setEnergy(this.energy - extracted);
         return extracted;
@@ -32,12 +40,18 @@ public class SimpleEnergyContainer implements EnergyContainer {
 
     @Override
     public long internalInsert(long maxAmount, boolean simulate) {
-        return insertEnergy(maxAmount, simulate);
+        long inserted = (long) Mth.clamp(maxAmount, 0, getMaxCapacity() - getStoredEnergy());
+        if (simulate) return inserted;
+        this.setEnergy(this.energy + inserted);
+        return inserted;
     }
 
     @Override
     public long internalExtract(long maxAmount, boolean simulate) {
-        return extractEnergy(maxAmount, simulate);
+        long extracted = (long) Mth.clamp(maxAmount, 0, getStoredEnergy());
+        if (simulate) return extracted;
+        this.setEnergy(this.energy - extracted);
+        return extracted;
     }
 
     @Override
@@ -57,12 +71,12 @@ public class SimpleEnergyContainer implements EnergyContainer {
 
     @Override
     public long maxInsert() {
-        return 1024;
+        return maxInsert;
     }
 
     @Override
     public long maxExtract() {
-        return 1024;
+        return maxExtract;
     }
 
     @Override

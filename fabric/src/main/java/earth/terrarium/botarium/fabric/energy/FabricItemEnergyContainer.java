@@ -6,6 +6,7 @@ import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
 import net.fabricmc.fabric.api.transfer.v1.transaction.base.SnapshotParticipant;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
 import team.reborn.energy.api.EnergyStorage;
 
@@ -24,7 +25,7 @@ public class FabricItemEnergyContainer extends SnapshotParticipant<CompoundTag> 
     @Override
     public long insert(long maxAmount, TransactionContext transaction) {
         this.updateSnapshots(transaction);
-        long inserted = container.insertEnergy(maxAmount, false);
+        long inserted = container.insertEnergy(Math.min(maxAmount, container.maxInsert()), false);
         setChanged(transaction);
         return inserted;
     }
@@ -32,7 +33,7 @@ public class FabricItemEnergyContainer extends SnapshotParticipant<CompoundTag> 
     @Override
     public long extract(long maxAmount, TransactionContext transaction) {
         this.updateSnapshots(transaction);
-        long l = container.extractEnergy(maxAmount, false);
+        long l = container.extractEnergy(Math.min(maxAmount, container.maxExtract()), false);
         setChanged(transaction);
         return l;
     }

@@ -10,6 +10,8 @@ import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
+import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.msrandom.extensions.annotations.ClassExtension;
 import net.msrandom.extensions.annotations.ImplementsBaseElement;
 import org.jetbrains.annotations.Nullable;
@@ -24,7 +26,8 @@ public class FluidApiImpl {
 
     @ImplementsBaseElement
     public static FluidContainer getBlockFluidContainer(BlockEntity entity, @Nullable Direction direction) {
-        return isFluidContainingBlock(entity, direction) ? new PlatformBlockFluidHandler(entity.getCapability(ForgeCapabilities.FLUID_HANDLER, direction).orElseThrow(IllegalArgumentException::new)) : null;
+        LazyOptional<IFluidHandler> capability = entity.getCapability(ForgeCapabilities.FLUID_HANDLER, direction);
+        return capability.isPresent() ? new PlatformBlockFluidHandler(capability.orElseThrow(IllegalArgumentException::new)) : null;
     }
 
     @ImplementsBaseElement

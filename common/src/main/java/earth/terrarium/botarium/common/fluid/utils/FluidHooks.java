@@ -50,6 +50,7 @@ public class FluidHooks {
      * @param buckets The number of buckets.
      * @return The number of fluid values in the given number of buckets.
      */
+    @Deprecated
     @ImplementedByExtension
     public static long buckets(double buckets) {
         return (long) (buckets * getBucketAmount());

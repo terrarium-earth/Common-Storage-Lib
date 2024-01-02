@@ -95,5 +95,6 @@ public record WrappedItemEnergyContainer(ItemStack stack,
     @Override
     public void clearContent() {
         container.clearContent();
+        update(stack);
     }
 }

@@ -109,7 +109,6 @@ public class FluidApi {
      * @param entity    The {@link BlockEntity} to get the {@link PlatformFluidHandler} from.
      * @param direction The {@link Direction} to get the {@link PlatformFluidHandler} from on the {@link BlockEntity}.
      * @return The {@link PlatformFluidHandler} for the {@link BlockEntity} and {@link Direction}.
-     * @throws IllegalArgumentException If the {@link BlockEntity} does not have a {@link PlatformFluidHandler}.
      */
     @ImplementedByExtension
     public static FluidContainer getBlockFluidContainer(BlockEntity entity, @Nullable Direction direction) {
@@ -121,6 +120,7 @@ public class FluidApi {
      * @param direction The {@link Direction} to check on the {@link BlockEntity} for a fluid container.
      * @return True if the {@link BlockEntity} is a fluid container.
      */
+    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     @ImplementedByExtension
     public static boolean isFluidContainingBlock(BlockEntity entity, @Nullable Direction direction) {
         throw new NotImplementedException();
@@ -130,6 +130,7 @@ public class FluidApi {
      * @param stack The {@link ItemStack} to check if it is a fluid container.
      * @return True if the {@link ItemStack} is a fluid container.
      */
+    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     @ImplementedByExtension
     public static boolean isFluidContainingItem(ItemStack stack) {
         throw new NotImplementedException();
