@@ -27,6 +27,6 @@ dependencies {
         exclude(group = "net.fabricmc", module = "fabric-api")
     }
 
-    modLocalRuntime(group = "curse.maven", name = "reborncore-237903", version = "4652960")
-    modLocalRuntime(group = "curse.maven", name = "techreborn-233564", version = "4652961")
+    modLocalRuntime(group = "curse.maven", name = "reborncore-237903", version = "4958437")
+    modLocalRuntime(group = "curse.maven", name = "techreborn-233564", version = "4958438")
 }

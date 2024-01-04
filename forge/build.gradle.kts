@@ -26,7 +26,7 @@ dependencies {
 
     forge(group = "net.minecraftforge", name = "forge", version = "$minecraftVersion-$forgeVersion")
 
-    modLocalRuntime(group = "curse.maven", name = "energizedpower-782147", version = "4573938") {
+    modLocalRuntime(group = "curse.maven", name = "energizedpower-782147", version = "4978046") {
         isTransitive = false
     }
 }

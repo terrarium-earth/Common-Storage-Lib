@@ -1,19 +1,10 @@
 package testmod;
 
 import earth.terrarium.botarium.common.energy.EnergyApi;
-import earth.terrarium.botarium.common.energy.base.BotariumEnergyItem;
 import earth.terrarium.botarium.common.energy.base.EnergyContainer;
 import earth.terrarium.botarium.common.energy.base.PlatformItemEnergyManager;
-import earth.terrarium.botarium.common.energy.impl.SimpleEnergyContainer;
-import earth.terrarium.botarium.common.energy.impl.WrappedItemEnergyContainer;
-import earth.terrarium.botarium.common.energy.util.EnergyHooks;
 import earth.terrarium.botarium.common.fluid.FluidApi;
-import earth.terrarium.botarium.common.fluid.base.BotariumFluidItem;
-import earth.terrarium.botarium.common.fluid.base.FluidHolder;
-import earth.terrarium.botarium.common.fluid.base.ItemFluidContainer;
 import earth.terrarium.botarium.common.fluid.base.PlatformFluidItemHandler;
-import earth.terrarium.botarium.common.fluid.impl.SimpleFluidContainer;
-import earth.terrarium.botarium.common.fluid.impl.WrappedItemFluidContainer;
 import earth.terrarium.botarium.common.fluid.utils.FluidHooks;
 import earth.terrarium.botarium.common.item.ItemStackHolder;
 import net.minecraft.ChatFormatting;
@@ -50,10 +41,11 @@ public class TestNonInterfaceItem extends Item {
             tooltip.add(Component.literal("Water: " + oxygen + "mb / " + oxygenCapacity + "mb").setStyle(Style.EMPTY.withColor(ChatFormatting.GRAY)));
         }
 
-        if (EnergyHooks.isEnergyItem(stack)) {
-            PlatformItemEnergyManager energyManager = EnergyHooks.getItemEnergyManager(stack);
+        if (EnergyApi.isEnergyItem(stack)) {
+            ItemStackHolder itemStackHolder = new ItemStackHolder(stack);
+            EnergyContainer energyManager = EnergyApi.getItemEnergyContainer(itemStackHolder);
             long energy = energyManager.getStoredEnergy();
-            long energyCapacity = energyManager.getCapacity();
+            long energyCapacity = energyManager.getMaxCapacity();
             tooltip.add(Component.literal("Energy: " + energy + "FE / " + energyCapacity + "FE").setStyle(Style.EMPTY.withColor(ChatFormatting.GRAY)));
         }
     }

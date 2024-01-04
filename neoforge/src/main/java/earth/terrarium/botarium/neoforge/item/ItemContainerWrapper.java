@@ -1,0 +1,32 @@
+package earth.terrarium.botarium.neoforge.item;
+
+import earth.terrarium.botarium.common.item.SerializableContainer;
+import earth.terrarium.botarium.neoforge.AutoSerializable;
+import earth.terrarium.botarium.util.Serializable;
+import net.minecraft.core.Direction;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.neoforged.neoforge.capabilities.ICapabilityProvider;
+import net.neoforged.neoforge.items.IItemHandler;
+import net.neoforged.neoforge.items.wrapper.InvWrapper;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+public class ItemContainerWrapper extends InvWrapper implements ICapabilityProvider<BlockEntity, Direction, IItemHandler>, AutoSerializable {
+
+    private final SerializableContainer serializableContainer;
+
+    public ItemContainerWrapper(SerializableContainer inv) {
+        super(inv);
+        this.serializableContainer = inv;
+    }
+
+    @Override
+    public Serializable getSerializable() {
+        return serializableContainer;
+    }
+
+    @Override
+    public @Nullable IItemHandler getCapability(BlockEntity object, Direction object2) {
+        return this;
+    }
+}

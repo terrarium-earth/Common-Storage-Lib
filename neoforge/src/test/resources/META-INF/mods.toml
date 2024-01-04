@@ -1,0 +1,28 @@
+modLoader = "javafml"
+loaderVersion = "[47,)"
+license = "MIT"
+issueTrackerURL = "https://github.com/terrarium-earth/botarium/issues"
+
+[[mods]]
+modId = "testmod"
+version = "1.0.0"
+displayName = "Botarium Test Mod"
+displayURL = "https://modrinth.com/mod/botarium"
+logoFile = "icon.png"
+authors = "CodexAdrian"
+credits = "ThatGravyBoat, Alex Nijjar"
+description = "A crossplatform API for devs that makes transfer and storage of items, fluids and energy easier, as well as some other helpful things"
+
+[[dependencies.testmod]]
+modId = "forge"
+mandatory = true
+versionRange = "[47,)"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.testmod]]
+modId = "minecraft"
+mandatory = true
+versionRange = "[1.20,)"
+ordering = "NONE"
+side = "BOTH"

@@ -2,7 +2,6 @@ package earth.terrarium.botarium.forge.energy;
 
 import earth.terrarium.botarium.common.energy.base.EnergyContainer;
 import earth.terrarium.botarium.common.energy.base.EnergySnapshot;
-import earth.terrarium.botarium.common.energy.base.PlatformEnergyManager;
 import earth.terrarium.botarium.common.energy.impl.SimpleEnergySnapshot;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;

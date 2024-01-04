@@ -1,6 +1,8 @@
 package testmod;
 
-import earth.terrarium.botarium.common.energy.util.EnergyHooks;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
+import earth.terrarium.botarium.common.energy.EnergyApi;
 import earth.terrarium.botarium.common.fluid.base.FluidHolder;
 import earth.terrarium.botarium.common.fluid.impl.SimpleFluidContainer;
 import net.minecraft.core.BlockPos;
@@ -24,6 +26,11 @@ public class TestBlock extends BaseEntityBlock {
         super(properties);
     }
 
+    @Override
+    protected MapCodec<? extends BaseEntityBlock> codec() {
+        return simpleCodec(TestBlock::new);
+    }
+
     @Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos blockPos, BlockState blockState) {
@@ -41,7 +48,7 @@ public class TestBlock extends BaseEntityBlock {
         }
 
         if (!level.isClientSide()) {
-            player.sendSystemMessage(Component.literal("Energy: " + EnergyHooks.getBlockEnergyManager(
+            player.sendSystemMessage(Component.literal("Energy: " + EnergyApi.getBlockEnergyContainer(
                 level.getBlockEntity(blockPos),
                 blockHitResult.getDirection()
             ).getStoredEnergy()));

@@ -16,7 +16,6 @@ import net.msrandom.extensions.annotations.ClassExtension;
 import net.msrandom.extensions.annotations.ExtensionInjectedElement;
 import net.msrandom.extensions.annotations.ImplementedByExtension;
 import net.msrandom.extensions.annotations.ImplementsBaseElement;
-import org.apache.commons.lang3.NotImplementedException;
 
 @ClassExtension(FluidRegistry.class)
 public class FluidRegistryImpl {
