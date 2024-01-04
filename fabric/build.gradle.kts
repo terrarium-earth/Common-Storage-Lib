@@ -11,6 +11,7 @@ dependencies {
     common(project(":common", configuration = "namedElements")) {
         isTransitive = false
     }
+
     testImplementation(project(":common", configuration = "namedElements"))
 
     val minecraftVersion: String by project

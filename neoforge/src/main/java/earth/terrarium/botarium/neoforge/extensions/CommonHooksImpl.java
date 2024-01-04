@@ -6,7 +6,7 @@ import net.msrandom.extensions.annotations.ImplementsBaseElement;
 import net.neoforged.fml.ModList;
 import net.neoforged.neoforge.common.CommonHooks;
 
-@ClassExtension(CommonHooks.class)
+@ClassExtension(earth.terrarium.botarium.util.CommonHooks.class)
 public class CommonHooksImpl {
 
     @ImplementsBaseElement

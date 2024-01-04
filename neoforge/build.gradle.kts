@@ -1,10 +1,11 @@
 architectury {
     platformSetupLoomIde()
+    neoForge()
 }
 
 loom {
     mods {
-        create("testmod") {
+        register("testmod") {
             sourceSet(sourceSets.test.get())
         }
     }

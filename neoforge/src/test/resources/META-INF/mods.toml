@@ -14,15 +14,15 @@ credits = "ThatGravyBoat, Alex Nijjar"
 description = "A crossplatform API for devs that makes transfer and storage of items, fluids and energy easier, as well as some other helpful things"
 
 [[dependencies.testmod]]
-modId = "forge"
-mandatory = true
+modId = "neoforge"
+type = "required"
 versionRange = "[47,)"
 ordering = "NONE"
 side = "BOTH"
 
 [[dependencies.testmod]]
 modId = "minecraft"
-mandatory = true
+type = "required"
 versionRange = "[1.20,)"
 ordering = "NONE"
 side = "BOTH"
