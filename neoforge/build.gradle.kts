@@ -1,5 +1,6 @@
 architectury {
     platformSetupLoomIde()
+    neoForge()
 }
 
 loom {
@@ -17,6 +18,10 @@ val common: Configuration by configurations.creating {
 
 dependencies {
     common(project(":common", configuration = "namedElements")) {
+        isTransitive = false
+    }
+
+    "shadowCommon"(project(path = ":common", configuration = "transformProductionNeoForge")) {
         isTransitive = false
     }
 
