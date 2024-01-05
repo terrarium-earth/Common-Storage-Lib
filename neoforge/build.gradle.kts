@@ -4,7 +4,7 @@ architectury {
 
 loom {
     mods {
-        register("testmod") {
+        create("testmod") {
             sourceSet(sourceSets.test.get())
         }
     }
