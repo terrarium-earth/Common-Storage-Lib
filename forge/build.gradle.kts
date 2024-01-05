@@ -1,6 +1,5 @@
 architectury {
     platformSetupLoomIde()
-    forge()
 }
 
 loom {

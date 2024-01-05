@@ -1,6 +1,5 @@
 architectury {
     platformSetupLoomIde()
-    neoForge()
 }
 
 loom {
