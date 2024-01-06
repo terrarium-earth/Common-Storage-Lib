@@ -10,7 +10,7 @@ import net.neoforged.neoforge.fluids.FluidType;
 import org.apache.commons.lang3.NotImplementedException;
 
 @ClassExtension(FluidHolder.class)
-public class FluidHolderImpl {
+public interface FluidHolderImpl {
     @ImplementsBaseElement
     static FluidHolder of(Fluid fluid) {
         return new ForgeFluidHolder(fluid, FluidType.BUCKET_VOLUME, null);

@@ -2,10 +2,9 @@ package testmod;
 
 import earth.terrarium.botarium.common.energy.EnergyApi;
 import earth.terrarium.botarium.common.energy.base.EnergyContainer;
-import earth.terrarium.botarium.common.energy.base.PlatformItemEnergyManager;
 import earth.terrarium.botarium.common.fluid.FluidApi;
-import earth.terrarium.botarium.common.fluid.base.PlatformFluidItemHandler;
-import earth.terrarium.botarium.common.fluid.utils.FluidHooks;
+import earth.terrarium.botarium.common.fluid.base.FluidContainer;
+import earth.terrarium.botarium.common.fluid.base.FluidHolder;
 import earth.terrarium.botarium.common.item.ItemStackHolder;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -34,9 +33,10 @@ public class TestNonInterfaceItem extends Item {
 
     @Override
     public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltip, TooltipFlag tooltipFlag) {
-        if (FluidHooks.isFluidContainingItem(stack)) {
-            PlatformFluidItemHandler itemFluidManager = FluidHooks.getItemFluidManager(stack);
-            long oxygen = itemFluidManager.getFluidInTank(0).getFluidAmount();
+        if (FluidApi.isFluidContainingItem(stack)) {
+            ItemStackHolder itemStackHolder = new ItemStackHolder(stack);
+            FluidContainer itemFluidManager = FluidApi.getItemFluidContainer(itemStackHolder);
+            long oxygen = itemFluidManager.getFluids().get(0).getFluidAmount();
             long oxygenCapacity = itemFluidManager.getTankCapacity(0);
             tooltip.add(Component.literal("Water: " + oxygen + "mb / " + oxygenCapacity + "mb").setStyle(Style.EMPTY.withColor(ChatFormatting.GRAY)));
         }
@@ -64,17 +64,17 @@ public class TestNonInterfaceItem extends Item {
                 ItemStackHolder from = new ItemStackHolder(player.getMainHandItem());
                 ItemStackHolder to = new ItemStackHolder(player.getOffhandItem());
 
-                PlatformFluidItemHandler itemFluidManager = FluidHooks.getItemFluidManager(from.getStack());
+                FluidContainer itemFluidManager = FluidApi.getItemFluidContainer(from);
 
                 if (player.isShiftKeyDown()) {
-                    if (FluidApi.moveFluid(to, from, FluidHooks.newFluidHolder(BuiltInRegistries.FLUID.get(new ResourceLocation("minecraft", "water")), FluidHooks.buckets(1), null), false) > 0) {
+                    if (FluidApi.moveFluid(to, from, FluidHolder.of(BuiltInRegistries.FLUID.get(new ResourceLocation("minecraft", "water")), FluidApi.fromMillibuckets(1000), null), false) > 0) {
                         level.playSound(null, player.blockPosition(), SoundEvents.GENERIC_DRINK, SoundSource.PLAYERS, 1, 1);
                         if (from.isDirty()) player.setItemInHand(interactionHand, from.getStack());
                         if (to.isDirty()) player.setItemSlot(EquipmentSlot.OFFHAND, to.getStack());
                         return InteractionResultHolder.consume(player.getMainHandItem());
                     }
                 } else {
-                    if (FluidApi.moveFluid(from, to, FluidHooks.newFluidHolder(BuiltInRegistries.FLUID.get(new ResourceLocation("minecraft", "water")), FluidHooks.buckets(1), null), false) > 0) {
+                    if (FluidApi.moveFluid(from, to, FluidHolder.of(BuiltInRegistries.FLUID.get(new ResourceLocation("minecraft", "water")), FluidApi.fromMillibuckets(1000), null), false) > 0) {
                         if (from.isDirty()) player.setItemInHand(interactionHand, from.getStack());
                         if (to.isDirty()) player.setItemSlot(EquipmentSlot.OFFHAND, to.getStack());
                         level.playSound(null, player.blockPosition(), SoundEvents.GENERIC_DRINK, SoundSource.PLAYERS, 1, 1);

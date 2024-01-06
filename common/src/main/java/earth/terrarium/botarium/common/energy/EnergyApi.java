@@ -1,6 +1,7 @@
 package earth.terrarium.botarium.common.energy;
 
 import com.mojang.datafixers.util.Pair;
+import earth.terrarium.botarium.Botarium;
 import earth.terrarium.botarium.common.energy.base.BotariumEnergyBlock;
 import earth.terrarium.botarium.common.energy.base.EnergyContainer;
 import earth.terrarium.botarium.common.item.ItemStackHolder;
@@ -35,7 +36,7 @@ public class EnergyApi {
 
     public static void finalizeBlockRegistration() {
         if (!blocksFinalized) {
-            System.out.println("Finalizing energy block registration");
+            Botarium.LOGGER.debug("Finalizing energy block registration");
             for (Map.Entry<Supplier<BlockEntityType<?>>, BlockEnergyGetter<?>> entry : BLOCK_ENTITY_LOOKUP_MAP.entrySet()) {
                 FINALIZED_BLOCK_ENTITY_LOOKUP_MAP.put(entry.getKey().get(), entry.getValue());
             }
@@ -50,7 +51,7 @@ public class EnergyApi {
 
     public static void finalizeItemRegistration() {
         if (!itemsFinalized) {
-            System.out.println("Finalizing energy item registration");
+            Botarium.LOGGER.debug("Finalizing energy item registration");
             for (Map.Entry<Supplier<Item>, ItemEnergyGetter<?>> entry : ITEM_LOOKUP_MAP.entrySet()) {
                 FINALIZED_ITEM_LOOKUP_MAP.put(entry.getKey().get(), entry.getValue());
             }

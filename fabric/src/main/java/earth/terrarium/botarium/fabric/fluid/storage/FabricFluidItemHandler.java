@@ -51,7 +51,7 @@ public record FabricFluidItemHandler(ItemStack stack, ContainerItemContext conte
                 transaction.commit();
                 item.setStack(context.getItemVariant().toStack());
             }
-            return extracted == 0 ? FluidHooks.emptyFluid() : FabricFluidHolder.of(fabricFluidHolder.toVariant(), extracted);
+            return extracted == 0 ? FluidHolder.empty() : FabricFluidHolder.of(fabricFluidHolder.toVariant(), extracted);
         }
     }
 

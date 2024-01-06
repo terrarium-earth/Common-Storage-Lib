@@ -92,10 +92,10 @@ public class FluidIngredient implements Predicate<FluidHolder> {
     }
 
     public record FluidValue(FluidHolder fluid) implements Value {
-        private static final Codec<FluidValue> NEW_CODEC = FluidHolder.CODEC.orElse(FluidHooks.emptyFluid())
+        private static final Codec<FluidValue> NEW_CODEC = FluidHolder.MILLIBUCKET_CODEC.orElse(FluidHolder.empty())
             .xmap(FluidValue::new, FluidValue::fluid);
         private static final Codec<FluidValue> OLD_CODEC = RecordCodecBuilder.create(instance -> instance.group(
-            FluidHolder.CODEC.fieldOf("fluid").orElse(FluidHooks.emptyFluid()).forGetter(FluidValue::fluid)
+            FluidHolder.MILLIBUCKET_CODEC.fieldOf("fluid").orElse(FluidHolder.empty()).forGetter(FluidValue::fluid)
         ).apply(instance, FluidValue::new));
         public static final Codec<FluidValue> CODEC = Codec.either(NEW_CODEC, OLD_CODEC).xmap(p -> p.map(a -> a, b -> b), Either::left);
 

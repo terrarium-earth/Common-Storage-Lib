@@ -1,10 +1,10 @@
 package earth.terrarium.botarium.common.fluid;
 
+import earth.terrarium.botarium.Botarium;
 import earth.terrarium.botarium.common.fluid.base.FluidContainer;
 import earth.terrarium.botarium.common.fluid.base.FluidHolder;
 import earth.terrarium.botarium.common.fluid.base.ItemFluidContainer;
 import earth.terrarium.botarium.common.fluid.base.PlatformFluidHandler;
-import earth.terrarium.botarium.common.fluid.utils.FluidHooks;
 import earth.terrarium.botarium.common.item.ItemStackHolder;
 import earth.terrarium.botarium.util.Updatable;
 import net.minecraft.core.BlockPos;
@@ -44,7 +44,7 @@ public class FluidApi {
 
     public static void finalizeBlockRegistration() {
         if (!blocksFinalized) {
-            System.out.println("Finalizing fluid block registration");
+            Botarium.LOGGER.debug("Finalizing fluid block registration");
             for (Map.Entry<Supplier<BlockEntityType<?>>, BlockFluidGetter<?>> entry : BLOCK_ENTITY_LOOKUP_MAP.entrySet()) {
                 FINALIZED_BLOCK_ENTITY_LOOKUP_MAP.put(entry.getKey().get(), entry.getValue());
             }
@@ -57,7 +57,7 @@ public class FluidApi {
 
     public static void finalizeItemRegistration() {
         if (!itemsFinalized) {
-            System.out.println("Finalizing fluid item registration");
+            Botarium.LOGGER.debug("Finalizing fluid item registration");
             for (Map.Entry<Supplier<Item>, ItemFluidGetter<?>> entry : ITEM_LOOKUP_MAP.entrySet()) {
                 FINALIZED_ITEM_LOOKUP_MAP.put(entry.getKey().get(), entry.getValue());
             }
@@ -220,7 +220,7 @@ public class FluidApi {
     }
 
     public static FluidHolder readFromBuffer(FriendlyByteBuf buffer) {
-        if (!buffer.readBoolean()) return FluidHooks.emptyFluid();
+        if (!buffer.readBoolean()) return FluidHolder.empty();
         Fluid fluid = BuiltInRegistries.FLUID.byId(buffer.readVarInt());
         long amount = buffer.readVarLong();
         return FluidHolder.of(fluid, amount, buffer.readNbt());
@@ -237,7 +237,7 @@ public class FluidApi {
     public static long moveFluid(FluidContainer from, FluidContainer to, FluidHolder amount, boolean simulate) {
         FluidHolder extracted = from.extractFluid(amount, true);
         long inserted = to.insertFluid(extracted, true);
-        FluidHolder toInsert = newFluidHolder(amount.getFluid(), inserted, amount.getCompound());
+        FluidHolder toInsert = FluidHolder.of(amount.getFluid(), inserted, amount.getCompound());
         FluidHolder simulatedExtraction = from.extractFluid(toInsert, true);
         if (!simulate && inserted > 0 && simulatedExtraction.getFluidAmount() == inserted) {
             from.extractFluid(toInsert, false);

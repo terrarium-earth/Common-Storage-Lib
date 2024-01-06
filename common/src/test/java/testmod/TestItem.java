@@ -5,7 +5,9 @@ import earth.terrarium.botarium.common.energy.base.BotariumEnergyItem;
 import earth.terrarium.botarium.common.energy.base.EnergyContainer;
 import earth.terrarium.botarium.common.energy.impl.SimpleEnergyContainer;
 import earth.terrarium.botarium.common.energy.impl.WrappedItemEnergyContainer;
+import earth.terrarium.botarium.common.fluid.FluidApi;
 import earth.terrarium.botarium.common.fluid.base.BotariumFluidItem;
+import earth.terrarium.botarium.common.fluid.base.FluidContainer;
 import earth.terrarium.botarium.common.fluid.base.PlatformFluidItemHandler;
 import earth.terrarium.botarium.common.fluid.impl.SimpleFluidContainer;
 import earth.terrarium.botarium.common.fluid.impl.WrappedItemFluidContainer;
@@ -42,9 +44,10 @@ public class TestItem extends Item implements BotariumEnergyItem<WrappedItemEner
 
     @Override
     public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltip, TooltipFlag tooltipFlag) {
-        if (FluidHooks.isFluidContainingItem(stack)) {
-            PlatformFluidItemHandler itemFluidManager = FluidHooks.getItemFluidManager(stack);
-            long oxygen = itemFluidManager.getFluidInTank(0).getFluidAmount();
+        if (FluidApi.isFluidContainingItem(stack)) {
+            ItemStackHolder holder = new ItemStackHolder(stack);
+            FluidContainer itemFluidManager = FluidApi.getItemFluidContainer(holder);
+            long oxygen = itemFluidManager.getFluids().get(0).getFluidAmount();
             long oxygenCapacity = itemFluidManager.getTankCapacity(0);
             tooltip.add(Component.literal("Water: " + oxygen + "mb / " + oxygenCapacity + "mb").setStyle(Style.EMPTY.withColor(ChatFormatting.GRAY)));
         }

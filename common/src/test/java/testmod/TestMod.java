@@ -56,7 +56,7 @@ public class TestMod {
         FLUID_TYPES.initialize();
         FLUIDS.initialize();
 
-        FluidApi.registerFluidItem(EXAMPLE_ITEM_NO_INTERFACE, stack -> new WrappedItemFluidContainer(stack, new SimpleFluidContainer(FluidApi.buckets(1), 1, (integer, fluidHolder) -> true)));
+        FluidApi.registerFluidItem(EXAMPLE_ITEM_NO_INTERFACE, stack -> new WrappedItemFluidContainer(stack, new SimpleFluidContainer(FluidApi.fromMillibuckets(1000), 1, (integer, fluidHolder) -> true)));
         EnergyApi.registerEnergyItem(EXAMPLE_ITEM_NO_INTERFACE, stack -> new WrappedItemEnergyContainer(stack, new SimpleEnergyContainer(100000)));
     }
 }

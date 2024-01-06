@@ -45,12 +45,6 @@ public class FluidApiImpl {
     }
 
     @ImplementsBaseElement
-    public static FluidHolder fluidFromCompound(CompoundTag compoundTag) {
-        return ForgeFluidHolder.fromCompound(compoundTag);
-    }
-
-
-    @ImplementsBaseElement
     public static long toMillibuckets(long amount) {
         return amount;
     }

@@ -25,13 +25,13 @@ public interface FluidHolder {
         BuiltInRegistries.FLUID.byNameCodec().fieldOf("fluid").forGetter(FluidHolder::getFluid),
         Codec.FLOAT.fieldOf("buckets").orElse(1f).forGetter(fluidHolder -> (float) fluidHolder.getFluidAmount() / FluidApi.getBucketAmount()),
         CompoundTag.CODEC.optionalFieldOf("tag").forGetter(fluidHolder -> Optional.ofNullable(fluidHolder.getCompound()))
-    ).apply(instance, (fluid, buckets, compoundTag) -> FluidApi.newFluidHolder(fluid, FluidApi.fromMillibuckets((long) (buckets * 1000L)), compoundTag.orElse(null))));
+    ).apply(instance, (fluid, buckets, compoundTag) -> FluidHolder.of(fluid, FluidApi.fromMillibuckets((long) (buckets * 1000L)), compoundTag.orElse(null))));
 
     Codec<FluidHolder> MILLIBUCKET_CODEC = RecordCodecBuilder.create(instance -> instance.group(
             BuiltInRegistries.FLUID.byNameCodec().fieldOf("fluid").forGetter(FluidHolder::getFluid),
             Codec.LONG.fieldOf("millibuckets").orElse(1000L).forGetter(fluidHolder -> FluidApi.toMillibuckets(fluidHolder.getFluidAmount())),
             CompoundTag.CODEC.optionalFieldOf("tag").forGetter(fluidHolder -> Optional.ofNullable(fluidHolder.getCompound()))
-    ).apply(instance, (fluid, buckets, compoundTag) -> FluidApi.newFluidHolder(fluid, FluidApi.fromMillibuckets(buckets), compoundTag.orElse(null))));
+    ).apply(instance, (fluid, buckets, compoundTag) -> FluidHolder.of(fluid, FluidApi.fromMillibuckets(buckets), compoundTag.orElse(null))));
 
     @ImplementedByExtension
     static FluidHolder of(Fluid fluid) {
