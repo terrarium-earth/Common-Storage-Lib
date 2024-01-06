@@ -4,14 +4,26 @@ import earth.terrarium.botarium.common.fluid.base.FluidContainer;
 import earth.terrarium.botarium.common.fluid.base.FluidHolder;
 import earth.terrarium.botarium.common.fluid.base.FluidSnapshot;
 import earth.terrarium.botarium.common.fluid.impl.SimpleFluidSnapshot;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public record PlatformBlockFluidHandler(IFluidHandler handler) implements FluidContainer {
+
+    public static PlatformBlockFluidHandler of(Level level, BlockPos pos, BlockState state, @Nullable BlockEntity entity, @Nullable Direction direction) {
+        var cap = level.getCapability(Capabilities.FluidHandler.BLOCK, pos, state, entity, direction);
+        return cap != null ? new PlatformBlockFluidHandler(cap) : null;
+    }
 
     @Override
     public long insertFluid(FluidHolder fluid, boolean simulate) {

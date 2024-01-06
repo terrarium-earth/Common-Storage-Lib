@@ -1,7 +1,7 @@
 package testmod;
 
-import earth.terrarium.botarium.common.fluid.base.PlatformFluidHandler;
-import earth.terrarium.botarium.common.fluid.utils.FluidHooks;
+import earth.terrarium.botarium.common.fluid.FluidApi;
+import earth.terrarium.botarium.common.fluid.base.FluidContainer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -19,11 +19,11 @@ public class ExampleN2SPipeBlockEntity extends TestBlockEntity {
             BlockEntity forwardBlock = level.getBlockEntity(getBlockPos().north());
             BlockEntity backBlock = level.getBlockEntity(getBlockPos().south());
 
-            PlatformFluidHandler forwardTank = FluidHooks.safeGetBlockFluidManager(forwardBlock, Direction.NORTH).orElse(null);
-            PlatformFluidHandler backTank = FluidHooks.safeGetBlockFluidManager(backBlock, Direction.SOUTH).orElse(null);
+            FluidContainer forwardTank = FluidApi.getBlockFluidContainer(forwardBlock, Direction.NORTH);
+            FluidContainer backTank = FluidApi.getBlockFluidContainer(backBlock, Direction.SOUTH);
 
-            if (forwardTank != null && backTank != null && !forwardTank.getFluidInTank(0).isEmpty()) {
-                FluidHooks.moveFluid(forwardTank, backTank, forwardTank.getFluidInTank(0));
+            if (forwardTank != null && backTank != null && !forwardTank.getFluids().get(0).isEmpty()) {
+                FluidApi.moveFluid(forwardTank, backTank, forwardTank.getFluids().get(0), false);
             }
         }
     }

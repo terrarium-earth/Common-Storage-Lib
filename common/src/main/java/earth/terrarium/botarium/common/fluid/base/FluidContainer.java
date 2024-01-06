@@ -1,12 +1,53 @@
 package earth.terrarium.botarium.common.fluid.base;
 
+import earth.terrarium.botarium.common.item.ItemStackHolder;
 import earth.terrarium.botarium.util.Serializable;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.Clearable;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.msrandom.extensions.annotations.ImplementedByExtension;
+import org.apache.commons.lang3.NotImplementedException;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
+@SuppressWarnings({"BooleanMethodIsAlwaysInverted", "DataFlowIssue"})
 public interface FluidContainer extends Serializable, Clearable {
+
+    @Nullable
+    @ImplementedByExtension
+    static FluidContainer of(Level level, BlockPos pos, BlockState state, @Nullable BlockEntity entity, @Nullable Direction direction) {
+        throw new NotImplementedException();
+    }
+
+    @Nullable
+    static FluidContainer of(BlockEntity block, @Nullable Direction direction) {
+        return FluidContainer.of(block.getLevel(), block.getBlockPos(), block.getBlockState(), block, direction);
+    }
+
+    @Nullable
+    @ImplementedByExtension
+    static FluidContainer of(ItemStackHolder holder) {
+        throw new NotImplementedException();
+    }
+
+    @ImplementedByExtension
+    static boolean holdsFluid(ItemStack stack) {
+        throw new NotImplementedException();
+    }
+
+    @ImplementedByExtension
+    static boolean holdsFluid(Level level, BlockPos pos, BlockState state, @Nullable BlockEntity entity, @Nullable Direction direction) {
+        throw new NotImplementedException();
+    }
+
+    static boolean holdsFluid(BlockEntity block, @Nullable Direction direction) {
+        return FluidContainer.holdsFluid(block.getLevel(), block.getBlockPos(), block.getBlockState(), block, direction);
+    }
 
     /**
      * Inserts a {@link FluidHolder} into the container.
@@ -106,14 +147,6 @@ public interface FluidContainer extends Serializable, Clearable {
      * @return Weather can be extracted from.
      */
     boolean allowsExtraction();
-
-    /**
-     * @param direction The direction to check.
-     * @return A {@link FluidContainer} from the given {@link Direction}.
-     */
-    default FluidContainer getContainer(Direction direction) {
-        return this;
-    }
 
     /**
      * @return A {@link FluidSnapshot} of the given state of the {@link FluidContainer}.

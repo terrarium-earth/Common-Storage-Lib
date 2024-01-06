@@ -6,8 +6,16 @@ import earth.terrarium.botarium.util.Updatable;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
 
+/**
+ * Represents a wrapped energy container for an item.
+ * This class implements the EnergyContainer interface and the Updatable interface.
+ * It delegates energy-related operations to the wrapped energy container, and updates the item when the energy is changed.
+ *
+ * @param stack The item stack.
+ * @param container The wrapped energy container. Botarium provides a default implementation for this with {@link SimpleEnergyContainer}.
+ */
 public record WrappedItemEnergyContainer(ItemStack stack,
-                                         EnergyContainer container) implements EnergyContainer, Updatable<ItemStack> {
+                                         EnergyContainer container) implements EnergyContainer, Updatable {
 
     public WrappedItemEnergyContainer {
         container.deserialize(stack.getOrCreateTag());
@@ -26,14 +34,14 @@ public record WrappedItemEnergyContainer(ItemStack stack,
     @Override
     public long internalInsert(long amount, boolean simulate) {
         long l = container.internalInsert(amount, simulate);
-        if (!simulate) update(stack);
+        if (!simulate) update();
         return l;
     }
 
     @Override
     public long internalExtract(long amount, boolean simulate) {
         long extracted = container.internalExtract(amount, simulate);
-        if (!simulate) update(stack);
+        if (!simulate) update();
         return extracted;
     }
 
@@ -88,13 +96,13 @@ public record WrappedItemEnergyContainer(ItemStack stack,
     }
 
     @Override
-    public void update(ItemStack object) {
-        container.serialize(object.getOrCreateTag());
+    public void update() {
+        container.serialize(stack.getOrCreateTag());
     }
 
     @Override
     public void clearContent() {
         container.clearContent();
-        update(stack);
+        update();
     }
 }

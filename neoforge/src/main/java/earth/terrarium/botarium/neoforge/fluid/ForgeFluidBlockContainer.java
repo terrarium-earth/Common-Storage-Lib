@@ -13,7 +13,7 @@ import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public record ForgeFluidBlockContainer<T extends FluidContainer & Updatable<BlockEntity>>(
+public record ForgeFluidBlockContainer<T extends FluidContainer & Updatable>(
         T container) implements IFluidHandler, ICapabilityProvider<BlockEntity, Direction, IFluidHandler>, AutoSerializable {
 
     @Override

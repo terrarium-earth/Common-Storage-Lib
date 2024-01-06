@@ -22,7 +22,7 @@ import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
 
 @Mod(Botarium.MOD_ID)
-@SuppressWarnings("unchecked")
+@SuppressWarnings("unused")
 public class BotariumForge {
 
     public BotariumForge() {
@@ -33,47 +33,22 @@ public class BotariumForge {
     }
 
     public static void attachBlockCapabilities(AttachCapabilitiesEvent<BlockEntity> event) {
-        EnergyApi.finalizeBlockRegistration();
-        FluidApi.finalizeBlockRegistration();
-
         if (event.getObject() instanceof BotariumEnergyBlock<?> energyBlock) {
-            event.addCapability(new ResourceLocation(Botarium.MOD_ID, "energy"), new ForgeEnergyContainer<>(energyBlock.getEnergyStorage(), event.getObject()));
+            event.addCapability(new ResourceLocation(Botarium.MOD_ID, "energy"), new ForgeEnergyContainer(energyBlock, event.getObject()));
         }
 
-        EnergyApi.BlockEnergyGetter<?> blockEnergyGetter = EnergyApi.FINALIZED_BLOCK_ENTITY_LOOKUP_MAP.get(event.getObject().getType());
+        BotariumEnergyBlock<?> blockEnergyGetter = EnergyApi.getEnergyBlock(event.getObject().getType());
         if (blockEnergyGetter != null) {
-            var energyContainer = blockEnergyGetter.getEnergyContainer(event.getObject().getLevel(), event.getObject().getBlockPos(), event.getObject().getBlockState(), event.getObject(), null);
-            if (energyContainer != null) {
-                event.addCapability(new ResourceLocation(Botarium.MOD_ID, "energy"), new ForgeEnergyContainer<>(energyContainer, event.getObject()));
-            }
-        }
-
-        EnergyApi.BlockEnergyGetter<?> nonEntityEnergyGetter = EnergyApi.FINALIZED_BLOCK_LOOKUP_MAP.get(event.getObject().getBlockState().getBlock());
-        if (nonEntityEnergyGetter != null) {
-            var nonEntityEnergyContainer = nonEntityEnergyGetter.getEnergyContainer(event.getObject().getLevel(), event.getObject().getBlockPos(), event.getObject().getBlockState(), event.getObject(), null);
-            if (nonEntityEnergyContainer != null) {
-                event.addCapability(new ResourceLocation(Botarium.MOD_ID, "energy"), new ForgeEnergyContainer<>(nonEntityEnergyContainer, event.getObject()));
-            }
+            event.addCapability(new ResourceLocation(Botarium.MOD_ID, "energy"), new ForgeEnergyContainer(blockEnergyGetter, event.getObject()));
         }
 
         if (event.getObject() instanceof BotariumFluidBlock<?> fluidHoldingBlock) {
-            event.addCapability(new ResourceLocation(Botarium.MOD_ID, "fluid"), new ForgeFluidContainer<>(fluidHoldingBlock.getFluidContainer(), event.getObject()));
+            event.addCapability(new ResourceLocation(Botarium.MOD_ID, "fluid"), new ForgeFluidContainer(fluidHoldingBlock, event.getObject()));
         }
 
-        FluidApi.BlockFluidGetter<?> blockFluidGetter = FluidApi.FINALIZED_BLOCK_ENTITY_LOOKUP_MAP.get(event.getObject().getType());
+        BotariumFluidBlock<?> blockFluidGetter = FluidApi.FINALIZED_BLOCK_ENTITY_LOOKUP_MAP.get(event.getObject().getType());
         if (blockFluidGetter != null) {
-            var fluidContainer = blockFluidGetter.getFluidContainer(event.getObject().getLevel(), event.getObject().getBlockPos(), event.getObject().getBlockState(), event.getObject(), null);
-            if (fluidContainer != null) {
-                event.addCapability(new ResourceLocation(Botarium.MOD_ID, "fluid"), new ForgeFluidContainer<>(fluidContainer, event.getObject()));
-            }
-        }
-
-        FluidApi.BlockFluidGetter<?> nonEntityBlockFluidGetter = FluidApi.FINALIZED_BLOCK_LOOKUP_MAP.get(event.getObject().getBlockState().getBlock());
-        if (nonEntityBlockFluidGetter != null) {
-            var nonEntityFluidContainer = nonEntityBlockFluidGetter.getFluidContainer(event.getObject().getLevel(), event.getObject().getBlockPos(), event.getObject().getBlockState(), event.getObject(), null);
-            if (nonEntityFluidContainer != null) {
-                event.addCapability(new ResourceLocation(Botarium.MOD_ID, "fluid"), new ForgeFluidContainer<>(nonEntityFluidContainer, event.getObject()));
-            }
+            event.addCapability(new ResourceLocation(Botarium.MOD_ID, "fluid"), new ForgeFluidContainer(blockFluidGetter, event.getObject()));
         }
 
         if (event.getObject() instanceof ItemContainerBlock itemContainerBlock) {
@@ -82,30 +57,27 @@ public class BotariumForge {
     }
 
     public static void attachItemCapabilities(AttachCapabilitiesEvent<ItemStack> event) {
-        EnergyApi.finalizeItemRegistration();
-        FluidApi.finalizeItemRegistration();
-
         if (event.getObject().getItem() instanceof BotariumEnergyItem<?> energyItem) {
-            event.addCapability(new ResourceLocation(Botarium.MOD_ID, "energy"), new ForgeItemEnergyContainer<>(energyItem.getEnergyStorage(event.getObject()), event.getObject()));
+            event.addCapability(new ResourceLocation(Botarium.MOD_ID, "energy"), new ForgeItemEnergyContainer<>(energyItem.getEnergyStorage(event.getObject())));
         }
 
-        EnergyApi.ItemEnergyGetter<?> itemEnergyGetter = EnergyApi.FINALIZED_ITEM_LOOKUP_MAP.get(event.getObject().getItem());
+        BotariumEnergyItem<?> itemEnergyGetter = EnergyApi.getEnergyItem(event.getObject().getItem());
         if (itemEnergyGetter != null) {
-            var energyContainer = itemEnergyGetter.getEnergyContainer(event.getObject());
+            var energyContainer = itemEnergyGetter.getEnergyStorage(event.getObject());
             if (energyContainer != null) {
-                event.addCapability(new ResourceLocation(Botarium.MOD_ID, "energy"), new ForgeItemEnergyContainer<>(energyContainer, event.getObject()));
+                event.addCapability(new ResourceLocation(Botarium.MOD_ID, "energy"), new ForgeItemEnergyContainer<>(energyContainer));
             }
         }
 
         if (event.getObject().getItem() instanceof BotariumFluidItem<?> fluidHoldingItem) {
-            event.addCapability(new ResourceLocation(Botarium.MOD_ID, "fluid"), new ForgeItemFluidContainer<>(fluidHoldingItem.getFluidContainer(event.getObject()), event.getObject()));
+            event.addCapability(new ResourceLocation(Botarium.MOD_ID, "fluid"), new ForgeItemFluidContainer<>(fluidHoldingItem.getFluidContainer(event.getObject())));
         }
 
-        FluidApi.ItemFluidGetter<?> itemFluidGetter = FluidApi.FINALIZED_ITEM_LOOKUP_MAP.get(event.getObject().getItem());
+        var itemFluidGetter = FluidApi.FINALIZED_ITEM_LOOKUP_MAP.get(event.getObject().getItem());
         if (itemFluidGetter != null) {
             var fluidContainer = itemFluidGetter.getFluidContainer(event.getObject());
             if (fluidContainer != null) {
-                event.addCapability(new ResourceLocation(Botarium.MOD_ID, "fluid"), new ForgeItemFluidContainer<>(fluidContainer, event.getObject()));
+                event.addCapability(new ResourceLocation(Botarium.MOD_ID, "fluid"), new ForgeItemFluidContainer<>(fluidContainer));
             }
         }
     }

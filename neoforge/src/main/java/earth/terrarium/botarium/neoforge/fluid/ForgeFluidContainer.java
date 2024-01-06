@@ -13,8 +13,7 @@ import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public record ForgeFluidContainer<T extends FluidContainer & Updatable<BlockEntity>>(
-        T container, BlockEntity entity) implements IFluidHandler, ICapabilityProvider<BlockEntity, Direction, IFluidHandler>, AutoSerializable {
+public record ForgeFluidContainer<T extends FluidContainer & Updatable>(T container) implements IFluidHandler, ICapabilityProvider<BlockEntity, Direction, IFluidHandler>, AutoSerializable {
 
     @Override
     public int getTanks() {
@@ -39,14 +38,14 @@ public record ForgeFluidContainer<T extends FluidContainer & Updatable<BlockEnti
     @Override
     public int fill(FluidStack fluidStack, FluidAction fluidAction) {
         int i = (int) this.container.insertFluid(new ForgeFluidHolder(fluidStack), fluidAction.simulate());
-        if (i > 0 && fluidAction.execute()) this.container.update(entity);
+        if (i > 0 && fluidAction.execute()) this.container.update();
         return i;
     }
 
     @Override
     public @NotNull FluidStack drain(FluidStack fluidStack, FluidAction fluidAction) {
         FluidStack fluidStack1 = new ForgeFluidHolder(this.container.extractFluid(new ForgeFluidHolder(fluidStack), fluidAction.simulate())).getFluidStack();
-        if(!fluidStack1.isEmpty() && fluidAction.execute()) this.container.update(entity);
+        if(!fluidStack1.isEmpty() && fluidAction.execute()) this.container.update();
         return fluidStack1;
     }
 
@@ -56,7 +55,7 @@ public record ForgeFluidContainer<T extends FluidContainer & Updatable<BlockEnti
         if (fluid.isEmpty()) return FluidStack.EMPTY;
         fluid.setAmount(i);
         FluidStack fluidStack = new ForgeFluidHolder(this.container.extractFluid(fluid, fluidAction.simulate())).getFluidStack();
-        if(!fluidStack.isEmpty() && fluidAction.execute()) this.container.update(entity);
+        if(!fluidStack.isEmpty() && fluidAction.execute()) this.container.update();
         return fluidStack;
     }
 

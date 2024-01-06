@@ -4,18 +4,23 @@ import earth.terrarium.botarium.common.energy.base.EnergyContainer;
 import earth.terrarium.botarium.common.energy.base.EnergySnapshot;
 import earth.terrarium.botarium.common.energy.impl.SimpleEnergySnapshot;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.Nullable;
 import team.reborn.energy.api.EnergyStorage;
 
 @ApiStatus.Internal
-@SuppressWarnings("UnstableApiUsage")
 public record PlatformEnergyManager(EnergyStorage energy) implements EnergyContainer {
 
-    public PlatformEnergyManager(BlockEntity entity, Direction direction) {
-        this(EnergyStorage.SIDED.find(entity.getLevel(), entity.getBlockPos(), direction));
+    @Nullable
+    public static PlatformEnergyManager of(Level level, BlockPos pos, BlockState state, @Nullable BlockEntity entity, @Nullable Direction direction) {
+        EnergyStorage fabricEnergy = EnergyStorage.SIDED.find(level, pos, state, entity, direction);
+        return fabricEnergy == null ? null : new PlatformEnergyManager(fabricEnergy);
     }
 
     @Override

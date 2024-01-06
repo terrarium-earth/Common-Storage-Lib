@@ -10,8 +10,16 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 
 import java.util.List;
 
+/**
+ * Represents a wrapped fluid container for a block entity.
+ * This class implements the FluidContainer interface and the Updatable interface.
+ * It delegates fluid-related operations to the wrapped fluid container, and updates the block entity when the fluid is changed.
+ *
+ * @param block     The block entity.
+ * @param container The wrapped fluid container. Botarium provides a default implementation for this with {@link SimpleFluidContainer}.
+ */
 public record WrappedBlockFluidContainer(BlockEntity block,
-                                         FluidContainer container) implements FluidContainer, Updatable<BlockEntity> {
+                                         FluidContainer container) implements FluidContainer, Updatable {
     @Override
     public long insertFluid(FluidHolder fluid, boolean simulate) {
         return container.insertFluid(fluid, simulate);
@@ -20,7 +28,7 @@ public record WrappedBlockFluidContainer(BlockEntity block,
     @Override
     public long internalInsert(FluidHolder fluids, boolean simulate) {
         long inserted = container.internalInsert(fluids, simulate);
-        if (!simulate) update(block);
+        if (!simulate) update();
         return inserted;
     }
 
@@ -32,7 +40,7 @@ public record WrappedBlockFluidContainer(BlockEntity block,
     @Override
     public FluidHolder internalExtract(FluidHolder fluid, boolean simulate) {
         FluidHolder extracted = container.internalExtract(fluid, simulate);
-        if (!simulate) update(block);
+        if (!simulate) update();
         return extracted;
     }
 
@@ -74,7 +82,7 @@ public record WrappedBlockFluidContainer(BlockEntity block,
     @Override
     public long extractFromSlot(FluidHolder fluidHolder, FluidHolder toInsert, Runnable snapshot) {
         long extract = container.extractFromSlot(fluidHolder, toInsert, snapshot);
-        update(block);
+        update();
         return extract;
     }
 
@@ -104,7 +112,7 @@ public record WrappedBlockFluidContainer(BlockEntity block,
     }
 
     @Override
-    public void update(BlockEntity block) {
+    public void update() {
         block.setChanged();
         block.getLevel().sendBlockUpdated(block.getBlockPos(), block.getBlockState(), block.getBlockState(), Block.UPDATE_ALL);
     }

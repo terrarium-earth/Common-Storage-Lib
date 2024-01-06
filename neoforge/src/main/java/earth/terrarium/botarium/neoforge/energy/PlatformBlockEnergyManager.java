@@ -2,23 +2,27 @@ package earth.terrarium.botarium.neoforge.energy;
 
 import earth.terrarium.botarium.common.energy.base.EnergyContainer;
 import earth.terrarium.botarium.common.energy.base.EnergySnapshot;
-import earth.terrarium.botarium.common.energy.base.PlatformEnergyManager;
 import earth.terrarium.botarium.common.energy.impl.SimpleEnergySnapshot;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.energy.IEnergyStorage;
 import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 
 @ApiStatus.Internal
 public record PlatformBlockEnergyManager(IEnergyStorage energy) implements EnergyContainer {
 
-    @SuppressWarnings("UnstableApiUsage")
-    public PlatformBlockEnergyManager(BlockEntity energyItem, Direction direction) {
-        this(Objects.requireNonNull(Objects.requireNonNull(energyItem.getLevel()).getCapability(Capabilities.EnergyStorage.BLOCK, energyItem.getBlockPos(), energyItem.getBlockState(), energyItem, direction), "Energy capability is somehow null right now"));
+    @Nullable
+    public static EnergyContainer of(Level level, BlockPos pos, BlockState state, @Nullable BlockEntity entity, @Nullable Direction direction) {
+        var energy = level.getCapability(Capabilities.EnergyStorage.BLOCK, pos, state, entity, direction);
+        return energy != null ? new PlatformBlockEnergyManager(energy) : null;
     }
 
     @Override

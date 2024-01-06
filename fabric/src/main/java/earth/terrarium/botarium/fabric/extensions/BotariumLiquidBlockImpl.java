@@ -7,10 +7,10 @@ import net.msrandom.extensions.annotations.ClassExtension;
 import net.msrandom.extensions.annotations.ImplementsBaseElement;
 
 @ClassExtension(BotariumLiquidBlock.class)
-public class BoatariumLiquidBlockImpl extends LiquidBlock {
+public class BotariumLiquidBlockImpl extends LiquidBlock {
 
     @ImplementsBaseElement
-    public BoatariumLiquidBlockImpl(FluidData data, Properties properties) {
+    public BotariumLiquidBlockImpl(FluidData data, Properties properties) {
         super(data.getFlowingFluid().get(), properties);
         data.setBlock(() -> this);
     }

@@ -10,24 +10,24 @@ import net.msrandom.extensions.annotations.ImplementsBaseElement;
 import org.apache.commons.lang3.NotImplementedException;
 
 @ClassExtension(FluidHolder.class)
-public class FluidHolderImpl {
+public interface FluidHolderImpl {
     @ImplementsBaseElement
-    public static FluidHolder of(Fluid fluid) {
+    static FluidHolder of(Fluid fluid) {
         return new ForgeFluidHolder(fluid, FluidType.BUCKET_VOLUME, null);
     }
 
     @ImplementsBaseElement
-    public static FluidHolder of(Fluid fluid, long amount, CompoundTag tag) {
+    static FluidHolder of(Fluid fluid, long amount, CompoundTag tag) {
         return new ForgeFluidHolder(fluid, (int) amount, tag);
     }
 
     @ImplementsBaseElement
-    public static FluidHolder fromCompound(CompoundTag tag) {
+    static FluidHolder fromCompound(CompoundTag tag) {
         return ForgeFluidHolder.fromCompound(tag);
     }
 
     @ImplementsBaseElement
-    public static FluidHolder empty() {
+    static FluidHolder empty() {
         return ForgeFluidHolder.empty();
     }
 }

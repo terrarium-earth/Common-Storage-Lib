@@ -3,9 +3,9 @@ package earth.terrarium.botarium.common.energy;
 import com.mojang.datafixers.util.Pair;
 import earth.terrarium.botarium.Botarium;
 import earth.terrarium.botarium.common.energy.base.BotariumEnergyBlock;
+import earth.terrarium.botarium.common.energy.base.BotariumEnergyItem;
 import earth.terrarium.botarium.common.energy.base.EnergyContainer;
 import earth.terrarium.botarium.common.item.ItemStackHolder;
-import earth.terrarium.botarium.util.Updatable;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.Item;
@@ -21,73 +21,83 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
+import java.util.function.BiConsumer;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
+@SuppressWarnings("DataFlowIssue")
 public class EnergyApi {
-    private static final Map<Supplier<BlockEntityType<?>>, BlockEnergyGetter<?>> BLOCK_ENTITY_LOOKUP_MAP = new HashMap<>();
-    private static final Map<Supplier<Block>, BlockEnergyGetter<?>> BLOCK_LOOKUP_MAP = new HashMap<>();
-    private static final Map<Supplier<Item>, ItemEnergyGetter<?>> ITEM_LOOKUP_MAP = new HashMap<>();
+    private static final Map<Supplier<BlockEntityType<?>>, BotariumEnergyBlock<?>> BLOCK_ENTITY_LOOKUP_MAP = new HashMap<>();
+    private static final Map<Supplier<Block>, BotariumEnergyBlock<?>> BLOCK_LOOKUP_MAP = new HashMap<>();
+    private static final Map<Supplier<Item>, BotariumEnergyItem<?>> ITEM_LOOKUP_MAP = new HashMap<>();
 
-    public static final Map<BlockEntityType<?>, BlockEnergyGetter<?>> FINALIZED_BLOCK_ENTITY_LOOKUP_MAP = new HashMap<>();
-    public static final Map<Block, BlockEnergyGetter<?>> FINALIZED_BLOCK_LOOKUP_MAP = new HashMap<>();
-    public static boolean blocksFinalized = false;
-    public static final Map<Item, ItemEnergyGetter<?>> FINALIZED_ITEM_LOOKUP_MAP = new HashMap<>();
-    public static boolean itemsFinalized = false;
+    private static Map<BlockEntityType<?>, BotariumEnergyBlock<?>> FINALIZED_BLOCK_ENTITY_LOOKUP_MAP = null;
+    private static Map<Block, BotariumEnergyBlock<?>> FINALIZED_BLOCK_LOOKUP_MAP = null;
+    private static Map<Item, BotariumEnergyItem<?>> FINALIZED_ITEM_LOOKUP_MAP = null;
 
-    public static void finalizeBlockRegistration() {
-        if (!blocksFinalized) {
-            Botarium.LOGGER.debug("Finalizing energy block registration");
-            for (Map.Entry<Supplier<BlockEntityType<?>>, BlockEnergyGetter<?>> entry : BLOCK_ENTITY_LOOKUP_MAP.entrySet()) {
-                FINALIZED_BLOCK_ENTITY_LOOKUP_MAP.put(entry.getKey().get(), entry.getValue());
-            }
-
-            for (Map.Entry<Supplier<Block>, BlockEnergyGetter<?>> entry : BLOCK_LOOKUP_MAP.entrySet()) {
-                FINALIZED_BLOCK_LOOKUP_MAP.put(entry.getKey().get(), entry.getValue());
-            }
-
-            blocksFinalized = true;
+    private static <T, U> Map<T, U> finalizeRegistration(Map<Supplier<T>, U> unfinalized, @Nullable Map<T, U> finalized, String type) {
+        if (finalized == null) {
+            Botarium.LOGGER.debug("Finalizing energy {} registration", type);
+            Map<T, U> collected = unfinalized.entrySet().stream().map(entry -> Pair.of(entry.getKey().get(), entry.getValue())).collect(Collectors.toUnmodifiableMap(Pair::getFirst, Pair::getSecond));
+            unfinalized.clear();
+            return collected;
         }
+
+        return finalized;
     }
 
-    public static void finalizeItemRegistration() {
-        if (!itemsFinalized) {
-            Botarium.LOGGER.debug("Finalizing energy item registration");
-            for (Map.Entry<Supplier<Item>, ItemEnergyGetter<?>> entry : ITEM_LOOKUP_MAP.entrySet()) {
-                FINALIZED_ITEM_LOOKUP_MAP.put(entry.getKey().get(), entry.getValue());
-            }
-
-            itemsFinalized = true;
-        }
+    public static Map<BlockEntityType<?>, BotariumEnergyBlock<?>> getBlockEntityRegistry() {
+        return FINALIZED_BLOCK_ENTITY_LOOKUP_MAP = finalizeRegistration(BLOCK_ENTITY_LOOKUP_MAP, FINALIZED_BLOCK_ENTITY_LOOKUP_MAP, "block entity");
     }
 
-    public static void registerEnergyBlockEntity(Supplier<BlockEntityType<?>> block, BlockEnergyGetter<?> getter) {
+    public static Map<Block, BotariumEnergyBlock<?>> getBlockRegistry() {
+        return FINALIZED_BLOCK_LOOKUP_MAP = finalizeRegistration(BLOCK_LOOKUP_MAP, FINALIZED_BLOCK_LOOKUP_MAP, "block");
+    }
+
+    public static Map<Item, BotariumEnergyItem<?>> getItemRegistry() {
+        return FINALIZED_ITEM_LOOKUP_MAP = finalizeRegistration(ITEM_LOOKUP_MAP, FINALIZED_ITEM_LOOKUP_MAP, "item");
+    }
+
+    public static BotariumEnergyBlock<?> getEnergyBlock(Block block) {
+        return getBlockRegistry().get(block);
+    }
+
+    public static BotariumEnergyBlock<?> getEnergyBlock(BlockEntityType<?> blockEntity) {
+        return getBlockEntityRegistry().get(blockEntity);
+    }
+
+    public static BotariumEnergyItem<?> getEnergyItem(Item item) {
+        return getItemRegistry().get(item);
+    }
+
+    public static void registerEnergyBlockEntity(Supplier<BlockEntityType<?>> block, BotariumEnergyBlock<?> getter) {
         BLOCK_ENTITY_LOOKUP_MAP.put(block, getter);
     }
 
     @SafeVarargs
-    public static void registerEnergyBlockEntity(BlockEnergyGetter<?> getter, Supplier<BlockEntityType<?>>... blocks) {
+    public static void registerEnergyBlockEntity(BotariumEnergyBlock<?> getter, Supplier<BlockEntityType<?>>... blocks) {
         for (Supplier<BlockEntityType<?>> block : blocks) {
             BLOCK_ENTITY_LOOKUP_MAP.put(block, getter);
         }
     }
 
-    public static void registerEnergyBlock(Supplier<Block> block, BlockEnergyGetter<?> getter) {
+    public static void registerEnergyBlock(Supplier<Block> block, BotariumEnergyBlock<?> getter) {
         BLOCK_LOOKUP_MAP.put(block, getter);
     }
 
     @SafeVarargs
-    public static void registerEnergyBlock(BlockEnergyGetter<?> getter, Supplier<Block>... blocks) {
+    public static void registerEnergyBlock(BotariumEnergyBlock<?> getter, Supplier<Block>... blocks) {
         for (Supplier<Block> block : blocks) {
             BLOCK_LOOKUP_MAP.put(block, getter);
         }
     }
 
-    public static void registerEnergyItem(Supplier<Item> item, ItemEnergyGetter<?> getter) {
+    public static void registerEnergyItem(Supplier<Item> item, BotariumEnergyItem<?> getter) {
         ITEM_LOOKUP_MAP.put(item, getter);
     }
 
     @SafeVarargs
-    public static void registerEnergyItem(ItemEnergyGetter<?> getter, Supplier<Item>... items) {
+    public static void registerEnergyItem(BotariumEnergyItem<?> getter, Supplier<Item>... items) {
         for (Supplier<Item> item : items) {
             ITEM_LOOKUP_MAP.put(item, getter);
         }
@@ -117,6 +127,12 @@ public class EnergyApi {
     @ImplementedByExtension
     @Nullable
     public static EnergyContainer getBlockEnergyContainer(BlockEntity entity, @Nullable Direction direction) {
+        return getBlockEnergyContainer(entity.getLevel(), entity.getBlockPos(), entity.getBlockState(), entity, direction);
+    }
+
+    @ImplementedByExtension
+    @Nullable
+    public static EnergyContainer getBlockEnergyContainer(Level level, BlockPos pos, BlockState state, @Nullable BlockEntity entity, @Nullable Direction direction) {
         throw new NotImplementedException("Block Entity Energy manager not implemented");
     }
 
@@ -124,20 +140,25 @@ public class EnergyApi {
      * @param stack The {@link ItemStack} to check if it is an energy container.
      * @return Whether the given {@link ItemStack} is an energy container.
      */
-    @Contract(pure = true)
     @ImplementedByExtension
     public static boolean isEnergyItem(ItemStack stack) {
         throw new NotImplementedException("Energy item check not Implemented");
     }
 
     /**
-     * @param stack     The {@link BlockEntity} to check if it is an energy container.
+     * @param blockEntity     The {@link BlockEntity} to check if it is an energy container.
      * @param direction The {@link Direction} to check for an energy container on the {@link BlockEntity}.
      * @return Whether the given {@link BlockEntity} is an energy container.
      */
-    @Contract(pure = true)
     @ImplementedByExtension
     public static boolean isEnergyBlock(BlockEntity blockEntity, @Nullable Direction direction) {
+        return isEnergyBlock(blockEntity.getLevel(), blockEntity.getBlockPos(), blockEntity.getBlockState(), blockEntity, direction);
+    }
+
+    /**
+     *
+     */
+    public static boolean isEnergyBlock(Level level, BlockPos pos, BlockState state, @Nullable BlockEntity entity, @Nullable Direction direction) {
         throw new NotImplementedException("Energy item check not Implemented");
     }
 
@@ -249,15 +270,5 @@ public class EnergyApi {
         EnergyContainer fromEnergy = getItemEnergyContainer(from);
         EnergyContainer toEnergy = getBlockEnergyContainer(to, direction);
         return moveEnergy(fromEnergy, toEnergy, amount, simulate);
-    }
-
-    @FunctionalInterface
-    public interface BlockEnergyGetter<T extends EnergyContainer & Updatable<BlockEntity>>  {
-        T getEnergyContainer(Level level, BlockPos pos, BlockState state, BlockEntity entity, Direction direction);
-    }
-
-    @FunctionalInterface
-    public interface ItemEnergyGetter<T extends EnergyContainer & Updatable<ItemStack>>  {
-        T getEnergyContainer(ItemStack stack);
     }
 }

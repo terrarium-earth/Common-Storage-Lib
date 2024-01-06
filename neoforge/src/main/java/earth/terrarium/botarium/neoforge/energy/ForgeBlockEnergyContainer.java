@@ -9,9 +9,11 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.neoforged.neoforge.capabilities.ICapabilityProvider;
 import net.neoforged.neoforge.energy.IEnergyStorage;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public record ForgeBlockEnergyContainer<T extends EnergyContainer & Updatable<BlockEntity>>(T container) implements IEnergyStorage, AutoSerializable, ICapabilityProvider<Block, Direction, IEnergyStorage> {
+@APiSt
+public record ForgeBlockEnergyContainer<T extends EnergyContainer & Updatable>(T container) implements IEnergyStorage, AutoSerializable, ICapabilityProvider<Block, Direction, IEnergyStorage> {
     @Override
     public int receiveEnergy(int maxAmount, boolean bl) {
         if (maxAmount <= 0) return 0;
@@ -50,7 +52,7 @@ public record ForgeBlockEnergyContainer<T extends EnergyContainer & Updatable<Bl
     }
 
     @Override
-    public @Nullable IEnergyStorage getCapability(Block object, Direction direction) {
-        return container.getContainer(direction) == null ? this : null;
+    public @NotNull IEnergyStorage getCapability(Block object, Direction direction) {
+        return this;
     }
 }

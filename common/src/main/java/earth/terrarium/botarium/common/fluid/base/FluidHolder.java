@@ -3,9 +3,11 @@ package earth.terrarium.botarium.common.fluid.base;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import earth.terrarium.botarium.common.fluid.FluidApi;
+import earth.terrarium.botarium.common.fluid.FluidConstants;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.material.Fluid;
 import net.msrandom.extensions.annotations.ImplementedByExtension;
@@ -23,34 +25,76 @@ public interface FluidHolder {
     @Deprecated
     Codec<FluidHolder> CODEC = RecordCodecBuilder.create(instance -> instance.group(
         BuiltInRegistries.FLUID.byNameCodec().fieldOf("fluid").forGetter(FluidHolder::getFluid),
-        Codec.FLOAT.fieldOf("buckets").orElse(1f).forGetter(fluidHolder -> (float) fluidHolder.getFluidAmount() / FluidApi.getBucketAmount()),
+        Codec.FLOAT.fieldOf("buckets").orElse(1f).forGetter(fluidHolder -> (float) fluidHolder.getFluidAmount() / FluidConstants.getBucketAmount()),
         CompoundTag.CODEC.optionalFieldOf("tag").forGetter(fluidHolder -> Optional.ofNullable(fluidHolder.getCompound()))
-    ).apply(instance, (fluid, buckets, compoundTag) -> FluidHolder.of(fluid, FluidApi.fromMillibuckets((long) (buckets * 1000L)), compoundTag.orElse(null))));
+    ).apply(instance, (fluid, buckets, compoundTag) -> FluidHolder.of(fluid, FluidConstants.fromMillibuckets((long) (buckets * 1000L)), compoundTag.orElse(null))));
 
     Codec<FluidHolder> MILLIBUCKET_CODEC = RecordCodecBuilder.create(instance -> instance.group(
             BuiltInRegistries.FLUID.byNameCodec().fieldOf("fluid").forGetter(FluidHolder::getFluid),
-            Codec.LONG.fieldOf("millibuckets").orElse(1000L).forGetter(fluidHolder -> FluidApi.toMillibuckets(fluidHolder.getFluidAmount())),
+            Codec.LONG.fieldOf("millibuckets").orElse(1000L).forGetter(fluidHolder -> FluidConstants.toMillibuckets(fluidHolder.getFluidAmount())),
             CompoundTag.CODEC.optionalFieldOf("tag").forGetter(fluidHolder -> Optional.ofNullable(fluidHolder.getCompound()))
-    ).apply(instance, (fluid, buckets, compoundTag) -> FluidHolder.of(fluid, FluidApi.fromMillibuckets(buckets), compoundTag.orElse(null))));
+    ).apply(instance, (fluid, buckets, compoundTag) -> FluidHolder.of(fluid, FluidConstants.fromMillibuckets(buckets), compoundTag.orElse(null))));
 
+    /**
+     * Creates a FluidHolder with the given Fluid and a default of 1 bucket.
+     *
+     * @param fluid The Fluid to set in the holder.
+     * @return The FluidHolder with the specified Fluid.
+     */
     @ImplementedByExtension
     static FluidHolder of(Fluid fluid) {
         throw new NotImplementedException();
     }
 
+    /**
+     * Creates a FluidHolder with the specified Fluid, amount, and CompoundTag.
+     *
+     * @param fluid The Fluid to set in the holder.
+     * @param amount The amount of fluid to set in the holder.
+     * @param tag The CompoundTag to set in the holder.
+     * @return The created FluidHolder.
+     */
     @ImplementedByExtension
     static FluidHolder of(Fluid fluid, long amount, CompoundTag tag) {
         throw new NotImplementedException();
     }
 
+    /**
+     * Creates a FluidHolder from a CompoundTag.
+     *
+     * @param tag The CompoundTag to create the FluidHolder from.
+     * @return The created FluidHolder.
+     */
     @ImplementedByExtension
     static FluidHolder fromCompound(CompoundTag tag) {
         throw new NotImplementedException();
     }
 
+    /**
+     * Returns an empty FluidHolder.
+     *
+     * @return The empty FluidHolder.
+     */
     @ImplementedByExtension
     static FluidHolder empty() {
         throw new NotImplementedException();
+    }
+
+    default void writeToBuffer(FriendlyByteBuf buffer) {
+        buffer.writeOptional(Optional.ofNullable(this.isEmpty() ? null : this), (friendlyByteBuf, fluid) -> {
+            friendlyByteBuf.writeVarInt(BuiltInRegistries.FLUID.getId(fluid.getFluid()));
+            friendlyByteBuf.writeVarLong(fluid.getFluidAmount());
+            friendlyByteBuf.writeNbt(fluid.getCompound());
+        });
+    }
+
+    static FluidHolder readFromBuffer(FriendlyByteBuf buffer) {
+        return buffer.readOptional((friendlyByteBuf) -> {
+            Fluid fluid = BuiltInRegistries.FLUID.byId(friendlyByteBuf.readVarInt());
+            long amount = friendlyByteBuf.readVarLong();
+            CompoundTag tag = friendlyByteBuf.readNbt();
+            return FluidHolder.of(fluid, amount, tag);
+        }).orElse(FluidHolder.empty());
     }
 
     /**

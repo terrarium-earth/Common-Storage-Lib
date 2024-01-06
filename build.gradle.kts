@@ -80,6 +80,7 @@ subprojects {
 
     java {
         withSourcesJar()
+        withJavadocJar()
     }
 
     tasks.jar {

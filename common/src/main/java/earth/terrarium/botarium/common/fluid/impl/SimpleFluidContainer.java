@@ -16,6 +16,10 @@ import java.util.Objects;
 import java.util.function.BiPredicate;
 import java.util.function.IntToLongFunction;
 
+/**
+ * A simple implementation for fluid storage.
+ * This class should be wrapped by a {@link WrappedBlockFluidContainer} or a {@link WrappedItemFluidContainer} to provide the necessary functionality.
+ */
 public class SimpleFluidContainer implements FluidContainer {
     public static final String FLUID_KEY = "StoredFluids";
 
@@ -115,16 +119,6 @@ public class SimpleFluidContainer implements FluidContainer {
     @Override
     public boolean isEmpty() {
         return getFluids().isEmpty() || getFluids().get(0) == null || getFluids().get(0).isEmpty();
-    }
-
-    /**
-     * Clears the container of all fluids.
-     * <br />
-     * <u>Meant only for internal use!</u>
-     * @deprecated
-     */
-    public void clear() {
-        this.storedFluid.clear();
     }
 
     @Override

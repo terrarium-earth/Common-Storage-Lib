@@ -17,16 +17,11 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.stream.IntStream;
 
-@SuppressWarnings("UnstableApiUsage")
-public class FabricBlockFluidContainer extends ExtendedFluidContainer implements Storage<FluidVariant>, ManualSyncing {
-    private final FluidContainer container;
-    private final Updatable<BlockEntity> blockEntity;
-    private final BlockEntity block;
+public class FabricBlockFluidContainer<T extends FluidContainer & Updatable> extends ExtendedFluidContainer implements Storage<FluidVariant>, ManualSyncing {
+    private final T container;
 
-    public FabricBlockFluidContainer(FluidContainer container, Updatable<BlockEntity> updatable, BlockEntity entity) {
+    public FabricBlockFluidContainer(T container) {
         this.container = container;
-        this.blockEntity = updatable;
-        this.block = entity;
     }
 
     @Override
@@ -59,7 +54,7 @@ public class FabricBlockFluidContainer extends ExtendedFluidContainer implements
 
     @Override
     public void onFinalCommit() {
-        blockEntity.update(block);
+        container.update();
     }
 
 }

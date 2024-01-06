@@ -1,17 +1,104 @@
 package earth.terrarium.botarium.common.energy.base;
 
+import earth.terrarium.botarium.common.item.ItemStackHolder;
 import earth.terrarium.botarium.util.Serializable;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.Clearable;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.msrandom.extensions.annotations.ImplementedByExtension;
+import org.apache.commons.lang3.NotImplementedException;
+import org.jetbrains.annotations.Nullable;
 
 public interface EnergyContainer extends Serializable, Clearable {
 
     /**
-     * @param direction The {@link Direction} to get the container from.
-     * @return A {@link EnergyContainer} for a given {@link Direction}.
+     * Retrieves an instance of EnergyContainer for the given level, position, state, entity, and direction.
+     * This method can be used to retrieve EnergyContainers from Botarium and any other mod that uses the modloader's Energy API.
+     *
+     * @param level     The level of the EnergyContainer.
+     * @param pos       The position of the EnergyContainer.
+     * @param state     The block state of the EnergyContainer.
+     * @param entity    The block entity associated with the EnergyContainer (can be null).
+     * @param direction The direction of the EnergyContainer (can be null).
+     * @return An instance of EnergyContainer.
      */
-    default EnergyContainer getContainer(Direction direction) {
-        return this;
+    @ImplementedByExtension
+    static EnergyContainer of(Level level, BlockPos pos, BlockState state, @Nullable BlockEntity entity, @Nullable Direction direction) {
+        throw new NotImplementedException();
+    }
+
+    /**
+     * Retrieves an instance of EnergyContainer for the given block entity and direction.
+     * This method can be used to retrieve EnergyContainers from Botarium and any other mod that uses the modloader's Energy API.
+     *
+     * @param block     The block entity associated with the EnergyContainer.
+     * @param direction The direction of the EnergyContainer (can be null).
+     * @return An instance of EnergyContainer.
+     */
+    static EnergyContainer of(BlockEntity block, @Nullable Direction direction) {
+        return EnergyContainer.of(block.getLevel(), block.getBlockPos(), block.getBlockState(), block, direction);
+    }
+
+    /**
+     * Retrieves an instance of EnergyContainer for the given item stack holder.
+     * On Fabric, the item stack holder's internal stack will be mutated, and you should replace the item stack
+     * inside the container inside with the stack from {@link ItemStackHolder#getStack()}.
+     * This method can be used to retrieve EnergyContainers from Botarium and any other mod that uses the modloader's Energy API.
+     *
+     * @param holder The item stack holder.
+     * @return An instance of EnergyContainer.
+     */
+    @ImplementedByExtension
+    static EnergyContainer of(ItemStackHolder holder) {
+        throw new NotImplementedException();
+    }
+
+    /**
+     * Checks if an ItemStack holds energy.
+     * This method can be used to check ItemStacks from Botarium and any other mod that uses the modloader's Energy API.
+     *
+     * @param stack The ItemStack to check.
+     * @return True if the ItemStack holds energy, false otherwise.
+     */
+    @ImplementedByExtension
+    static boolean holdsEnergy(ItemStack stack) {
+        throw new NotImplementedException();
+    }
+
+    /**
+     * Checks if the given block at the specified position and state holds energy.
+     * This method can be used to check blocks from Botarium and any other mod that uses the modloader's Energy API.
+     * <p>
+     * NOTE: While Fabric and NeoForge support attaching energy to blocks, MinecraftForge does not. This means that while Botarium
+     * does support energy blocks on Fabric and NeoForge, it does not support them on Forge, and this method will always
+     * return false on a block without a block entity on MinecraftForge.
+     *
+     * @param level     The level of the block.
+     * @param pos       The position of the block.
+     * @param state     The block state.
+     * @param entity    The block entity associated with the block (can be null).
+     * @param direction The direction of the block (can be null).
+     * @return True if the block holds energy, false otherwise.
+     */
+    @ImplementedByExtension
+    static boolean holdsEnergy(Level level, BlockPos pos, BlockState state, @Nullable BlockEntity entity, @Nullable Direction direction) {
+        throw new NotImplementedException();
+    }
+
+    /**
+     * Checks if the given block entity holds energy.
+     * This method can be used to check block entities from Botarium and any other mod that uses the modloader's Energy API.
+     *
+     * @param block     The block entity to check.
+     * @param direction The direction of the block entity (can be null).
+     * @return True if the block entity holds energy, false otherwise.
+     */
+    static boolean holdsEnergy(BlockEntity block, @Nullable Direction direction) {
+        return EnergyContainer.holdsEnergy(block.getLevel(), block.getBlockPos(), block.getBlockState(), block, direction);
     }
 
     /**

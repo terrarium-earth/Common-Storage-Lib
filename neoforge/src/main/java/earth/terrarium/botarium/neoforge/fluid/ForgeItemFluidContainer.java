@@ -12,8 +12,7 @@ import net.neoforged.neoforge.fluids.capability.IFluidHandlerItem;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public record ForgeItemFluidContainer<T extends ItemFluidContainer & Updatable<ItemStack>>(T container,
-                                                                                           ItemStack itemStack) implements IFluidHandlerItem, ICapabilityProvider<ItemStack, Void, IFluidHandlerItem> {
+public record ForgeItemFluidContainer<T extends ItemFluidContainer & Updatable>(T container) implements IFluidHandlerItem, ICapabilityProvider<ItemStack, Void, IFluidHandlerItem> {
 
     @Override
     public @NotNull ItemStack getContainer() {
@@ -43,14 +42,14 @@ public record ForgeItemFluidContainer<T extends ItemFluidContainer & Updatable<I
     @Override
     public int fill(FluidStack fluidStack, IFluidHandler.FluidAction fluidAction) {
         long filled = this.container.insertFluid(new ForgeFluidHolder(fluidStack), fluidAction.simulate());
-        container.update(itemStack);
+        container.update();
         return (int) filled;
     }
 
     @Override
     public @NotNull FluidStack drain(FluidStack fluidStack, FluidAction fluidAction) {
         FluidStack drained = new ForgeFluidHolder(this.container.extractFluid(new ForgeFluidHolder(fluidStack), fluidAction.simulate())).getFluidStack();
-        container.update(itemStack);
+        container.update();
         return drained;
     }
 
@@ -59,12 +58,12 @@ public record ForgeItemFluidContainer<T extends ItemFluidContainer & Updatable<I
         FluidHolder fluid = this.container.getFluids().get(0).copyHolder();
         if (fluid.isEmpty()) return FluidStack.EMPTY;
         fluid.setAmount(i);
-        container.update(itemStack);
+        container.update();
         return new ForgeFluidHolder(this.container.extractFluid(fluid, fluidAction.simulate())).getFluidStack();
     }
 
     @Override
-    public @Nullable IFluidHandlerItem getCapability(@Nullable ItemStack itemStack, @Nullable Void unused) {
+    public @NotNull IFluidHandlerItem getCapability(@Nullable ItemStack itemStack, @Nullable Void unused) {
         return this;
     }
 }

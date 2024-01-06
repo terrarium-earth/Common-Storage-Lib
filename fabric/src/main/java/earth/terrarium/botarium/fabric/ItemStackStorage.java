@@ -1,4 +1,4 @@
-package earth.terrarium.botarium.fabric.fluid.holder;
+package earth.terrarium.botarium.fabric;
 
 import net.fabricmc.fabric.api.transfer.v1.context.ContainerItemContext;
 import net.fabricmc.fabric.api.transfer.v1.item.base.SingleStackStorage;

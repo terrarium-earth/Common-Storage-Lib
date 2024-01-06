@@ -1,16 +1,12 @@
 package earth.terrarium.botarium.common.fluid;
 
 import earth.terrarium.botarium.Botarium;
-import earth.terrarium.botarium.common.fluid.base.FluidContainer;
-import earth.terrarium.botarium.common.fluid.base.FluidHolder;
-import earth.terrarium.botarium.common.fluid.base.ItemFluidContainer;
-import earth.terrarium.botarium.common.fluid.base.PlatformFluidHandler;
+import earth.terrarium.botarium.common.fluid.base.*;
 import earth.terrarium.botarium.common.item.ItemStackHolder;
 import earth.terrarium.botarium.util.Updatable;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -32,23 +28,23 @@ import java.util.function.Supplier;
 public class FluidApi {
 
     // region Fluid Container Registration
-    private static final Map<Supplier<BlockEntityType<?>>, BlockFluidGetter<?>> BLOCK_ENTITY_LOOKUP_MAP = new HashMap<>();
-    private static final Map<Supplier<Block>, BlockFluidGetter<?>> BLOCK_LOOKUP_MAP = new HashMap<>();
-    private static final Map<Supplier<Item>, ItemFluidGetter<?>> ITEM_LOOKUP_MAP = new HashMap<>();
+    private static final Map<Supplier<BlockEntityType<?>>, BotariumFluidBlock<?>> BLOCK_ENTITY_LOOKUP_MAP = new HashMap<>();
+    private static final Map<Supplier<Block>, BotariumFluidBlock<?>> BLOCK_LOOKUP_MAP = new HashMap<>();
+    private static final Map<Supplier<Item>, BotariumFluidItem<?>> ITEM_LOOKUP_MAP = new HashMap<>();
 
-    public static final Map<BlockEntityType<?>, BlockFluidGetter<?>> FINALIZED_BLOCK_ENTITY_LOOKUP_MAP = new HashMap<>();
-    public static final Map<Block, BlockFluidGetter<?>> FINALIZED_BLOCK_LOOKUP_MAP = new HashMap<>();
+    public static final Map<BlockEntityType<?>, BotariumFluidBlock<?>> FINALIZED_BLOCK_ENTITY_LOOKUP_MAP = new HashMap<>();
+    public static final Map<Block, BotariumFluidBlock<?>> FINALIZED_BLOCK_LOOKUP_MAP = new HashMap<>();
     public static boolean blocksFinalized = false;
-    public static final Map<Item, ItemFluidGetter<?>> FINALIZED_ITEM_LOOKUP_MAP = new HashMap<>();
+    public static final Map<Item, BotariumFluidItem<?>> FINALIZED_ITEM_LOOKUP_MAP = new HashMap<>();
     public static boolean itemsFinalized = false;
 
     public static void finalizeBlockRegistration() {
         if (!blocksFinalized) {
             Botarium.LOGGER.debug("Finalizing fluid block registration");
-            for (Map.Entry<Supplier<BlockEntityType<?>>, BlockFluidGetter<?>> entry : BLOCK_ENTITY_LOOKUP_MAP.entrySet()) {
+            for (Map.Entry<Supplier<BlockEntityType<?>>, BotariumFluidBlock<?>> entry : BLOCK_ENTITY_LOOKUP_MAP.entrySet()) {
                 FINALIZED_BLOCK_ENTITY_LOOKUP_MAP.put(entry.getKey().get(), entry.getValue());
             }
-            for (Map.Entry<Supplier<Block>, BlockFluidGetter<?>> entry : BLOCK_LOOKUP_MAP.entrySet()) {
+            for (Map.Entry<Supplier<Block>, BotariumFluidBlock<?>> entry : BLOCK_LOOKUP_MAP.entrySet()) {
                 FINALIZED_BLOCK_LOOKUP_MAP.put(entry.getKey().get(), entry.getValue());
             }
             blocksFinalized = true;
@@ -58,172 +54,44 @@ public class FluidApi {
     public static void finalizeItemRegistration() {
         if (!itemsFinalized) {
             Botarium.LOGGER.debug("Finalizing fluid item registration");
-            for (Map.Entry<Supplier<Item>, ItemFluidGetter<?>> entry : ITEM_LOOKUP_MAP.entrySet()) {
+            for (Map.Entry<Supplier<Item>, BotariumFluidItem<?>> entry : ITEM_LOOKUP_MAP.entrySet()) {
                 FINALIZED_ITEM_LOOKUP_MAP.put(entry.getKey().get(), entry.getValue());
             }
             itemsFinalized = true;
         }
     }
 
-    public static void registerFluidBlockEntity(Supplier<BlockEntityType<?>> block, BlockFluidGetter<?> getter) {
+    public static void registerFluidBlockEntity(Supplier<BlockEntityType<?>> block, BotariumFluidBlock<?> getter) {
         BLOCK_ENTITY_LOOKUP_MAP.put(block, getter);
     }
 
     @SafeVarargs
-    public static void registerFluidBlockEntity(BlockFluidGetter<?> getter, Supplier<BlockEntityType<?>>... blocks) {
+    public static void registerFluidBlockEntity(BotariumFluidBlock<?> getter, Supplier<BlockEntityType<?>>... blocks) {
         for (Supplier<BlockEntityType<?>> block : blocks) {
             BLOCK_ENTITY_LOOKUP_MAP.put(block, getter);
         }
     }
 
-    public static void registerFluidBlock(Supplier<Block> block, BlockFluidGetter<?> getter) {
+    public static void registerFluidBlock(Supplier<Block> block, BotariumFluidBlock<?> getter) {
         BLOCK_LOOKUP_MAP.put(block, getter);
     }
 
     @SafeVarargs
-    public static void registerFluidBlock(BlockFluidGetter<?> getter, Supplier<Block>... blocks) {
+    public static void registerFluidBlock(BotariumFluidBlock<?> getter, Supplier<Block>... blocks) {
         for (Supplier<Block> block : blocks) {
             BLOCK_LOOKUP_MAP.put(block, getter);
         }
     }
 
-    public static void registerFluidItem(Supplier<Item> item, ItemFluidGetter<?> getter) {
+    public static void registerFluidItem(Supplier<Item> item, BotariumFluidItem<?> getter) {
         ITEM_LOOKUP_MAP.put(item, getter);
     }
 
     @SafeVarargs
-    public static void registerFluidItem(ItemFluidGetter<?> getter, Supplier<Item>... items) {
+    public static void registerFluidItem(BotariumFluidItem<?> getter, Supplier<Item>... items) {
         for (Supplier<Item> item : items) {
             ITEM_LOOKUP_MAP.put(item, getter);
         }
-    }
-    // endregion
-
-    /**
-     * Gets the {@link PlatformFluidHandler} for an {@link ItemStack}.
-     *
-     * @param stack The {@link ItemStack} to get the {@link PlatformFluidHandler} from.
-     * @return The {@link PlatformFluidHandler} for the {@link ItemStack}.
-     * @throws IllegalArgumentException If the {@link ItemStack} does not have a {@link PlatformFluidHandler}.
-     */
-    @ImplementedByExtension
-    public static ItemFluidContainer getItemFluidContainer(ItemStackHolder stack) {
-        throw new NotImplementedException("Item Fluid Manager not Implemented");
-    }
-
-    /**
-     * Gets the {@link PlatformFluidHandler} for a {@link BlockEntity}.
-     *
-     * @param entity    The {@link BlockEntity} to get the {@link PlatformFluidHandler} from.
-     * @param direction The {@link Direction} to get the {@link PlatformFluidHandler} from on the {@link BlockEntity}.
-     * @return The {@link PlatformFluidHandler} for the {@link BlockEntity} and {@link Direction}.
-     */
-    @ImplementedByExtension
-    public static FluidContainer getBlockFluidContainer(BlockEntity entity, @Nullable Direction direction) {
-        throw new NotImplementedException("Block Entity Fluid manager not implemented");
-    }
-
-    /**
-     * @param entity    The {@link BlockEntity} to check if it is a fluid container.
-     * @param direction The {@link Direction} to check on the {@link BlockEntity} for a fluid container.
-     * @return True if the {@link BlockEntity} is a fluid container.
-     */
-    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
-    @ImplementedByExtension
-    public static boolean isFluidContainingBlock(BlockEntity entity, @Nullable Direction direction) {
-        throw new NotImplementedException();
-    }
-
-    /**
-     * @param stack The {@link ItemStack} to check if it is a fluid container.
-     * @return True if the {@link ItemStack} is a fluid container.
-     */
-    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
-    @ImplementedByExtension
-    public static boolean isFluidContainingItem(ItemStack stack) {
-        throw new NotImplementedException();
-    }
-
-
-    /**
-     * Converts the given amount of millibuckets to the platform-specific amount of fluid.
-     *
-     * @param millibuckets The amount of millibuckets to convert.
-     * @return The converted value as a long.
-     */
-    @ImplementsBaseElement
-    public static long fromMillibuckets(long millibuckets) {
-        throw new NotImplementedException();
-    }
-
-
-    /**
-     * Converts the given amount of platform-specific amount of fluid to millibuckets.
-     *
-     * @param amount The amount of platform specific liquid to convert.
-     * @return The converted millibuckets as a long.
-     */
-    @ImplementsBaseElement
-    public static long toMillibuckets(long amount) {
-        throw new NotImplementedException();
-    }
-
-    /**
-     * @return The amount of fluid a bucket is for the platform.
-     */
-    @ImplementedByExtension
-    public static long getBucketAmount() {
-        throw new NotImplementedException();
-    }
-
-    /**
-     * @return The amount of fluid a bottle is for the platform.
-     */
-    @ImplementedByExtension
-    public static long getBottleAmount() {
-        throw new NotImplementedException();
-    }
-
-    /**
-     * @return The amount of fluid a block is for the platform.
-     */
-    @ImplementedByExtension
-    public static long getBlockAmount() {
-        throw new NotImplementedException();
-    }
-
-    /**
-     * @return The amount of fluid an ingot is for the platform.
-     */
-    @ImplementedByExtension
-    public static long getIngotAmount() {
-        throw new NotImplementedException();
-    }
-
-    /**
-     * @return The amount of fluid a nugget is for the platform.
-     */
-    @ImplementedByExtension
-    public static long getNuggetAmount() {
-        throw new NotImplementedException();
-    }
-
-    public static void writeToBuffer(FluidHolder holder, FriendlyByteBuf buffer) {
-        if (holder.isEmpty()) {
-            buffer.writeBoolean(false);
-        } else {
-            buffer.writeBoolean(true);
-            buffer.writeVarInt(BuiltInRegistries.FLUID.getId(holder.getFluid()));
-            buffer.writeVarLong(holder.getFluidAmount());
-            buffer.writeNbt(holder.getCompound());
-        }
-    }
-
-    public static FluidHolder readFromBuffer(FriendlyByteBuf buffer) {
-        if (!buffer.readBoolean()) return FluidHolder.empty();
-        Fluid fluid = BuiltInRegistries.FLUID.byId(buffer.readVarInt());
-        long amount = buffer.readVarLong();
-        return FluidHolder.of(fluid, amount, buffer.readNbt());
     }
 
     /**
@@ -237,7 +105,7 @@ public class FluidApi {
     public static long moveFluid(FluidContainer from, FluidContainer to, FluidHolder amount, boolean simulate) {
         FluidHolder extracted = from.extractFluid(amount, true);
         long inserted = to.insertFluid(extracted, true);
-        FluidHolder toInsert = FluidHolder.of(amount.getFluid(), inserted, amount.getCompound());
+        FluidHolder toInsert = amount.copyWithAmount(inserted);
         FluidHolder simulatedExtraction = from.extractFluid(toInsert, true);
         if (!simulate && inserted > 0 && simulatedExtraction.getFluidAmount() == inserted) {
             from.extractFluid(toInsert, false);
@@ -255,9 +123,9 @@ public class FluidApi {
      * @return The amount of fluid that was moved
      */
     public static long moveFluid(ItemStackHolder from, ItemStackHolder to, FluidHolder fluidHolder, boolean simulate) {
-        if (!isFluidContainingItem(from.getStack()) || !isFluidContainingItem(to.getStack())) return 0;
-        FluidContainer fromFluid = getItemFluidContainer(from);
-        FluidContainer toFluid = getItemFluidContainer(to);
+        if (!FluidContainer.holdsFluid(from.getStack()) || !FluidContainer.holdsFluid(to.getStack())) return 0;
+        FluidContainer fromFluid =  FluidContainer.of(from);
+        FluidContainer toFluid =  FluidContainer.of(to);
         return moveFluid(fromFluid, toFluid, fluidHolder, simulate);
     }
 
@@ -270,9 +138,9 @@ public class FluidApi {
      * @return The amount of energy that was moved
      */
     public static long moveFluid(BlockEntity from, BlockEntity to, FluidHolder fluidHolder, boolean simulate) {
-        if (!isFluidContainingBlock(from, null) || !isFluidContainingBlock(to, null)) return 0;
-        FluidContainer fromFluid = getBlockFluidContainer(from, null);
-        FluidContainer toFluid = getBlockFluidContainer(to, null);
+        if (!FluidContainer.holdsFluid(from, null) || !FluidContainer.holdsFluid(to, null)) return 0;
+        FluidContainer fromFluid =  FluidContainer.of(from, null);
+        FluidContainer toFluid =  FluidContainer.of(to, null);
         return moveFluid(fromFluid, toFluid, fluidHolder, simulate);
     }
 
@@ -285,9 +153,9 @@ public class FluidApi {
      * @return The amount of energy that was moved
      */
     public static long moveFluid(BlockEntity from, Direction direction, ItemStackHolder to, FluidHolder fluidHolder, boolean simulate) {
-        if (!isFluidContainingBlock(from, direction) || !isFluidContainingItem(to.getStack())) return 0;
-        FluidContainer fromFluid = getBlockFluidContainer(from, direction);
-        FluidContainer toFluid = getItemFluidContainer(to);
+        if (!FluidContainer.holdsFluid(from, direction) || !FluidContainer.holdsFluid(to.getStack())) return 0;
+        FluidContainer fromFluid = FluidContainer.of(from, direction);
+        FluidContainer toFluid =  FluidContainer.of(to);
         return moveFluid(fromFluid, toFluid, fluidHolder, simulate);
     }
 
@@ -300,19 +168,9 @@ public class FluidApi {
      * @return The amount of energy that was moved
      */
     public static long moveFluid(ItemStackHolder from, BlockEntity to, Direction direction, FluidHolder fluidHolder, boolean simulate) {
-        if (!isFluidContainingItem(from.getStack()) || !isFluidContainingBlock(to, direction)) return 0;
-        FluidContainer fromFluid = getItemFluidContainer(from);
-        FluidContainer toFluid = getBlockFluidContainer(to, direction);
+        if (!FluidContainer.holdsFluid(from.getStack()) || !FluidContainer.holdsFluid(to, direction)) return 0;
+        FluidContainer fromFluid =  FluidContainer.of(from);
+        FluidContainer toFluid =  FluidContainer.of(to, direction);
         return moveFluid(fromFluid, toFluid, fluidHolder, simulate);
-    }
-
-    @FunctionalInterface
-    public interface BlockFluidGetter<T extends FluidContainer & Updatable<BlockEntity>>  {
-        T getFluidContainer(Level level, BlockPos pos, BlockState state, BlockEntity entity, Direction direction);
-    }
-
-    @FunctionalInterface
-    public interface ItemFluidGetter<T extends ItemFluidContainer & Updatable<ItemStack>>  {
-        T getFluidContainer(ItemStack stack);
     }
 }

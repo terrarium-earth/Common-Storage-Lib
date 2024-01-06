@@ -7,14 +7,13 @@ import net.neoforged.neoforge.capabilities.ICapabilityProvider;
 import net.neoforged.neoforge.energy.IEnergyStorage;
 import org.jetbrains.annotations.NotNull;
 
-public record ForgeItemEnergyContainer<T extends EnergyContainer & Updatable<ItemStack>>(T container,
-                                                                                         ItemStack entity) implements IEnergyStorage {
+public record ForgeItemEnergyContainer<T extends EnergyContainer & Updatable>(T container) implements IEnergyStorage {
 
     @Override
     public int receiveEnergy(int maxAmount, boolean bl) {
         if (maxAmount <= 0) return 0;
         int inserted = (int) container.insertEnergy(Math.min(maxAmount, container.maxInsert()), bl);
-        container.update(entity);
+        container.update();
         return inserted;
     }
 
@@ -22,7 +21,7 @@ public record ForgeItemEnergyContainer<T extends EnergyContainer & Updatable<Ite
     public int extractEnergy(int maxAmount, boolean bl) {
         if (maxAmount <= 0) return 0;
         int extracted = (int) container.extractEnergy(Math.min(maxAmount, container.maxExtract()), bl);
-        container.update(entity);
+        container.update();
         return extracted;
     }
 

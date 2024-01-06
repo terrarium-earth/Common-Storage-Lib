@@ -4,14 +4,31 @@ import earth.terrarium.botarium.common.fluid.base.FluidContainer;
 import earth.terrarium.botarium.common.fluid.base.FluidHolder;
 import earth.terrarium.botarium.common.fluid.base.FluidSnapshot;
 import earth.terrarium.botarium.common.fluid.impl.SimpleFluidSnapshot;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.common.capabilities.CapabilityProvider;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
+import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public record PlatformBlockFluidHandler(IFluidHandler handler) implements FluidContainer {
+
+    @Nullable
+    public static PlatformBlockFluidHandler of(Level level, BlockPos pos, BlockState state, @Nullable BlockEntity entity, @Nullable Direction direction) {
+        ICapabilityProvider provider = entity != null ? entity : level.getBlockEntity(pos);
+        if (provider == null) return null;
+        var handler = provider.getCapability(ForgeCapabilities.FLUID_HANDLER, direction);
+        return handler.map(PlatformBlockFluidHandler::new).orElse(null);
+    }
 
     @Override
     public long insertFluid(FluidHolder fluid, boolean simulate) {

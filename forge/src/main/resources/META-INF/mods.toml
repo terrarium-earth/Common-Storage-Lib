@@ -10,7 +10,7 @@ displayName = "Botarium"
 displayURL = "https://modrinth.com/mod/botarium"
 logoFile = "icon.png"
 authors = "CodexAdrian"
-credits = "ThatGravyBoat, Alex Nijjar"
+credits = "ThatGravyBoat, MsRandom1 (Ashley), Alex Nijjar"
 description = "A crossplatform API for devs that makes transfer and storage of items, fluids and energy easier, as well as some other helpful things"
 
 [[dependencies.botarium]]

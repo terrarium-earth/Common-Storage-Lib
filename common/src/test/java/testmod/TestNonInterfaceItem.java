@@ -3,6 +3,7 @@ package testmod;
 import earth.terrarium.botarium.common.energy.EnergyApi;
 import earth.terrarium.botarium.common.energy.base.EnergyContainer;
 import earth.terrarium.botarium.common.fluid.FluidApi;
+import earth.terrarium.botarium.common.fluid.FluidConstants;
 import earth.terrarium.botarium.common.fluid.base.FluidContainer;
 import earth.terrarium.botarium.common.fluid.base.FluidHolder;
 import earth.terrarium.botarium.common.item.ItemStackHolder;
@@ -67,14 +68,14 @@ public class TestNonInterfaceItem extends Item {
                 FluidContainer itemFluidManager = FluidApi.getItemFluidContainer(from);
 
                 if (player.isShiftKeyDown()) {
-                    if (FluidApi.moveFluid(to, from, FluidHolder.of(BuiltInRegistries.FLUID.get(new ResourceLocation("minecraft", "water")), FluidApi.fromMillibuckets(1000), null), false) > 0) {
+                    if (FluidApi.moveFluid(to, from, FluidHolder.of(BuiltInRegistries.FLUID.get(new ResourceLocation("minecraft", "water")), FluidConstants.fromMillibuckets(1000), null), false) > 0) {
                         level.playSound(null, player.blockPosition(), SoundEvents.GENERIC_DRINK, SoundSource.PLAYERS, 1, 1);
                         if (from.isDirty()) player.setItemInHand(interactionHand, from.getStack());
                         if (to.isDirty()) player.setItemSlot(EquipmentSlot.OFFHAND, to.getStack());
                         return InteractionResultHolder.consume(player.getMainHandItem());
                     }
                 } else {
-                    if (FluidApi.moveFluid(from, to, FluidHolder.of(BuiltInRegistries.FLUID.get(new ResourceLocation("minecraft", "water")), FluidApi.fromMillibuckets(1000), null), false) > 0) {
+                    if (FluidApi.moveFluid(from, to, FluidHolder.of(BuiltInRegistries.FLUID.get(new ResourceLocation("minecraft", "water")), FluidConstants.fromMillibuckets(1000), null), false) > 0) {
                         if (from.isDirty()) player.setItemInHand(interactionHand, from.getStack());
                         if (to.isDirty()) player.setItemSlot(EquipmentSlot.OFFHAND, to.getStack());
                         level.playSound(null, player.blockPosition(), SoundEvents.GENERIC_DRINK, SoundSource.PLAYERS, 1, 1);

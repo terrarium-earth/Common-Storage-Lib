@@ -8,15 +8,15 @@ import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.neoforged.neoforge.capabilities.ICapabilityProvider;
 import net.neoforged.neoforge.energy.IEnergyStorage;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public record ForgeEnergyContainer<T extends EnergyContainer & Updatable<BlockEntity>>(T container,
-                                                                                       BlockEntity entity) implements IEnergyStorage, AutoSerializable, ICapabilityProvider<BlockEntity, Direction, IEnergyStorage> {
+public record ForgeEnergyContainer<T extends EnergyContainer & Updatable>(T container) implements IEnergyStorage, AutoSerializable, ICapabilityProvider<BlockEntity, Direction, IEnergyStorage> {
     @Override
     public int receiveEnergy(int maxAmount, boolean bl) {
         if (maxAmount <= 0) return 0;
         int inserted = (int) container.insertEnergy(Math.min(maxAmount, container.maxInsert()), bl);
-        container.update(entity);
+        container.update();
         return inserted;
     }
 
@@ -24,7 +24,7 @@ public record ForgeEnergyContainer<T extends EnergyContainer & Updatable<BlockEn
     public int extractEnergy(int maxAmount, boolean bl) {
         if (maxAmount <= 0) return 0;
         int extracted = (int) container.extractEnergy(Math.min(maxAmount, container.maxExtract()), bl);
-        container.update(entity);
+        container.update();
         return extracted;
     }
 
@@ -54,7 +54,7 @@ public record ForgeEnergyContainer<T extends EnergyContainer & Updatable<BlockEn
     }
 
     @Override
-    public @Nullable IEnergyStorage getCapability(BlockEntity object, Direction direction) {
-        return container.getContainer(direction) == null ? this : null;
+    public @NotNull IEnergyStorage getCapability(BlockEntity object, Direction direction) {
+        return this;
     }
 }

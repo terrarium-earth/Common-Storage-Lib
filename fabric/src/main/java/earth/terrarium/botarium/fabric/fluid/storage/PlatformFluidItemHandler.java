@@ -5,10 +5,9 @@ import earth.terrarium.botarium.common.fluid.base.FluidHolder;
 import earth.terrarium.botarium.common.fluid.base.FluidSnapshot;
 import earth.terrarium.botarium.common.fluid.base.ItemFluidContainer;
 import earth.terrarium.botarium.common.fluid.impl.SimpleFluidSnapshot;
-import earth.terrarium.botarium.common.fluid.utils.FluidHooks;
 import earth.terrarium.botarium.common.item.ItemStackHolder;
 import earth.terrarium.botarium.fabric.fluid.holder.FabricFluidHolder;
-import earth.terrarium.botarium.fabric.fluid.holder.ItemStackStorage;
+import earth.terrarium.botarium.fabric.ItemStackStorage;
 import net.fabricmc.fabric.api.transfer.v1.context.ContainerItemContext;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
@@ -17,20 +16,19 @@ import net.fabricmc.fabric.api.transfer.v1.storage.StorageView;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@SuppressWarnings("UnstableApiUsage")
 public record PlatformFluidItemHandler(ItemStackHolder stack, ContainerItemContext context,
                                        Storage<FluidVariant> storage) implements ItemFluidContainer {
 
-    public PlatformFluidItemHandler(ItemStackHolder stack) {
-        this(stack, ItemStackStorage.of(stack.getStack()));
-    }
-
-    public PlatformFluidItemHandler(ItemStackHolder stack, ContainerItemContext context) {
-        this(stack, context, FluidStorage.ITEM.find(stack.getStack(), context));
+    @Nullable
+    public static PlatformFluidItemHandler of(ItemStackHolder stack) {
+        ContainerItemContext context = ItemStackStorage.of(stack.getStack());
+        var fabricFluid = FluidStorage.ITEM.find(stack.getStack(), context);
+        return fabricFluid == null ? null : new PlatformFluidItemHandler(stack, context, fabricFluid);
     }
 
     @Override

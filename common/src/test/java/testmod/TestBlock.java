@@ -1,7 +1,6 @@
 package testmod;
 
 import com.mojang.serialization.MapCodec;
-import com.mojang.serialization.codecs.RecordCodecBuilder;
 import earth.terrarium.botarium.common.energy.EnergyApi;
 import earth.terrarium.botarium.common.fluid.base.FluidHolder;
 import earth.terrarium.botarium.common.fluid.impl.SimpleFluidContainer;
@@ -39,12 +38,11 @@ public class TestBlock extends BaseEntityBlock {
 
     @Override
     public InteractionResult use(BlockState blockState, Level level, BlockPos blockPos, Player player, InteractionHand interactionHand, BlockHitResult blockHitResult) {
-
         if (player.isShiftKeyDown()
             && level.getBlockEntity(blockPos) instanceof TestBlockEntity testBlockEntity
-            && testBlockEntity.getFluidContainer().container() instanceof SimpleFluidContainer fluidContainer
+            && testBlockEntity.getFluidContainer(level, blockPos, blockState, testBlockEntity, null).container() instanceof SimpleFluidContainer fluidContainer
         ) {
-            fluidContainer.clear();
+            fluidContainer.clearContent();
         }
 
         if (!level.isClientSide()) {
@@ -54,7 +52,7 @@ public class TestBlock extends BaseEntityBlock {
             ).getStoredEnergy()));
 
             if (level.getBlockEntity(blockPos) instanceof TestBlockEntity testBlockEntity) {
-                player.sendSystemMessage(Component.literal("Fluid: " + testBlockEntity.getFluidContainer().getFluids().stream()
+                player.sendSystemMessage(Component.literal("Fluid: " + testBlockEntity.getFluidContainer(level, blockPos, blockState, testBlockEntity, null).getFluids().stream()
                     .mapToLong(FluidHolder::getFluidAmount)
                     .mapToObj(Long::toString)
                     .collect(Collectors.joining(", "))

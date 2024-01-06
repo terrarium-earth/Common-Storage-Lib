@@ -3,19 +3,27 @@ package earth.terrarium.botarium.forge.energy;
 import earth.terrarium.botarium.common.energy.base.EnergyContainer;
 import earth.terrarium.botarium.common.energy.base.EnergySnapshot;
 import earth.terrarium.botarium.common.energy.impl.SimpleEnergySnapshot;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.CapabilityProvider;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
+import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.energy.IEnergyStorage;
 import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.Nullable;
 
 @ApiStatus.Internal
 public record PlatformBlockEnergyManager(IEnergyStorage energy) implements EnergyContainer {
 
-    @SuppressWarnings("UnstableApiUsage")
-    public PlatformBlockEnergyManager(CapabilityProvider<?> energyItem, Direction direction) {
-        this(energyItem.getCapability(ForgeCapabilities.ENERGY, direction).orElseThrow(IllegalArgumentException::new));
+    public static PlatformBlockEnergyManager of(Level level, BlockPos pos, BlockState state, @Nullable BlockEntity entity, @Nullable Direction direction) {
+        ICapabilityProvider provider = entity != null ? entity : level.getBlockEntity(pos);
+        if (provider == null) return null;
+        var cap = provider.getCapability(ForgeCapabilities.ENERGY, direction);
+        return cap.map(PlatformBlockEnergyManager::new).orElse(null);
     }
 
     @Override

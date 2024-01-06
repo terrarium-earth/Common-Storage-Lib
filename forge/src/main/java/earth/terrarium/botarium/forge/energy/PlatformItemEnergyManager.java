@@ -8,13 +8,16 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.energy.IEnergyStorage;
 import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.Nullable;
 
 @ApiStatus.Internal
 @SuppressWarnings("UnstableApiUsage")
 public record PlatformItemEnergyManager(IEnergyStorage energy) implements EnergyContainer {
 
-    public PlatformItemEnergyManager(ItemStackHolder holder) {
-        this(holder.getStack().getCapability(ForgeCapabilities.ENERGY).orElseThrow(IllegalArgumentException::new));
+    @Nullable
+    public static PlatformItemEnergyManager of(ItemStackHolder holder) {
+        var cap = holder.getStack().getCapability(ForgeCapabilities.ENERGY);
+        return cap.map(PlatformItemEnergyManager::new).orElse(null);
     }
 
     @Override

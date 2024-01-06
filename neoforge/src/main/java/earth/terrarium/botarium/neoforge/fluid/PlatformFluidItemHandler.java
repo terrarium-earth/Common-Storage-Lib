@@ -18,8 +18,9 @@ import java.util.List;
 
 public record PlatformFluidItemHandler(ItemStackHolder holder, IFluidHandlerItem handler) implements ItemFluidContainer {
 
-    public PlatformFluidItemHandler(ItemStackHolder holder) {
-        this(holder, holder.getStack().getCapability(Capabilities.FluidHandler.ITEM));
+    public static PlatformFluidItemHandler of(ItemStackHolder holder) {
+        var cap = holder.getStack().getCapability(Capabilities.FluidHandler.ITEM);
+        return cap != null ? new PlatformFluidItemHandler(holder, cap) : null;
     }
 
     @Override

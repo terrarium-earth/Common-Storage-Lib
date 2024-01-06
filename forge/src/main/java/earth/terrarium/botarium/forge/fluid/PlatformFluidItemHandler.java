@@ -13,13 +13,16 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
 public record PlatformFluidItemHandler(ItemStackHolder holder, IFluidHandlerItem handler) implements ItemFluidContainer {
 
-    public PlatformFluidItemHandler(ItemStackHolder holder) {
-        this(holder, holder.getStack().getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM).orElseThrow(() -> new IllegalStateException("ItemStackHolder does not have a fluid handler capability")));
+    @Nullable
+    public static PlatformFluidItemHandler of(ItemStackHolder holder) {
+        var handler = holder.getStack().getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM);
+        return handler.map(fluidHandler -> new PlatformFluidItemHandler(holder, fluidHandler)).orElse(null);
     }
 
     @Override

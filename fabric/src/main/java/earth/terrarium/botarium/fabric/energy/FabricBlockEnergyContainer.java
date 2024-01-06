@@ -8,16 +8,11 @@ import net.fabricmc.fabric.api.transfer.v1.transaction.base.SnapshotParticipant;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import team.reborn.energy.api.EnergyStorage;
 
-@SuppressWarnings("UnstableApiUsage")
-public class FabricBlockEnergyContainer extends SnapshotParticipant<EnergySnapshot> implements EnergyStorage {
-    private final EnergyContainer container;
-    private final Updatable<BlockEntity> updatable;
-    private final BlockEntity block;
+public class FabricBlockEnergyContainer<T extends EnergyContainer & Updatable> extends SnapshotParticipant<EnergySnapshot> implements EnergyStorage {
+    private final T container;
 
-    public FabricBlockEnergyContainer(EnergyContainer container, Updatable<BlockEntity> updatable, BlockEntity block) {
+    public FabricBlockEnergyContainer(T container) {
         this.container = container;
-        this.updatable = updatable;
-        this.block = block;
     }
 
     @Override
@@ -66,6 +61,6 @@ public class FabricBlockEnergyContainer extends SnapshotParticipant<EnergySnapsh
 
     @Override
     protected void onFinalCommit() {
-        this.updatable.update(block);
+        container.update();
     }
 }

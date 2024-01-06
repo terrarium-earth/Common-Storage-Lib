@@ -10,7 +10,6 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
 import team.reborn.energy.api.EnergyStorage;
 
-@SuppressWarnings("UnstableApiUsage")
 public class FabricItemEnergyContainer extends SnapshotParticipant<CompoundTag> implements EnergyStorage {
     private final ContainerItemContext ctx;
     private final EnergyContainer container;

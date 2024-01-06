@@ -4,23 +4,21 @@ import earth.terrarium.botarium.common.energy.base.EnergyContainer;
 import earth.terrarium.botarium.common.energy.base.EnergySnapshot;
 import earth.terrarium.botarium.common.energy.impl.SimpleEnergySnapshot;
 import earth.terrarium.botarium.common.item.ItemStackHolder;
-import earth.terrarium.botarium.fabric.fluid.holder.ItemStackStorage;
+import earth.terrarium.botarium.fabric.ItemStackStorage;
 import net.fabricmc.fabric.api.transfer.v1.context.ContainerItemContext;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.item.ItemStack;
+import org.jetbrains.annotations.Nullable;
 import team.reborn.energy.api.EnergyStorage;
 
-@SuppressWarnings("UnstableApiUsage")
 public record PlatformItemEnergyManager(ItemStackHolder holder, ContainerItemContext context,
                                         EnergyStorage energy) implements EnergyContainer {
 
-    public PlatformItemEnergyManager(ItemStackHolder stack) {
-        this(stack, ItemStackStorage.of(stack.getStack()));
-    }
-
-    public PlatformItemEnergyManager(ItemStackHolder stack, ContainerItemContext context) {
-        this(stack, context, EnergyStorage.ITEM.find(stack.getStack(), context));
+    @Nullable
+    public static PlatformItemEnergyManager of(ItemStackHolder stack) {
+        ContainerItemContext context = ItemStackStorage.of(stack.getStack());
+        var fabricEnergy = EnergyStorage.ITEM.find(stack.getStack(), context);
+        return fabricEnergy == null ? null : new PlatformItemEnergyManager(stack, context, fabricEnergy);
     }
 
     @Override

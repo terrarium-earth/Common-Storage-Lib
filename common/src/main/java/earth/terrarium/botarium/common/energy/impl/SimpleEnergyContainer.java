@@ -6,6 +6,10 @@ import earth.terrarium.botarium.common.energy.base.EnergySnapshot;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Mth;
 
+/**
+ * A simple implementation for energy storage.
+ * This class should be wrapped by a {@link WrappedBlockEnergyContainer} or a {@link WrappedItemEnergyContainer} to provide the necessary functionality.
+ */
 public class SimpleEnergyContainer implements EnergyContainer {
     private final long capacity;
     private final long maxInsert;

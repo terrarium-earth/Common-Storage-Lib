@@ -10,8 +10,16 @@ import net.minecraft.world.item.ItemStack;
 
 import java.util.List;
 
+/**
+ * Represents a wrapped fluid container for an item.
+ * This class implements the FluidContainer interface and the Updatable interface.
+ * It delegates fluid-related operations to the wrapped fluid container, and updates the item when the fluid is changed.
+ *
+ * @param stack     The item stack.
+ * @param container The wrapped fluid container. Botarium provides a default implementation for this with {@link SimpleFluidContainer}.
+ */
 public record WrappedItemFluidContainer(ItemStack stack,
-                                        FluidContainer container) implements ItemFluidContainer, Updatable<ItemStack> {
+                                        FluidContainer container) implements ItemFluidContainer, Updatable {
 
     public WrappedItemFluidContainer {
         container.deserialize(stack.getOrCreateTag());
@@ -25,7 +33,7 @@ public record WrappedItemFluidContainer(ItemStack stack,
     @Override
     public long internalInsert(FluidHolder fluids, boolean simulate) {
         long inserted = container.internalInsert(fluids, simulate);
-        if (!simulate) update(stack);
+        if (!simulate) update();
         return inserted;
     }
 
@@ -37,14 +45,14 @@ public record WrappedItemFluidContainer(ItemStack stack,
     @Override
     public FluidHolder internalExtract(FluidHolder fluid, boolean simulate) {
         FluidHolder extracted = container.internalExtract(fluid, simulate);
-        if (!simulate) update(stack);
+        if (!simulate) update();
         return extracted;
     }
 
     @Override
     public void setFluid(int slot, FluidHolder fluid) {
         container.setFluid(slot, fluid);
-        update(stack);
+        update();
     }
 
     @Override
@@ -113,8 +121,8 @@ public record WrappedItemFluidContainer(ItemStack stack,
     }
 
     @Override
-    public void update(ItemStack object) {
-        serialize(object.getOrCreateTag());
+    public void update() {
+        serialize(stack.getOrCreateTag());
     }
 
     @Override
