@@ -2,12 +2,14 @@ package earth.terrarium.botarium.common.fluid.base;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import earth.terrarium.botarium.common.fluid.utils.FluidHooks;
+import earth.terrarium.botarium.common.fluid.FluidApi;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.material.Fluid;
+import net.msrandom.extensions.annotations.ImplementedByExtension;
+import org.apache.commons.lang3.NotImplementedException;
 
 import java.util.Optional;
 import java.util.function.Predicate;
@@ -18,18 +20,37 @@ import java.util.function.Predicate;
  */
 public interface FluidHolder {
 
+    @Deprecated
     Codec<FluidHolder> CODEC = RecordCodecBuilder.create(instance -> instance.group(
         BuiltInRegistries.FLUID.byNameCodec().fieldOf("fluid").forGetter(FluidHolder::getFluid),
-        Codec.FLOAT.fieldOf("buckets").orElse(1f).forGetter(fluidHolder -> (float) fluidHolder.getFluidAmount() / FluidHooks.getBucketAmount()),
+        Codec.FLOAT.fieldOf("buckets").orElse(1f).forGetter(fluidHolder -> (float) fluidHolder.getFluidAmount() / FluidApi.getBucketAmount()),
         CompoundTag.CODEC.optionalFieldOf("tag").forGetter(fluidHolder -> Optional.ofNullable(fluidHolder.getCompound()))
-    ).apply(instance, (fluid, buckets, compoundTag) -> FluidHooks.newFluidHolder(fluid, FluidHooks.buckets(buckets), compoundTag.orElse(null))));
+    ).apply(instance, (fluid, buckets, compoundTag) -> FluidApi.newFluidHolder(fluid, FluidApi.fromMillibuckets((long) (buckets * 1000L)), compoundTag.orElse(null))));
 
+    Codec<FluidHolder> MILLIBUCKET_CODEC = RecordCodecBuilder.create(instance -> instance.group(
+            BuiltInRegistries.FLUID.byNameCodec().fieldOf("fluid").forGetter(FluidHolder::getFluid),
+            Codec.LONG.fieldOf("millibuckets").orElse(1000L).forGetter(fluidHolder -> FluidApi.toMillibuckets(fluidHolder.getFluidAmount())),
+            CompoundTag.CODEC.optionalFieldOf("tag").forGetter(fluidHolder -> Optional.ofNullable(fluidHolder.getCompound()))
+    ).apply(instance, (fluid, buckets, compoundTag) -> FluidApi.newFluidHolder(fluid, FluidApi.fromMillibuckets(buckets), compoundTag.orElse(null))));
+
+    @ImplementedByExtension
     static FluidHolder of(Fluid fluid) {
-        return FluidHooks.newFluidHolder(fluid, FluidHooks.buckets(1D), null);
+        throw new NotImplementedException();
     }
 
-    static FluidHolder of(Fluid fluid, double buckets, CompoundTag tag) {
-        return FluidHooks.newFluidHolder(fluid, FluidHooks.buckets(buckets), tag);
+    @ImplementedByExtension
+    static FluidHolder of(Fluid fluid, long amount, CompoundTag tag) {
+        throw new NotImplementedException();
+    }
+
+    @ImplementedByExtension
+    static FluidHolder fromCompound(CompoundTag tag) {
+        throw new NotImplementedException();
+    }
+
+    @ImplementedByExtension
+    static FluidHolder empty() {
+        throw new NotImplementedException();
     }
 
     /**

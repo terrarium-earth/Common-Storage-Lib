@@ -17,6 +17,7 @@ import earth.terrarium.botarium.neoforge.fluid.ForgeItemFluidContainer;
 import earth.terrarium.botarium.neoforge.item.ItemContainerWrapper;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.neoforged.bus.api.IEventBus;
+import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
@@ -29,9 +30,9 @@ public class BotariumForge {
     public BotariumForge() {
         Botarium.init();
         IEventBus bus = NeoForge.EVENT_BUS;
-        bus.addListener(BotariumForge::attachCapabilities);
     }
 
+    @SubscribeEvent
     public static void attachCapabilities(RegisterCapabilitiesEvent event) {
         EnergyApi.finalizeBlockRegistration();
         FluidApi.finalizeBlockRegistration();

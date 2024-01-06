@@ -1,7 +1,3 @@
-architectury {
-    platformSetupLoomIde()
-}
-
 loom {
     mods {
         create("testmod") {

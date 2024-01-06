@@ -6,7 +6,6 @@ import earth.terrarium.botarium.common.energy.impl.WrappedItemEnergyContainer;
 import earth.terrarium.botarium.common.fluid.FluidApi;
 import earth.terrarium.botarium.common.fluid.impl.SimpleFluidContainer;
 import earth.terrarium.botarium.common.fluid.impl.WrappedItemFluidContainer;
-import earth.terrarium.botarium.common.fluid.utils.FluidHooks;
 import earth.terrarium.botarium.common.registry.RegistryHelpers;
 import earth.terrarium.botarium.common.registry.RegistryHolder;
 import earth.terrarium.botarium.common.registry.fluid.*;
@@ -57,7 +56,7 @@ public class TestMod {
         FLUID_TYPES.initialize();
         FLUIDS.initialize();
 
-        FluidApi.registerFluidItem(EXAMPLE_ITEM_NO_INTERFACE, stack -> new WrappedItemFluidContainer(stack, new SimpleFluidContainer(FluidHooks.buckets(1), 1, (integer, fluidHolder) -> true)));
+        FluidApi.registerFluidItem(EXAMPLE_ITEM_NO_INTERFACE, stack -> new WrappedItemFluidContainer(stack, new SimpleFluidContainer(FluidApi.buckets(1), 1, (integer, fluidHolder) -> true)));
         EnergyApi.registerEnergyItem(EXAMPLE_ITEM_NO_INTERFACE, stack -> new WrappedItemEnergyContainer(stack, new SimpleEnergyContainer(100000)));
     }
 }

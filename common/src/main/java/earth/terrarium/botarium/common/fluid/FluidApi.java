@@ -9,6 +9,9 @@ import earth.terrarium.botarium.common.item.ItemStackHolder;
 import earth.terrarium.botarium.util.Updatable;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -16,7 +19,9 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Fluid;
 import net.msrandom.extensions.annotations.ImplementedByExtension;
+import net.msrandom.extensions.annotations.ImplementsBaseElement;
 import org.apache.commons.lang3.NotImplementedException;
 import org.jetbrains.annotations.Nullable;
 
@@ -25,6 +30,8 @@ import java.util.Map;
 import java.util.function.Supplier;
 
 public class FluidApi {
+
+    // region Fluid Container Registration
     private static final Map<Supplier<BlockEntityType<?>>, BlockFluidGetter<?>> BLOCK_ENTITY_LOOKUP_MAP = new HashMap<>();
     private static final Map<Supplier<Block>, BlockFluidGetter<?>> BLOCK_LOOKUP_MAP = new HashMap<>();
     private static final Map<Supplier<Item>, ItemFluidGetter<?>> ITEM_LOOKUP_MAP = new HashMap<>();
@@ -90,6 +97,7 @@ public class FluidApi {
             ITEM_LOOKUP_MAP.put(item, getter);
         }
     }
+    // endregion
 
     /**
      * Gets the {@link PlatformFluidHandler} for an {@link ItemStack}.
@@ -136,6 +144,88 @@ public class FluidApi {
         throw new NotImplementedException();
     }
 
+
+    /**
+     * Converts the given amount of millibuckets to the platform-specific amount of fluid.
+     *
+     * @param millibuckets The amount of millibuckets to convert.
+     * @return The converted value as a long.
+     */
+    @ImplementsBaseElement
+    public static long fromMillibuckets(long millibuckets) {
+        throw new NotImplementedException();
+    }
+
+
+    /**
+     * Converts the given amount of platform-specific amount of fluid to millibuckets.
+     *
+     * @param amount The amount of platform specific liquid to convert.
+     * @return The converted millibuckets as a long.
+     */
+    @ImplementsBaseElement
+    public static long toMillibuckets(long amount) {
+        throw new NotImplementedException();
+    }
+
+    /**
+     * @return The amount of fluid a bucket is for the platform.
+     */
+    @ImplementedByExtension
+    public static long getBucketAmount() {
+        throw new NotImplementedException();
+    }
+
+    /**
+     * @return The amount of fluid a bottle is for the platform.
+     */
+    @ImplementedByExtension
+    public static long getBottleAmount() {
+        throw new NotImplementedException();
+    }
+
+    /**
+     * @return The amount of fluid a block is for the platform.
+     */
+    @ImplementedByExtension
+    public static long getBlockAmount() {
+        throw new NotImplementedException();
+    }
+
+    /**
+     * @return The amount of fluid an ingot is for the platform.
+     */
+    @ImplementedByExtension
+    public static long getIngotAmount() {
+        throw new NotImplementedException();
+    }
+
+    /**
+     * @return The amount of fluid a nugget is for the platform.
+     */
+    @ImplementedByExtension
+    public static long getNuggetAmount() {
+        throw new NotImplementedException();
+    }
+
+    public static void writeToBuffer(FluidHolder holder, FriendlyByteBuf buffer) {
+        if (holder.isEmpty()) {
+            buffer.writeBoolean(false);
+        } else {
+            buffer.writeBoolean(true);
+            buffer.writeVarInt(BuiltInRegistries.FLUID.getId(holder.getFluid()));
+            buffer.writeVarLong(holder.getFluidAmount());
+            buffer.writeNbt(holder.getCompound());
+        }
+    }
+
+    public static FluidHolder readFromBuffer(FriendlyByteBuf buffer) {
+        if (!buffer.readBoolean()) return FluidHooks.emptyFluid();
+        Fluid fluid = BuiltInRegistries.FLUID.byId(buffer.readVarInt());
+        long amount = buffer.readVarLong();
+        return FluidHolder.of(fluid, amount, buffer.readNbt());
+    }
+
     /**
      * Moves energy from one energy container to another
      *
@@ -147,7 +237,7 @@ public class FluidApi {
     public static long moveFluid(FluidContainer from, FluidContainer to, FluidHolder amount, boolean simulate) {
         FluidHolder extracted = from.extractFluid(amount, true);
         long inserted = to.insertFluid(extracted, true);
-        FluidHolder toInsert = FluidHooks.newFluidHolder(amount.getFluid(), inserted, amount.getCompound());
+        FluidHolder toInsert = newFluidHolder(amount.getFluid(), inserted, amount.getCompound());
         FluidHolder simulatedExtraction = from.extractFluid(toInsert, true);
         if (!simulate && inserted > 0 && simulatedExtraction.getFluidAmount() == inserted) {
             from.extractFluid(toInsert, false);

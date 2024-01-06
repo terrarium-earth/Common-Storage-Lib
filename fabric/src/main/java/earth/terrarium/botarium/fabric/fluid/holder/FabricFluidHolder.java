@@ -26,7 +26,7 @@ public class FabricFluidHolder extends SnapshotParticipant<FabricFluidHolder> im
         return new FabricFluidHolder(variant, amount);
     }
 
-    public static FabricFluidHolder of(Fluid variant, CompoundTag compoundTag, long amount) {
+    public static FabricFluidHolder of(Fluid variant, long amount, CompoundTag compoundTag) {
         return new FabricFluidHolder(FluidVariant.of(variant, compoundTag), amount);
     }
 
