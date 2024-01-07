@@ -12,18 +12,8 @@ import org.apache.commons.lang3.NotImplementedException;
 @ClassExtension(FluidHolder.class)
 public interface FluidHolderImpl {
     @ImplementsBaseElement
-    static FluidHolder of(Fluid fluid) {
-        return new ForgeFluidHolder(fluid, FluidType.BUCKET_VOLUME, null);
-    }
-
-    @ImplementsBaseElement
     static FluidHolder of(Fluid fluid, long amount, CompoundTag tag) {
         return new ForgeFluidHolder(fluid, (int) amount, tag);
-    }
-
-    @ImplementsBaseElement
-    static FluidHolder fromCompound(CompoundTag tag) {
-        return ForgeFluidHolder.fromCompound(tag);
     }
 
     @ImplementsBaseElement

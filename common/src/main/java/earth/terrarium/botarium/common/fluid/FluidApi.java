@@ -54,6 +54,18 @@ public class FluidApi {
         return getItemRegistry().get(item);
     }
 
+    /**
+     * Retrieves the Botarium specific FluidContainer object from a block entity or block. This method is used internally
+     * by the Botarium API and should not be used by other mods.
+     *
+     * @param <T>        the type of FluidContainer
+     * @param level      the game level
+     * @param pos        the position of the block
+     * @param state      the block state
+     * @param entity     the block entity (can be null)
+     * @param direction  the direction (can be null)
+     * @return the API FluidContainer object
+     */
     public static <T extends FluidContainer & Updatable> T getAPIFluidContainer(Level level, BlockPos pos, BlockState state, @Nullable BlockEntity entity, @Nullable Direction direction) {
         BotariumFluidBlock<?> getter = getFluidBlock(state.getBlock());
         if (getter == null && entity != null) {

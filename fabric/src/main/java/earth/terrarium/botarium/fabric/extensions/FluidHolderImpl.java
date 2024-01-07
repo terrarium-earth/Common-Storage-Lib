@@ -11,20 +11,8 @@ import net.msrandom.extensions.annotations.ImplementsBaseElement;
 @ClassExtension(FluidHolder.class)
 public interface FluidHolderImpl {
     @ImplementsBaseElement
-    static FluidHolder of(Fluid fluid) {
-        return FabricFluidHolder.of(fluid, FluidConstants.BUCKET, null);
-    }
-
-    @ImplementsBaseElement
     static FluidHolder of(Fluid fluid, long amount, CompoundTag tag) {
         return FabricFluidHolder.of(fluid, amount, tag);
-    }
-
-    @ImplementsBaseElement
-    static FluidHolder fromCompound(CompoundTag tag) {
-        FabricFluidHolder fluid = FabricFluidHolder.of(null, 0);
-        fluid.deserialize(tag);
-        return fluid;
     }
 
     @ImplementsBaseElement

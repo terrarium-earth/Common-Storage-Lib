@@ -28,14 +28,6 @@ public class ForgeFluidHolder implements FluidHolder {
         return fluidStack;
     }
 
-    public static ForgeFluidHolder fromCompound(CompoundTag compound) {
-        Fluid fluid = BuiltInRegistries.FLUID.get(new ResourceLocation(compound.getString("Fluid")));
-        int amount = (int) compound.getLong("Amount");
-        CompoundTag nbt = null;
-        if (compound.contains("Nbt")) nbt = compound.getCompound("Nbt");
-        return new ForgeFluidHolder(fluid, amount, nbt);
-    }
-
     @Override
     public Fluid getFluid() {
         return fluidStack.getFluid();

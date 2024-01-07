@@ -12,6 +12,7 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.material.Fluid;
 import net.msrandom.extensions.annotations.ImplementedByExtension;
 import org.apache.commons.lang3.NotImplementedException;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 import java.util.function.Predicate;
@@ -22,18 +23,11 @@ import java.util.function.Predicate;
  */
 public interface FluidHolder {
 
-    @Deprecated
     Codec<FluidHolder> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-        BuiltInRegistries.FLUID.byNameCodec().fieldOf("fluid").forGetter(FluidHolder::getFluid),
-        Codec.FLOAT.fieldOf("buckets").orElse(1f).forGetter(fluidHolder -> (float) fluidHolder.getFluidAmount() / FluidConstants.getBucketAmount()),
-        CompoundTag.CODEC.optionalFieldOf("tag").forGetter(fluidHolder -> Optional.ofNullable(fluidHolder.getCompound()))
-    ).apply(instance, (fluid, buckets, compoundTag) -> FluidHolder.of(fluid, FluidConstants.fromMillibuckets((long) (buckets * 1000L)), compoundTag.orElse(null))));
-
-    Codec<FluidHolder> MILLIBUCKET_CODEC = RecordCodecBuilder.create(instance -> instance.group(
             BuiltInRegistries.FLUID.byNameCodec().fieldOf("fluid").forGetter(FluidHolder::getFluid),
             Codec.LONG.fieldOf("millibuckets").orElse(1000L).forGetter(fluidHolder -> FluidConstants.toMillibuckets(fluidHolder.getFluidAmount())),
             CompoundTag.CODEC.optionalFieldOf("tag").forGetter(fluidHolder -> Optional.ofNullable(fluidHolder.getCompound()))
-    ).apply(instance, (fluid, buckets, compoundTag) -> FluidHolder.of(fluid, FluidConstants.fromMillibuckets(buckets), compoundTag.orElse(null))));
+    ).apply(instance, (fluid, millibuckets, compoundTag) -> FluidHolder.of(fluid, FluidConstants.fromMillibuckets(millibuckets), compoundTag.orElse(null))));
 
     /**
      * Creates a FluidHolder with the given Fluid and a default of 1 bucket.
@@ -41,9 +35,19 @@ public interface FluidHolder {
      * @param fluid The Fluid to set in the holder.
      * @return The FluidHolder with the specified Fluid.
      */
-    @ImplementedByExtension
     static FluidHolder of(Fluid fluid) {
-        throw new NotImplementedException();
+        return of(fluid, FluidConstants.getBucketAmount());
+    }
+
+    /**
+     * Creates a FluidHolder with the specified Fluid and amount.
+     *
+     * @param fluid The Fluid to set in the holder.
+     * @param amount The amount of fluid to set in the holder.
+     * @return The created FluidHolder.
+     */
+    static FluidHolder of(Fluid fluid, long amount) {
+        return of(fluid, amount, null);
     }
 
     /**
@@ -55,7 +59,7 @@ public interface FluidHolder {
      * @return The created FluidHolder.
      */
     @ImplementedByExtension
-    static FluidHolder of(Fluid fluid, long amount, CompoundTag tag) {
+    static FluidHolder of(Fluid fluid, long amount, @Nullable CompoundTag tag) {
         throw new NotImplementedException();
     }
 
@@ -65,9 +69,10 @@ public interface FluidHolder {
      * @param tag The CompoundTag to create the FluidHolder from.
      * @return The created FluidHolder.
      */
-    @ImplementedByExtension
     static FluidHolder fromCompound(CompoundTag tag) {
-        throw new NotImplementedException();
+        FluidHolder fluid = of(null, 0);
+        fluid.deserialize(tag);
+        return fluid;
     }
 
     /**
