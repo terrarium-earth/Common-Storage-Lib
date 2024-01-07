@@ -57,6 +57,26 @@ jobs:
           game-versions: ${{ steps.properties.outputs.minecraftVersion }}
           version-resolver: exact
 
+      - name: Upload NeoForge Releases (Curse/Modrinth/Github)
+        id: neoforge_release
+        if: contains(steps.properties.outputs.enabledPlatforms, 'neoforge')
+        uses: Kir-Antipov/mc-publish@v3.2
+        with:
+          curseforge-id: ${{ vars.CURSE_ID }}
+          curseforge-token: ${{ secrets.CURSE_TOKEN }}
+
+          modrinth-id: ${{ vars.MODRINTH_ID }}
+          modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
+
+          files: ./neoforge/build/libs/!(*-@(dev|sources|dev-shadow)).jar
+          name: "[NeoForge] Botarium ${{ steps.properties.outputs.version }}"
+          version: ${{ steps.properties.outputs.version }}
+          version-type: release
+          changelog-file: changelog.md
+          loaders: neoforge
+          game-versions: ${{ steps.properties.outputs.minecraftVersion }}
+          version-resolver: exact
+
       - name: Upload Fabric Releases (Curse/Modrinth/Github)
         id: fabric_release
         if: contains(steps.properties.outputs.enabledPlatforms, 'fabric')
@@ -82,6 +102,7 @@ jobs:
         env:
           FORGE_RELEASE_URL: ${{ steps.forge_release.outputs.modrinth-url }}
           FABRIC_RELEASE_URL: ${{ steps.fabric_release.outputs.modrinth-url }}
+          NEOFORGE_RELEASE_URL: ${{ steps.neoforge_release.outputs.modrinth-url }}
 
       - name: Upload Discord Embed
         uses: tsickert/discord-webhook@v5.3.0

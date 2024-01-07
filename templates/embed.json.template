@@ -11,12 +11,17 @@
                 },
                 {
                     "type": 2,
+                    "label": "NeoForge",
+                    "style": 5,
+                    "url": "${neoforge_link}"
+                },
+                {
+                    "type": 2,
                     "label": "Forge",
                     "style": 5,
                     "url": "${forge_link}"
                 }
             ]
-
         }
     ],
     "embeds": [
