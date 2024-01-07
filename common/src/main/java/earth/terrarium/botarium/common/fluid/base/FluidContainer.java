@@ -108,6 +108,15 @@ public interface FluidContainer extends Serializable, Clearable {
     boolean allowsExtraction();
 
     /**
+     * @param slot The slot to check.
+     * @param fluid The fluid to check.
+     * @return Whether the given fluid can be inserted into the given slot.
+     */
+    default boolean isFluidValid(int slot, FluidHolder fluid) {
+        return true;
+    }
+
+    /**
      * @param direction The direction to check.
      * @return A {@link FluidContainer} from the given {@link Direction}.
      */

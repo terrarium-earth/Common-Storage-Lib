@@ -36,7 +36,7 @@ public record ForgeFluidContainer<T extends FluidContainer & Updatable<BlockEnti
 
     @Override
     public boolean isFluidValid(int i, @NotNull FluidStack fluidStack) {
-        return this.container.getFluids().get(i).matches(new ForgeFluidHolder(fluidStack));
+        return container.isFluidValid(i, new ForgeFluidHolder(fluidStack));
     }
 
     @Override

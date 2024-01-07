@@ -111,6 +111,11 @@ public record PlatformFluidItemHandler(ItemStackHolder holder, IFluidHandlerItem
     }
 
     @Override
+    public boolean isFluidValid(int slot, FluidHolder fluid) {
+        return handler.isFluidValid(slot, new ForgeFluidHolder(fluid).getFluidStack());
+    }
+
+    @Override
     public void clearContent() {
         for (int i = 0; i < handler.getTanks(); i++) {
             handler.drain(handler.getFluidInTank(i), IFluidHandler.FluidAction.EXECUTE);

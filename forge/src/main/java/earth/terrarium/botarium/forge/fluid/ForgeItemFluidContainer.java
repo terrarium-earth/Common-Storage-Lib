@@ -39,7 +39,7 @@ public record ForgeItemFluidContainer<T extends ItemFluidContainer & Updatable<I
 
     @Override
     public boolean isFluidValid(int i, @NotNull FluidStack fluidStack) {
-        return getFluidInTank(i).isFluidEqual(fluidStack);
+        return container.isFluidValid(i, new ForgeFluidHolder(fluidStack));
     }
 
     @Override

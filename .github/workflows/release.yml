@@ -49,11 +49,13 @@ jobs:
           modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
 
           files: ./forge/build/libs/!(*-@(dev|sources|dev-shadow)).jar
-          name: "[Forge] Botarium ${{ steps.properties.outputs.version }}"
+          name: "[Forge/NeoForge] Botarium ${{ steps.properties.outputs.version }}"
           version: ${{ steps.properties.outputs.version }}
           version-type: release
           changelog-file: changelog.md
-          loaders: forge
+          loaders: |
+            forge
+            neoforge
           game-versions: ${{ steps.properties.outputs.minecraftVersion }}
           version-resolver: exact
 

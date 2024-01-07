@@ -98,6 +98,11 @@ public record WrappedItemFluidContainer(ItemStack stack,
     }
 
     @Override
+    public void readSnapshot(FluidSnapshot snapshot) {
+        container.readSnapshot(snapshot);
+    }
+
+    @Override
     public ItemStack getContainerItem() {
         return stack;
     }
@@ -110,6 +115,11 @@ public record WrappedItemFluidContainer(ItemStack stack,
     @Override
     public CompoundTag serialize(CompoundTag nbt) {
         return container.serialize(nbt);
+    }
+
+    @Override
+    public boolean isFluidValid(int slot, FluidHolder fluid) {
+        return container.isFluidValid(slot, fluid);
     }
 
     @Override

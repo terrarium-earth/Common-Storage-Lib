@@ -84,6 +84,11 @@ public record PlatformBlockFluidHandler(IFluidHandler handler) implements FluidC
     }
 
     @Override
+    public boolean isFluidValid(int slot, FluidHolder fluid) {
+        return handler.isFluidValid(slot, new ForgeFluidHolder(fluid).getFluidStack());
+    }
+
+    @Override
     public FluidSnapshot createSnapshot() {
         return new SimpleFluidSnapshot(this);
     }

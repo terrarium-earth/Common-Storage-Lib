@@ -181,6 +181,11 @@ public class SimpleFluidContainer implements FluidContainer {
     }
 
     @Override
+    public boolean isFluidValid(int slot, FluidHolder fluid) {
+        return fluidFilter.test(slot, fluid);
+    }
+
+    @Override
     public FluidSnapshot createSnapshot() {
         return new SimpleFluidSnapshot(this);
     }

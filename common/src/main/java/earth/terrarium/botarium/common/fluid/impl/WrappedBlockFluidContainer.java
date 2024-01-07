@@ -89,8 +89,18 @@ public record WrappedBlockFluidContainer(BlockEntity block,
     }
 
     @Override
+    public boolean isFluidValid(int slot, FluidHolder fluid) {
+        return container.isFluidValid(slot, fluid);
+    }
+
+    @Override
     public FluidSnapshot createSnapshot() {
         return container.createSnapshot();
+    }
+
+    @Override
+    public void readSnapshot(FluidSnapshot snapshot) {
+        container.readSnapshot(snapshot);
     }
 
     @Override
