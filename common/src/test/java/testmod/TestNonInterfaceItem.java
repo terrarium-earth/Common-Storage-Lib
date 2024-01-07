@@ -34,17 +34,16 @@ public class TestNonInterfaceItem extends Item {
 
     @Override
     public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltip, TooltipFlag tooltipFlag) {
-        if (FluidApi.isFluidContainingItem(stack)) {
-            ItemStackHolder itemStackHolder = new ItemStackHolder(stack);
-            FluidContainer itemFluidManager = FluidApi.getItemFluidContainer(itemStackHolder);
+        ItemStackHolder itemStackHolder = new ItemStackHolder(stack);
+        FluidContainer itemFluidManager = FluidContainer.of(itemStackHolder);
+        if (itemFluidManager != null) {
             long oxygen = itemFluidManager.getFluids().get(0).getFluidAmount();
             long oxygenCapacity = itemFluidManager.getTankCapacity(0);
             tooltip.add(Component.literal("Water: " + oxygen + "mb / " + oxygenCapacity + "mb").setStyle(Style.EMPTY.withColor(ChatFormatting.GRAY)));
         }
 
-        if (EnergyApi.isEnergyItem(stack)) {
-            ItemStackHolder itemStackHolder = new ItemStackHolder(stack);
-            EnergyContainer energyManager = EnergyApi.getItemEnergyContainer(itemStackHolder);
+        EnergyContainer energyManager = EnergyContainer.of(itemStackHolder);
+        if (energyManager != null) {
             long energy = energyManager.getStoredEnergy();
             long energyCapacity = energyManager.getMaxCapacity();
             tooltip.add(Component.literal("Energy: " + energy + "FE / " + energyCapacity + "FE").setStyle(Style.EMPTY.withColor(ChatFormatting.GRAY)));
@@ -65,7 +64,7 @@ public class TestNonInterfaceItem extends Item {
                 ItemStackHolder from = new ItemStackHolder(player.getMainHandItem());
                 ItemStackHolder to = new ItemStackHolder(player.getOffhandItem());
 
-                FluidContainer itemFluidManager = FluidApi.getItemFluidContainer(from);
+                FluidContainer itemFluidManager = FluidContainer.of(from);
 
                 if (player.isShiftKeyDown()) {
                     if (FluidApi.moveFluid(to, from, FluidHolder.of(BuiltInRegistries.FLUID.get(new ResourceLocation("minecraft", "water")), FluidConstants.fromMillibuckets(1000), null), false) > 0) {

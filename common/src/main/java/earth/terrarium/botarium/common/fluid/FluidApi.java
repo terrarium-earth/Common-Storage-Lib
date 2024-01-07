@@ -6,8 +6,6 @@ import earth.terrarium.botarium.common.item.ItemStackHolder;
 import earth.terrarium.botarium.util.Updatable;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -15,10 +13,6 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.material.Fluid;
-import net.msrandom.extensions.annotations.ImplementedByExtension;
-import net.msrandom.extensions.annotations.ImplementsBaseElement;
-import org.apache.commons.lang3.NotImplementedException;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
@@ -32,33 +26,45 @@ public class FluidApi {
     private static final Map<Supplier<Block>, BotariumFluidBlock<?>> BLOCK_LOOKUP_MAP = new HashMap<>();
     private static final Map<Supplier<Item>, BotariumFluidItem<?>> ITEM_LOOKUP_MAP = new HashMap<>();
 
-    public static final Map<BlockEntityType<?>, BotariumFluidBlock<?>> FINALIZED_BLOCK_ENTITY_LOOKUP_MAP = new HashMap<>();
-    public static final Map<Block, BotariumFluidBlock<?>> FINALIZED_BLOCK_LOOKUP_MAP = new HashMap<>();
-    public static boolean blocksFinalized = false;
-    public static final Map<Item, BotariumFluidItem<?>> FINALIZED_ITEM_LOOKUP_MAP = new HashMap<>();
-    public static boolean itemsFinalized = false;
+    private static Map<BlockEntityType<?>, BotariumFluidBlock<?>> FINALIZED_BLOCK_ENTITY_LOOKUP_MAP = null;
+    private static Map<Block, BotariumFluidBlock<?>> FINALIZED_BLOCK_LOOKUP_MAP = null;
+    private static Map<Item, BotariumFluidItem<?>> FINALIZED_ITEM_LOOKUP_MAP = null;
 
-    public static void finalizeBlockRegistration() {
-        if (!blocksFinalized) {
-            Botarium.LOGGER.debug("Finalizing fluid block registration");
-            for (Map.Entry<Supplier<BlockEntityType<?>>, BotariumFluidBlock<?>> entry : BLOCK_ENTITY_LOOKUP_MAP.entrySet()) {
-                FINALIZED_BLOCK_ENTITY_LOOKUP_MAP.put(entry.getKey().get(), entry.getValue());
-            }
-            for (Map.Entry<Supplier<Block>, BotariumFluidBlock<?>> entry : BLOCK_LOOKUP_MAP.entrySet()) {
-                FINALIZED_BLOCK_LOOKUP_MAP.put(entry.getKey().get(), entry.getValue());
-            }
-            blocksFinalized = true;
-        }
+    public static Map<BlockEntityType<?>, BotariumFluidBlock<?>> getBlockEntityRegistry() {
+        return FINALIZED_BLOCK_ENTITY_LOOKUP_MAP = Botarium.finalizeRegistration(BLOCK_ENTITY_LOOKUP_MAP, FINALIZED_BLOCK_ENTITY_LOOKUP_MAP, "fluid containing block entity");
     }
 
-    public static void finalizeItemRegistration() {
-        if (!itemsFinalized) {
-            Botarium.LOGGER.debug("Finalizing fluid item registration");
-            for (Map.Entry<Supplier<Item>, BotariumFluidItem<?>> entry : ITEM_LOOKUP_MAP.entrySet()) {
-                FINALIZED_ITEM_LOOKUP_MAP.put(entry.getKey().get(), entry.getValue());
+    public static Map<Block, BotariumFluidBlock<?>> getBlockRegistry() {
+        return FINALIZED_BLOCK_LOOKUP_MAP = Botarium.finalizeRegistration(BLOCK_LOOKUP_MAP, FINALIZED_BLOCK_LOOKUP_MAP, "fluid containing block");
+    }
+
+    public static Map<Item, BotariumFluidItem<?>> getItemRegistry() {
+        return FINALIZED_ITEM_LOOKUP_MAP = Botarium.finalizeRegistration(ITEM_LOOKUP_MAP, FINALIZED_ITEM_LOOKUP_MAP, "fluid containing item");
+    }
+
+    public static BotariumFluidBlock<?> getFluidBlock(Block block) {
+        return getBlockRegistry().get(block);
+    }
+
+    public static BotariumFluidBlock<?> getFluidBlock(BlockEntityType<?> blockEntity) {
+        return getBlockEntityRegistry().get(blockEntity);
+    }
+
+    public static BotariumFluidItem<?> getFluidItem(Item item) {
+        return getItemRegistry().get(item);
+    }
+
+    public static <T extends FluidContainer & Updatable> T getAPIFluidContainer(Level level, BlockPos pos, BlockState state, @Nullable BlockEntity entity, @Nullable Direction direction) {
+        BotariumFluidBlock<?> getter = getFluidBlock(state.getBlock());
+        if (getter == null && entity != null) {
+            getter = getFluidBlock(entity.getType());
+
+            if (getter == null && entity instanceof BotariumFluidBlock<?> fluidGetter) {
+                getter = fluidGetter;
             }
-            itemsFinalized = true;
         }
+        if (getter == null) return null;
+        return (T) getter.getFluidContainer(level, pos, state, entity, direction);
     }
 
     public static void registerFluidBlockEntity(Supplier<BlockEntityType<?>> block, BotariumFluidBlock<?> getter) {

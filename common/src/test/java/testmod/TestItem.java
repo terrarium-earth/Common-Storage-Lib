@@ -42,17 +42,16 @@ public class TestItem extends Item implements BotariumEnergyItem<WrappedItemEner
 
     @Override
     public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltip, TooltipFlag tooltipFlag) {
-        if (FluidApi.isFluidContainingItem(stack)) {
-            ItemStackHolder holder = new ItemStackHolder(stack);
-            FluidContainer itemFluidManager = FluidApi.getItemFluidContainer(holder);
+        ItemStackHolder holder = new ItemStackHolder(stack);
+        FluidContainer itemFluidManager = FluidContainer.of(holder);
+        if (itemFluidManager != null) {
             long oxygen = itemFluidManager.getFluids().get(0).getFluidAmount();
             long oxygenCapacity = itemFluidManager.getTankCapacity(0);
             tooltip.add(Component.literal("Water: " + oxygen + "mb / " + oxygenCapacity + "mb").setStyle(Style.EMPTY.withColor(ChatFormatting.GRAY)));
         }
 
-        if (EnergyApi.isEnergyItem(stack)) {
-            ItemStackHolder holder = new ItemStackHolder(stack);
-            EnergyContainer energyManager = EnergyApi.getItemEnergyContainer(holder);
+        EnergyContainer energyManager = EnergyContainer.of(holder);
+        if (energyManager != null) {
             long energy = energyManager.getStoredEnergy();
             long energyCapacity = energyManager.getMaxCapacity();
             tooltip.add(Component.literal("Energy: " + energy + "FE / " + energyCapacity + "FE").setStyle(Style.EMPTY.withColor(ChatFormatting.GRAY)));
@@ -70,17 +69,11 @@ public class TestItem extends Item implements BotariumEnergyItem<WrappedItemEner
             return InteractionResultHolder.success(player.getItemInHand(interactionHand));
         } else {
             ItemStack stack = player.getItemInHand(interactionHand);
-            if (EnergyApi.isEnergyItem(stack)) {
-                ItemStackHolder holder = new ItemStackHolder(stack);
-                EnergyContainer energyManager = EnergyApi.getItemEnergyContainer(holder);
+            EnergyContainer energyManager = getEnergyStorage(stack);
+            if (energyManager != null) {
                 energyManager.setEnergy(100000);
-                if (holder.isDirty()) {
-                    player.setItemInHand(interactionHand, holder.getStack());
-                }
             }
         }
-
-
         return InteractionResultHolder.success(player.getMainHandItem());
     }
 }

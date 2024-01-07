@@ -110,6 +110,11 @@ public record PlatformBlockFluidHandler(IFluidHandler handler) implements FluidC
     }
 
     @Override
+    public boolean isFluidValid(int slot, FluidHolder fluidHolder) {
+        return handler.isFluidValid(slot, new ForgeFluidHolder(fluidHolder).getFluidStack());
+    }
+
+    @Override
     public CompoundTag serialize(CompoundTag nbt) {
         return nbt;
     }

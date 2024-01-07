@@ -1,5 +1,6 @@
 package earth.terrarium.botarium.forge.extensions;
 
+import earth.terrarium.botarium.common.fluid.FluidApi;
 import earth.terrarium.botarium.common.fluid.base.FluidContainer;
 import earth.terrarium.botarium.common.item.ItemStackHolder;
 import earth.terrarium.botarium.forge.fluid.PlatformBlockFluidHandler;
@@ -22,7 +23,8 @@ public interface FluidContainerImpl {
     @Nullable
     @ImplementedByExtension
     static FluidContainer of(Level level, BlockPos pos, BlockState state, @Nullable BlockEntity entity, @Nullable Direction direction) {
-        return PlatformBlockFluidHandler.of(level, pos, state, entity, direction);
+        PlatformBlockFluidHandler platformBlockFluidHandler = PlatformBlockFluidHandler.of(level, pos, state, entity, direction);
+        return platformBlockFluidHandler == null ? FluidApi.getAPIFluidContainer(level, pos, state, entity, direction) : platformBlockFluidHandler;
     }
 
     @Nullable
@@ -38,6 +40,6 @@ public interface FluidContainerImpl {
 
     @ImplementedByExtension
     static boolean holdsFluid(Level level, BlockPos pos, BlockState state, @Nullable BlockEntity entity, @Nullable Direction direction) {
-        return entity != null && entity.getCapability(ForgeCapabilities.FLUID_HANDLER, direction).isPresent();
+        return (entity != null && entity.getCapability(ForgeCapabilities.FLUID_HANDLER, direction).isPresent()) || FluidApi.getAPIFluidContainer(level, pos, state, entity, direction) != null;
     }
 }

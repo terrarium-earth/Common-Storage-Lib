@@ -111,7 +111,7 @@ public class FabricFluidHolder extends SnapshotParticipant<FabricFluidHolder> im
 
     @Override
     public FabricFluidHolder copyHolder() {
-        return FabricFluidHolder.of(getFluid(), getCompound() == null ? null : getCompound().copy(), getFluidAmount());
+        return FabricFluidHolder.of(getFluid(), getFluidAmount(), getCompound() == null ? null : getCompound().copy());
     }
 
     @Override

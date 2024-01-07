@@ -96,7 +96,7 @@ public interface FluidContainer extends Serializable, Clearable {
     void setFluid(int slot, FluidHolder fluid);
 
     /**
-     * @return A {@link List}<{@link FluidHolder}> of all the fluids in the container.
+     * @return A {@link List} of {@link FluidHolder} in the container.
      */
     List<FluidHolder> getFluids();
 
@@ -147,6 +147,14 @@ public interface FluidContainer extends Serializable, Clearable {
      * @return Weather can be extracted from.
      */
     boolean allowsExtraction();
+
+    /**
+     * @param fluidHolder The {@link FluidHolder} to check if can be inserted into.
+     * @return Weather the given {@link FluidHolder} can be inserted into.
+     */
+    default boolean isFluidValid(int slot, FluidHolder fluidHolder) {
+        return allowsInsertion();
+    }
 
     /**
      * @return A {@link FluidSnapshot} of the given state of the {@link FluidContainer}.

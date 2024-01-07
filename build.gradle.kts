@@ -58,6 +58,7 @@ subprojects {
                 includeGroup("curse.maven")
             }
         }
+        mavenLocal()
     }
 
     dependencies {

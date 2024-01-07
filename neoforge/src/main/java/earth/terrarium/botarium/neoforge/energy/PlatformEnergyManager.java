@@ -4,20 +4,30 @@ import earth.terrarium.botarium.common.energy.base.EnergyContainer;
 import earth.terrarium.botarium.common.energy.base.EnergySnapshot;
 import earth.terrarium.botarium.common.energy.impl.SimpleEnergySnapshot;
 import earth.terrarium.botarium.common.item.ItemStackHolder;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.energy.IEnergyStorage;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 
 @ApiStatus.Internal
-@SuppressWarnings("UnstableApiUsage")
-public record PlatformItemEnergyManager(IEnergyStorage energy) implements EnergyContainer {
+public record PlatformEnergyManager(IEnergyStorage energy) implements EnergyContainer {
+
+    @Nullable
+    public static EnergyContainer of(Level level, BlockPos pos, BlockState state, @Nullable BlockEntity entity, @Nullable Direction direction) {
+        var energy = level.getCapability(Capabilities.EnergyStorage.BLOCK, pos, state, entity, direction);
+        return energy != null ? new PlatformEnergyManager(energy) : null;
+    }
 
     @Nullable
     public static EnergyContainer of(ItemStackHolder stack) {
         var energy = stack.getStack().getCapability(Capabilities.EnergyStorage.ITEM);
-        return energy != null ? new PlatformItemEnergyManager(energy) : null;
+        return energy != null ? new PlatformEnergyManager(energy) : null;
     }
 
     @Override

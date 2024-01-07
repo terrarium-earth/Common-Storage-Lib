@@ -8,10 +8,8 @@ import earth.terrarium.botarium.common.fluid.FluidApi;
 import earth.terrarium.botarium.common.fluid.base.BotariumFluidBlock;
 import earth.terrarium.botarium.common.fluid.base.BotariumFluidItem;
 import earth.terrarium.botarium.common.item.ItemContainerBlock;
-import earth.terrarium.botarium.neoforge.energy.ForgeBlockEnergyContainer;
+import earth.terrarium.botarium.common.registry.fluid.FluidBucketItem;
 import earth.terrarium.botarium.neoforge.energy.ForgeEnergyContainer;
-import earth.terrarium.botarium.neoforge.energy.ForgeItemEnergyContainer;
-import earth.terrarium.botarium.neoforge.fluid.ForgeFluidBlockContainer;
 import earth.terrarium.botarium.neoforge.fluid.ForgeFluidContainer;
 import earth.terrarium.botarium.neoforge.fluid.ForgeItemFluidContainer;
 import earth.terrarium.botarium.neoforge.item.ItemContainerWrapper;
@@ -20,13 +18,14 @@ import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
+import net.neoforged.neoforge.fluids.capability.wrappers.FluidBucketWrapper;
 
 @SuppressWarnings({"unused", "CodeBlock2Expr"})
 @Mod(Botarium.MOD_ID)
 public class BotariumNeoForge {
-
     public BotariumNeoForge(IEventBus bus) {
         Botarium.init();
+
         bus.addListener(BotariumNeoForge::registerEnergy);
         bus.addListener(BotariumNeoForge::registerFluid);
         bus.addListener(BotariumNeoForge::registerItem);
@@ -52,7 +51,7 @@ public class BotariumNeoForge {
 
         EnergyApi.getBlockRegistry().forEach((block, blockEnergyGetter) -> {
             event.registerBlock(Capabilities.EnergyStorage.BLOCK, (level, blockPos, blockState, blockEntity, direction) -> {
-                return new ForgeBlockEnergyContainer<>(blockEnergyGetter.getEnergyStorage(level, blockPos, blockState, blockEntity, direction));
+                return new ForgeEnergyContainer<>(blockEnergyGetter.getEnergyStorage(level, blockPos, blockState, blockEntity, direction));
             }, block);
         });
 
@@ -60,7 +59,7 @@ public class BotariumNeoForge {
             event.registerItem(Capabilities.EnergyStorage.ITEM, (itemStack, unused) -> {
                 var energyContainer = itemEnergyGetter.getEnergyStorage(itemStack);
                 if (energyContainer != null) {
-                    return new ForgeItemEnergyContainer<>(energyContainer);
+                    return new ForgeEnergyContainer<>(energyContainer);
                 }
                 return null;
             }, item);
@@ -78,25 +77,25 @@ public class BotariumNeoForge {
         BuiltInRegistries.ITEM.stream().filter(item -> item instanceof BotariumEnergyItem<?>).forEach(item -> {
             event.registerItem(Capabilities.EnergyStorage.ITEM, (itemStack, unused) -> {
                 BotariumEnergyItem<?> energyItem = (BotariumEnergyItem<?>) item;
-                return new ForgeItemEnergyContainer<>(energyItem.getEnergyStorage(itemStack));
+                return new ForgeEnergyContainer<>(energyItem.getEnergyStorage(itemStack));
             }, item);
         });
     }
 
     public static void registerFluid(RegisterCapabilitiesEvent event) {
-        FluidApi.FINALIZED_BLOCK_ENTITY_LOOKUP_MAP.forEach((blockEntityType, blockFluidGetter1) -> {
+        FluidApi.getBlockEntityRegistry().forEach((blockEntityType, blockFluidGetter1) -> {
             event.registerBlockEntity(Capabilities.FluidHandler.BLOCK, blockEntityType, (blockEntity, direction) -> {
                 return new ForgeFluidContainer<>(blockFluidGetter1.getFluidContainer(blockEntity.getLevel(), blockEntity.getBlockPos(), blockEntity.getBlockState(), blockEntity, direction));
             });
         });
 
-        FluidApi.FINALIZED_BLOCK_LOOKUP_MAP.forEach((block, blockFluidGetter) -> {
+        FluidApi.getBlockRegistry().forEach((block, blockFluidGetter) -> {
             event.registerBlock(Capabilities.FluidHandler.BLOCK, (level, blockPos, blockState, blockEntity, direction) -> {
-                return new ForgeFluidBlockContainer<>(blockFluidGetter.getFluidContainer(level, blockPos, blockState, blockEntity, direction));
+                return new ForgeFluidContainer<>(blockFluidGetter.getFluidContainer(level, blockPos, blockState, blockEntity, direction));
             }, block);
         });
 
-        FluidApi.FINALIZED_ITEM_LOOKUP_MAP.forEach((item, itemFluidGetter) -> {
+        FluidApi.getItemRegistry().forEach((item, itemFluidGetter) -> {
             event.registerItem(Capabilities.FluidHandler.ITEM, (itemStack, unused) -> {
                 var fluidContainer = itemFluidGetter.getFluidContainer(itemStack);
                 if (fluidContainer != null) {
@@ -120,6 +119,10 @@ public class BotariumNeoForge {
                 BotariumFluidItem<?> fluidHoldingItem = (BotariumFluidItem<?>) item;
                 return new ForgeItemFluidContainer<>(fluidHoldingItem.getFluidContainer(itemStack));
             }, item);
+        });
+
+        BuiltInRegistries.ITEM.stream().filter(item -> item instanceof FluidBucketItem).forEach(item -> {
+            event.registerItem(Capabilities.FluidHandler.ITEM, (itemStack, unused) -> new FluidBucketWrapper(itemStack), item);
         });
     }
 }

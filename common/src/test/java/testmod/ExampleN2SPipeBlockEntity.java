@@ -19,8 +19,8 @@ public class ExampleN2SPipeBlockEntity extends TestBlockEntity {
             BlockEntity forwardBlock = level.getBlockEntity(getBlockPos().north());
             BlockEntity backBlock = level.getBlockEntity(getBlockPos().south());
 
-            FluidContainer forwardTank = FluidApi.getBlockFluidContainer(forwardBlock, Direction.NORTH);
-            FluidContainer backTank = FluidApi.getBlockFluidContainer(backBlock, Direction.SOUTH);
+            FluidContainer forwardTank = FluidContainer.of(forwardBlock, Direction.NORTH);
+            FluidContainer backTank = FluidContainer.of(backBlock, Direction.SOUTH);
 
             if (forwardTank != null && backTank != null && !forwardTank.getFluids().get(0).isEmpty()) {
                 FluidApi.moveFluid(forwardTank, backTank, forwardTank.getFluids().get(0), false);

@@ -2,8 +2,7 @@ package earth.terrarium.botarium.neoforge.extensions;
 
 import earth.terrarium.botarium.common.energy.base.EnergyContainer;
 import earth.terrarium.botarium.common.item.ItemStackHolder;
-import earth.terrarium.botarium.neoforge.energy.PlatformBlockEnergyManager;
-import earth.terrarium.botarium.neoforge.energy.PlatformItemEnergyManager;
+import earth.terrarium.botarium.neoforge.energy.PlatformEnergyManager;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemStack;
@@ -18,11 +17,11 @@ import org.jetbrains.annotations.Nullable;
 @ClassExtension(EnergyContainer.class)
 public interface EnergyContainerImpl {
     static EnergyContainer of(Level level, BlockPos pos, BlockState state, @Nullable BlockEntity entity, @Nullable Direction direction) {
-        return PlatformBlockEnergyManager.of(level, pos, state, entity, direction);
+        return PlatformEnergyManager.of(level, pos, state, entity, direction);
     }
 
     static EnergyContainer of(ItemStackHolder holder) {
-        return PlatformItemEnergyManager.of(holder);
+        return PlatformEnergyManager.of(holder);
     }
 
     @ImplementedByExtension

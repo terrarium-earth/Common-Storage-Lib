@@ -3,17 +3,13 @@ package earth.terrarium.botarium.neoforge.fluid;
 import earth.terrarium.botarium.common.fluid.base.FluidHolder;
 import earth.terrarium.botarium.common.fluid.base.ItemFluidContainer;
 import earth.terrarium.botarium.util.Updatable;
-import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.capabilities.ICapabilityProvider;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import net.neoforged.neoforge.fluids.capability.IFluidHandlerItem;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
-public record ForgeItemFluidContainer<T extends ItemFluidContainer & Updatable>(T container) implements IFluidHandlerItem, ICapabilityProvider<ItemStack, Void, IFluidHandlerItem> {
-
+public record ForgeItemFluidContainer<T extends ItemFluidContainer & Updatable>(T container) implements IFluidHandlerItem {
     @Override
     public @NotNull ItemStack getContainer() {
         return container.getContainerItem();
@@ -36,7 +32,7 @@ public record ForgeItemFluidContainer<T extends ItemFluidContainer & Updatable>(
 
     @Override
     public boolean isFluidValid(int i, @NotNull FluidStack fluidStack) {
-        return getFluidInTank(i).isFluidEqual(fluidStack);
+        return container.isFluidValid(i, new ForgeFluidHolder(fluidStack));
     }
 
     @Override
@@ -60,10 +56,5 @@ public record ForgeItemFluidContainer<T extends ItemFluidContainer & Updatable>(
         fluid.setAmount(i);
         container.update();
         return new ForgeFluidHolder(this.container.extractFluid(fluid, fluidAction.simulate())).getFluidStack();
-    }
-
-    @Override
-    public @NotNull IFluidHandlerItem getCapability(@Nullable ItemStack itemStack, @Nullable Void unused) {
-        return this;
     }
 }

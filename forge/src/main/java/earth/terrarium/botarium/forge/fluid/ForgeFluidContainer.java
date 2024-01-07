@@ -43,7 +43,7 @@ public record ForgeFluidContainer(BotariumFluidBlock<?> fluidGetter, BlockEntity
 
         @Override
         public boolean isFluidValid(int i, @NotNull FluidStack fluidStack) {
-            return this.container.getFluids().get(i).matches(new ForgeFluidHolder(fluidStack));
+            return this.container.isFluidValid(i, new ForgeFluidHolder(fluidStack));
         }
 
         @Override

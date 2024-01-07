@@ -66,7 +66,6 @@ public class BotariumFabric implements ModInitializer {
         });
 
         FluidStorage.SIDED.registerFallback((world, pos, state, blockEntity, context) -> {
-            FluidApi.finalizeBlockRegistration();
             if (blockEntity instanceof BotariumFluidBlock<?> attachment) {
                 var container = attachment.getFluidContainer(world, pos, state, blockEntity, context);
                 return container == null ? null : new FabricBlockFluidContainer<>(container);
@@ -74,7 +73,7 @@ public class BotariumFabric implements ModInitializer {
                 var container = attachment.getFluidContainer(world, pos, state, blockEntity, context);
                 return container == null ? null : new FabricBlockFluidContainer<>(container);
             } else {
-                var blockEnergyGetter = FluidApi.FINALIZED_BLOCK_LOOKUP_MAP.get(state.getBlock());
+                var blockEnergyGetter = FluidApi.getFluidBlock(state.getBlock());
                 if (blockEnergyGetter != null) {
                     var container = blockEnergyGetter.getFluidContainer(world, pos, state, blockEntity, context);
                     if (container != null) {
@@ -82,7 +81,7 @@ public class BotariumFabric implements ModInitializer {
                     }
                 }
                 if (blockEntity != null) {
-                    var entityEnergyGetter = FluidApi.FINALIZED_BLOCK_ENTITY_LOOKUP_MAP.get(blockEntity.getType());
+                    var entityEnergyGetter = FluidApi.getFluidBlock(blockEntity.getType());
                     if (entityEnergyGetter == null) return null;
                     var entityContainer = entityEnergyGetter.getFluidContainer(world, pos, state, blockEntity, context);
                     return entityContainer == null ? null : new FabricBlockFluidContainer<>(entityContainer);
@@ -93,12 +92,11 @@ public class BotariumFabric implements ModInitializer {
 
 
         FluidStorage.ITEM.registerFallback((itemStack, context) -> {
-            FluidApi.finalizeItemRegistration();
             if (itemStack.getItem() instanceof BotariumFluidItem<?> attachment) {
                 FluidContainer fluidContainer = attachment.getFluidContainer(itemStack);
                 return fluidContainer == null ? null : new FabricItemFluidContainer(context, fluidContainer);
             } else {
-                var itemFluidGetter = FluidApi.FINALIZED_ITEM_LOOKUP_MAP.get(itemStack.getItem());
+                var itemFluidGetter = FluidApi.getFluidItem(itemStack.getItem());
                 if (itemFluidGetter == null) return null;
                 var container = itemFluidGetter.getFluidContainer(itemStack);
                 return container == null ? null : new FabricItemFluidContainer(context, container);

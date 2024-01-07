@@ -33,11 +33,11 @@ public interface FluidContainerImpl {
 
     @ImplementedByExtension
     static boolean holdsFluid(ItemStack stack) {
-        return stack.getCapability(Capabilities.EnergyStorage.ITEM) != null;
+        return stack.getCapability(Capabilities.FluidHandler.ITEM) != null;
     }
 
     @ImplementedByExtension
     static boolean holdsFluid(Level level, BlockPos pos, BlockState state, @Nullable BlockEntity entity, @Nullable Direction direction) {
-        return level.getCapability(Capabilities.EnergyStorage.BLOCK, pos, state, entity, direction) != null;
+        return level.getCapability(Capabilities.FluidHandler.BLOCK, pos, state, entity, direction) != null;
     }
 }

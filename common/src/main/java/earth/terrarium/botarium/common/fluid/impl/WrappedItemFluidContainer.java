@@ -106,6 +106,16 @@ public record WrappedItemFluidContainer(ItemStack stack,
     }
 
     @Override
+    public void readSnapshot(FluidSnapshot snapshot) {
+        container.readSnapshot(snapshot);
+    }
+
+    @Override
+    public boolean isFluidValid(int slot, FluidHolder fluidHolder) {
+        return container.isFluidValid(slot, fluidHolder);
+    }
+
+    @Override
     public ItemStack getContainerItem() {
         return stack;
     }

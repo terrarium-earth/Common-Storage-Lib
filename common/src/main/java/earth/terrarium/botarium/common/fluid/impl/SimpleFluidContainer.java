@@ -158,6 +158,8 @@ public class SimpleFluidContainer implements FluidContainer {
                 tags.add(fluidHolder.serialize());
             }
             tag.put(FLUID_KEY, tags);
+        } else {
+            tag.put(FLUID_KEY, new ListTag());
         }
         root.put(Botarium.BOTARIUM_DATA, tag);
         return root;
@@ -171,6 +173,11 @@ public class SimpleFluidContainer implements FluidContainer {
     @Override
     public boolean allowsExtraction() {
         return true;
+    }
+
+    @Override
+    public boolean isFluidValid(int slot, FluidHolder fluidHolder) {
+        return fluidFilter.test(slot, fluidHolder);
     }
 
     @Override

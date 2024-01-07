@@ -1,5 +1,5 @@
 modLoader = "javafml"
-loaderVersion = "[47,)"
+loaderVersion = "[49,)"
 license = "MIT"
 issueTrackerURL = "https://github.com/terrarium-earth/botarium/issues"
 
@@ -16,13 +16,13 @@ description = "A crossplatform API for devs that makes transfer and storage of i
 [[dependencies.botarium]]
 modId = "forge"
 mandatory = true
-versionRange = "[47,)"
+versionRange = "[49,)"
 ordering = "NONE"
 side = "BOTH"
 
 [[dependencies.botarium]]
 modId = "minecraft"
 mandatory = true
-versionRange = "[1.20,)"
+versionRange = "[1.20.4,)"
 ordering = "NONE"
 side = "BOTH"

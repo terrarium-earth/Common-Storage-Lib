@@ -2,10 +2,12 @@ package testmod;
 
 import earth.terrarium.botarium.common.energy.EnergyApi;
 import earth.terrarium.botarium.common.energy.impl.SimpleEnergyContainer;
+import earth.terrarium.botarium.common.energy.impl.UnlimitedEnergyContainer;
 import earth.terrarium.botarium.common.energy.impl.WrappedItemEnergyContainer;
 import earth.terrarium.botarium.common.fluid.FluidApi;
 import earth.terrarium.botarium.common.fluid.FluidConstants;
 import earth.terrarium.botarium.common.fluid.impl.SimpleFluidContainer;
+import earth.terrarium.botarium.common.fluid.impl.UnlimitedFluidContainer;
 import earth.terrarium.botarium.common.fluid.impl.WrappedItemFluidContainer;
 import earth.terrarium.botarium.common.registry.RegistryHelpers;
 import earth.terrarium.botarium.common.registry.RegistryHolder;
@@ -33,10 +35,12 @@ public class TestMod {
 
 
     public static final Supplier<Block> EXAMPLE_BLOCK = BLOCKS.register("block", () -> new TestBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.STONE)));
+    public static final Supplier<Block> EXAMPLE_BLOCK_UNLIMITED = BLOCKS.register("block_unlimited", () -> new TestBlockNonInterface(BlockBehaviour.Properties.ofFullCopy(Blocks.STONE)));
     public static final Supplier<BlockEntityType<?>> EXAMPLE_BLOCK_ENTITY = BLOCK_ENTITIES.register("block", () -> RegistryHelpers.createBlockEntityType(TestBlockEntity::new, EXAMPLE_BLOCK.get()));
     public static final Supplier<BlockItem> EXAMPLE_BLOCK_ITEM = ITEMS.register("block", () -> new BlockItem(EXAMPLE_BLOCK.get(), new Item.Properties()));
     public static final Supplier<Item> EXAMPLE_ITEM = ITEMS.register("item", () -> new TestItem(new Item.Properties().stacksTo(1)));
     public static final Supplier<Item> EXAMPLE_ITEM_NO_INTERFACE = ITEMS.register("item_two", () -> new TestNonInterfaceItem(new Item.Properties().stacksTo(1)));
+    public static final Supplier<Item> EXAMPLE_ITEM_UNLIMITED = ITEMS.register("item_unlimited", () -> new Item(new Item.Properties().stacksTo(1)));
 
     public static final Supplier<Block> EXAMPLE_PIPE = BLOCKS.register("pipe", () -> new ExamplePipe(BlockBehaviour.Properties.ofFullCopy(Blocks.STONE)));
     public static final Supplier<BlockEntityType<?>> EXAMPLE_PIPE_ENTITY = BLOCK_ENTITIES.register("pipe", () -> RegistryHelpers.createBlockEntityType(ExampleN2SPipeBlockEntity::new, EXAMPLE_PIPE.get()));
@@ -57,7 +61,11 @@ public class TestMod {
         FLUID_TYPES.initialize();
         FLUIDS.initialize();
 
-        FluidApi.registerFluidItem(EXAMPLE_ITEM_NO_INTERFACE, stack -> new WrappedItemFluidContainer(stack, new SimpleFluidContainer(FluidConstants.fromMillibuckets(1000), 1, (integer, fluidHolder) -> true)));
+        FluidApi.registerFluidItem(EXAMPLE_ITEM_NO_INTERFACE, stack -> new WrappedItemFluidContainer(stack, new SimpleFluidContainer(FluidConstants.fromMillibuckets(4000), 1, (integer, fluidHolder) -> true)));
+        FluidApi.registerFluidItem(EXAMPLE_ITEM_UNLIMITED, stack -> new WrappedItemFluidContainer(stack, new UnlimitedFluidContainer(TEST_FLUID_SOURCE.get())));
+        FluidApi.registerFluidBlock(EXAMPLE_BLOCK_UNLIMITED, (level, blockPos, blockState, blockEntity, direction) -> new UnlimitedFluidContainer(TEST_FLUID_SOURCE.get()));
+        EnergyApi.registerEnergyItem(EXAMPLE_ITEM_UNLIMITED, stack -> new UnlimitedEnergyContainer());
         EnergyApi.registerEnergyItem(EXAMPLE_ITEM_NO_INTERFACE, stack -> new WrappedItemEnergyContainer(stack, new SimpleEnergyContainer(100000)));
+        EnergyApi.registerEnergyBlock(EXAMPLE_BLOCK_UNLIMITED, (level, blockPos, blockState, blockEntity, direction) -> new UnlimitedEnergyContainer());
     }
 }

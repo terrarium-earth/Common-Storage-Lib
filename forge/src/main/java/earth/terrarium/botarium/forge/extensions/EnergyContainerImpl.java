@@ -1,5 +1,6 @@
 package earth.terrarium.botarium.forge.extensions;
 
+import earth.terrarium.botarium.common.energy.EnergyApi;
 import earth.terrarium.botarium.common.energy.base.EnergyContainer;
 import earth.terrarium.botarium.common.item.ItemStackHolder;
 import earth.terrarium.botarium.forge.energy.PlatformBlockEnergyManager;
@@ -18,7 +19,8 @@ import org.jetbrains.annotations.Nullable;
 @ClassExtension(EnergyContainer.class)
 public interface EnergyContainerImpl {
     static EnergyContainer of(Level level, BlockPos pos, BlockState state, @Nullable BlockEntity entity, @Nullable Direction direction) {
-        return PlatformBlockEnergyManager.of(level, pos, state, entity, direction);
+        PlatformBlockEnergyManager platformBlockEnergyManager = PlatformBlockEnergyManager.of(level, pos, state, entity, direction);
+        return platformBlockEnergyManager == null ? EnergyApi.getAPIEnergyContainer(level, pos, state, entity, direction) : platformBlockEnergyManager;
     }
 
     static EnergyContainer of(ItemStackHolder holder) {
@@ -32,6 +34,6 @@ public interface EnergyContainerImpl {
 
     @ImplementedByExtension
     static boolean holdsEnergy(Level level, BlockPos pos, BlockState state, @Nullable BlockEntity entity, @Nullable Direction direction) {
-        return entity != null && entity.getCapability(ForgeCapabilities.ENERGY, direction).isPresent();
+        return (entity != null && entity.getCapability(ForgeCapabilities.ENERGY, direction).isPresent()) || EnergyApi.getAPIEnergyContainer(level, pos, state, entity, direction) != null;
     }
 }

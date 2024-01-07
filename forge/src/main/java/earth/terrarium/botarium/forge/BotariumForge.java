@@ -46,7 +46,7 @@ public class BotariumForge {
             event.addCapability(new ResourceLocation(Botarium.MOD_ID, "fluid"), new ForgeFluidContainer(fluidHoldingBlock, event.getObject()));
         }
 
-        BotariumFluidBlock<?> blockFluidGetter = FluidApi.FINALIZED_BLOCK_ENTITY_LOOKUP_MAP.get(event.getObject().getType());
+        BotariumFluidBlock<?> blockFluidGetter = FluidApi.getFluidBlock(event.getObject().getType());
         if (blockFluidGetter != null) {
             event.addCapability(new ResourceLocation(Botarium.MOD_ID, "fluid"), new ForgeFluidContainer(blockFluidGetter, event.getObject()));
         }
@@ -73,7 +73,7 @@ public class BotariumForge {
             event.addCapability(new ResourceLocation(Botarium.MOD_ID, "fluid"), new ForgeItemFluidContainer<>(fluidHoldingItem.getFluidContainer(event.getObject())));
         }
 
-        var itemFluidGetter = FluidApi.FINALIZED_ITEM_LOOKUP_MAP.get(event.getObject().getItem());
+        var itemFluidGetter = FluidApi.getFluidItem(event.getObject().getItem());
         if (itemFluidGetter != null) {
             var fluidContainer = itemFluidGetter.getFluidContainer(event.getObject());
             if (fluidContainer != null) {

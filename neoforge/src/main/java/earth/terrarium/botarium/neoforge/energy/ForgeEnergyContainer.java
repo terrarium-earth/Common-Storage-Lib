@@ -1,22 +1,17 @@
 package earth.terrarium.botarium.neoforge.energy;
 
 import earth.terrarium.botarium.common.energy.base.EnergyContainer;
-import earth.terrarium.botarium.neoforge.AutoSerializable;
-import earth.terrarium.botarium.util.Serializable;
 import earth.terrarium.botarium.util.Updatable;
-import net.minecraft.core.Direction;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.neoforged.neoforge.capabilities.ICapabilityProvider;
 import net.neoforged.neoforge.energy.IEnergyStorage;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
-public record ForgeEnergyContainer<T extends EnergyContainer & Updatable>(T container) implements IEnergyStorage, AutoSerializable, ICapabilityProvider<BlockEntity, Direction, IEnergyStorage> {
+public record ForgeEnergyContainer<T extends EnergyContainer & Updatable>(T container) implements IEnergyStorage {
     @Override
     public int receiveEnergy(int maxAmount, boolean bl) {
         if (maxAmount <= 0) return 0;
         int inserted = (int) container.insertEnergy(Math.min(maxAmount, container.maxInsert()), bl);
-        container.update();
+        if (inserted > 0 && !bl) {
+            container.update();
+        }
         return inserted;
     }
 
@@ -24,7 +19,9 @@ public record ForgeEnergyContainer<T extends EnergyContainer & Updatable>(T cont
     public int extractEnergy(int maxAmount, boolean bl) {
         if (maxAmount <= 0) return 0;
         int extracted = (int) container.extractEnergy(Math.min(maxAmount, container.maxExtract()), bl);
-        container.update();
+        if (extracted > 0 &&!bl) {
+            container.update();
+        }
         return extracted;
     }
 
@@ -46,15 +43,5 @@ public record ForgeEnergyContainer<T extends EnergyContainer & Updatable>(T cont
     @Override
     public boolean canReceive() {
         return container.allowsInsertion();
-    }
-
-    @Override
-    public Serializable getSerializable() {
-        return container;
-    }
-
-    @Override
-    public @NotNull IEnergyStorage getCapability(BlockEntity object, Direction direction) {
-        return this;
     }
 }

@@ -2,6 +2,8 @@ package testmod;
 
 import com.mojang.serialization.MapCodec;
 import earth.terrarium.botarium.common.energy.EnergyApi;
+import earth.terrarium.botarium.common.energy.base.EnergyContainer;
+import earth.terrarium.botarium.common.fluid.base.FluidContainer;
 import earth.terrarium.botarium.common.fluid.base.FluidHolder;
 import earth.terrarium.botarium.common.fluid.impl.SimpleFluidContainer;
 import net.minecraft.core.BlockPos;
@@ -46,13 +48,13 @@ public class TestBlock extends BaseEntityBlock {
         }
 
         if (!level.isClientSide()) {
-            player.sendSystemMessage(Component.literal("Energy: " + EnergyApi.getBlockEnergyContainer(
+            player.sendSystemMessage(Component.literal("Energy: " + EnergyContainer.of(
                 level.getBlockEntity(blockPos),
                 blockHitResult.getDirection()
             ).getStoredEnergy()));
 
             if (level.getBlockEntity(blockPos) instanceof TestBlockEntity testBlockEntity) {
-                player.sendSystemMessage(Component.literal("Fluid: " + testBlockEntity.getFluidContainer(level, blockPos, blockState, testBlockEntity, null).getFluids().stream()
+                player.sendSystemMessage(Component.literal("Fluid: " + FluidContainer.of(level, blockPos, blockState, testBlockEntity, null).getFluids().stream()
                     .mapToLong(FluidHolder::getFluidAmount)
                     .mapToObj(Long::toString)
                     .collect(Collectors.joining(", "))

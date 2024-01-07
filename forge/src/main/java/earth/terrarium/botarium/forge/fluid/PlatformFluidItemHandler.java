@@ -104,6 +104,11 @@ public record PlatformFluidItemHandler(ItemStackHolder holder, IFluidHandlerItem
     }
 
     @Override
+    public boolean isFluidValid(int slot, FluidHolder fluidHolder) {
+        return handler.isFluidValid(slot, new ForgeFluidHolder(fluidHolder).getFluidStack());
+    }
+
+    @Override
     public void deserialize(CompoundTag nbt) {
 
     }

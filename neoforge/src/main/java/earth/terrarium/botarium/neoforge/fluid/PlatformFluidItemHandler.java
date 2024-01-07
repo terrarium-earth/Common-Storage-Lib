@@ -123,4 +123,9 @@ public record PlatformFluidItemHandler(ItemStackHolder holder, IFluidHandlerItem
     public ItemStack getContainerItem() {
         return handler.getContainer();
     }
+
+    @Override
+    public boolean isFluidValid(int slot, FluidHolder fluidHolder) {
+        return handler.isFluidValid(slot, new ForgeFluidHolder(fluidHolder).getFluidStack());
+    }
 }
