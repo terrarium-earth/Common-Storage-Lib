@@ -10,6 +10,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.level.material.Fluids;
 import net.msrandom.extensions.annotations.ImplementedByExtension;
 import org.apache.commons.lang3.NotImplementedException;
 import org.jetbrains.annotations.Nullable;
@@ -70,7 +71,7 @@ public interface FluidHolder {
      * @return The created FluidHolder.
      */
     static FluidHolder fromCompound(CompoundTag tag) {
-        FluidHolder fluid = of(null, 0);
+        FluidHolder fluid = of(Fluids.EMPTY, 0);
         fluid.deserialize(tag);
         return fluid;
     }
