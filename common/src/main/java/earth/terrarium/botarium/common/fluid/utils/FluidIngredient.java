@@ -104,7 +104,7 @@ public class FluidIngredient implements Predicate<FluidHolder> {
             BuiltInRegistries.FLUID.byNameCodec().fieldOf("fluid").orElse(Fluids.EMPTY).forGetter(FluidValue::fluid)
         ).apply(instance, FluidValue::new));
         private static final Codec<FluidValue> OLD_CODEC = RecordCodecBuilder.create(instance -> instance.group(
-            FluidHolder.CODEC.fieldOf("fluid").orElse(FluidHooks.emptyFluid()).forGetter(value -> FluidHolder.of(value.fluid()))
+            FluidHolder.CODEC.fieldOf("fluid").forGetter(value -> FluidHolder.of(value.fluid()))
         ).apply(instance, fluidHolder -> new FluidValue(fluidHolder.getFluid())));
         public static final Codec<FluidValue> CODEC = Codec.either(NEW_CODEC, OLD_CODEC).xmap(p -> p.map(a -> a, b -> b), Either::left);
 

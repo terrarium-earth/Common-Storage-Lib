@@ -1,3 +1,3 @@
-# 2.2.5
+# 2.2.6
 
-Revert copy with amount change
+Fix fluid ingredient
