@@ -11,19 +11,24 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.material.Fluid;
 
 import java.util.*;
+import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class FluidIngredient implements Predicate<FluidHolder> {
-    private static final Codec<FluidIngredient> CODEC = Codec.either(FluidValue.CODEC, TagValue.CODEC)
-        .listOf()
-        .xmap(FluidIngredient::new, FluidIngredient::getRawValues);
-
+    public static final Codec<FluidIngredient> CODEC = listAndObjectCodec(Codec.either(FluidValue.CODEC, TagValue.CODEC), FluidIngredient::getRawValues, FluidIngredient::new);
     private final List<Either<FluidValue, TagValue>> values;
     private List<FluidHolder> cachedFluids;
 
-    private FluidIngredient(List<Either<FluidValue, TagValue>> stream) {
+    public static <A, B> Codec<B> listAndObjectCodec(Codec<A> codec, Function<B, List<A>> from, Function<List<A>, B> to) {
+        return Codec.either(codec, codec.listOf()).xmap(eitherListEither -> eitherListEither.map(
+                either -> to.apply(List.of(either)),
+                to
+        ), a -> from.apply(a).size() == 1 ? Either.left(from.apply(a).get(0)) : Either.right(from.apply(a)));
+    }
+
+    protected FluidIngredient(List<Either<FluidValue, TagValue>> stream) {
         this.values = stream;
     }
 
@@ -42,7 +47,7 @@ public class FluidIngredient implements Predicate<FluidHolder> {
     public static FluidIngredient of(Stream<FluidHolder> fluids) {
         List<Either<FluidValue, TagValue>> values = new ArrayList<>();
         for (FluidHolder fluid : fluids.filter(Predicate.not(FluidHolder::isEmpty)).toList()) {
-            values.add(Either.left(new FluidValue(fluid)));
+            values.add(Either.left(new FluidValue(fluid.getFluid())));
         }
         return new FluidIngredient(values);
     }
@@ -57,7 +62,7 @@ public class FluidIngredient implements Predicate<FluidHolder> {
             return fluidHolder.isEmpty();
         } else {
             for (FluidHolder value : getFluids()) {
-                if (fluidHolder.getFluid().isSame(value.getFluid())) {
+                if (fluidHolder.is(value.getFluid())) {
                     return true;
                 }
             }
@@ -73,8 +78,8 @@ public class FluidIngredient implements Predicate<FluidHolder> {
     public void dissolve() {
         if (this.cachedFluids == null) {
             this.cachedFluids = this.values.stream().flatMap(either -> either.map(
-                fluidValue -> Stream.of(fluidValue.fluid()),
-                tagValue -> tagValue.getFluids().stream()
+                    fluidValue -> Stream.of(FluidHolder.of(fluidValue.fluid())),
+                    tagValue -> tagValue.getFluids().stream()
             )).collect(Collectors.toList());
         }
     }
@@ -87,17 +92,14 @@ public class FluidIngredient implements Predicate<FluidHolder> {
         Collection<FluidHolder> getFluids();
     }
 
-    public record FluidValue(FluidHolder fluid) implements Value {
-        private static final Codec<FluidValue> NEW_CODEC = FluidHolder.CODEC.orElse(FluidHolder.empty())
-            .xmap(FluidValue::new, FluidValue::fluid);
-        private static final Codec<FluidValue> OLD_CODEC = RecordCodecBuilder.create(instance -> instance.group(
-            FluidHolder.CODEC.fieldOf("fluid").orElse(FluidHolder.empty()).forGetter(FluidValue::fluid)
+    public record FluidValue(Fluid fluid) implements Value {
+        public static final Codec<FluidValue> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+                BuiltInRegistries.FLUID.byNameCodec().fieldOf("fluid").forGetter(FluidValue::fluid)
         ).apply(instance, FluidValue::new));
-        public static final Codec<FluidValue> CODEC = Codec.either(NEW_CODEC, OLD_CODEC).xmap(p -> p.map(a -> a, b -> b), Either::left);
 
         @Override
         public Collection<FluidHolder> getFluids() {
-            return Collections.singleton(fluid);
+            return Collections.singleton(FluidHolder.of(this.fluid));
         }
     }
 
