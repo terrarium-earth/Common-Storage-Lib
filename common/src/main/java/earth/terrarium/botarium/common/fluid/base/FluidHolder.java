@@ -7,6 +7,7 @@ import earth.terrarium.botarium.common.fluid.utils.FluidHooks;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.material.Fluid;
 
@@ -51,6 +52,27 @@ public interface FluidHolder {
 
     static FluidHolder ofMillibuckets(Fluid fluid, long millibuckets, CompoundTag tag) {
         return FluidHooks.newFluidHolder(fluid, FluidConstants.fromMillibuckets(millibuckets), tag);
+    }
+
+    static FluidHolder empty() {
+        return FluidHooks.emptyFluid();
+    }
+
+    default void writeToBuffer(FriendlyByteBuf buffer) {
+        buffer.writeOptional(Optional.ofNullable(this.isEmpty() ? null : this), (friendlyByteBuf, fluid) -> {
+            friendlyByteBuf.writeVarInt(BuiltInRegistries.FLUID.getId(fluid.getFluid()));
+            friendlyByteBuf.writeVarLong(fluid.getFluidAmount());
+            friendlyByteBuf.writeNbt(fluid.getCompound());
+        });
+    }
+
+    static FluidHolder readFromBuffer(FriendlyByteBuf buffer) {
+        return buffer.readOptional((friendlyByteBuf) -> {
+            Fluid fluid = BuiltInRegistries.FLUID.byId(friendlyByteBuf.readVarInt());
+            long amount = friendlyByteBuf.readVarLong();
+            CompoundTag tag = friendlyByteBuf.readNbt();
+            return FluidHolder.of(fluid, amount, tag);
+        }).orElse(FluidHolder.empty());
     }
 
     /**
@@ -126,9 +148,7 @@ public interface FluidHolder {
      * @return A copy of the {@link FluidHolder} with the given amount.
      */
     default FluidHolder copyWithAmount(long amount) {
-        FluidHolder copy = copyHolder();
-        if (!copy.isEmpty()) copy.setAmount(amount);
-        return copy;
+        return this.getFluid() != null ? this.copyHolder() : FluidHolder.of(this.getFluid(), amount, this.getCompound());
     }
 
     @SuppressWarnings("deprecation")

@@ -9,6 +9,7 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.level.material.Fluids;
 
 import java.util.*;
 import java.util.function.Function;
@@ -18,7 +19,7 @@ import java.util.stream.Stream;
 
 public class FluidIngredient implements Predicate<FluidHolder> {
     private static final Codec<FluidIngredient> NEW_CODEC = listAndObjectCodec(Codec.either(FluidValue.CODEC, TagValue.CODEC), FluidIngredient::getRawValues, FluidIngredient::new);
-    
+
     private static final Codec<FluidIngredient> OLD_CODEC = RecordCodecBuilder.create(instance -> instance.group(
         Codec.either(FluidValue.CODEC, TagValue.CODEC).listOf().fieldOf("fluids").forGetter(FluidIngredient::getRawValues)
     ).apply(instance, FluidIngredient::new));
@@ -43,7 +44,7 @@ public class FluidIngredient implements Predicate<FluidHolder> {
     }
 
     public static FluidIngredient of(Fluid... fluids) {
-        return FluidIngredient.of(Arrays.stream(fluids).map(FluidHolder::of));
+        return new FluidIngredient(Arrays.stream(fluids).map(FluidValue::new).map(Either::<FluidValue, TagValue>left).toList());
     }
 
     public static FluidIngredient of(FluidHolder... fluids) {
@@ -53,7 +54,7 @@ public class FluidIngredient implements Predicate<FluidHolder> {
     public static FluidIngredient of(Stream<FluidHolder> fluids) {
         List<Either<FluidValue, TagValue>> values = new ArrayList<>();
         for (FluidHolder fluid : fluids.filter(Predicate.not(FluidHolder::isEmpty)).toList()) {
-            values.add(Either.left(new FluidValue(fluid)));
+            values.add(Either.left(new FluidValue(fluid.getFluid())));
         }
         return new FluidIngredient(values);
     }
@@ -84,7 +85,7 @@ public class FluidIngredient implements Predicate<FluidHolder> {
     public void dissolve() {
         if (this.cachedFluids == null) {
             this.cachedFluids = this.values.stream().flatMap(either -> either.map(
-                fluidValue -> Stream.of(fluidValue.fluid()),
+                fluidValue -> fluidValue.getFluids().stream(),
                 tagValue -> tagValue.getFluids().stream()
             )).collect(Collectors.toList());
         }
@@ -98,17 +99,18 @@ public class FluidIngredient implements Predicate<FluidHolder> {
         Collection<FluidHolder> getFluids();
     }
 
-    public record FluidValue(FluidHolder fluid) implements Value {
-        private static final Codec<FluidValue> NEW_CODEC = FluidHolder.CODEC.orElse(FluidHooks.emptyFluid())
-            .xmap(FluidValue::new, FluidValue::fluid);
-        private static final Codec<FluidValue> OLD_CODEC = RecordCodecBuilder.create(instance -> instance.group(
-            FluidHolder.CODEC.fieldOf("fluid").orElse(FluidHooks.emptyFluid()).forGetter(FluidValue::fluid)
+    public record FluidValue(Fluid fluid) implements Value {
+        private static final Codec<FluidValue> NEW_CODEC = RecordCodecBuilder.create(instance -> instance.group(
+            BuiltInRegistries.FLUID.byNameCodec().fieldOf("fluid").orElse(Fluids.EMPTY).forGetter(FluidValue::fluid)
         ).apply(instance, FluidValue::new));
+        private static final Codec<FluidValue> OLD_CODEC = RecordCodecBuilder.create(instance -> instance.group(
+            FluidHolder.CODEC.fieldOf("fluid").orElse(FluidHooks.emptyFluid()).forGetter(value -> FluidHolder.of(value.fluid()))
+        ).apply(instance, fluidHolder -> new FluidValue(fluidHolder.getFluid())));
         public static final Codec<FluidValue> CODEC = Codec.either(NEW_CODEC, OLD_CODEC).xmap(p -> p.map(a -> a, b -> b), Either::left);
 
         @Override
         public Collection<FluidHolder> getFluids() {
-            return Collections.singleton(fluid);
+            return Collections.singleton(FluidHolder.of(this.fluid));
         }
     }
 
