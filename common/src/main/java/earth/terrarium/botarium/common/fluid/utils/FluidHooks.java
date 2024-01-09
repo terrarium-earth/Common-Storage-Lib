@@ -17,6 +17,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 
+@Deprecated
 public class FluidHooks {
     /**
      * @param fluid  The fluid to create the holder for.

@@ -33,15 +33,24 @@ public interface FluidHolder {
             BuiltInRegistries.FLUID.byNameCodec().fieldOf("fluid").forGetter(FluidHolder::getFluid),
             Codec.LONG.fieldOf("millibuckets").orElse(1000L).forGetter(fluidHolder -> FluidConstants.toMillibuckets(fluidHolder.getFluidAmount())),
             CompoundTag.CODEC.optionalFieldOf("tag").forGetter(fluidHolder -> Optional.ofNullable(fluidHolder.getCompound()))
-    ).apply(instance, (fluid, millibuckets, compoundTag) -> FluidHolder.of(fluid, FluidConstants.fromMillibuckets(millibuckets), compoundTag.orElse(null))));
+    ).apply(instance, (fluid, millibuckets, compoundTag) -> FluidHolder.ofMillibuckets(fluid, millibuckets, compoundTag.orElse(null))));
 
 
     static FluidHolder of(Fluid fluid) {
-        return FluidHooks.newFluidHolder(fluid, FluidHooks.buckets(1D), null);
+        return FluidHooks.newFluidHolder(fluid, FluidConstants.getBucketAmount(), null);
     }
 
+    @Deprecated
     static FluidHolder of(Fluid fluid, double buckets, CompoundTag tag) {
         return FluidHooks.newFluidHolder(fluid, FluidHooks.buckets(buckets), tag);
+    }
+
+    static FluidHolder of(Fluid fluid, long amount, CompoundTag tag) {
+        return FluidHooks.newFluidHolder(fluid, amount, tag);
+    }
+
+    static FluidHolder ofMillibuckets(Fluid fluid, long millibuckets, CompoundTag tag) {
+        return FluidHooks.newFluidHolder(fluid, FluidConstants.fromMillibuckets(millibuckets), tag);
     }
 
     /**

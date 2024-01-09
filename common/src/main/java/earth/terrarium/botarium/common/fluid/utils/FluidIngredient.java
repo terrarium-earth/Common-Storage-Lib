@@ -27,7 +27,7 @@ public class FluidIngredient implements Predicate<FluidHolder> {
     private final List<Either<FluidValue, TagValue>> values;
     private List<FluidHolder> cachedFluids;
 
-    private FluidIngredient(List<Either<FluidValue, TagValue>> stream) {
+    protected FluidIngredient(List<Either<FluidValue, TagValue>> stream) {
         this.values = stream;
     }
 
