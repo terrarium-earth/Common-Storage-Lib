@@ -1,4 +1,3 @@
-# 2.2.4
+# 2.2.5
 
-Fixed bug with FluidHolder codec
-Added QuantifiedFluidIngredient
+Revert copy with amount change

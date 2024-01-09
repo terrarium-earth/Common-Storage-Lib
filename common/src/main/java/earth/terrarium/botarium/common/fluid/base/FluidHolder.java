@@ -148,7 +148,9 @@ public interface FluidHolder {
      * @return A copy of the {@link FluidHolder} with the given amount.
      */
     default FluidHolder copyWithAmount(long amount) {
-        return this.getFluid() != null ? this.copyHolder() : FluidHolder.of(this.getFluid(), amount, this.getCompound());
+        FluidHolder copy = copyHolder();
+        if (!copy.isEmpty()) copy.setAmount(amount);
+        return copy;
     }
 
     @SuppressWarnings("deprecation")
