@@ -101,7 +101,7 @@ public class FluidIngredient implements Predicate<FluidHolder> {
 
     public record FluidValue(Fluid fluid) implements Value {
         private static final Codec<FluidValue> NEW_CODEC = RecordCodecBuilder.create(instance -> instance.group(
-            BuiltInRegistries.FLUID.byNameCodec().fieldOf("fluid").orElse(Fluids.EMPTY).forGetter(FluidValue::fluid)
+            BuiltInRegistries.FLUID.byNameCodec().fieldOf("fluid").forGetter(FluidValue::fluid)
         ).apply(instance, FluidValue::new));
         private static final Codec<FluidValue> OLD_CODEC = RecordCodecBuilder.create(instance -> instance.group(
             FluidHolder.CODEC.fieldOf("fluid").forGetter(value -> FluidHolder.of(value.fluid()))
