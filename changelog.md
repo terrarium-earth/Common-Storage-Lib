@@ -1,4 +1,3 @@
-# 3.0.1
+# 3.0.2
 
-- Removed deprecated fluid ingredient codec
-- Fixed Forge not having an impl for FluidConstants
+- Create quantified fluid ingredient
