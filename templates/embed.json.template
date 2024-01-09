@@ -7,19 +7,19 @@
                     "type": 2,
                     "label": "Fabric",
                     "style": 5,
-                    "url": "${fabric_link}"
+                    "url": "https://modrinth.com/mod/botarium/version/${fabric_link}"
                 },
                 {
                     "type": 2,
                     "label": "NeoForge",
                     "style": 5,
-                    "url": "${neoforge_link}"
+                    "url": "https://modrinth.com/mod/botarium/version/${neoforge_link}"
                 },
                 {
                     "type": 2,
                     "label": "Forge",
                     "style": 5,
-                    "url": "${forge_link}"
+                    "url": "https://modrinth.com/mod/botarium/version/${forge_link}"
                 }
             ]
         }
