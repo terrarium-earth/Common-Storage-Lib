@@ -16,13 +16,9 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class FluidIngredient implements Predicate<FluidHolder> {
-    private static final Codec<FluidIngredient> NEW_CODEC = Codec.either(FluidValue.CODEC, TagValue.CODEC)
+    private static final Codec<FluidIngredient> CODEC = Codec.either(FluidValue.CODEC, TagValue.CODEC)
         .listOf()
         .xmap(FluidIngredient::new, FluidIngredient::getRawValues);
-    private static final Codec<FluidIngredient> OLD_CODEC = RecordCodecBuilder.create(instance -> instance.group(
-        Codec.either(FluidValue.CODEC, TagValue.CODEC).listOf().fieldOf("fluids").forGetter(FluidIngredient::getRawValues)
-    ).apply(instance, FluidIngredient::new));
-    public static final Codec<FluidIngredient> CODEC = Codec.either(NEW_CODEC, OLD_CODEC).xmap(p -> p.map(a -> a, b -> b), Either::left);
 
     private final List<Either<FluidValue, TagValue>> values;
     private List<FluidHolder> cachedFluids;
