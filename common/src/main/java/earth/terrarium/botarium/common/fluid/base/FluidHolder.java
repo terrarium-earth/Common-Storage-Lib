@@ -10,6 +10,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.material.Fluid;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 import java.util.function.Predicate;
@@ -50,8 +51,12 @@ public interface FluidHolder {
         return FluidHooks.newFluidHolder(fluid, amount, tag);
     }
 
-    static FluidHolder ofMillibuckets(Fluid fluid, long millibuckets, CompoundTag tag) {
+    static FluidHolder ofMillibuckets(Fluid fluid, long millibuckets, @Nullable CompoundTag tag) {
         return FluidHooks.newFluidHolder(fluid, FluidConstants.fromMillibuckets(millibuckets), tag);
+    }
+
+    static FluidHolder ofMillibuckets(Fluid fluid, long millibuckets) {
+        return FluidHooks.newFluidHolder(fluid, FluidConstants.fromMillibuckets(millibuckets), null);
     }
 
     static FluidHolder empty() {
