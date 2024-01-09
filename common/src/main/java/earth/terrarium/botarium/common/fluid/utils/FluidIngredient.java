@@ -11,14 +11,14 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.material.Fluid;
 
 import java.util.*;
+import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class FluidIngredient implements Predicate<FluidHolder> {
-    private static final Codec<FluidIngredient> NEW_CODEC = Codec.either(FluidValue.CODEC, TagValue.CODEC)
-        .listOf()
-        .xmap(FluidIngredient::new, FluidIngredient::getRawValues);
+    private static final Codec<FluidIngredient> NEW_CODEC = listAndObjectCodec(Codec.either(FluidValue.CODEC, TagValue.CODEC), FluidIngredient::getRawValues, FluidIngredient::new);
+    
     private static final Codec<FluidIngredient> OLD_CODEC = RecordCodecBuilder.create(instance -> instance.group(
         Codec.either(FluidValue.CODEC, TagValue.CODEC).listOf().fieldOf("fluids").forGetter(FluidIngredient::getRawValues)
     ).apply(instance, FluidIngredient::new));
@@ -26,6 +26,13 @@ public class FluidIngredient implements Predicate<FluidHolder> {
 
     private final List<Either<FluidValue, TagValue>> values;
     private List<FluidHolder> cachedFluids;
+
+    public static <A, B> Codec<B> listAndObjectCodec(Codec<A> codec, Function<B, List<A>> from, Function<List<A>, B> to) {
+        return Codec.either(codec, codec.listOf()).xmap(eitherListEither -> eitherListEither.map(
+                either -> to.apply(List.of(either)),
+                to
+        ), a -> from.apply(a).size() == 1 ? Either.left(from.apply(a).get(0)) : Either.right(from.apply(a)));
+    }
 
     protected FluidIngredient(List<Either<FluidValue, TagValue>> stream) {
         this.values = stream;
