@@ -2,6 +2,7 @@ package earth.terrarium.botarium.common.fluid.base;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import earth.terrarium.botarium.common.fluid.FluidConstants;
 import earth.terrarium.botarium.common.fluid.utils.FluidHooks;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -18,11 +19,22 @@ import java.util.function.Predicate;
  */
 public interface FluidHolder {
 
+    /*
+     * This is a temporary codec that will be replaced with the new codec on 1.20.4
+     */
+    @Deprecated
     Codec<FluidHolder> CODEC = RecordCodecBuilder.create(instance -> instance.group(
         BuiltInRegistries.FLUID.byNameCodec().fieldOf("fluid").forGetter(FluidHolder::getFluid),
         Codec.FLOAT.fieldOf("buckets").orElse(1f).forGetter(fluidHolder -> (float) fluidHolder.getFluidAmount() / FluidHooks.getBucketAmount()),
         CompoundTag.CODEC.optionalFieldOf("tag").forGetter(fluidHolder -> Optional.ofNullable(fluidHolder.getCompound()))
     ).apply(instance, (fluid, buckets, compoundTag) -> FluidHooks.newFluidHolder(fluid, FluidHooks.buckets(buckets), compoundTag.orElse(null))));
+
+    Codec<FluidHolder> NEW_CODEC = RecordCodecBuilder.create(instance -> instance.group(
+            BuiltInRegistries.FLUID.byNameCodec().fieldOf("fluid").forGetter(FluidHolder::getFluid),
+            Codec.LONG.fieldOf("millibuckets").orElse(1000L).forGetter(fluidHolder -> FluidConstants.toMillibuckets(fluidHolder.getFluidAmount())),
+            CompoundTag.CODEC.optionalFieldOf("tag").forGetter(fluidHolder -> Optional.ofNullable(fluidHolder.getCompound()))
+    ).apply(instance, (fluid, millibuckets, compoundTag) -> FluidHolder.of(fluid, FluidConstants.fromMillibuckets(millibuckets), compoundTag.orElse(null))));
+
 
     static FluidHolder of(Fluid fluid) {
         return FluidHooks.newFluidHolder(fluid, FluidHooks.buckets(1D), null);
