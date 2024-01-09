@@ -7,6 +7,10 @@ public class InsertOnlyEnergyContainer extends SimpleEnergyContainer {
         super(energyCapacity);
     }
 
+    public InsertOnlyEnergyContainer(long energyCapacity, long maxInsert) {
+        super(energyCapacity, 0, maxInsert);
+    }
+
     @Override
     public long maxExtract() {
         return 0;
