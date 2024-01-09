@@ -1,6 +1,4 @@
-# 3.0.0
+# 3.0.1
 
-- API Refactor
-- Added NeoForge support
-- Added support for BlockEntity-less Energy and Fluid containers
-- Removed Herobrine
+- Removed deprecated fluid ingredient codec
+- Fixed Forge not having an impl for FluidConstants
