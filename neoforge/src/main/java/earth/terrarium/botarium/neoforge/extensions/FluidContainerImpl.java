@@ -27,7 +27,7 @@ public interface FluidContainerImpl {
 
     @Nullable
     @ImplementedByExtension
-    static FluidContainer of(ItemStackHolder holder) {
+    static ItemFluidContainer of(ItemStackHolder holder) {
         return PlatformFluidItemHandler.of(holder);
     }
 

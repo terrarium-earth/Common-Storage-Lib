@@ -31,7 +31,7 @@ public interface FluidContainer extends Serializable, Clearable {
 
     @Nullable
     @ImplementedByExtension
-    static FluidContainer of(ItemStackHolder holder) {
+    static ItemFluidContainer of(ItemStackHolder holder) {
         throw new NotImplementedException();
     }
 
@@ -168,5 +168,9 @@ public interface FluidContainer extends Serializable, Clearable {
      */
     default void readSnapshot(FluidSnapshot snapshot) {
         snapshot.loadSnapshot(this);
+    }
+
+    default FluidHolder getFirstFluid() {
+        return getFluids().get(0);
     }
 }

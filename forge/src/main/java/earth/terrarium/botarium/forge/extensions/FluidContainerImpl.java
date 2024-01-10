@@ -2,6 +2,7 @@ package earth.terrarium.botarium.forge.extensions;
 
 import earth.terrarium.botarium.common.fluid.FluidApi;
 import earth.terrarium.botarium.common.fluid.base.FluidContainer;
+import earth.terrarium.botarium.common.fluid.base.ItemFluidContainer;
 import earth.terrarium.botarium.common.item.ItemStackHolder;
 import earth.terrarium.botarium.forge.fluid.PlatformBlockFluidHandler;
 import earth.terrarium.botarium.forge.fluid.PlatformFluidItemHandler;
@@ -29,7 +30,7 @@ public interface FluidContainerImpl {
 
     @Nullable
     @ImplementedByExtension
-    static FluidContainer of(ItemStackHolder holder) {
+    static ItemFluidContainer of(ItemStackHolder holder) {
         return PlatformFluidItemHandler.of(holder);
     }
 

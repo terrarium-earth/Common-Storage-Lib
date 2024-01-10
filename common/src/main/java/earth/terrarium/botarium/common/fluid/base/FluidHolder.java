@@ -64,6 +64,14 @@ public interface FluidHolder {
         throw new NotImplementedException();
     }
 
+    static FluidHolder ofMillibuckets(Fluid fluid, long millibuckets, @Nullable CompoundTag tag) {
+        return FluidHolder.of(fluid, FluidConstants.fromMillibuckets(millibuckets), tag);
+    }
+
+    static FluidHolder ofMillibuckets(Fluid fluid, long millibuckets) {
+        return FluidHolder.of(fluid, FluidConstants.fromMillibuckets(millibuckets), null);
+    }
+
     /**
      * Creates a FluidHolder from a CompoundTag.
      *
