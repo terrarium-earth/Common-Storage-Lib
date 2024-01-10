@@ -8,6 +8,7 @@ import earth.terrarium.botarium.common.energy.impl.WrappedItemEnergyContainer;
 import earth.terrarium.botarium.common.fluid.FluidApi;
 import earth.terrarium.botarium.common.fluid.base.BotariumFluidItem;
 import earth.terrarium.botarium.common.fluid.base.FluidContainer;
+import earth.terrarium.botarium.common.fluid.base.ItemFluidContainer;
 import earth.terrarium.botarium.common.fluid.impl.SimpleFluidContainer;
 import earth.terrarium.botarium.common.fluid.impl.WrappedItemFluidContainer;
 import earth.terrarium.botarium.common.item.ItemStackHolder;
@@ -43,7 +44,7 @@ public class TestItem extends Item implements BotariumEnergyItem<WrappedItemEner
     @Override
     public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltip, TooltipFlag tooltipFlag) {
         ItemStackHolder holder = new ItemStackHolder(stack);
-        FluidContainer itemFluidManager = FluidContainer.of(holder);
+        ItemFluidContainer itemFluidManager = FluidContainer.of(holder);
         if (itemFluidManager != null) {
             long oxygen = itemFluidManager.getFluids().get(0).getFluidAmount();
             long oxygenCapacity = itemFluidManager.getTankCapacity(0);

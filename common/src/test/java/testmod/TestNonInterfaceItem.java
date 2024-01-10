@@ -6,6 +6,7 @@ import earth.terrarium.botarium.common.fluid.FluidApi;
 import earth.terrarium.botarium.common.fluid.FluidConstants;
 import earth.terrarium.botarium.common.fluid.base.FluidContainer;
 import earth.terrarium.botarium.common.fluid.base.FluidHolder;
+import earth.terrarium.botarium.common.fluid.base.ItemFluidContainer;
 import earth.terrarium.botarium.common.item.ItemStackHolder;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -35,7 +36,7 @@ public class TestNonInterfaceItem extends Item {
     @Override
     public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltip, TooltipFlag tooltipFlag) {
         ItemStackHolder itemStackHolder = new ItemStackHolder(stack);
-        FluidContainer itemFluidManager = FluidContainer.of(itemStackHolder);
+        ItemFluidContainer itemFluidManager = FluidContainer.of(itemStackHolder);
         if (itemFluidManager != null) {
             long oxygen = itemFluidManager.getFluids().get(0).getFluidAmount();
             long oxygenCapacity = itemFluidManager.getTankCapacity(0);
@@ -64,7 +65,7 @@ public class TestNonInterfaceItem extends Item {
                 ItemStackHolder from = new ItemStackHolder(player.getMainHandItem());
                 ItemStackHolder to = new ItemStackHolder(player.getOffhandItem());
 
-                FluidContainer itemFluidManager = FluidContainer.of(from);
+                ItemFluidContainer itemFluidManager = FluidContainer.of(from);
 
                 if (player.isShiftKeyDown()) {
                     if (FluidApi.moveFluid(to, from, FluidHolder.of(BuiltInRegistries.FLUID.get(new ResourceLocation("minecraft", "water")), FluidConstants.fromMillibuckets(1000), null), false) > 0) {

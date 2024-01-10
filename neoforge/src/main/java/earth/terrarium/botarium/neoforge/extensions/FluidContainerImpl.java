@@ -1,6 +1,7 @@
 package earth.terrarium.botarium.neoforge.extensions;
 
 import earth.terrarium.botarium.common.fluid.base.FluidContainer;
+import earth.terrarium.botarium.common.fluid.base.ItemFluidContainer;
 import earth.terrarium.botarium.common.item.ItemStackHolder;
 import earth.terrarium.botarium.neoforge.fluid.PlatformBlockFluidHandler;
 import earth.terrarium.botarium.neoforge.fluid.PlatformFluidItemHandler;

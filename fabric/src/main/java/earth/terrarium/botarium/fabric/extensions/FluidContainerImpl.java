@@ -1,6 +1,7 @@
 package earth.terrarium.botarium.fabric.extensions;
 
 import earth.terrarium.botarium.common.fluid.base.FluidContainer;
+import earth.terrarium.botarium.common.fluid.base.ItemFluidContainer;
 import earth.terrarium.botarium.common.item.ItemStackHolder;
 import earth.terrarium.botarium.fabric.ItemStackStorage;
 import earth.terrarium.botarium.fabric.fluid.storage.PlatformFluidContainer;
@@ -29,7 +30,7 @@ public interface FluidContainerImpl {
 
     @Nullable
     @ImplementedByExtension
-    static FluidContainer of(ItemStackHolder holder) {
+    static ItemFluidContainer of(ItemStackHolder holder) {
         return PlatformFluidItemHandler.of(holder);
     }
 
