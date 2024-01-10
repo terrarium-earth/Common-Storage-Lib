@@ -1,3 +1,3 @@
-# 3.0.2
+# 3.0.3
 
-- Create quantified fluid ingredient
+Ported over some fixes from the old api
