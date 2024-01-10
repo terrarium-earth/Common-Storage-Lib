@@ -16,7 +16,7 @@ import org.apache.commons.lang3.NotImplementedException;
 import org.jetbrains.annotations.Nullable;
 
 @ClassExtension(FluidContainer.class)
-public class FluidContainerImpl {
+public interface FluidContainerImpl {
     @Nullable
     @ImplementsBaseElement
     static FluidContainer of(Level level, BlockPos pos, BlockState state, @Nullable BlockEntity entity, @Nullable Direction direction) {
