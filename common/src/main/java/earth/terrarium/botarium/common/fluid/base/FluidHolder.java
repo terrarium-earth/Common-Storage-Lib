@@ -37,7 +37,6 @@ public interface FluidHolder {
             CompoundTag.CODEC.optionalFieldOf("tag").forGetter(fluidHolder -> Optional.ofNullable(fluidHolder.getCompound()))
     ).apply(instance, (fluid, millibuckets, compoundTag) -> FluidHolder.ofMillibuckets(fluid, millibuckets, compoundTag.orElse(null))));
 
-
     static FluidHolder of(Fluid fluid) {
         return FluidHooks.newFluidHolder(fluid, FluidConstants.getBucketAmount(), null);
     }

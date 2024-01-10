@@ -1,12 +1,54 @@
 package earth.terrarium.botarium.common.fluid.base;
 
+import earth.terrarium.botarium.common.fluid.FluidApi;
+import earth.terrarium.botarium.common.item.ItemStackHolder;
 import earth.terrarium.botarium.util.Serializable;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.Clearable;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.msrandom.extensions.annotations.ImplementedByExtension;
+import org.apache.commons.lang3.NotImplementedException;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
 public interface FluidContainer extends Serializable, Clearable {
+
+    @SuppressWarnings("ConstantValue")
+    @Nullable
+    @ImplementedByExtension
+    static FluidContainer of(Level level, BlockPos pos, BlockState state, @Nullable BlockEntity entity, @Nullable Direction direction) {
+        throw new NotImplementedException();
+    }
+
+    @Nullable
+    static FluidContainer of(BlockEntity block, @Nullable Direction direction) {
+        if (!FluidApi.isFluidContainingBlock(block, direction)) return null;
+        return FluidApi.getBlockFluidContainer(block, direction);
+    }
+
+    @Nullable
+    static ItemFluidContainer of(ItemStackHolder holder) {
+        if (!FluidApi.isFluidContainingItem(holder.getStack())) return null;
+        return FluidApi.getItemFluidContainer(holder);
+    }
+
+    static boolean holdsFluid(ItemStack stack) {
+        return FluidApi.isFluidContainingItem(stack);
+    }
+
+    @ImplementedByExtension
+    static boolean holdsFluid(Level level, BlockPos pos, BlockState state, @Nullable BlockEntity entity, @Nullable Direction direction) {
+        throw new NotImplementedException();
+    }
+
+    static boolean holdsFluid(BlockEntity block, @Nullable Direction direction) {
+        return FluidApi.isFluidContainingBlock(block, direction);
+    }
 
     /**
      * Inserts a {@link FluidHolder} into the container.

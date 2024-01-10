@@ -1,3 +1,3 @@
-# 2.2.6
+# 2.2.7
 
-Fix fluid ingredient
+Backported FluidContainer and EnergyContainer static methods
