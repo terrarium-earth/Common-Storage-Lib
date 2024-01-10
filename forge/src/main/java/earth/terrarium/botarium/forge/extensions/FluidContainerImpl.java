@@ -8,9 +8,11 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
+import net.msrandom.extensions.annotations.ClassExtension;
 import net.msrandom.extensions.annotations.ImplementsBaseElement;
 import org.jetbrains.annotations.Nullable;
 
+@ClassExtension(FluidContainer.class)
 public class FluidContainerImpl {
     @Nullable
     @ImplementsBaseElement
