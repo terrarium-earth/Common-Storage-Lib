@@ -141,9 +141,9 @@ public class FluidApi {
      * @return The amount of fluid that was moved
      */
     public static long moveFluid(ItemStackHolder from, ItemStackHolder to, FluidHolder fluidHolder, boolean simulate) {
-        if (!FluidContainer.holdsFluid(from.getStack()) || !FluidContainer.holdsFluid(to.getStack())) return 0;
         FluidContainer fromFluid =  FluidContainer.of(from);
         FluidContainer toFluid =  FluidContainer.of(to);
+        if (fromFluid == null || toFluid == null) return 0;
         return moveFluid(fromFluid, toFluid, fluidHolder, simulate);
     }
 
@@ -156,9 +156,16 @@ public class FluidApi {
      * @return The amount of energy that was moved
      */
     public static long moveFluid(BlockEntity from, BlockEntity to, FluidHolder fluidHolder, boolean simulate) {
-        if (!FluidContainer.holdsFluid(from, null) || !FluidContainer.holdsFluid(to, null)) return 0;
         FluidContainer fromFluid =  FluidContainer.of(from, null);
         FluidContainer toFluid =  FluidContainer.of(to, null);
+        if (fromFluid == null || toFluid == null) return 0;
+        return moveFluid(fromFluid, toFluid, fluidHolder, simulate);
+    }
+
+    public static long moveFluid(Level level, BlockPos fromPos, @Nullable Direction fromDirection, BlockPos toPos, @Nullable Direction toDirection, FluidHolder fluidHolder, boolean simulate) {
+        FluidContainer fromFluid =  FluidContainer.of(level, fromPos, fromDirection);
+        FluidContainer toFluid =  FluidContainer.of(level, toPos, toDirection);
+        if (fromFluid == null || toFluid == null) return 0;
         return moveFluid(fromFluid, toFluid, fluidHolder, simulate);
     }
 
@@ -171,9 +178,9 @@ public class FluidApi {
      * @return The amount of energy that was moved
      */
     public static long moveFluid(BlockEntity from, Direction direction, ItemStackHolder to, FluidHolder fluidHolder, boolean simulate) {
-        if (!FluidContainer.holdsFluid(from, direction) || !FluidContainer.holdsFluid(to.getStack())) return 0;
         FluidContainer fromFluid = FluidContainer.of(from, direction);
         FluidContainer toFluid =  FluidContainer.of(to);
+        if (fromFluid == null || toFluid == null) return 0;
         return moveFluid(fromFluid, toFluid, fluidHolder, simulate);
     }
 
@@ -186,9 +193,9 @@ public class FluidApi {
      * @return The amount of energy that was moved
      */
     public static long moveFluid(ItemStackHolder from, BlockEntity to, Direction direction, FluidHolder fluidHolder, boolean simulate) {
-        if (!FluidContainer.holdsFluid(from.getStack()) || !FluidContainer.holdsFluid(to, direction)) return 0;
         FluidContainer fromFluid =  FluidContainer.of(from);
         FluidContainer toFluid =  FluidContainer.of(to, direction);
+        if (fromFluid == null || toFluid == null) return 0;
         return moveFluid(fromFluid, toFluid, fluidHolder, simulate);
     }
 }

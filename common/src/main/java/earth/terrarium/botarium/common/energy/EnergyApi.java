@@ -110,20 +110,40 @@ public class EnergyApi {
      * Automatically transfers energy from an energy block to surrounding blocks
      *
      * @param energyBlock A block entity that is an instance of {@link BotariumEnergyBlock}
+     * @param extractDirection The direction to extract energy from the energy block
+     * @param amount      The total amount that will be distributed as equally it can be. If one block cannot receive all the energy, it will be distributed evenly to the other blocks.
+     * @return The amount of energy that was distributed
+     */
+    public static long distributeEnergyNearby(BlockEntity energyBlock, @Nullable Direction extractDirection, long amount) {
+        return distributeEnergyNearby(energyBlock.getLevel(), energyBlock.getBlockPos(), extractDirection, amount);
+    }
+
+    /**
+     * Automatically transfers energy from an energy block to surrounding blocks
+     *
+     * @param energyBlock A block entity that is an instance of {@link BotariumEnergyBlock}
      * @param amount      The total amount that will be distributed as equally it can be. If one block cannot receive all the energy, it will be distributed evenly to the other blocks.
      * @return The amount of energy that was distributed
      */
     public static long distributeEnergyNearby(BlockEntity energyBlock, long amount) {
-        BlockPos blockPos = energyBlock.getBlockPos();
-        Level level = energyBlock.getLevel();
-        if (level == null) return 0;
-        EnergyContainer internalEnergy = EnergyContainer.of(energyBlock, null);
+        return distributeEnergyNearby(energyBlock.getLevel(), energyBlock.getBlockPos(), null, amount);
+    }
+
+    /**
+     * Automatically transfers energy from an energy block to surrounding blocks
+     *
+     * @param level         The level of the energy block
+     * @param energyPos     The position of the energy block
+     * @param amount        The total amount that will be distributed as equally it can be. If one block cannot receive all the energy, it will be distributed evenly to the other blocks.
+     * @param extractDirection The direction to extract energy from the energy block
+     * @return The amount of energy that was distributed
+     */
+    public static long distributeEnergyNearby(Level level, BlockPos energyPos, @Nullable Direction extractDirection, long amount) {
+        EnergyContainer internalEnergy = EnergyContainer.of(level, energyPos, extractDirection);
         long amountToDistribute = internalEnergy.extractEnergy(amount, true);
         if (amountToDistribute == 0) return 0;
         List<EnergyContainer> list = Direction.stream()
-                .map(direction -> Pair.of(direction, level.getBlockEntity(blockPos.relative(direction))))
-                .filter(pair -> pair.getSecond() != null)
-                .map(pair -> EnergyContainer.of(pair.getSecond(), pair.getFirst()))
+                .map(direction -> EnergyContainer.of(level, energyPos.relative(direction), direction.getOpposite()))
                 .filter(Objects::nonNull)
                 .sorted(Comparator.comparingLong(energy -> energy.insertEnergy(amount, true)))
                 .toList();
@@ -182,6 +202,13 @@ public class EnergyApi {
     public static long moveEnergy(BlockEntity from, BlockEntity to, long amount, boolean simulate) {
         EnergyContainer fromEnergy = EnergyContainer.of(from, null);
         EnergyContainer toEnergy = EnergyContainer.of(to, null);
+        if (fromEnergy == null || toEnergy == null) return 0;
+        return moveEnergy(fromEnergy, toEnergy, amount, simulate);
+    }
+
+    public static long moveEnergy(Level level, BlockPos fromPos, @Nullable Direction fromDirection, BlockPos toPos, @Nullable Direction toDirection, long amount, boolean simulate) {
+        EnergyContainer fromEnergy = EnergyContainer.of(level, fromPos, fromDirection);
+        EnergyContainer toEnergy = EnergyContainer.of(level, toPos, toDirection);
         if (fromEnergy == null || toEnergy == null) return 0;
         return moveEnergy(fromEnergy, toEnergy, amount, simulate);
     }

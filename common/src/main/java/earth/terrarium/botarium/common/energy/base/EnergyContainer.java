@@ -24,11 +24,26 @@ public interface EnergyContainer extends Serializable, Clearable {
      * @param state     The block state of the EnergyContainer.
      * @param entity    The block entity associated with the EnergyContainer (can be null).
      * @param direction The direction of the EnergyContainer (can be null).
-     * @return An instance of EnergyContainer.
+     * @return An instance of EnergyContainer. Returns null if the block does not hold energy.
      */
+    @Nullable
     @ImplementedByExtension
-    static EnergyContainer of(Level level, BlockPos pos, BlockState state, @Nullable BlockEntity entity, @Nullable Direction direction) {
+    static EnergyContainer of(Level level, BlockPos pos, @Nullable BlockState state, @Nullable BlockEntity entity, @Nullable Direction direction) {
         throw new NotImplementedException();
+    }
+
+    /**
+     * Retrieves an instance of EnergyContainer for the given level, position, and direction.
+     * This method can be used to retrieve EnergyContainers from Botarium and any other mod that uses the modloader's Energy API.
+     *
+     * @param level     The level of the EnergyContainer.
+     * @param pos       The position of the EnergyContainer.
+     * @param direction The direction of the EnergyContainer (can be null).
+     * @return An instance of EnergyContainer. Returns null if the block does not hold energy.
+     */
+    @Nullable
+    static EnergyContainer of(Level level, BlockPos pos, @Nullable Direction direction) {
+        return EnergyContainer.of(level, pos, null, null, direction);
     }
 
     /**
@@ -37,8 +52,9 @@ public interface EnergyContainer extends Serializable, Clearable {
      *
      * @param block     The block entity associated with the EnergyContainer.
      * @param direction The direction of the EnergyContainer (can be null).
-     * @return An instance of EnergyContainer.
+     * @return An instance of EnergyContainer. Returns null if the block does not hold energy.
      */
+    @Nullable
     static EnergyContainer of(BlockEntity block, @Nullable Direction direction) {
         return EnergyContainer.of(block.getLevel(), block.getBlockPos(), block.getBlockState(), block, direction);
     }
@@ -50,8 +66,9 @@ public interface EnergyContainer extends Serializable, Clearable {
      * This method can be used to retrieve EnergyContainers from Botarium and any other mod that uses the modloader's Energy API.
      *
      * @param holder The item stack holder.
-     * @return An instance of EnergyContainer.
+     * @return An instance of EnergyContainer. Returns null if the item stack does not hold energy.
      */
+    @Nullable
     @ImplementedByExtension
     static EnergyContainer of(ItemStackHolder holder) {
         throw new NotImplementedException();
@@ -85,8 +102,25 @@ public interface EnergyContainer extends Serializable, Clearable {
      * @return True if the block holds energy, false otherwise.
      */
     @ImplementedByExtension
-    static boolean holdsEnergy(Level level, BlockPos pos, BlockState state, @Nullable BlockEntity entity, @Nullable Direction direction) {
+    static boolean holdsEnergy(Level level, BlockPos pos, @Nullable BlockState state, @Nullable BlockEntity entity, @Nullable Direction direction) {
         throw new NotImplementedException();
+    }
+    
+    /**
+     * Checks if the given block at the specified position and state holds energy.
+     * This method can be used to check blocks from Botarium and any other mod that uses the modloader's Energy API.
+     * <p>
+     * NOTE: While Fabric and NeoForge support attaching energy to blocks, MinecraftForge does not. This means that while Botarium
+     * does support energy blocks on Fabric and NeoForge, it does not support them on Forge, and this method will always
+     * return false on a block without a block entity on MinecraftForge.
+     *
+     * @param level     The level of the block.
+     * @param pos       The position of the block.
+     * @param direction The direction of the block (can be null).
+     * @return True if the block holds energy, false otherwise.
+     */
+    static boolean holdsEnergy(Level level, BlockPos pos, @Nullable Direction direction) {
+        return EnergyContainer.holdsEnergy(level, pos, null, null, direction);
     }
 
     /**
@@ -167,12 +201,12 @@ public interface EnergyContainer extends Serializable, Clearable {
     long maxExtract();
 
     /**
-     * @return Weather the container allows for energy to be inserted.
+     * @return Whether the container allows for energy to be inserted.
      */
     boolean allowsInsertion();
 
     /**
-     * @return Weather the container allows for energy to be extracted.
+     * @return Whether the container allows for energy to be extracted.
      */
     boolean allowsExtraction();
 

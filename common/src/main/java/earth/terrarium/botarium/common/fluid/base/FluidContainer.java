@@ -18,33 +18,104 @@ import java.util.List;
 @SuppressWarnings({"BooleanMethodIsAlwaysInverted", "DataFlowIssue"})
 public interface FluidContainer extends Serializable, Clearable {
 
+    /**
+     * Retrieves an instance of FluidContainer for the given level, position, state, entity, and direction.
+     * This method can be used to retrieve FluidContainers from Botarium and any other mod that uses the modloader's Fluid API.
+     *
+     * @param level     The level of the FluidContainer.
+     * @param pos       The position of the FluidContainer.
+     * @param state     The block state of the FluidContainer.
+     * @param entity    The block entity associated with the FluidContainer (can be null).
+     * @param direction The direction of the FluidContainer (can be null).
+     * @return An instance of FluidContainer. Returns null if the block does not hold fluid.
+     */
     @Nullable
     @ImplementedByExtension
-    static FluidContainer of(Level level, BlockPos pos, BlockState state, @Nullable BlockEntity entity, @Nullable Direction direction) {
+    static FluidContainer of(Level level, BlockPos pos, @Nullable BlockState state, @Nullable BlockEntity entity, @Nullable Direction direction) {
         throw new NotImplementedException();
     }
+    
+    /**
+     * Retrieves an instance of FluidContainer for the given level, position, and direction.
+     * This method can be used to retrieve FluidContainers from Botarium and any other mod that uses the modloader's Fluid API.
+     *
+     * @param level     The level of the FluidContainer.
+     * @param pos       The position of the FluidContainer.
+     * @param direction The direction of the FluidContainer (can be null).
+     * @return An instance of FluidContainer. Returns null if the block does not hold fluid.
+     */
+    @Nullable
+    static FluidContainer of(Level level, BlockPos pos, @Nullable Direction direction) {
+        return FluidContainer.of(level, pos, null, null, direction);
+    }
 
+    /**
+     * Retrieves an instance of FluidContainer for the given block entity and direction.
+     * This method can be used to retrieve FluidContainers from Botarium and any other mod that uses the modloader's Fluid API.
+     *
+     * @param block     The block entity associated with the FluidContainer.
+     * @param direction The direction of the FluidContainer (can be null).
+     * @return An instance of FluidContainer. Returns null if the block does not hold fluid.
+     */
     @Nullable
     static FluidContainer of(BlockEntity block, @Nullable Direction direction) {
         return FluidContainer.of(block.getLevel(), block.getBlockPos(), block.getBlockState(), block, direction);
     }
 
+    /**
+     * Retrieves an instance of FluidContainer for the given item stack.
+     * This method can be used to retrieve FluidContainers from Botarium and any other mod that uses the modloader's Fluid API.
+     *
+     * @param holder The item stack associated with the FluidContainer.
+     * @return An instance of FluidContainer. Returns null if the item does not hold fluid.
+     */
     @Nullable
     @ImplementedByExtension
     static ItemFluidContainer of(ItemStackHolder holder) {
         throw new NotImplementedException();
     }
 
+    /**
+     * Checks if the given item stack holds fluid.
+     * @param stack The item stack to check.
+     * @return Whether the given item stack holds fluid.
+     */
     @ImplementedByExtension
     static boolean holdsFluid(ItemStack stack) {
         throw new NotImplementedException();
     }
 
+    /**
+     * Checks if the given block holds fluid.
+     * @param level The level of the block.
+     * @param pos The position of the block.
+     * @param state The block state of the block.
+     * @param entity The block entity associated with the block (can be null).
+     * @param direction The direction of the block (can be null).
+     * @return Whether the given block holds fluid.
+     */
     @ImplementedByExtension
-    static boolean holdsFluid(Level level, BlockPos pos, BlockState state, @Nullable BlockEntity entity, @Nullable Direction direction) {
+    static boolean holdsFluid(Level level, BlockPos pos, @Nullable BlockState state, @Nullable BlockEntity entity, @Nullable Direction direction) {
         throw new NotImplementedException();
     }
 
+    /**
+     * Checks if the given block holds fluid.
+     * @param level The level of the block.
+     * @param pos The position of the block.
+     * @param direction The direction of the block (can be null).
+     * @return Whether the given block holds fluid.
+     */
+    static boolean holdsFluid(Level level, BlockPos pos, @Nullable Direction direction) {
+        return FluidContainer.holdsFluid(level, pos, null, null, direction);
+    }
+
+    /**
+     * Checks if the given block entity holds fluid.
+     * @param block The block entity to check.
+     * @param direction The direction of the block entity (can be null).
+     * @return Whether the given block entity holds fluid.
+     */
     static boolean holdsFluid(BlockEntity block, @Nullable Direction direction) {
         return FluidContainer.holdsFluid(block.getLevel(), block.getBlockPos(), block.getBlockState(), block, direction);
     }
@@ -106,7 +177,7 @@ public interface FluidContainer extends Serializable, Clearable {
     int getSize();
 
     /**
-     * @return Weather or not the container is empty.
+     * @return Whether or not the container is empty.
      */
     boolean isEmpty();
 
@@ -139,18 +210,18 @@ public interface FluidContainer extends Serializable, Clearable {
     long extractFromSlot(FluidHolder fluidHolder, FluidHolder toInsert, Runnable snapshot);
 
     /**
-     * @return Weather can be inserted into.
+     * @return Whether can be inserted into.
      */
     boolean allowsInsertion();
 
     /**
-     * @return Weather can be extracted from.
+     * @return Whether can be extracted from.
      */
     boolean allowsExtraction();
 
     /**
      * @param fluidHolder The {@link FluidHolder} to check if can be inserted into.
-     * @return Weather the given {@link FluidHolder} can be inserted into.
+     * @return Whether the given {@link FluidHolder} can be inserted into.
      */
     default boolean isFluidValid(int slot, FluidHolder fluidHolder) {
         return allowsInsertion();
