@@ -16,38 +16,99 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
+@SuppressWarnings("DataFlowIssue")
 public interface FluidContainer extends Serializable, Clearable {
 
-    @SuppressWarnings("ConstantValue")
+    /**
+     * Retrieves an instance of FluidContainer for the given level, position, state, entity, and direction.
+     * This method can be used to retrieve FluidContainers from Botarium and any other mod that uses the modloader's Fluid API.
+     * @param level     The level of the FluidContainer.
+     * @param pos       The position of the FluidContainer.
+     * @param state     The block state of the FluidContainer.
+     * @param entity    The block entity associated with the FluidContainer (can be null).
+     * @param direction The direction of the FluidContainer (can be null).
+     * @return An instance of FluidContainer.
+     */
     @Nullable
     @ImplementedByExtension
-    static FluidContainer of(Level level, BlockPos pos, BlockState state, @Nullable BlockEntity entity, @Nullable Direction direction) {
+    static FluidContainer of(Level level, BlockPos pos, @Nullable BlockState state, @Nullable BlockEntity entity, @Nullable Direction direction) {
         throw new NotImplementedException();
     }
 
+    /**
+     * Retrieves an instance of FluidContainer for the given level, position, and direction.
+     * This method can be used to retrieve FluidContainers from Botarium and any other mod that uses the modloader's Fluid API.
+     * @param level     The level of the FluidContainer.
+     * @param pos       The position of the FluidContainer.
+     * @param direction The direction of the FluidContainer (can be null).
+     * @return An instance of FluidContainer.
+     */
+    @Nullable
+    static FluidContainer of(Level level, BlockPos pos, @Nullable Direction direction) {
+        return of(level, pos, null, null, direction);
+    }
+
+    /**
+     * Retrieves an instance of FluidContainer for the given block entity and direction.
+     * This method can be used to retrieve FluidContainers from Botarium and any other mod that uses the modloader's Fluid API.
+     * @param block     The block entity associated with the FluidContainer.
+     * @param direction The direction of the FluidContainer (can be null).
+     * @return An instance of FluidContainer.
+     */
     @Nullable
     static FluidContainer of(BlockEntity block, @Nullable Direction direction) {
-        if (!FluidApi.isFluidContainingBlock(block, direction)) return null;
-        return FluidApi.getBlockFluidContainer(block, direction);
+        return of(block.getLevel(), block.getBlockPos(), block.getBlockState(), block, direction);
     }
 
+    /**
+     * Retrieves an instance of FluidContainer for the given item stack.
+     * This method can be used to retrieve FluidContainers from Botarium and any other mod that uses the modloader's Fluid API.
+     * @param holder The item stack associated with the FluidContainer.
+     * @return An instance of FluidContainer.
+     */
     @Nullable
     static ItemFluidContainer of(ItemStackHolder holder) {
-        if (!FluidApi.isFluidContainingItem(holder.getStack())) return null;
-        return FluidApi.getItemFluidContainer(holder);
-    }
-
-    static boolean holdsFluid(ItemStack stack) {
-        return FluidApi.isFluidContainingItem(stack);
-    }
-
-    @ImplementedByExtension
-    static boolean holdsFluid(Level level, BlockPos pos, BlockState state, @Nullable BlockEntity entity, @Nullable Direction direction) {
         throw new NotImplementedException();
     }
 
+    /**
+     * @param stack The item stack to check.
+     * @return Weather the given item stack holds a fluid.
+     */
+    static boolean holdsFluid(ItemStack stack) {
+        throw new NotImplementedException();
+    }
+
+    /**
+     * @param level     The level of the FluidContainer.
+     * @param pos       The position of the FluidContainer.
+     * @param state     The block state of the FluidContainer.
+     * @param entity    The block entity associated with the FluidContainer (can be null).
+     * @param direction The direction of the FluidContainer (can be null).
+     * @return Weather the given block holds a fluid.
+     */
+    @ImplementedByExtension
+    static boolean holdsFluid(Level level, BlockPos pos, @Nullable BlockState state, @Nullable BlockEntity entity, @Nullable Direction direction) {
+        throw new NotImplementedException();
+    }
+
+    /**
+     * @param level     The level of the FluidContainer.
+     * @param pos       The position of the FluidContainer.
+     * @param direction The direction of the FluidContainer (can be null).
+     * @return Weather the given block holds a fluid.
+     */
+    static boolean holdsFluid(Level level, BlockPos pos, @Nullable Direction direction) {
+        return holdsFluid(level, pos, null, null, direction);
+    }
+
+    /**
+     * @param block     The block entity associated with the FluidContainer.
+     * @param direction The direction of the FluidContainer (can be null).
+     * @return Weather the given block holds a fluid.
+     */
     static boolean holdsFluid(BlockEntity block, @Nullable Direction direction) {
-        return FluidApi.isFluidContainingBlock(block, direction);
+        return holdsFluid(block.getLevel(), block.getBlockPos(), block.getBlockState(), block, direction);
     }
 
     /**

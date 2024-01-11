@@ -1,5 +1,6 @@
 package earth.terrarium.botarium.common.fluid;
 
+import earth.terrarium.botarium.common.energy.base.EnergyContainer;
 import earth.terrarium.botarium.common.fluid.base.FluidContainer;
 import earth.terrarium.botarium.common.fluid.base.FluidHolder;
 import earth.terrarium.botarium.common.fluid.base.ItemFluidContainer;
@@ -18,6 +19,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.msrandom.extensions.annotations.ImplementedByExtension;
 import org.apache.commons.lang3.NotImplementedException;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
@@ -96,9 +98,12 @@ public class FluidApi {
      *
      * @param stack The {@link ItemStack} to get the {@link PlatformFluidHandler} from.
      * @return The {@link PlatformFluidHandler} for the {@link ItemStack}.
-     * @throws IllegalArgumentException If the {@link ItemStack} does not have a {@link PlatformFluidHandler}.
+     * @deprecated Use {@link FluidContainer#of(ItemStackHolder)} instead.
      */
+    @Nullable
+    @Deprecated
     @ImplementedByExtension
+    @ApiStatus.ScheduledForRemoval(inVersion = "1.20.4")
     public static ItemFluidContainer getItemFluidContainer(ItemStackHolder stack) {
         throw new NotImplementedException("Item Fluid Manager not Implemented");
     }
@@ -108,9 +113,13 @@ public class FluidApi {
      *
      * @param entity    The {@link BlockEntity} to get the {@link PlatformFluidHandler} from.
      * @param direction The {@link Direction} to get the {@link PlatformFluidHandler} from on the {@link BlockEntity}.
-     * @return The {@link PlatformFluidHandler} for the {@link BlockEntity} and {@link Direction}.
+     * @return The {@link PlatformFluidHandler} for the {@link BlockEntity} and {@link Direction}, or null if there is none.
+     * @deprecated Use {@link FluidContainer#of(Level, BlockPos, Direction)} or {@link FluidContainer#of(BlockEntity, Direction)} instead.
      */
+    @Nullable
+    @Deprecated
     @ImplementedByExtension
+    @ApiStatus.ScheduledForRemoval(inVersion = "1.20.4")
     public static FluidContainer getBlockFluidContainer(BlockEntity entity, @Nullable Direction direction) {
         throw new NotImplementedException("Block Entity Fluid manager not implemented");
     }
@@ -119,9 +128,12 @@ public class FluidApi {
      * @param entity    The {@link BlockEntity} to check if it is a fluid container.
      * @param direction The {@link Direction} to check on the {@link BlockEntity} for a fluid container.
      * @return True if the {@link BlockEntity} is a fluid container.
+     * @deprecated Use {@link FluidContainer#holdsFluid(Level, BlockPos, Direction)} or {@link FluidContainer#of(BlockEntity, Direction)} instead.
      */
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")
+    @Deprecated
     @ImplementedByExtension
+    @ApiStatus.ScheduledForRemoval(inVersion = "1.20.4")
     public static boolean isFluidContainingBlock(BlockEntity entity, @Nullable Direction direction) {
         throw new NotImplementedException();
     }
@@ -129,9 +141,12 @@ public class FluidApi {
     /**
      * @param stack The {@link ItemStack} to check if it is a fluid container.
      * @return True if the {@link ItemStack} is a fluid container.
+     * @deprecated Use {@link FluidContainer#holdsFluid(ItemStack)} instead.
      */
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")
+    @Deprecated
     @ImplementedByExtension
+    @ApiStatus.ScheduledForRemoval(inVersion = "1.20.4")
     public static boolean isFluidContainingItem(ItemStack stack) {
         throw new NotImplementedException();
     }
@@ -147,7 +162,7 @@ public class FluidApi {
     public static long moveFluid(FluidContainer from, FluidContainer to, FluidHolder amount, boolean simulate) {
         FluidHolder extracted = from.extractFluid(amount, true);
         long inserted = to.insertFluid(extracted, true);
-        FluidHolder toInsert = FluidHooks.newFluidHolder(amount.getFluid(), inserted, amount.getCompound());
+        FluidHolder toInsert = FluidHolder.of(amount.getFluid(), inserted, amount.getCompound());
         FluidHolder simulatedExtraction = from.extractFluid(toInsert, true);
         if (!simulate && inserted > 0 && simulatedExtraction.getFluidAmount() == inserted) {
             from.extractFluid(toInsert, false);
@@ -183,6 +198,21 @@ public class FluidApi {
         if (!isFluidContainingBlock(from, null) || !isFluidContainingBlock(to, null)) return 0;
         FluidContainer fromFluid = getBlockFluidContainer(from, null);
         FluidContainer toFluid = getBlockFluidContainer(to, null);
+        return moveFluid(fromFluid, toFluid, fluidHolder, simulate);
+    }
+
+    /**
+     * Moves energy from one energy container to another
+     *
+     * @param from   The energy container to move energy from
+     * @param to     The energy container to move energy to
+     * @param fluidHolder The amount of energy to move
+     * @return The amount of energy that was moved
+     */
+    public static long moveFluid(Level level, BlockPos from, Direction extractDirection, BlockPos to, Direction insertDirection, FluidHolder fluidHolder, boolean simulate) {
+        if (!FluidContainer.holdsFluid(level, from, extractDirection) || !FluidContainer.holdsFluid(level, to, insertDirection)) return 0;
+        FluidContainer fromFluid = FluidContainer.of(level, from, extractDirection);
+        FluidContainer toFluid = FluidContainer.of(level, to, insertDirection);
         return moveFluid(fromFluid, toFluid, fluidHolder, simulate);
     }
 

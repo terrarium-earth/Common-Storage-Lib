@@ -1,6 +1,8 @@
 package earth.terrarium.botarium.common.fluid.utils;
 
+import earth.terrarium.botarium.common.fluid.FluidConstants;
 import earth.terrarium.botarium.common.fluid.base.FluidHolder;
+import earth.terrarium.botarium.common.fluid.base.FluidContainer;
 import earth.terrarium.botarium.common.fluid.base.PlatformFluidHandler;
 import earth.terrarium.botarium.common.fluid.base.PlatformFluidItemHandler;
 import earth.terrarium.botarium.common.item.ItemStackHolder;
@@ -13,17 +15,26 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.material.Fluid;
 import net.msrandom.extensions.annotations.ImplementedByExtension;
 import org.apache.commons.lang3.NotImplementedException;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 
+/**
+ * A class containing hooks for the Fluid API.
+ * <p>
+ *     This class is scheduled for removal in 1.20.4.
+ *     Please use {@link FluidContainer} instead for getting FluidContainers, {@link FluidHolder} for creating FluidHolders, and {@link FluidConstants} for liquid amounts.
+ */
 @Deprecated
+@ApiStatus.ScheduledForRemoval(inVersion = "1.20.4")
 public class FluidHooks {
     /**
      * @param fluid  The fluid to create the holder for.
      * @param amount The amount of fluid in the holder.
      * @param tag    The tag of the holder.
      * @return A {@link FluidHolder} for the given fluid, amount, and tag.
+     * @deprecated Use {@link FluidHolder#of(Fluid, double, CompoundTag)} instead.
      */
     @ImplementedByExtension
     public static FluidHolder newFluidHolder(Fluid fluid, long amount, @Nullable CompoundTag tag) {
@@ -33,6 +44,7 @@ public class FluidHooks {
     /**
      * @param compoundTag The compound tag to read from.
      * @return The {@link FluidHolder} read from the compound tag.
+     * @deprecated Use {@link FluidHolder#fromCompound(CompoundTag)} instead.
      */
     @ImplementedByExtension
     public static FluidHolder fluidFromCompound(CompoundTag compoundTag) {
@@ -41,6 +53,7 @@ public class FluidHooks {
 
     /**
      * @return An empty fluid holder.
+     * @deprecated Use {@link FluidHolder#empty()} instead.
      */
     @ImplementedByExtension
     public static FluidHolder emptyFluid() {
@@ -51,7 +64,6 @@ public class FluidHooks {
      * @param buckets The number of buckets.
      * @return The number of fluid values in the given number of buckets.
      */
-    @Deprecated
     @ImplementedByExtension
     public static long buckets(double buckets) {
         return (long) (buckets * getBucketAmount());
@@ -63,6 +75,7 @@ public class FluidHooks {
      * @param stack The {@link ItemStack} to get the {@link PlatformFluidHandler} from.
      * @return The {@link PlatformFluidHandler} for the {@link ItemStack}.
      * @throws IllegalArgumentException If the {@link ItemStack} does not have a {@link PlatformFluidHandler}.
+     * @deprecated Use {@link FluidContainer#of(ItemStackHolder)} instead
      */
     @ImplementedByExtension
     public static PlatformFluidItemHandler getItemFluidManager(ItemStack stack) {
@@ -76,6 +89,7 @@ public class FluidHooks {
      * @param direction The {@link Direction} to get the {@link PlatformFluidHandler} from on the {@link BlockEntity}.
      * @return The {@link PlatformFluidHandler} for the {@link BlockEntity} and {@link Direction}.
      * @throws IllegalArgumentException If the {@link BlockEntity} does not have a {@link PlatformFluidHandler}.
+     * @deprecated Use {@link FluidContainer#of(BlockEntity, Direction)} instead
      */
     @ImplementedByExtension
     public static PlatformFluidHandler getBlockFluidManager(BlockEntity entity, @Nullable Direction direction) {
@@ -86,6 +100,7 @@ public class FluidHooks {
      * @param entity    The {@link BlockEntity} to check if it is a fluid container.
      * @param direction The {@link Direction} to check on the {@link BlockEntity} for a fluid container.
      * @return True if the {@link BlockEntity} is a fluid container.
+     * @deprecated Use {@link FluidContainer#holdsFluid(BlockEntity, Direction)} instead
      */
     @ImplementedByExtension
     public static boolean isFluidContainingBlock(BlockEntity entity, @Nullable Direction direction) {
@@ -95,6 +110,7 @@ public class FluidHooks {
     /**
      * @param stack The {@link ItemStack} to check if it is a fluid container.
      * @return True if the {@link ItemStack} is a fluid container.
+     * @deprecated Use {@link FluidContainer#holdsFluid(ItemStack)} instead
      */
     @ImplementedByExtension
     public static boolean isFluidContainingItem(ItemStack stack) {

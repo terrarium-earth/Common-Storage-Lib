@@ -26,7 +26,8 @@ public interface EnergyContainer extends Serializable, Clearable {
      * @param direction The direction of the EnergyContainer (can be null).
      * @return An instance of EnergyContainer.
      */
-    static EnergyContainer of(Level level, BlockPos pos, BlockState state, @Nullable BlockEntity entity, @Nullable Direction direction) {
+    @Nullable
+    static EnergyContainer of(Level level, BlockPos pos, @Nullable BlockState state, @Nullable BlockEntity entity, @Nullable Direction direction) {
         throw new NotImplementedException();
     }
 
@@ -38,9 +39,23 @@ public interface EnergyContainer extends Serializable, Clearable {
      * @param direction The direction of the EnergyContainer (can be null).
      * @return An instance of EnergyContainer.
      */
+    @Nullable
     static EnergyContainer of(BlockEntity block, @Nullable Direction direction) {
-        if (EnergyApi.isEnergyBlock(block, direction)) return null;
-        return EnergyApi.getBlockEnergyContainer(block, direction);
+        return of(block.getLevel(), block.getBlockPos(), block.getBlockState(), block, direction);
+    }
+
+    /**
+     * Retrieves an instance of EnergyContainer for the given level, position, and direction.
+     * This method can be used to retrieve EnergyContainers from Botarium and any other mod that uses the modloader's Energy API.
+     *
+     * @param level     The level of the EnergyContainer.
+     * @param pos       The position of the EnergyContainer.
+     * @param direction The direction of the EnergyContainer (can be null).
+     * @return An instance of EnergyContainer.
+     */
+    @Nullable
+    static EnergyContainer of(Level level, BlockPos pos, @Nullable Direction direction) {
+        return of(level, pos, null, null, direction);
     }
 
     /**
@@ -52,9 +67,9 @@ public interface EnergyContainer extends Serializable, Clearable {
      * @param holder The item stack holder.
      * @return An instance of EnergyContainer.
      */
+    @Nullable
     static EnergyContainer of(ItemStackHolder holder) {
-        if (EnergyApi.isEnergyItem(holder.getStack())) return null;
-        return EnergyApi.getItemEnergyContainer(holder);
+        throw new NotImplementedException();
     }
 
     /**
@@ -65,7 +80,7 @@ public interface EnergyContainer extends Serializable, Clearable {
      * @return True if the ItemStack holds energy, false otherwise.
      */
     static boolean holdsEnergy(ItemStack stack) {
-        return EnergyApi.isEnergyItem(stack);
+        throw new NotImplementedException();
     }
 
     /**
@@ -83,8 +98,21 @@ public interface EnergyContainer extends Serializable, Clearable {
      * @param direction The direction of the block (can be null).
      * @return True if the block holds energy, false otherwise.
      */
-    static boolean holdsEnergy(Level level, BlockPos pos, BlockState state, @Nullable BlockEntity entity, @Nullable Direction direction) {
+    static boolean holdsEnergy(Level level, BlockPos pos, @Nullable BlockState state, @Nullable BlockEntity entity, @Nullable Direction direction) {
         throw new NotImplementedException();
+    }
+
+    /**
+     * Checks if the given block at the specified position and state holds energy.
+     * This method can be used to check blocks from Botarium and any other mod that uses the modloader's Energy API.
+     *
+     * @param level    The level of the block.
+     * @param pos     The position of the block.
+     * @param direction The direction of the block (can be null).
+     * @return True if the block holds energy, false otherwise.
+     */
+    static boolean holdsEnergy(Level level, BlockPos pos, @Nullable Direction direction) {
+        return holdsEnergy(level, pos, null, null, direction);
     }
 
     /**

@@ -10,6 +10,8 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.level.material.Fluids;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
@@ -41,7 +43,12 @@ public interface FluidHolder {
         return FluidHooks.newFluidHolder(fluid, FluidConstants.getBucketAmount(), null);
     }
 
+    static FluidHolder of(Fluid fluid, long amount) {
+        return FluidHooks.newFluidHolder(fluid, amount, null);
+    }
+
     @Deprecated
+    @ApiStatus.ScheduledForRemoval(inVersion = "1.20.4")
     static FluidHolder of(Fluid fluid, double buckets, CompoundTag tag) {
         return FluidHooks.newFluidHolder(fluid, FluidHooks.buckets(buckets), tag);
     }
@@ -60,6 +67,18 @@ public interface FluidHolder {
 
     static FluidHolder empty() {
         return FluidHooks.emptyFluid();
+    }
+
+    /**
+     * Creates a FluidHolder from a CompoundTag.
+     *
+     * @param tag The CompoundTag to create the FluidHolder from.
+     * @return The created FluidHolder.
+     */
+    static FluidHolder fromCompound(CompoundTag tag) {
+        FluidHolder fluid = of(Fluids.EMPTY, 0);
+        fluid.deserialize(tag);
+        return fluid;
     }
 
     default void writeToBuffer(FriendlyByteBuf buffer) {

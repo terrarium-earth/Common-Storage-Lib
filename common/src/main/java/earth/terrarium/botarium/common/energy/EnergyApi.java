@@ -16,6 +16,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.msrandom.extensions.annotations.ImplementedByExtension;
 import org.apache.commons.lang3.NotImplementedException;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Nullable;
 
@@ -98,9 +99,12 @@ public class EnergyApi {
      *
      * @param stack The {@link ItemStack} to get the energy container from.
      * @return The {@link EnergyContainer} of the given {@link ItemStack}.
+     * @deprecated Use {@link EnergyContainer#of(ItemStackHolder)} instead.
      */
-    @ImplementedByExtension
     @Nullable
+    @Deprecated
+    @ImplementedByExtension
+    @ApiStatus.ScheduledForRemoval(inVersion = "1.20.4")
     public static EnergyContainer getItemEnergyContainer(ItemStackHolder stack) {
         throw new NotImplementedException("Item Energy Manager not Implemented");
     }
@@ -112,9 +116,12 @@ public class EnergyApi {
      * @param entity    The {@link BlockEntity} to get the energy container from.
      * @param direction The {@link Direction} to get the energy container from.
      * @return The {@link EnergyContainer} of the given {@link BlockEntity} and {@link Direction}.
+     * @deprecated Use {@link EnergyContainer#of(Level, BlockPos, Direction)} or {@link EnergyContainer#of(BlockEntity, Direction)} instead.
      */
-    @ImplementedByExtension
     @Nullable
+    @Deprecated
+    @ImplementedByExtension
+    @ApiStatus.ScheduledForRemoval(inVersion = "1.20.4")
     public static EnergyContainer getBlockEnergyContainer(BlockEntity entity, @Nullable Direction direction) {
         throw new NotImplementedException("Block Entity Energy manager not implemented");
     }
@@ -122,9 +129,11 @@ public class EnergyApi {
     /**
      * @param stack The {@link ItemStack} to check if it is an energy container.
      * @return Whether the given {@link ItemStack} is an energy container.
+     * @deprecated Use {@link EnergyContainer#holdsEnergy(ItemStack)} instead.
      */
-    @Contract(pure = true)
+    @Deprecated
     @ImplementedByExtension
+    @ApiStatus.ScheduledForRemoval(inVersion = "1.20.4")
     public static boolean isEnergyItem(ItemStack stack) {
         throw new NotImplementedException("Energy item check not Implemented");
     }
@@ -133,11 +142,26 @@ public class EnergyApi {
      * @param stack     The {@link BlockEntity} to check if it is an energy container.
      * @param direction The {@link Direction} to check for an energy container on the {@link BlockEntity}.
      * @return Whether the given {@link BlockEntity} is an energy container.
+     * @deprecated Use {@link EnergyContainer#holdsEnergy(Level, BlockPos, Direction)} or {@link EnergyContainer#holdsEnergy(BlockEntity, Direction)} instead.
      */
+    @Deprecated
     @Contract(pure = true)
     @ImplementedByExtension
+    @ApiStatus.ScheduledForRemoval(inVersion = "1.20.4")
     public static boolean isEnergyBlock(BlockEntity blockEntity, @Nullable Direction direction) {
         throw new NotImplementedException("Energy item check not Implemented");
+    }
+
+    /**
+     * Automatically transfers energy from an energy block to surrounding blocks
+     *
+     * @param energyBlock A block entity that is an instance of {@link BotariumEnergyBlock}
+     * @param extractDirection The direction to extract energy from the energy block
+     * @param amount      The total amount that will be distributed as equally it can be. If one block cannot receive all the energy, it will be distributed evenly to the other blocks.
+     * @return The amount of energy that was distributed
+     */
+    public static long distributeEnergyNearby(BlockEntity energyBlock, @Nullable Direction extractDirection, long amount) {
+        return distributeEnergyNearby(energyBlock.getLevel(), energyBlock.getBlockPos(), extractDirection, amount);
     }
 
     /**
@@ -148,16 +172,24 @@ public class EnergyApi {
      * @return The amount of energy that was distributed
      */
     public static long distributeEnergyNearby(BlockEntity energyBlock, long amount) {
-        BlockPos blockPos = energyBlock.getBlockPos();
-        Level level = energyBlock.getLevel();
-        if (level == null) return 0;
-        EnergyContainer internalEnergy = getBlockEnergyContainer(energyBlock, null);
+        return distributeEnergyNearby(energyBlock.getLevel(), energyBlock.getBlockPos(), null, amount);
+    }
+
+    /**
+     * Automatically transfers energy from an energy block to surrounding blocks
+     *
+     * @param level         The level of the energy block
+     * @param energyPos     The position of the energy block
+     * @param amount        The total amount that will be distributed as equally it can be. If one block cannot receive all the energy, it will be distributed evenly to the other blocks.
+     * @param extractDirection The direction to extract energy from the energy block
+     * @return The amount of energy that was distributed
+     */
+    public static long distributeEnergyNearby(Level level, BlockPos energyPos, @Nullable Direction extractDirection, long amount) {
+        EnergyContainer internalEnergy = EnergyContainer.of(level, energyPos, extractDirection);
         long amountToDistribute = internalEnergy.extractEnergy(amount, true);
         if (amountToDistribute == 0) return 0;
         List<EnergyContainer> list = Direction.stream()
-                .map(direction -> Pair.of(direction, level.getBlockEntity(blockPos.relative(direction))))
-                .filter(pair -> pair.getSecond() != null)
-                .map(pair -> getBlockEnergyContainer(pair.getSecond(), pair.getFirst()))
+                .map(direction -> EnergyContainer.of(level, energyPos.relative(direction), direction.getOpposite()))
                 .filter(Objects::nonNull)
                 .sorted(Comparator.comparingLong(energy -> energy.insertEnergy(amount, true)))
                 .toList();
@@ -217,6 +249,24 @@ public class EnergyApi {
         if (!isEnergyBlock(from, null) || !isEnergyBlock(to, null)) return 0;
         EnergyContainer fromEnergy = getBlockEnergyContainer(from, null);
         EnergyContainer toEnergy = getBlockEnergyContainer(to, null);
+        return moveEnergy(fromEnergy, toEnergy, amount, simulate);
+    }
+
+    /**
+     * Moves energy from one energy container to another
+     *
+     * @param level The level of the energy container to move energy from
+     * @param fromPos The position of the energy container to move energy from
+     * @param fromDirection The direction of the energy container to move energy from
+     * @param toPos The position of the energy container to move energy to
+     * @param toDirection The direction of the energy container to move energy to
+     * @param amount The amount of energy to move
+     * @return The amount of energy that was moved
+     */
+    public static long moveEnergy(Level level, BlockPos fromPos, @Nullable Direction fromDirection, BlockPos toPos, @Nullable Direction toDirection, long amount, boolean simulate) {
+        if(!EnergyContainer.holdsEnergy(level, fromPos, fromDirection) || !EnergyContainer.holdsEnergy(level, toPos, toDirection)) return 0;
+        EnergyContainer fromEnergy = EnergyContainer.of(level, fromPos, fromDirection);
+        EnergyContainer toEnergy = EnergyContainer.of(level, toPos, toDirection);
         return moveEnergy(fromEnergy, toEnergy, amount, simulate);
     }
 
