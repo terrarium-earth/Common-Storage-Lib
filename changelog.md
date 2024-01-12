@@ -1,3 +1,3 @@
-# 3.0.3
+# 3.0.5
 
-Add overload and utility methods
+Minor changes to internal api

@@ -48,7 +48,7 @@ jobs:
           modrinth-id: ${{ vars.MODRINTH_ID }}
           modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
 
-          files: ./forge/build/libs/!(*-@(dev|sources|dev-shadow)).jar
+          files: ./forge/build/libs/!(*-@(dev|sources|dev-shadow|javadoc)).jar
           name: "[Forge] Botarium ${{ steps.properties.outputs.version }}"
           version: ${{ steps.properties.outputs.version }}
           version-type: release
@@ -68,7 +68,7 @@ jobs:
           modrinth-id: ${{ vars.MODRINTH_ID }}
           modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
 
-          files: ./neoforge/build/libs/!(*-@(dev|sources|dev-shadow)).jar
+          files: ./neoforge/build/libs/!(*-@(dev|sources|dev-shadow|javadoc)).jar
           name: "[NeoForge] Botarium ${{ steps.properties.outputs.version }}"
           version: ${{ steps.properties.outputs.version }}
           version-type: release
@@ -88,7 +88,7 @@ jobs:
           modrinth-id: ${{ vars.MODRINTH_ID }}
           modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
 
-          files: ./fabric/build/libs/!(*-@(dev|sources|dev-shadow)).jar
+          files: ./fabric/build/libs/!(*-@(dev|sources|dev-shadow|javadoc)).jar
           name: "[Fabric] Botarium ${{ steps.properties.outputs.version }}"
           version: ${{ steps.properties.outputs.version }}
           version-type: release

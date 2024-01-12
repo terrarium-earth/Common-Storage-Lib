@@ -6,6 +6,7 @@ import earth.terrarium.botarium.common.energy.base.BotariumEnergyBlock;
 import earth.terrarium.botarium.common.energy.base.BotariumEnergyItem;
 import earth.terrarium.botarium.common.energy.base.EnergyContainer;
 import earth.terrarium.botarium.common.item.ItemStackHolder;
+import earth.terrarium.botarium.util.Updatable;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.Item;
@@ -58,7 +59,19 @@ public class EnergyApi {
         return getItemRegistry().get(item);
     }
 
-    public static <T extends EnergyContainer> T getAPIEnergyContainer(Level level, BlockPos pos, BlockState state, @Nullable BlockEntity entity, @Nullable Direction direction) {
+    /**
+     * Retrieves the Botarium specific EnergyContainer object from a block entity or block. This method is used internally
+     * by the Botarium API and should not be used by other mods.
+     *
+     * @param <T>        the type of EnergyContainer
+     * @param level      the game level
+     * @param pos        the position of the block
+     * @param state      the block state
+     * @param entity     the block entity (can be null)
+     * @param direction  the direction (can be null)
+     * @return the API EnergyContainer object
+     */
+    public static <T extends EnergyContainer & Updatable> T getAPIEnergyContainer(Level level, BlockPos pos, BlockState state, @Nullable BlockEntity entity, @Nullable Direction direction) {
         BotariumEnergyBlock<?> getter = getEnergyBlock(state.getBlock());
         if (getter == null && entity != null) {
             getter = getEnergyBlock(entity.getType());
