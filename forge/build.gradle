@@ -4,6 +4,7 @@ architectury {
 
 classExtensions {
     registerForSourceSet sourceSets.main, "earth.terrarium.botarium.forge.extensions"
+    registerForSourceSet sourceSets.main, "earth.terrarium.botarium.impl.extensions"
 }
 
 loom {
@@ -11,6 +12,10 @@ loom {
         testmod {
             sourceSet(sourceSets.test)
         }
+    }
+
+    forge {
+        mixinConfig "botarium.forge.mixins.json"
     }
 }
 
