@@ -55,13 +55,13 @@ public class BotariumFabric implements ModInitializer {
 
         EnergyStorage.ITEM.registerFallback((itemStack, context) -> {
             if (itemStack.getItem() instanceof BotariumEnergyItem<?> attachment) {
-                EnergyContainer energyStorage = attachment.getEnergyStorage(itemStack);
-                return energyStorage == null ? null : new FabricItemEnergyContainer(context, energyStorage);
+                var energyStorage = attachment.getEnergyStorage(itemStack);
+                return energyStorage == null ? null : new FabricItemEnergyContainer<>(context, itemStack, energyStorage);
             } else {
                 BotariumEnergyItem<?> itemEnergyGetter = EnergyApi.getEnergyItem(itemStack.getItem());
                 if (itemEnergyGetter == null) return null;
                 var container = itemEnergyGetter.getEnergyStorage(itemStack);
-                return container == null ? null : new FabricItemEnergyContainer(context, container);
+                return container == null ? null : new FabricItemEnergyContainer<>(context, itemStack, container);
             }
         });
 

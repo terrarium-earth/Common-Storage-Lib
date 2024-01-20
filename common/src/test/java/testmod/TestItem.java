@@ -6,6 +6,7 @@ import earth.terrarium.botarium.common.energy.base.EnergyContainer;
 import earth.terrarium.botarium.common.energy.impl.SimpleEnergyContainer;
 import earth.terrarium.botarium.common.energy.impl.WrappedItemEnergyContainer;
 import earth.terrarium.botarium.common.fluid.FluidApi;
+import earth.terrarium.botarium.common.fluid.FluidConstants;
 import earth.terrarium.botarium.common.fluid.base.BotariumFluidItem;
 import earth.terrarium.botarium.common.fluid.base.FluidContainer;
 import earth.terrarium.botarium.common.fluid.base.ItemFluidContainer;
@@ -46,7 +47,7 @@ public class TestItem extends Item implements BotariumEnergyItem<WrappedItemEner
         ItemStackHolder holder = new ItemStackHolder(stack);
         ItemFluidContainer itemFluidManager = FluidContainer.of(holder);
         if (itemFluidManager != null) {
-            long oxygen = itemFluidManager.getFluids().get(0).getFluidAmount();
+            long oxygen = FluidConstants.toMillibuckets(itemFluidManager.getFluids().get(0).getFluidAmount());
             long oxygenCapacity = itemFluidManager.getTankCapacity(0);
             tooltip.add(Component.literal("Water: " + oxygen + "mb / " + oxygenCapacity + "mb").setStyle(Style.EMPTY.withColor(ChatFormatting.GRAY)));
         }

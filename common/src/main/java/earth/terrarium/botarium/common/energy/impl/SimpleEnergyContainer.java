@@ -20,6 +20,10 @@ public class SimpleEnergyContainer implements EnergyContainer {
         this(maxCapacity, 1024, 1024);
     }
 
+    public SimpleEnergyContainer(long maxCapacity, long maxTransfer) {
+        this(maxCapacity, maxTransfer, maxTransfer);
+    }
+
     public SimpleEnergyContainer(long maxCapacity, long maxExtract, long maxInsert) {
         this.capacity = maxCapacity;
         this.maxExtract = maxExtract;

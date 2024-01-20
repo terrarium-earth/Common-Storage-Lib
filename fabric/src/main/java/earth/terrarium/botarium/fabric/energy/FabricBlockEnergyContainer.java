@@ -19,14 +19,14 @@ public class FabricBlockEnergyContainer<T extends EnergyContainer & Updatable> e
     public long insert(long maxAmount, TransactionContext transaction) {
         if (maxAmount <= 0) return 0;
         this.updateSnapshots(transaction);
-        return container.insertEnergy(Math.min(maxAmount, this.container.maxInsert()), false);
+        return container.insertEnergy(maxAmount, false);
     }
 
     @Override
     public long extract(long maxAmount, TransactionContext transaction) {
         if (maxAmount <= 0) return 0;
         this.updateSnapshots(transaction);
-        return container.extractEnergy(Math.min(maxAmount, this.container.maxExtract()), false);
+        return container.extractEnergy(maxAmount, false);
     }
 
     @Override

@@ -129,6 +129,13 @@ public interface FluidHolder {
     long getFluidAmount();
 
     /**
+     * @return The amount of fluid in the holder in millibuckets.
+     */
+    default long getMillibuckets() {
+        return FluidConstants.toMillibuckets(getFluidAmount());
+    }
+
+    /**
      * Sets the amount of fluid in the holder.
      *
      * @param amount The amount of fluid to set in the holder.

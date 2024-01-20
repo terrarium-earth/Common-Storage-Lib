@@ -24,16 +24,16 @@ public record ForgeItemEnergyContainer<T extends EnergyContainer & Updatable>(T 
     @Override
     public int receiveEnergy(int maxAmount, boolean bl) {
         if (maxAmount <= 0) return 0;
-        int inserted = (int) container.insertEnergy(Math.min(maxAmount, container.maxInsert()), bl);
-        container.update();
+        int inserted = (int) container.insertEnergy(maxAmount, bl);
+        if(!bl) container.update();
         return inserted;
     }
 
     @Override
     public int extractEnergy(int maxAmount, boolean bl) {
         if (maxAmount <= 0) return 0;
-        int extracted = (int) container.extractEnergy(Math.min(maxAmount, container.maxExtract()), bl);
-        container.update();
+        int extracted = (int) container.extractEnergy(maxAmount, bl);
+        if(!bl) container.update();
         return extracted;
     }
 

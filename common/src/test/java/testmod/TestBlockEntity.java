@@ -36,7 +36,7 @@ public class TestBlockEntity extends BlockEntity implements BotariumEnergyBlock<
 
     @Override
     public final WrappedBlockEnergyContainer getEnergyStorage(Level level, BlockPos pos, BlockState state, @Nullable BlockEntity entity, @Nullable Direction direction) {
-        return energyContainer == null ? this.energyContainer = new WrappedBlockEnergyContainer(entity, new SimpleEnergyContainer(1000000)) : this.energyContainer;
+        return energyContainer == null ? this.energyContainer = new WrappedBlockEnergyContainer(entity, new SimpleEnergyContainer(1000000, Integer.MAX_VALUE)) : this.energyContainer;
     }
 
     @Override
