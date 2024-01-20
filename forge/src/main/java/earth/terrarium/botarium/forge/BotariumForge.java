@@ -11,6 +11,7 @@ import earth.terrarium.botarium.forge.energy.ForgeEnergyContainer;
 import earth.terrarium.botarium.forge.fluid.ForgeFluidContainer;
 import earth.terrarium.botarium.forge.fluid.ForgeItemFluidContainer;
 import earth.terrarium.botarium.forge.item.ItemContainerWrapper;
+import earth.terrarium.botarium.impl.NewApiForge;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -27,6 +28,8 @@ public class BotariumForge {
         Botarium.init();
         IEventBus bus = MinecraftForge.EVENT_BUS;
         bus.addGenericListener(BlockEntity.class, BotariumForge::attachBlockCapabilities);
+        bus.addGenericListener(BlockEntity.class, NewApiForge::attachBlockCapabilities);
+        bus.addGenericListener(ItemStack.class, NewApiForge::attachItemCapabilities);
     }
 
     public static void attachBlockCapabilities(AttachCapabilitiesEvent<BlockEntity> event) {

@@ -1,26 +1,30 @@
 package testmod;
 
-import earth.terrarium.botarium.api.energy.EnergyBlock;
-import earth.terrarium.botarium.api.energy.SimpleUpdatingEnergyContainer;
-import earth.terrarium.botarium.api.energy.StatefulEnergyContainer;
-import earth.terrarium.botarium.api.fluid.FluidHoldingBlock;
-import earth.terrarium.botarium.api.fluid.FluidHooks;
-import earth.terrarium.botarium.api.fluid.SimpleUpdatingFluidContainer;
-import earth.terrarium.botarium.api.fluid.UpdatingFluidContainer;
-import earth.terrarium.botarium.api.item.ItemContainerBlock;
-import earth.terrarium.botarium.api.item.SerializableContainer;
-import earth.terrarium.botarium.api.item.SimpleItemContainer;
+import earth.terrarium.botarium.common.energy.base.BotariumEnergyBlock;
+import earth.terrarium.botarium.common.energy.impl.SimpleEnergyContainer;
+import earth.terrarium.botarium.common.energy.impl.WrappedBlockEnergyContainer;
+import earth.terrarium.botarium.common.fluid.FluidConstants;
+import earth.terrarium.botarium.common.fluid.base.BotariumFluidBlock;
+import earth.terrarium.botarium.common.fluid.impl.SimpleFluidContainer;
+import earth.terrarium.botarium.common.fluid.impl.WrappedBlockFluidContainer;
+import earth.terrarium.botarium.common.item.ItemContainerBlock;
+import earth.terrarium.botarium.common.item.SerializableContainer;
+import earth.terrarium.botarium.common.item.SimpleItemContainer;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-public class TestBlockEntity extends BlockEntity implements EnergyBlock, FluidHoldingBlock, ItemContainerBlock{
-    public SimpleUpdatingFluidContainer fluidContainer;
-    private SimpleItemContainer itemContainer;
-    private SimpleUpdatingEnergyContainer energyContainer;
+public class TestBlockEntity extends BlockEntity implements BotariumEnergyBlock<WrappedBlockEnergyContainer>, BotariumFluidBlock<WrappedBlockFluidContainer>, ItemContainerBlock {
+    public WrappedBlockFluidContainer fluidContainer;
+    private earth.terrarium.botarium.common.item.SimpleItemContainer itemContainer;
+    private WrappedBlockEnergyContainer energyContainer;
 
     public TestBlockEntity(BlockPos blockPos, BlockState blockState) {
         this(TestMod.EXAMPLE_BLOCK_ENTITY.get(), blockPos, blockState);
@@ -31,13 +35,13 @@ public class TestBlockEntity extends BlockEntity implements EnergyBlock, FluidHo
     }
 
     @Override
-    public final StatefulEnergyContainer getEnergyStorage() {
-        return energyContainer == null ? this.energyContainer = new SimpleUpdatingEnergyContainer(this, 1000000) : this.energyContainer;
+    public final WrappedBlockEnergyContainer getEnergyStorage(Level level, BlockPos pos, BlockState state, @Nullable BlockEntity entity, @Nullable Direction direction) {
+        return energyContainer == null ? this.energyContainer = new WrappedBlockEnergyContainer(entity, new SimpleEnergyContainer(1000000, Integer.MAX_VALUE)) : this.energyContainer;
     }
 
     @Override
-    public UpdatingFluidContainer getFluidContainer() {
-        return fluidContainer == null ? this.fluidContainer = new SimpleUpdatingFluidContainer(this, FluidHooks.buckets(2), 1, (i, fluidHolder) -> true) : this.fluidContainer;
+    public WrappedBlockFluidContainer getFluidContainer(Level level, BlockPos pos, BlockState state, @Nullable BlockEntity entity, @Nullable Direction direction) {
+        return fluidContainer == null ? this.fluidContainer = new WrappedBlockFluidContainer(entity, new SimpleFluidContainer(FluidConstants.fromMillibuckets(2000), 1, (i, fluidHolder) -> true)) : this.fluidContainer;
     }
 
     @Override
@@ -46,16 +50,10 @@ public class TestBlockEntity extends BlockEntity implements EnergyBlock, FluidHo
     }
 
     @Override
-    public CompoundTag getUpdateTag() {
+    public @NotNull CompoundTag getUpdateTag() {
         CompoundTag tag = new CompoundTag();
         this.saveAdditional(tag);
         return tag;
-    }
-
-    @Override
-    public void update() {
-        this.setChanged();
-        if (level != null) level.sendBlockUpdated(this.getBlockPos(), this.getBlockState(), this.getBlockState(), Block.UPDATE_ALL);
     }
 
     public void tick() {}

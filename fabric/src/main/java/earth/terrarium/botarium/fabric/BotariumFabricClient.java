@@ -3,6 +3,7 @@ package earth.terrarium.botarium.fabric;
 import earth.terrarium.botarium.api.registry.fluid.FluidProperties;
 import earth.terrarium.botarium.fabric.client.BoatriumFluidRenderHandler;
 import earth.terrarium.botarium.fabric.registry.fluid.FabricFluidData;
+import earth.terrarium.botarium.impl.NewClientApiFabric;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderHandlerRegistry;
 import net.fabricmc.fabric.api.event.client.ClientSpriteRegistryCallback;
@@ -34,6 +35,8 @@ public class BotariumFabricClient implements ClientModInitializer {
                 if (overlay != null) registry.register(overlay);
             });
         }
+
+        NewClientApiFabric.initialize();
     }
 
     public static void registerRenderedFluid(FabricFluidData holder) {

@@ -12,6 +12,7 @@ import earth.terrarium.botarium.fabric.energy.FabricBlockEnergyStorage;
 import earth.terrarium.botarium.fabric.energy.FabricItemEnergyStorage;
 import earth.terrarium.botarium.fabric.fluid.FabricBlockFluidContainer;
 import earth.terrarium.botarium.fabric.fluid.FabricItemFluidContainer;
+import earth.terrarium.botarium.impl.NewApiFabric;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemStorage;
@@ -58,5 +59,6 @@ public class BotariumFabric implements ModInitializer {
             return null;
         });
 
+        NewApiFabric.initialize();
     }
 }

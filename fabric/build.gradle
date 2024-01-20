@@ -4,6 +4,7 @@ architectury {
 
 classExtensions {
     registerForSourceSet sourceSets.main, "earth.terrarium.botarium.fabric.extensions"
+    registerForSourceSet sourceSets.main, "earth.terrarium.botarium.impl.extensions"
 }
 
 sourceSets.main {

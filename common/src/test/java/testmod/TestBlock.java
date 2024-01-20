@@ -1,8 +1,11 @@
 package testmod;
 
 import earth.terrarium.botarium.api.energy.EnergyHooks;
-import earth.terrarium.botarium.api.fluid.FluidHolder;
 import earth.terrarium.botarium.api.fluid.SimpleUpdatingFluidContainer;
+import earth.terrarium.botarium.common.energy.base.EnergyContainer;
+import earth.terrarium.botarium.common.fluid.base.FluidContainer;
+import earth.terrarium.botarium.common.fluid.base.FluidHolder;
+import earth.terrarium.botarium.common.fluid.impl.SimpleFluidContainer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
@@ -35,19 +38,19 @@ public class TestBlock extends BaseEntityBlock {
 
         if (player.isShiftKeyDown()
                 && level.getBlockEntity(blockPos) instanceof TestBlockEntity testBlockEntity
-                && testBlockEntity.getFluidContainer() instanceof SimpleUpdatingFluidContainer fluidContainer
+                && testBlockEntity.getFluidContainer(level, blockPos, blockState, testBlockEntity, null).container() instanceof SimpleFluidContainer fluidContainer
         ) {
-            fluidContainer.clear();
+            fluidContainer.clearContent();
         }
 
         if (!level.isClientSide()) {
-            player.sendSystemMessage(Component.literal("Energy: " + EnergyHooks.getBlockEnergyManager(
+            player.sendSystemMessage(Component.literal("Energy: " + EnergyContainer.of(
                     level.getBlockEntity(blockPos),
                     blockHitResult.getDirection()
             ).getStoredEnergy()));
 
             if (level.getBlockEntity(blockPos) instanceof TestBlockEntity testBlockEntity) {
-                player.sendSystemMessage(Component.literal("Fluid: " + testBlockEntity.getFluidContainer().getFluids().stream()
+                player.sendSystemMessage(Component.literal("Fluid: " + FluidContainer.of(level, blockPos, blockState, testBlockEntity, null).getFluids().stream()
                         .mapToLong(FluidHolder::getFluidAmount)
                         .mapToObj(Long::toString)
                         .collect(Collectors.joining(", "))
