@@ -13,7 +13,7 @@ import net.msrandom.extensions.annotations.ImplementsBaseElement;
 
 @SuppressWarnings("UnstableApiUsage")
 @ClassExtension(ClientFluidHooks.class)
-public class ClientFluidHookImpl {
+public class ClientFluidHooksImpl {
 
     @ImplementsBaseElement
     public static TextureAtlasSprite getFluidSprite(FluidHolder fluid) {
