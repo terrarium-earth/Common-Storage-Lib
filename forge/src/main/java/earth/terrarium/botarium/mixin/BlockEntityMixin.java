@@ -37,9 +37,6 @@ public abstract class BlockEntityMixin {
         if (energyContainer != null) {
             energyContainer.deserialize(compoundTag);
         }
-        if (this instanceof ItemContainerBlock itemContainerBlock) {
-            itemContainerBlock.getContainer().deserialize(compoundTag);
-        }
     }
 
     @Inject(method = "saveAdditional", at = @At("TAIL"))
@@ -51,9 +48,6 @@ public abstract class BlockEntityMixin {
         EnergyContainer energyContainer = EnergyApi.getAPIEnergyContainer(this.getLevel(), this.getBlockPos(), this.getBlockState(), (BlockEntity) (Object) this, null);
         if (energyContainer != null) {
             energyContainer.serialize(compoundTag);
-        }
-        if (this instanceof ItemContainerBlock itemContainerBlock) {
-            itemContainerBlock.getContainer().serialize(compoundTag);
         }
     }
 }

@@ -21,7 +21,8 @@ public record ForgeFluidContainer(BotariumFluidBlock<?> fluidGetter, BlockEntity
 
     @Override
     public @NotNull <T> LazyOptional<T> getCapability(@NotNull Capability<T> capability, @Nullable Direction arg) {
-        return capability == ForgeCapabilities.FLUID_HANDLER ? LazyOptional.of(() -> new ForgeFluidHandler<>(fluidGetter.getFluidContainer(entity.getLevel(), entity.getBlockPos(), entity.getBlockState(), entity, arg))).cast() : LazyOptional.empty();
+        var container = fluidGetter.getFluidContainer(entity.getLevel(), entity.getBlockPos(), entity.getBlockState(), entity, arg);
+        return capability == ForgeCapabilities.FLUID_HANDLER && container != null ? LazyOptional.of(() -> new ForgeFluidHandler<>(container)).cast() : LazyOptional.empty();
     }
 
     public record ForgeFluidHandler<T extends FluidContainer & Updatable>(T container) implements IFluidHandler, AutoSerializable {

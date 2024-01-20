@@ -8,6 +8,7 @@ import earth.terrarium.botarium.common.fluid.FluidApi;
 import earth.terrarium.botarium.common.fluid.base.BotariumFluidBlock;
 import earth.terrarium.botarium.common.fluid.base.BotariumFluidItem;
 import earth.terrarium.botarium.common.item.ItemContainerBlock;
+import earth.terrarium.botarium.common.item.SerializableContainer;
 import earth.terrarium.botarium.impl.energy.ForgeEnergyContainer;
 import earth.terrarium.botarium.impl.energy.ForgeItemEnergyContainer;
 import earth.terrarium.botarium.impl.fluid.ForgeFluidContainer;
@@ -39,13 +40,19 @@ public class NewApiForge {
         }
 
         if (event.getObject() instanceof ItemContainerBlock itemContainerBlock) {
-            event.addCapability(new ResourceLocation(Botarium.MOD_ID, "item"), new ItemContainerWrapper(itemContainerBlock.getContainer()));
+            SerializableContainer container = itemContainerBlock.getContainer();
+            if (container != null) {
+                event.addCapability(new ResourceLocation(Botarium.MOD_ID, "item"), new ItemContainerWrapper(container));
+            }
         }
     }
 
     public static void attachItemCapabilities(AttachCapabilitiesEvent<ItemStack> event) {
         if (event.getObject().getItem() instanceof BotariumEnergyItem<?> energyItem) {
-            event.addCapability(new ResourceLocation(Botarium.MOD_ID, "energy"), new ForgeItemEnergyContainer<>(energyItem.getEnergyStorage(event.getObject())));
+            var energyStorage = energyItem.getEnergyStorage(event.getObject());
+            if (energyStorage != null) {
+                event.addCapability(new ResourceLocation(Botarium.MOD_ID, "energy"), new ForgeItemEnergyContainer<>(energyStorage));
+            }
         }
 
         BotariumEnergyItem<?> itemEnergyGetter = EnergyApi.getEnergyItem(event.getObject().getItem());
@@ -57,7 +64,10 @@ public class NewApiForge {
         }
 
         if (event.getObject().getItem() instanceof BotariumFluidItem<?> fluidHoldingItem) {
-            event.addCapability(new ResourceLocation(Botarium.MOD_ID, "fluid"), new ForgeItemFluidContainer<>(fluidHoldingItem.getFluidContainer(event.getObject())));
+            var fluidContainer = fluidHoldingItem.getFluidContainer(event.getObject());
+            if (fluidContainer != null) {
+                event.addCapability(new ResourceLocation(Botarium.MOD_ID, "fluid"), new ForgeItemFluidContainer<>(fluidContainer));
+            }
         }
 
         var itemFluidGetter = FluidApi.getFluidItem(event.getObject().getItem());

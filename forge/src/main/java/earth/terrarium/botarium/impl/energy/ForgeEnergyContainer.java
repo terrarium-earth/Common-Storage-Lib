@@ -20,7 +20,8 @@ public record ForgeEnergyContainer(BotariumEnergyBlock<?> containerGetter, Block
     @Override
     @NotNull
     public <T> LazyOptional<T> getCapability(@NotNull Capability<T> capability, @Nullable Direction arg) {
-        LazyOptional<IEnergyStorage> of = LazyOptional.of(() -> new ForgeEnergyStorage<>(containerGetter.getEnergyStorage(entity.getLevel(), entity.getBlockPos(), entity.getBlockState(), entity, arg)));
+        var container = containerGetter.getEnergyStorage(entity.getLevel(), entity.getBlockPos(), entity.getBlockState(), entity, arg);
+        LazyOptional<IEnergyStorage> of = container != null ? LazyOptional.of(() -> new ForgeEnergyStorage<>(container)) : LazyOptional.empty();
         return capability.orEmpty(ForgeCapabilities.ENERGY, of.cast()).cast();
     }
 
