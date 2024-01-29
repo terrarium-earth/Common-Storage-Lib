@@ -31,7 +31,7 @@ public record FluidParticleOptions(FluidHolder fluid) implements ParticleOptions
 
 	public static final Codec<FluidParticleOptions> CODEC = FluidHolder.CODEC.xmap(FluidParticleOptions::new, FluidParticleOptions::fluid);
 
-	public static final Deserializer<FluidParticleOptions> DESERIALIZER = new Deserializer<FluidParticleOptions>() {
+	public static final Deserializer<FluidParticleOptions> DESERIALIZER = new Deserializer<>() {
 
 		public @NotNull FluidParticleOptions fromCommand(ParticleType<FluidParticleOptions> particleTypeIn, StringReader reader)
 				throws CommandSyntaxException {
