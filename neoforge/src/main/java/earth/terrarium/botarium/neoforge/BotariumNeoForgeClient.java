@@ -1,7 +1,7 @@
 package earth.terrarium.botarium.neoforge;
 
 import earth.terrarium.botarium.Botarium;
-import earth.terrarium.botarium.client.util.FluidHolderParticle;
+import earth.terrarium.botarium.client.FluidHolderParticle;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -14,6 +14,6 @@ public class BotariumNeoForgeClient {
 
     @SubscribeEvent
     public static void registerParticleFactories(RegisterParticleProvidersEvent event) {
-        event.registerSpecial(Botarium.FLUID_PARTICLE.get(), (type, level, x, y, z, xSpeed, ySpeed, zSpeed) -> new FluidHolderParticle(level, type.getFluid(), x, y, z, xSpeed, ySpeed, zSpeed));
+        event.registerSpecial(Botarium.FLUID_PARTICLE.get(), (type, level, x, y, z, xSpeed, ySpeed, zSpeed) -> new FluidHolderParticle(level, type.fluid(), x, y, z, xSpeed, ySpeed, zSpeed));
     }
 }
