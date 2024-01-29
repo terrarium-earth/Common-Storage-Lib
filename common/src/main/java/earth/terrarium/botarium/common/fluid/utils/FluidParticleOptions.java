@@ -31,9 +31,8 @@ public record FluidParticleOptions(FluidHolder fluid) implements ParticleOptions
 
     public static final Codec<FluidParticleOptions> CODEC = FluidHolder.NEW_CODEC.xmap(FluidParticleOptions::new, FluidParticleOptions::fluid);
 
-    public static final Deserializer<FluidParticleOptions> DESERIALIZER = new Deserializer<FluidParticleOptions>() {
+    public static final Deserializer<FluidParticleOptions> DESERIALIZER = new Deserializer<>() {
 
-        // TODO Fluid particles on command
         public @NotNull FluidParticleOptions fromCommand(ParticleType<FluidParticleOptions> particleTypeIn, StringReader reader) throws CommandSyntaxException {
             reader.expect(' ');
             return new FluidParticleOptions(FluidHolder.of(BuiltInRegistries.FLUID.get(ResourceLocation.tryParse(reader.readQuotedString()))));
