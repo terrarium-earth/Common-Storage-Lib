@@ -1,4 +1,4 @@
-package earth.terrarium.botarium.client.util;
+package earth.terrarium.botarium.client;
 
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import earth.terrarium.botarium.common.fluid.base.FluidHolder;

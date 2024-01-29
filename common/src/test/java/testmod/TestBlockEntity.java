@@ -1,6 +1,6 @@
 package testmod;
 
-import earth.terrarium.botarium.client.util.FluidParticleOptions;
+import earth.terrarium.botarium.common.fluid.utils.FluidParticleOptions;
 import earth.terrarium.botarium.common.energy.base.BotariumEnergyBlock;
 import earth.terrarium.botarium.common.energy.impl.SimpleEnergyContainer;
 import earth.terrarium.botarium.common.energy.impl.WrappedBlockEnergyContainer;
