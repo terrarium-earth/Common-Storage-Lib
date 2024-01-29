@@ -25,6 +25,11 @@ public class ClientFluidHookImpl {
         return FluidVariantRendering.getColor(FabricFluidHolder.of(fluid).toVariant());
     }
 
+    @ImplementsBaseElement
+    public static int getFluidLightLevel(FluidHolder fluid) {
+        return FluidVariantAttributes.getLuminance(FabricFluidHolder.of(fluid).toVariant());
+    }
+
     @ImplementedByExtension
     public static Component getDisplayName(FluidHolder fluid) {
         return FluidVariantAttributes.getName(FabricFluidHolder.of(fluid).toVariant());

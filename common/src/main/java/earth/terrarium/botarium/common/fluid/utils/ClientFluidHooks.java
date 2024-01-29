@@ -18,6 +18,11 @@ public class ClientFluidHooks {
     }
 
     @ImplementedByExtension
+    public static int getFluidLightLevel(FluidHolder fluid) {
+        throw new NotImplementedException();
+    }
+
+    @ImplementedByExtension
     public static Component getDisplayName(FluidHolder fluid) {
         throw new NotImplementedException();
     }

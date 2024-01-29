@@ -1,5 +1,3 @@
-# 2.3.1
+# 2.3.2
 
-- Fixed an issue with EnergyContainer methods
-- Added useful overload methods
-- Marked things for removal
+- Add fluid particles

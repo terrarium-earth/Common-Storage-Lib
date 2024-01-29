@@ -29,6 +29,11 @@ public class ClientFluidHooksImpl {
         return extension.getTintColor(ForgeFluidHolder.toStack(fluid));
     }
 
+    @ImplementsBaseElement
+    public static int getFluidLightLevel(FluidHolder fluid) {
+        return fluid.getFluid().getFluidType().getLightLevel();
+    }
+
     @ImplementedByExtension
     public static Component getDisplayName(FluidHolder fluid) {
         return ForgeFluidHolder.toStack(fluid).getDisplayName();
