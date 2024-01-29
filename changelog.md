@@ -1,3 +1,3 @@
-# 3.0.6
+# 3.0.7
 
-Cleanup internals
+- New feature: Fluid particles!

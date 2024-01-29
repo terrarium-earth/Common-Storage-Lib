@@ -12,6 +12,7 @@ import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.msrandom.extensions.annotations.ClassExtension;
 import net.msrandom.extensions.annotations.ImplementedByExtension;
 import net.msrandom.extensions.annotations.ImplementsBaseElement;
+import org.apache.commons.lang3.NotImplementedException;
 
 @ClassExtension(ClientFluidHooks.class)
 public class ClientFluidHooksImpl {
@@ -27,6 +28,11 @@ public class ClientFluidHooksImpl {
     public static int getFluidColor(FluidHolder fluid) {
         IClientFluidTypeExtensions extension = IClientFluidTypeExtensions.of(fluid.getFluid());
         return extension.getTintColor(ForgeFluidHolder.toStack(fluid));
+    }
+
+    @ImplementsBaseElement
+    public static int getFluidLightLevel(FluidHolder fluid) {
+        return fluid.getFluid().getFluidType().getLightLevel();
     }
 
     @ImplementedByExtension

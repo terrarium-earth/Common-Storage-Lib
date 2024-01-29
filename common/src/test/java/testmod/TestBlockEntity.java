@@ -1,9 +1,9 @@
 package testmod;
 
+import earth.terrarium.botarium.client.util.FluidParticleOptions;
 import earth.terrarium.botarium.common.energy.base.BotariumEnergyBlock;
 import earth.terrarium.botarium.common.energy.impl.SimpleEnergyContainer;
 import earth.terrarium.botarium.common.energy.impl.WrappedBlockEnergyContainer;
-import earth.terrarium.botarium.common.fluid.FluidApi;
 import earth.terrarium.botarium.common.fluid.FluidConstants;
 import earth.terrarium.botarium.common.fluid.base.BotariumFluidBlock;
 import earth.terrarium.botarium.common.fluid.impl.SimpleFluidContainer;
@@ -14,6 +14,7 @@ import earth.terrarium.botarium.common.item.SimpleItemContainer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -44,6 +45,10 @@ public class TestBlockEntity extends BlockEntity implements BotariumEnergyBlock<
         return fluidContainer == null ? this.fluidContainer = new WrappedBlockFluidContainer(entity, new SimpleFluidContainer(FluidConstants.fromMillibuckets(2000), 1, (i, fluidHolder) -> true)) : this.fluidContainer;
     }
 
+    public WrappedBlockFluidContainer getFluidContainer() {
+        return getFluidContainer(level, worldPosition, getBlockState(), this, null);
+    }
+
     @Override
     public SerializableContainer getContainer() {
         return itemContainer == null ? this.itemContainer = new SimpleItemContainer(this, 1) : this.itemContainer;
@@ -56,5 +61,9 @@ public class TestBlockEntity extends BlockEntity implements BotariumEnergyBlock<
         return tag;
     }
 
-    public void tick() {}
+    public void tick() {
+        if (!getFluidContainer().isEmpty() && level instanceof ServerLevel serverLevel) {
+            serverLevel.sendParticles(new FluidParticleOptions(getFluidContainer().getFirstFluid()), worldPosition.getX() + 0.5, worldPosition.getY() + 1.5, worldPosition.getZ() + 0.5, 10, 0.25, 0.5,0.25, 0.05);
+        }
+    }
 }
