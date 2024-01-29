@@ -1,7 +1,7 @@
 package earth.terrarium.botarium.fabric;
 
 import earth.terrarium.botarium.Botarium;
-import earth.terrarium.botarium.client.util.FluidHolderParticle;
+import earth.terrarium.botarium.client.FluidHolderParticle;
 import earth.terrarium.botarium.common.registry.fluid.FluidInformation;
 import earth.terrarium.botarium.fabric.client.BoatriumFluidRenderHandler;
 import earth.terrarium.botarium.fabric.registry.fluid.FabricFluidData;
@@ -27,7 +27,7 @@ public class BotariumFabricClient implements ClientModInitializer {
         }
 
 
-        ParticleFactoryRegistry.getInstance().register(Botarium.FLUID_PARTICLE.get(), (type, level, x, y, z, xSpeed, ySpeed, zSpeed) -> new FluidHolderParticle(level, type.getFluid(), x, y, z, xSpeed, ySpeed, zSpeed));
+        ParticleFactoryRegistry.getInstance().register(Botarium.FLUID_PARTICLE.get(), (type, level, x, y, z, xSpeed, ySpeed, zSpeed) -> new FluidHolderParticle(level, type.fluid(), x, y, z, xSpeed, ySpeed, zSpeed));
     }
 
     public static void registerRenderedFluid(FabricFluidData holder) {

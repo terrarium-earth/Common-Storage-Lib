@@ -1,7 +1,7 @@
 package earth.terrarium.botarium.forge;
 
 import earth.terrarium.botarium.Botarium;
-import earth.terrarium.botarium.client.util.FluidHolderParticle;
+import earth.terrarium.botarium.client.FluidHolderParticle;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.RegisterParticleProvidersEvent;
@@ -14,6 +14,6 @@ public class BotariumForgeClient {
 
     @SubscribeEvent
     public static void registerParticleFactories(RegisterParticleProvidersEvent event) {
-        event.registerSprite(Botarium.FLUID_PARTICLE.get(), (type, level, x, y, z, xSpeed, ySpeed, zSpeed) -> new FluidHolderParticle(level, type.getFluid(), x, y, z, xSpeed, ySpeed, zSpeed));
+        event.registerSprite(Botarium.FLUID_PARTICLE.get(), (type, level, x, y, z, xSpeed, ySpeed, zSpeed) -> new FluidHolderParticle(level, type.fluid(), x, y, z, xSpeed, ySpeed, zSpeed));
     }
 }

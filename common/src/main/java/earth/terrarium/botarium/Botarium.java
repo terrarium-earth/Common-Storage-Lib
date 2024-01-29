@@ -2,7 +2,7 @@ package earth.terrarium.botarium;
 
 import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Codec;
-import earth.terrarium.botarium.client.util.FluidParticleOptions;
+import earth.terrarium.botarium.common.fluid.utils.FluidParticleOptions;
 import earth.terrarium.botarium.common.registry.RegistryHolder;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.registries.BuiltInRegistries;
