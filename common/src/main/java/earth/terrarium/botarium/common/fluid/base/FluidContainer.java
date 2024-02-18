@@ -201,7 +201,7 @@ public interface FluidContainer extends Serializable, Clearable {
 
     /**
      * Extracts a fluid from one {@link FluidHolder} into another.
-     * This is deprecated, please use {@link #extractFluid(int slot, FluidHolder toExtract, boolean simulate)} instead.
+     * This is deprecated, please use {@link #extractFromSlot(int slot, FluidHolder toExtract, boolean simulate)} instead.
      *
      * @param fluidHolder The {@link FluidHolder} to extract from.
      * @param toExtract    The {@link FluidHolder} to insert into. With amount clamped between 0-fluid.getFluidAmount().
