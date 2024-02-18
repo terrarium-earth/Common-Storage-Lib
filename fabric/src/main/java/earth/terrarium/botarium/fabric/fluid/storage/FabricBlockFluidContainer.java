@@ -10,6 +10,7 @@ import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.fabricmc.fabric.api.transfer.v1.storage.StorageView;
 import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Iterator;
 import java.util.List;
@@ -20,6 +21,16 @@ public class FabricBlockFluidContainer<T extends FluidContainer & Updatable> ext
 
     public FabricBlockFluidContainer(T container) {
         this.container = container;
+    }
+
+    @Override
+    public boolean supportsInsertion() {
+        return container.allowsInsertion();
+    }
+
+    @Override
+    public boolean supportsExtraction() {
+        return container.allowsExtraction();
     }
 
     @Override

@@ -12,6 +12,7 @@ import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Iterator;
 import java.util.List;
@@ -27,6 +28,16 @@ public class FabricItemFluidContainer implements Storage<FluidVariant> {
         this.ctx = ctx;
         CompoundTag nbt = ctx.getItemVariant().getNbt();
         if (nbt != null) container.deserialize(nbt);
+    }
+
+    @Override
+    public boolean supportsInsertion() {
+        return container.allowsInsertion();
+    }
+
+    @Override
+    public boolean supportsExtraction() {
+        return container.allowsExtraction();
     }
 
     @Override
