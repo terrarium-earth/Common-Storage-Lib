@@ -1,3 +1,3 @@
-# 2.3.2
+# 2.3.3
 
-- Add fluid particles
+- Fix fluid interaction with items

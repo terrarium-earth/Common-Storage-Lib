@@ -5,28 +5,47 @@ import earth.terrarium.botarium.common.fluid.base.FluidHolder;
 import earth.terrarium.botarium.common.fluid.base.FluidSnapshot;
 import earth.terrarium.botarium.fabric.fluid.holder.FabricFluidHolder;
 import earth.terrarium.botarium.fabric.fluid.holder.ManualSyncing;
-import earth.terrarium.botarium.fabric.fluid.holder.WrappedFluidHolder;
 import earth.terrarium.botarium.util.Updatable;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.fabricmc.fabric.api.transfer.v1.storage.StorageView;
 import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Iterator;
 import java.util.List;
 import java.util.stream.IntStream;
 
 @SuppressWarnings("UnstableApiUsage")
-public class FabricBlockFluidContainer extends ExtendedFluidContainer implements Storage<FluidVariant>, ManualSyncing {
-    private final FluidContainer container;
-    private final Updatable<BlockEntity> blockEntity;
-    private final BlockEntity block;
+public class FabricBlockFluidContainer<T extends FluidContainer & Updatable<BlockEntity>> extends ExtendedFluidContainer implements Storage<FluidVariant>, ManualSyncing {
+    protected final T container;
+    protected final BlockEntity entity;
 
-    public FabricBlockFluidContainer(FluidContainer container, Updatable<BlockEntity> updatable, BlockEntity entity) {
+    public FabricBlockFluidContainer(T container, BlockEntity entity) {
         this.container = container;
-        this.blockEntity = updatable;
-        this.block = entity;
+        this.entity = entity;
+    }
+
+    @Override
+    public boolean supportsInsertion() {
+        return container.allowsInsertion();
+    }
+
+    @Override
+    public boolean supportsExtraction() {
+        return container.allowsExtraction();
+    }
+
+    @Override
+    public long simulateInsert(FluidVariant resource, long maxAmount, @Nullable TransactionContext transaction) {
+        return container.insertFluid(FabricFluidHolder.of(resource, maxAmount), true);
+    }
+
+    @Override
+    public long simulateExtract(FluidVariant resource, long maxAmount, @Nullable TransactionContext transaction) {
+        return container.extractFluid(FabricFluidHolder.of(resource, maxAmount), true).getFluidAmount();
     }
 
     @Override
@@ -42,9 +61,8 @@ public class FabricBlockFluidContainer extends ExtendedFluidContainer implements
     }
 
     @Override
-    public Iterator<StorageView<FluidVariant>> iterator() {
-        List<FluidHolder> fluids = container.getFluids();
-        return IntStream.range(0, fluids.size()).mapToObj(index -> new WrappedFluidHolder(this, fluids.get(index), container::extractFromSlot, container.getTankCapacity(index))).map(holder -> (StorageView<FluidVariant>) holder).iterator();
+    public @NotNull Iterator<StorageView<FluidVariant>> iterator() {
+        return IntStream.range(0, container.getSize()).mapToObj(index -> new SingleFluidSlot(this, index)).map(holder -> (StorageView<FluidVariant>) holder).iterator();
     }
 
     @Override
@@ -59,7 +77,6 @@ public class FabricBlockFluidContainer extends ExtendedFluidContainer implements
 
     @Override
     public void onFinalCommit() {
-        blockEntity.update(block);
+        container.update(entity);
     }
-
 }

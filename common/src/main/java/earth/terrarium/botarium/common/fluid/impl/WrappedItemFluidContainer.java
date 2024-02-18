@@ -78,8 +78,13 @@ public record WrappedItemFluidContainer(ItemStack stack,
     }
 
     @Override
-    public long extractFromSlot(FluidHolder fluidHolder, FluidHolder toInsert, Runnable snapshot) {
-        return container.extractFromSlot(fluidHolder, toInsert, snapshot);
+    public long extractFromSlot(FluidHolder fluidHolder, FluidHolder toExtract, Runnable snapshot) {
+        return container.extractFromSlot(fluidHolder, toExtract, snapshot);
+    }
+
+    @Override
+    public long extractFromSlot(int slot, FluidHolder toExtract, boolean simulate) {
+        return container.extractFromSlot(slot, toExtract, simulate);
     }
 
     @Override
