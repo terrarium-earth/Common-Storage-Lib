@@ -7,7 +7,7 @@ plugins {
     java
     id("maven-publish")
     id("com.teamresourceful.resourcefulgradle") version "0.0.+"
-    id("dev.architectury.loom") version "1.5-SNAPSHOT" apply false
+    id("dev.architectury.loom") version "1.3-SNAPSHOT" apply false
     id("architectury-plugin") version "3.4-SNAPSHOT"
     id("jvm-class-extensions") version "1.3"
 }
@@ -75,9 +75,9 @@ subprojects {
         if (isCommon) {
             compileOnly(group = "net.msrandom", name = "class-extension-annotations", version = "1.0")
         } else {
-            "modLocalRuntime"(group = "earth.terrarium.adastra", name = "ad_astra-$modLoader-1.20.1", version = "1.15.18") { isTransitive = false }
-            "modLocalRuntime"(group = "com.teamresourceful.resourcefullib", name = "resourcefullib-$modLoader-1.20.1", version = "2.1.23") { isTransitive = false }
-            "modLocalRuntime"(group = "com.teamresourceful.resourcefulconfig", name = "resourcefulconfig-$modLoader-1.20.1", version = "2.1.2") { isTransitive = false }
+            // "modLocalRuntime"(group = "earth.terrarium.adastra", name = "ad_astra-$modLoader-1.20.1", version = "1.15.18") { isTransitive = false }
+            // "modLocalRuntime"(group = "com.teamresourceful.resourcefullib", name = "resourcefullib-$modLoader-1.20.1", version = "2.1.23") { isTransitive = false }
+            // "modLocalRuntime"(group = "com.teamresourceful.resourcefulconfig", name = "resourcefulconfig-$modLoader-1.20.1", version = "2.1.2") { isTransitive = false }
         }
     }
 
