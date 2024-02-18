@@ -10,7 +10,7 @@ import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
 import java.util.function.Consumer;
 
 @SuppressWarnings("UnstableApiUsage")
-public class SingleItemFluidSlot implements StorageView<FluidVariant> {
+public class SingleItemFluidSlot extends ExtendedFluidContainer implements StorageView<FluidVariant> {
 
     private final FabricItemFluidContainer container;
     private final int slotIndex;
@@ -50,5 +50,20 @@ public class SingleItemFluidSlot implements StorageView<FluidVariant> {
     @Override
     public long getCapacity() {
         return container.container.getTankCapacity(slotIndex);
+    }
+
+    @Override
+    public void onFinalCommit() {
+        container.onFinalCommit();
+    }
+
+    @Override
+    public FluidSnapshot createSnapshot() {
+        return container.createSnapshot();
+    }
+
+    @Override
+    public void readSnapshot(FluidSnapshot snapshot) {
+        container.readSnapshot(snapshot);
     }
 }
