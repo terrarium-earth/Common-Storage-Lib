@@ -1,14 +1,11 @@
 package earth.terrarium.botarium.client;
 
-import com.mojang.blaze3d.vertex.VertexConsumer;
 import earth.terrarium.botarium.common.fluid.base.FluidHolder;
 import earth.terrarium.botarium.common.fluid.utils.ClientFluidHooks;
-import net.minecraft.client.Camera;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.ParticleRenderType;
 import net.minecraft.client.particle.TextureSheetParticle;
 import org.jetbrains.annotations.NotNull;
-import org.joml.Quaternionf;
 
 public class FluidHolderParticle extends TextureSheetParticle {
 	private final FluidHolder fluid;

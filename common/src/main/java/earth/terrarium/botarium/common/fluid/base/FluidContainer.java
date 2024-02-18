@@ -201,13 +201,19 @@ public interface FluidContainer extends Serializable, Clearable {
 
     /**
      * Extracts a fluid from one {@link FluidHolder} into another.
+     * This is deprecated, please use {@link #extractFluid(int slot, FluidHolder toExtract, boolean simulate)} instead.
      *
      * @param fluidHolder The {@link FluidHolder} to extract from.
-     * @param toInsert    The {@link FluidHolder} to insert into. With amount clamped between 0-fluid.getFluidAmount().
+     * @param toExtract    The {@link FluidHolder} to insert into. With amount clamped between 0-fluid.getFluidAmount().
      * @param snapshot    A runnable that will be called before the extraction happens.
      * @return The amount of fluid that was extracted.
      */
-    long extractFromSlot(FluidHolder fluidHolder, FluidHolder toInsert, Runnable snapshot);
+    @Deprecated(forRemoval = true)
+    long extractFromSlot(FluidHolder fluidHolder, FluidHolder toExtract, Runnable snapshot);
+
+    default long extractFromSlot(int slot, FluidHolder toExtract, boolean simulate) {
+        return extractFromSlot(getFluids().get(slot), toExtract, () -> {});
+    }
 
     /**
      * @return Whether can be inserted into.

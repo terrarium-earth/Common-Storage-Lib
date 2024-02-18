@@ -90,12 +90,28 @@ public class SimpleFluidContainer implements FluidContainer {
         return extractFluid(fluid, simulate);
     }
 
-    public long extractFromSlot(FluidHolder fluidHolder, FluidHolder toInsert, Runnable snapshot) {
-        if (Objects.equals(fluidHolder.getCompound(), toInsert.getCompound()) && fluidHolder.getFluid().isSame(toInsert.getFluid())) {
-            long extracted = (long) Mth.clamp(toInsert.getFluidAmount(), 0, fluidHolder.getFluidAmount());
+    public long extractFromSlot(FluidHolder fluidHolder, FluidHolder toExtract, Runnable snapshot) {
+        if (fluidHolder.matches(toExtract) && !fluidHolder.isEmpty()) {
+            long extracted = Mth.clamp(toExtract.getFluidAmount(), 0, fluidHolder.getFluidAmount());
             snapshot.run();
             fluidHolder.setAmount(fluidHolder.getFluidAmount() - extracted);
             if (fluidHolder.getFluidAmount() == 0) fluidHolder.setFluid(Fluids.EMPTY);
+            return extracted;
+        }
+        return 0;
+    }
+
+    @Override
+    public long extractFromSlot(int slot, FluidHolder toExtract, boolean simulate) {
+        if (slot < 0 || slot >= this.storedFluid.size()) return 0;
+        FluidHolder fluidHolder = this.storedFluid.get(slot);
+        if (!fluidHolder.isEmpty() && fluidHolder.matches(toExtract)) {
+            long extracted = Mth.clamp(toExtract.getFluidAmount(), 0, fluidHolder.getFluidAmount());
+            if (!simulate) {
+                fluidHolder.setAmount(fluidHolder.getFluidAmount() - extracted);
+                if (fluidHolder.getFluidAmount() == 0) fluidHolder.setFluid(Fluids.EMPTY);
+                this.storedFluid.set(slot, fluidHolder);
+            }
             return extracted;
         }
         return 0;
