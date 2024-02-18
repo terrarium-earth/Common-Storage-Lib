@@ -16,6 +16,8 @@ import net.minecraftforge.fluids.capability.IFluidHandler;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.function.Predicate;
+
 public record ForgeFluidContainer<T extends FluidContainer & Updatable<BlockEntity>>(
         T container, BlockEntity entity) implements IFluidHandler, ICapabilityProvider, AutoSerializable {
 
@@ -55,9 +57,8 @@ public record ForgeFluidContainer<T extends FluidContainer & Updatable<BlockEnti
 
     @Override
     public @NotNull FluidStack drain(int i, FluidAction fluidAction) {
-        FluidHolder fluid = this.container.getFluids().get(0).copyHolder();
-        if (fluid.isEmpty()) return FluidStack.EMPTY;
-        fluid.setAmount(i);
+        FluidHolder holder = this.container.getFluids().stream().filter(Predicate.not(FluidHolder::isEmpty)).findFirst().orElse(FluidHolder.empty());
+        if (i <= 0 || holder.isEmpty()) return FluidStack.EMPTY;
         FluidStack fluidStack = new ForgeFluidHolder(this.container.extractFluid(fluid, fluidAction.simulate())).getFluidStack();
         if(!fluidStack.isEmpty() && fluidAction.execute()) this.container.update(entity);
         return fluidStack;

@@ -7,6 +7,7 @@ import net.minecraftforge.fluids.capability.IFluidHandler;
 import java.util.ArrayList;
 import java.util.List;
 
+@Deprecated
 public record ForgeFluidHandler(IFluidHandler handler) implements PlatformFluidHandler {
 
     @Override

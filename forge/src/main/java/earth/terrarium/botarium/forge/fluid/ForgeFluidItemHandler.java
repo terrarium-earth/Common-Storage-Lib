@@ -6,6 +6,7 @@ import earth.terrarium.botarium.common.item.ItemStackHolder;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 
+@Deprecated
 public record ForgeFluidItemHandler(IFluidHandlerItem handler) implements PlatformFluidItemHandler {
     @Override
     public long insertFluid(ItemStackHolder item, FluidHolder fluid, boolean simulate) {
