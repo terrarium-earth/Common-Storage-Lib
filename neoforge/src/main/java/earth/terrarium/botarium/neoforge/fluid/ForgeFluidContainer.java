@@ -7,6 +7,8 @@ import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.function.Predicate;
+
 public record ForgeFluidContainer<T extends FluidContainer & Updatable>(T container) implements IFluidHandler {
 
     @Override
@@ -32,30 +34,23 @@ public record ForgeFluidContainer<T extends FluidContainer & Updatable>(T contai
     @Override
     public int fill(FluidStack fluidStack, FluidAction fluidAction) {
         int i = (int) this.container.insertFluid(new ForgeFluidHolder(fluidStack), fluidAction.simulate());
-        if (i > 0 && fluidAction.execute()) {
-            this.container.update();
-        }
+        if (i > 0 && fluidAction.execute()) this.container.update();
         return i;
     }
 
     @Override
     public @NotNull FluidStack drain(FluidStack fluidStack, FluidAction fluidAction) {
         FluidStack fluidStack1 = new ForgeFluidHolder(this.container.extractFluid(new ForgeFluidHolder(fluidStack), fluidAction.simulate())).getFluidStack();
-        if(!fluidStack1.isEmpty() && fluidAction.execute()) {
-            this.container.update();
-        }
+        if(!fluidStack1.isEmpty() && fluidAction.execute()) this.container.update();
         return fluidStack1;
     }
 
     @Override
     public @NotNull FluidStack drain(int i, FluidAction fluidAction) {
-        FluidHolder fluid = this.container.getFluids().get(0).copyHolder();
-        if (fluid.isEmpty()) return FluidStack.EMPTY;
-        fluid.setAmount(i);
-        FluidStack fluidStack = new ForgeFluidHolder(this.container.extractFluid(fluid, fluidAction.simulate())).getFluidStack();
-        if(!fluidStack.isEmpty() && fluidAction.execute()) {
-            this.container.update();
-        }
+        FluidHolder holder = this.container.getFluids().stream().filter(Predicate.not(FluidHolder::isEmpty)).findFirst().orElse(FluidHolder.empty());
+        if (i <= 0 || holder.isEmpty()) return FluidStack.EMPTY;
+        FluidStack fluidStack = new ForgeFluidHolder(this.container.extractFluid(holder, fluidAction.simulate())).getFluidStack();
+        if (!fluidStack.isEmpty() && fluidAction.execute()) this.container.update();
         return fluidStack;
     }
 }
