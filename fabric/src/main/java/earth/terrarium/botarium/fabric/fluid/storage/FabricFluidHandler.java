@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @SuppressWarnings("UnstableApiUsage")
+@Deprecated
 public record FabricFluidHandler(Storage<FluidVariant> storage) implements PlatformFluidHandler {
 
     @Override

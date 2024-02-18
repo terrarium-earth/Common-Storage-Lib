@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @SuppressWarnings("UnstableApiUsage")
+@Deprecated
 public record FabricFluidItemHandler(ItemStack stack, ContainerItemContext context,
                                      Storage<FluidVariant> storage) implements PlatformFluidItemHandler {
 

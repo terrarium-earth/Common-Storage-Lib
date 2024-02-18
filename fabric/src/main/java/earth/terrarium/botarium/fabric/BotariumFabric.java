@@ -86,17 +86,16 @@ public class BotariumFabric implements ModInitializer {
             return null;
         });
 
-
         FluidStorage.ITEM.registerFallback((itemStack, context) -> {
             FluidApi.finalizeItemRegistration();
             if (itemStack.getItem() instanceof BotariumFluidItem<?> attachment) {
-                FluidContainer fluidContainer = attachment.getFluidContainer(itemStack);
-                return fluidContainer == null ? null : new FabricItemFluidContainer(context, fluidContainer);
+                var fluidContainer = attachment.getFluidContainer(itemStack);
+                return fluidContainer == null ? null : new FabricItemFluidContainer<>(context, fluidContainer);
             } else {
                 FluidApi.ItemFluidGetter<?> itemFluidGetter = FluidApi.FINALIZED_ITEM_LOOKUP_MAP.get(itemStack.getItem());
                 if (itemFluidGetter == null) return null;
                 var container = itemFluidGetter.getFluidContainer(itemStack);
-                return container == null ? null : new FabricItemFluidContainer(context, container);
+                return container == null ? null : new FabricItemFluidContainer<>(context, container);
             }
         });
 
