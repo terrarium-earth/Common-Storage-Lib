@@ -1,11 +1,10 @@
 package earth.terrarium.botarium.impl.fluid.storage;
 
-import earth.terrarium.botarium.common.fluid.base.FluidContainer;
-import earth.terrarium.botarium.common.fluid.base.FluidHolder;
 import earth.terrarium.botarium.common.fluid.base.FluidSnapshot;
+import earth.terrarium.botarium.common.fluid.base.ItemFluidContainer;
 import earth.terrarium.botarium.impl.fluid.holder.FabricFluidHolder;
 import earth.terrarium.botarium.impl.fluid.holder.ManualSyncing;
-import earth.terrarium.botarium.impl.fluid.holder.WrappedFluidHolder;
+import earth.terrarium.botarium.util.Updatable;
 import net.fabricmc.fabric.api.transfer.v1.context.ContainerItemContext;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
@@ -20,11 +19,11 @@ import java.util.List;
 import java.util.stream.IntStream;
 
 @SuppressWarnings("UnstableApiUsage")
-public class FabricItemFluidContainer extends ExtendedFluidContainer implements Storage<FluidVariant>, ManualSyncing {
-    private final FluidContainer container;
+public class FabricItemFluidContainer<T extends ItemFluidContainer & Updatable> extends ExtendedFluidContainer implements Storage<FluidVariant>, ManualSyncing {
+    protected final T container;
     private final ContainerItemContext ctx;
 
-    public FabricItemFluidContainer(ContainerItemContext ctx, FluidContainer container) {
+    public FabricItemFluidContainer(ContainerItemContext ctx, T container) {
         this.container = container;
         this.ctx = ctx;
         CompoundTag nbt = ctx.getItemVariant().getNbt();
@@ -49,12 +48,12 @@ public class FabricItemFluidContainer extends ExtendedFluidContainer implements 
 
     @Override
     public Iterator<StorageView<FluidVariant>> iterator() {
-        List<FluidHolder> fluids = container.getFluids();
-        return IntStream.range(0, fluids.size()).mapToObj(index -> new WrappedFluidHolder(this, fluids.get(index), container::extractFromSlot, container.getTankCapacity(index))).map(holder -> (StorageView<FluidVariant>) holder).iterator();
+        return IntStream.range(0, container.getSize()).mapToObj(index -> new SingleItemFluidSlot(this, index)).map(holder -> (StorageView<FluidVariant>) holder).iterator();
     }
 
     @Override
     public void onFinalCommit() {
+        container.update();
     }
 
     @Override

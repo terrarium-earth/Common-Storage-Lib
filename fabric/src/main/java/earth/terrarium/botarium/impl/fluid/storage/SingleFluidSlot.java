@@ -1,34 +1,32 @@
-package earth.terrarium.botarium.impl.fluid.holder;
+package earth.terrarium.botarium.impl.fluid.storage;
 
 import earth.terrarium.botarium.common.fluid.base.FluidHolder;
 import earth.terrarium.botarium.common.fluid.base.FluidSnapshot;
-import earth.terrarium.botarium.impl.fluid.storage.ExtendedFluidContainer;
+import earth.terrarium.botarium.impl.fluid.holder.FabricFluidHolder;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.StorageView;
 import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
 
 @SuppressWarnings("UnstableApiUsage")
-public class WrappedFluidHolder extends ExtendedFluidContainer implements StorageView<FluidVariant> {
+public class SingleFluidSlot extends ExtendedFluidContainer implements StorageView<FluidVariant> {
 
-    private FluidHolder fluidHolder;
-    private final FluidExtraction extraction;
-    private final ExtendedFluidContainer container;
-    private final long capacity;
+    private final FabricBlockFluidContainer<?> container;
+    private final int slotIndex;
 
-    public WrappedFluidHolder(ExtendedFluidContainer container, FluidHolder fluidHolder, FluidExtraction extraction, long capacity) {
-        this.fluidHolder = fluidHolder;
-        this.extraction = extraction;
+    public SingleFluidSlot(FabricBlockFluidContainer<?> container, int slotIndex) {
         this.container = container;
-        this.capacity = capacity;
+        this.slotIndex = slotIndex;
     }
 
     public FluidVariant fluidVariant() {
+        FluidHolder fluidHolder = container.container.getFluids().get(slotIndex);
         return FluidVariant.of(fluidHolder.getFluid(), fluidHolder.getCompound());
     }
 
     @Override
     public long extract(FluidVariant resource, long maxAmount, TransactionContext transaction) {
-        return extraction.apply(this.fluidHolder, FabricFluidHolder.of(resource, maxAmount), () -> this.updateSnapshots(transaction));
+        updateSnapshots(transaction);
+        return container.container.extractFromSlot(slotIndex, FabricFluidHolder.of(resource, maxAmount), false);
     }
 
     @Override
@@ -43,12 +41,12 @@ public class WrappedFluidHolder extends ExtendedFluidContainer implements Storag
 
     @Override
     public long getAmount() {
-        return fluidHolder.getFluidAmount();
+        return container.container.getFluids().get(slotIndex).getFluidAmount();
     }
 
     @Override
     public long getCapacity() {
-        return this.capacity;
+        return container.container.getTankCapacity(slotIndex);
     }
 
     @Override
@@ -66,8 +64,8 @@ public class WrappedFluidHolder extends ExtendedFluidContainer implements Storag
         container.onFinalCommit();
     }
 
-    @FunctionalInterface
-    public interface FluidExtraction {
-        long apply(FluidHolder fluidHolder, FluidHolder toInsert, Runnable runnable);
+    @Override
+    public void updateSnapshots(TransactionContext transaction) {
+        container.updateSnapshots(transaction);
     }
 }

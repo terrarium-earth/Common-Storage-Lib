@@ -14,6 +14,8 @@ import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.function.Predicate;
+
 public record ForgeItemFluidContainer<T extends ItemFluidContainer & Updatable>(T container) implements IFluidHandlerItem, ICapabilityProvider {
 
     @Override
@@ -44,24 +46,24 @@ public record ForgeItemFluidContainer<T extends ItemFluidContainer & Updatable>(
     @Override
     public int fill(FluidStack fluidStack, FluidAction fluidAction) {
         long filled = this.container.insertFluid(new ForgeFluidHolder(fluidStack), fluidAction.simulate());
-        container.update();
+        if (filled > 0 && fluidAction.execute()) container.update();
         return (int) filled;
     }
 
     @Override
     public @NotNull FluidStack drain(FluidStack fluidStack, FluidAction fluidAction) {
         FluidStack drained = new ForgeFluidHolder(this.container.extractFluid(new ForgeFluidHolder(fluidStack), fluidAction.simulate())).getFluidStack();
-        container.update();
+        if (!drained.isEmpty() && fluidAction.execute()) container.update();
         return drained;
     }
 
     @Override
     public @NotNull FluidStack drain(int i, FluidAction fluidAction) {
-        FluidHolder fluid = this.container.getFluids().get(0).copyHolder();
-        if (fluid.isEmpty()) return FluidStack.EMPTY;
-        fluid.setAmount(i);
-        container.update();
-        return new ForgeFluidHolder(this.container.extractFluid(fluid, fluidAction.simulate())).getFluidStack();
+        FluidHolder holder = this.container.getFluids().stream().filter(Predicate.not(FluidHolder::isEmpty)).findFirst().orElse(FluidHolder.empty());
+        if (i <= 0 || holder.isEmpty()) return FluidStack.EMPTY;
+        FluidStack fluidStack = new ForgeFluidHolder(this.container.extractFluid(holder, fluidAction.simulate())).getFluidStack();
+        if (!fluidStack.isEmpty() && fluidAction.execute()) this.container.update();
+        return fluidStack;
     }
 
     @Override

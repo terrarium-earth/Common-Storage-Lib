@@ -102,6 +102,22 @@ public class SimpleFluidContainer implements FluidContainer {
     }
 
     @Override
+    public long extractFromSlot(int slot, FluidHolder toExtract, boolean simulate) {
+        if (slot < 0 || slot >= this.storedFluid.size()) return 0;
+        FluidHolder fluidHolder = this.storedFluid.get(slot);
+        if (!fluidHolder.isEmpty() && fluidHolder.matches(toExtract)) {
+            long extracted = Mth.clamp(toExtract.getFluidAmount(), 0, fluidHolder.getFluidAmount());
+            if (!simulate) {
+                fluidHolder.setAmount(fluidHolder.getFluidAmount() - extracted);
+                if (fluidHolder.getFluidAmount() == 0) fluidHolder.setFluid(Fluids.EMPTY);
+                this.storedFluid.set(slot, fluidHolder);
+            }
+            return extracted;
+        }
+        return 0;
+    }
+
+    @Override
     public void setFluid(int slot, FluidHolder fluid) {
         this.storedFluid.set(slot, fluid);
     }

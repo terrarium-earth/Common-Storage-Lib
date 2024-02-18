@@ -91,6 +91,11 @@ public record WrappedItemFluidContainer(ItemStack stack,
     }
 
     @Override
+    public long extractFromSlot(int slot, FluidHolder toExtract, boolean simulate) {
+        return container.extractFromSlot(slot, toExtract, simulate);
+    }
+
+    @Override
     public boolean allowsInsertion() {
         return container.allowsInsertion();
     }

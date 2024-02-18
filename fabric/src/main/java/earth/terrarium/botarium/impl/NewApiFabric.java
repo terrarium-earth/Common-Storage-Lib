@@ -88,13 +88,13 @@ public class NewApiFabric {
 
          FluidStorage.ITEM.registerFallback((itemStack, context) -> {
              if (itemStack.getItem() instanceof BotariumFluidItem<?> attachment) {
-                 FluidContainer fluidContainer = attachment.getFluidContainer(itemStack);
-                 return fluidContainer == null ? null : new FabricItemFluidContainer(context, fluidContainer);
+                 var fluidContainer = attachment.getFluidContainer(itemStack);
+                 return fluidContainer == null ? null : new FabricItemFluidContainer<>(context, fluidContainer);
              } else {
                  var itemFluidGetter = FluidApi.getFluidItem(itemStack.getItem());
                  if (itemFluidGetter == null) return null;
                  var container = itemFluidGetter.getFluidContainer(itemStack);
-                 return container == null ? null : new FabricItemFluidContainer(context, container);
+                 return container == null ? null : new FabricItemFluidContainer<>(context, container);
              }
          });
 

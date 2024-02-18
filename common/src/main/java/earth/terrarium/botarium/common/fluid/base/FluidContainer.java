@@ -209,6 +209,10 @@ public interface FluidContainer extends Serializable, Clearable {
      */
     long extractFromSlot(FluidHolder fluidHolder, FluidHolder toInsert, Runnable snapshot);
 
+    default long extractFromSlot(int slot, FluidHolder toExtract, boolean simulate) {
+        return extractFromSlot(getFluids().get(slot), toExtract, () -> {});
+    }
+
     /**
      * @return Whether can be inserted into.
      */
