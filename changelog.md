@@ -1,4 +1,3 @@
-# 3.0.8
+# 3.1.0
 
-- Fix fluid dupe bug on items
-- New extractFromSlot method to replace old one.
+- Cross platform support for Item inventories

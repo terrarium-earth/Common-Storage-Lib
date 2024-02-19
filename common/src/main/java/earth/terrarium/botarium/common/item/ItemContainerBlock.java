@@ -1,5 +1,6 @@
 package earth.terrarium.botarium.common.item;
 
+@Deprecated
 public interface ItemContainerBlock {
 
     /**

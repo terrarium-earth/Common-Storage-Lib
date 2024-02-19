@@ -12,6 +12,7 @@ import earth.terrarium.botarium.common.registry.fluid.FluidBucketItem;
 import earth.terrarium.botarium.neoforge.energy.ForgeEnergyContainer;
 import earth.terrarium.botarium.neoforge.fluid.ForgeFluidContainer;
 import earth.terrarium.botarium.neoforge.fluid.ForgeItemFluidContainer;
+import earth.terrarium.botarium.neoforge.generic.NeoForgeCapsHandler;
 import earth.terrarium.botarium.neoforge.item.ItemContainerWrapper;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.neoforged.bus.api.IEventBus;
@@ -29,6 +30,7 @@ public class BotariumNeoForge {
         bus.addListener(BotariumNeoForge::registerEnergy);
         bus.addListener(BotariumNeoForge::registerFluid);
         bus.addListener(BotariumNeoForge::registerItem);
+        bus.addListener(NeoForgeCapsHandler::registerCapabilities);
     }
 
     public static void registerItem(RegisterCapabilitiesEvent event) {

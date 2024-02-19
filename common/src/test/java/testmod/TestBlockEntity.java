@@ -26,6 +26,7 @@ public class TestBlockEntity extends BlockEntity implements BotariumEnergyBlock<
     public WrappedBlockFluidContainer fluidContainer;
     private SimpleItemContainer itemContainer;
     private WrappedBlockEnergyContainer energyContainer;
+    private ManaContainer manaContainer = new ManaContainer();
 
     public TestBlockEntity(BlockPos blockPos, BlockState blockState) {
         this(TestMod.EXAMPLE_BLOCK_ENTITY.get(), blockPos, blockState);
@@ -61,9 +62,25 @@ public class TestBlockEntity extends BlockEntity implements BotariumEnergyBlock<
         return tag;
     }
 
+    @Override
+    public void load(CompoundTag tag) {
+        super.load(tag);
+        manaContainer.deserialize(tag);
+    }
+
+    @Override
+    protected void saveAdditional(CompoundTag tag) {
+        super.saveAdditional(tag);
+        manaContainer.serialize(tag);
+    }
+
     public void tick() {
         if (!getFluidContainer().isEmpty() && level instanceof ServerLevel serverLevel) {
             serverLevel.sendParticles(new FluidParticleOptions(getFluidContainer().getFirstFluid()), worldPosition.getX() + 0.5, worldPosition.getY() + 1.5, worldPosition.getZ() + 0.5, 10, 0.25, 0.5,0.25, 0.05);
         }
+    }
+
+    public ManaContainer getManaContainer() {
+        return manaContainer;
     }
 }

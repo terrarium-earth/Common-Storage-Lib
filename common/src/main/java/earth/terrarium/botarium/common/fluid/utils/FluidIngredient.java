@@ -89,6 +89,8 @@ public class FluidIngredient implements Predicate<FluidHolder> {
     }
 
     public interface Value {
+        // Codec<Value> CODEC = Codec.either(FluidValue.CODEC, TagValue.CODEC).xmap(fluidValueTagValueEither -> fluidValueTagValueEither.map(Function.identity(), Function.identity()), value -> value instanceof FluidValue ? Either.left((FluidValue) value) : Either.right((TagValue) value));
+
         Collection<FluidHolder> getFluids();
     }
 

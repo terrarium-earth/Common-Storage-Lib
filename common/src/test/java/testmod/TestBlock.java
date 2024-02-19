@@ -60,6 +60,15 @@ public class TestBlock extends BaseEntityBlock {
                     .collect(Collectors.joining(", "))
                 ));
             }
+
+            BlockEntity blockEntity = level.getBlockEntity(blockPos);
+            ManaContainer container = TestMod.MANA_LOOKUP_BLOCK.getContainer(level, blockPos, blockState, blockEntity, null);
+            if (container != null) {
+                player.sendSystemMessage(Component.literal("Mana: " + container.getStoredAmount()));
+                container.insert(100, false);
+                if (blockEntity != null) blockEntity.setChanged();
+                level.sendBlockUpdated(blockPos, blockState, blockState, TestBlock.UPDATE_ALL);
+            }
         }
 
         return InteractionResult.SUCCESS;
