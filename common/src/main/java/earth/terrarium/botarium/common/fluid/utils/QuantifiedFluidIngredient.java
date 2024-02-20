@@ -1,22 +1,12 @@
 package earth.terrarium.botarium.common.fluid.utils;
 
-import com.google.common.collect.Lists;
 import com.mojang.datafixers.util.Either;
 import com.mojang.serialization.Codec;
-import com.mojang.serialization.DataResult;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import earth.terrarium.botarium.common.fluid.FluidConstants;
 import earth.terrarium.botarium.common.fluid.base.FluidHolder;
-import net.minecraft.core.Holder;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.tags.TagKey;
-import net.minecraft.world.level.material.Fluid;
 
-import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class QuantifiedFluidIngredient extends FluidIngredient {
     public static final Codec<QuantifiedFluidIngredient> CODEC = RecordCodecBuilder.create(instance -> instance.group(

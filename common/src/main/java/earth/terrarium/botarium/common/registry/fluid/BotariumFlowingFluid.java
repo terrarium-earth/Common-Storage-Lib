@@ -89,9 +89,9 @@ public class BotariumFlowingFluid extends FlowingFluid {
     @Override
     protected BlockState createLegacyBlock(@NotNull FluidState state) {
         return getData().getOptionalBlock()
-            .map(Block::defaultBlockState)
-            .map(block -> block.setValue(LiquidBlock.LEVEL, getLegacyLevel(state)))
-            .orElse(Blocks.AIR.defaultBlockState());
+                .map(Block::defaultBlockState)
+                .map(block -> block.setValue(LiquidBlock.LEVEL, getLegacyLevel(state)))
+                .orElse(Blocks.AIR.defaultBlockState());
     }
 
     @Override

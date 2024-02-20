@@ -11,7 +11,8 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Predicate;
 
-public record ForgeItemFluidContainer<T extends ItemFluidContainer & Updatable>(T container) implements IFluidHandlerItem {
+public record ForgeItemFluidContainer<T extends ItemFluidContainer & Updatable>(
+        T container) implements IFluidHandlerItem {
     @Override
     public @NotNull ItemStack getContainer() {
         return container.getContainerItem();

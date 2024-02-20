@@ -41,7 +41,7 @@ public record ForgeFluidContainer<T extends FluidContainer & Updatable>(T contai
     @Override
     public @NotNull FluidStack drain(FluidStack fluidStack, FluidAction fluidAction) {
         FluidStack fluidStack1 = new ForgeFluidHolder(this.container.extractFluid(new ForgeFluidHolder(fluidStack), fluidAction.simulate())).getFluidStack();
-        if(!fluidStack1.isEmpty() && fluidAction.execute()) this.container.update();
+        if (!fluidStack1.isEmpty() && fluidAction.execute()) this.container.update();
         return fluidStack1;
     }
 

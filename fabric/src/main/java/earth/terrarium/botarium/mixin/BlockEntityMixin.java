@@ -20,12 +20,15 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(BlockEntity.class)
 public abstract class BlockEntityMixin {
 
-    @Shadow @Nullable
+    @Shadow
+    @Nullable
     public abstract Level getLevel();
 
-    @Shadow public abstract BlockPos getBlockPos();
+    @Shadow
+    public abstract BlockPos getBlockPos();
 
-    @Shadow public abstract BlockState getBlockState();
+    @Shadow
+    public abstract BlockState getBlockState();
 
     @Inject(method = "load", at = @At("TAIL"))
     public void deserializeData(CompoundTag compoundTag, CallbackInfo ci) {

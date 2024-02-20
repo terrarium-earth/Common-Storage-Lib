@@ -1,38 +1,38 @@
 {
-    "schemaVersion": 1,
-    "id": "botarium",
-    "version": "${version}",
-    "name": "Botarium",
-    "description": "A crossplatform API for devs that makes transfer and storage of items, fluids and energy easier, as well as some other helpful things",
-    "authors": [
-        "CodexAdrian"
+  "schemaVersion": 1,
+  "id": "botarium",
+  "version": "${version}",
+  "name": "Botarium",
+  "description": "A crossplatform API for devs that makes transfer and storage of items, fluids and energy easier, as well as some other helpful things",
+  "authors": [
+    "CodexAdrian"
+  ],
+  "contributors": [
+    "ThatGravyBoat",
+    "MsRandom1 (Ashley)",
+    "Alex Nijjar"
+  ],
+  "contact": {
+    "website": "https://modrinth.com/mod/botarium",
+    "repo": "https://github.com/terrarium-earth/botarium",
+    "issues": "https://github.com/terrarium-earth/botarium/issues"
+  },
+  "license": "MIT",
+  "icon": "icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "earth.terrarium.botarium.fabric.BotariumFabric"
     ],
-    "contributors": [
-        "ThatGravyBoat",
-        "MsRandom1 (Ashley)",
-        "Alex Nijjar"
-    ],
-    "contact": {
-        "website": "https://modrinth.com/mod/botarium",
-        "repo": "https://github.com/terrarium-earth/botarium",
-        "issues": "https://github.com/terrarium-earth/botarium/issues"
-    },
-    "license": "MIT",
-    "icon": "icon.png",
-    "environment": "*",
-    "entrypoints": {
-        "main": [
-            "earth.terrarium.botarium.fabric.BotariumFabric"
-        ],
-        "client": [
-            "earth.terrarium.botarium.fabric.BotariumFabricClient"
-        ]
-    },
-    "mixins": [
-        "botarium.fabric.mixins.json"
-    ],
-    "depends": {
-        "fabric": "*",
-        "minecraft": ">=1.20"
-    }
+    "client": [
+      "earth.terrarium.botarium.fabric.BotariumFabricClient"
+    ]
+  },
+  "mixins": [
+    "botarium.fabric.mixins.json"
+  ],
+  "depends": {
+    "fabric": "*",
+    "minecraft": ">=1.20"
+  }
 }

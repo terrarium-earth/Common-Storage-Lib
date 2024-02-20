@@ -34,7 +34,7 @@ public interface FluidContainer extends Serializable, Clearable {
     static FluidContainer of(Level level, BlockPos pos, @Nullable BlockState state, @Nullable BlockEntity entity, @Nullable Direction direction) {
         throw new NotImplementedException();
     }
-    
+
     /**
      * Retrieves an instance of FluidContainer for the given level, position, and direction.
      * This method can be used to retrieve FluidContainers from Botarium and any other mod that uses the modloader's Fluid API.
@@ -77,6 +77,7 @@ public interface FluidContainer extends Serializable, Clearable {
 
     /**
      * Checks if the given item stack holds fluid.
+     *
      * @param stack The item stack to check.
      * @return Whether the given item stack holds fluid.
      */
@@ -87,10 +88,11 @@ public interface FluidContainer extends Serializable, Clearable {
 
     /**
      * Checks if the given block holds fluid.
-     * @param level The level of the block.
-     * @param pos The position of the block.
-     * @param state The block state of the block.
-     * @param entity The block entity associated with the block (can be null).
+     *
+     * @param level     The level of the block.
+     * @param pos       The position of the block.
+     * @param state     The block state of the block.
+     * @param entity    The block entity associated with the block (can be null).
      * @param direction The direction of the block (can be null).
      * @return Whether the given block holds fluid.
      */
@@ -101,8 +103,9 @@ public interface FluidContainer extends Serializable, Clearable {
 
     /**
      * Checks if the given block holds fluid.
-     * @param level The level of the block.
-     * @param pos The position of the block.
+     *
+     * @param level     The level of the block.
+     * @param pos       The position of the block.
      * @param direction The direction of the block (can be null).
      * @return Whether the given block holds fluid.
      */
@@ -112,7 +115,8 @@ public interface FluidContainer extends Serializable, Clearable {
 
     /**
      * Checks if the given block entity holds fluid.
-     * @param block The block entity to check.
+     *
+     * @param block     The block entity to check.
      * @param direction The direction of the block entity (can be null).
      * @return Whether the given block entity holds fluid.
      */
@@ -204,7 +208,7 @@ public interface FluidContainer extends Serializable, Clearable {
      * This is deprecated, please use {@link #extractFromSlot(int slot, FluidHolder toExtract, boolean simulate)} instead.
      *
      * @param fluidHolder The {@link FluidHolder} to extract from.
-     * @param toExtract    The {@link FluidHolder} to insert into. With amount clamped between 0-fluid.getFluidAmount().
+     * @param toExtract   The {@link FluidHolder} to insert into. With amount clamped between 0-fluid.getFluidAmount().
      * @param snapshot    A runnable that will be called before the extraction happens.
      * @return The amount of fluid that was extracted.
      */
@@ -212,7 +216,8 @@ public interface FluidContainer extends Serializable, Clearable {
     long extractFromSlot(FluidHolder fluidHolder, FluidHolder toExtract, Runnable snapshot);
 
     default long extractFromSlot(int slot, FluidHolder toExtract, boolean simulate) {
-        return extractFromSlot(getFluids().get(slot), toExtract, () -> {});
+        return extractFromSlot(getFluids().get(slot), toExtract, () -> {
+        });
     }
 
     /**

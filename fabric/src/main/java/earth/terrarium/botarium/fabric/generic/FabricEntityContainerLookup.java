@@ -28,4 +28,8 @@ public class FabricEntityContainerLookup<T, C> implements EntityContainerLookup<
             lookupMap.registerForTypes(getter::getContainer, container.get());
         }
     }
+
+    public EntityApiLookup<T, C> getLookupMap() {
+        return lookupMap;
+    }
 }

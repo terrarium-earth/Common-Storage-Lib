@@ -13,7 +13,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
  * It delegates energy-related operations to the wrapped energy container, and updates the block entity when the energy is changed.
  *
  * @param blockEntity The block entity.
- * @param container The wrapped energy container. Botarium provides a default implementation for this with {@link SimpleEnergyContainer}.
+ * @param container   The wrapped energy container. Botarium provides a default implementation for this with {@link SimpleEnergyContainer}.
  */
 public record WrappedBlockEnergyContainer(BlockEntity blockEntity,
                                           EnergyContainer container) implements EnergyContainer, Updatable {

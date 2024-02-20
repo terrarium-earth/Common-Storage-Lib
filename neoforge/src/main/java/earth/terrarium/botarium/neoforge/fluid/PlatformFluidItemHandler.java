@@ -16,7 +16,8 @@ import net.neoforged.neoforge.fluids.capability.IFluidHandlerItem;
 import java.util.ArrayList;
 import java.util.List;
 
-public record PlatformFluidItemHandler(ItemStackHolder holder, IFluidHandlerItem handler) implements ItemFluidContainer {
+public record PlatformFluidItemHandler(ItemStackHolder holder,
+                                       IFluidHandlerItem handler) implements ItemFluidContainer {
 
     public static PlatformFluidItemHandler of(ItemStackHolder holder) {
         var cap = holder.getStack().getCapability(Capabilities.FluidHandler.ITEM);
@@ -26,14 +27,14 @@ public record PlatformFluidItemHandler(ItemStackHolder holder, IFluidHandlerItem
     @Override
     public long insertFluid(FluidHolder fluid, boolean simulate) {
         int fill = handler.fill(new ForgeFluidHolder(fluid).getFluidStack(), simulate ? IFluidHandler.FluidAction.SIMULATE : IFluidHandler.FluidAction.EXECUTE);
-        if(!simulate) holder.setStack(handler.getContainer());
+        if (!simulate) holder.setStack(handler.getContainer());
         return fill;
     }
 
     @Override
     public FluidHolder extractFluid(FluidHolder fluid, boolean simulate) {
         ForgeFluidHolder drained = new ForgeFluidHolder(handler.drain(new ForgeFluidHolder(fluid).getFluidStack(), simulate ? IFluidHandler.FluidAction.SIMULATE : IFluidHandler.FluidAction.EXECUTE));
-        if(!simulate) holder.setStack(handler.getContainer());
+        if (!simulate) holder.setStack(handler.getContainer());
         return drained;
     }
 

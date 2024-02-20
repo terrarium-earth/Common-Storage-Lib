@@ -1,5 +1,6 @@
 package earth.terrarium.botarium.common.fluid.base;
 
+import earth.terrarium.botarium.common.fluid.impl.WrappedBlockFluidContainer;
 import earth.terrarium.botarium.util.Updatable;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -7,7 +8,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
-import earth.terrarium.botarium.common.fluid.impl.WrappedBlockFluidContainer;
 
 /**
  * This interface represents a block that contains a fluid container.

@@ -42,4 +42,8 @@ public class FabricBlockContainerLookup<T, C> implements BlockContainerLookup<T,
             lookupMap.registerForBlockEntities((blockEntity, context) -> getter.getContainer(blockEntity.getLevel(), blockEntity.getBlockPos(), blockEntity.getBlockState(), blockEntity, context), container.get());
         }
     }
+
+    public BlockApiLookup<T, C> getLookupMap() {
+        return lookupMap;
+    }
 }

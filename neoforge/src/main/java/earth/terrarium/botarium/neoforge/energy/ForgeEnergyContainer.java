@@ -19,7 +19,7 @@ public record ForgeEnergyContainer<T extends EnergyContainer & Updatable>(T cont
     public int extractEnergy(int maxAmount, boolean bl) {
         if (maxAmount <= 0) return 0;
         int extracted = (int) container.extractEnergy(Math.min(maxAmount, container.maxExtract()), bl);
-        if (extracted > 0 &&!bl) {
+        if (extracted > 0 && !bl) {
             container.update();
         }
         return extracted;

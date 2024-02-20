@@ -107,7 +107,7 @@ public class FluidIngredient implements Predicate<FluidHolder> {
 
     public record TagValue(TagKey<Fluid> tag) implements Value {
         public static final Codec<TagValue> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-            TagKey.codec(BuiltInRegistries.FLUID.key()).fieldOf("tag").forGetter(TagValue::tag)
+                TagKey.codec(BuiltInRegistries.FLUID.key()).fieldOf("tag").forGetter(TagValue::tag)
         ).apply(instance, TagValue::new));
 
         @Override

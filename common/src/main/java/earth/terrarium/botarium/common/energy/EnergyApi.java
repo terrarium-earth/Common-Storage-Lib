@@ -1,6 +1,5 @@
 package earth.terrarium.botarium.common.energy;
 
-import com.mojang.datafixers.util.Pair;
 import earth.terrarium.botarium.Botarium;
 import earth.terrarium.botarium.common.energy.base.BotariumEnergyBlock;
 import earth.terrarium.botarium.common.energy.base.BotariumEnergyItem;
@@ -10,21 +9,15 @@ import earth.terrarium.botarium.util.Updatable;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.msrandom.extensions.annotations.ImplementedByExtension;
-import org.apache.commons.lang3.NotImplementedException;
-import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
-import java.util.function.BiConsumer;
 import java.util.function.Supplier;
-import java.util.stream.Collectors;
 
 public class EnergyApi {
     private static final Map<Supplier<BlockEntityType<?>>, BotariumEnergyBlock<?>> BLOCK_ENTITY_LOOKUP_MAP = new HashMap<>();
@@ -63,12 +56,12 @@ public class EnergyApi {
      * Retrieves the Botarium specific EnergyContainer object from a block entity or block. This method is used internally
      * by the Botarium API and should not be used by other mods.
      *
-     * @param <T>        the type of EnergyContainer
-     * @param level      the game level
-     * @param pos        the position of the block
-     * @param state      the block state
-     * @param entity     the block entity (can be null)
-     * @param direction  the direction (can be null)
+     * @param <T>       the type of EnergyContainer
+     * @param level     the game level
+     * @param pos       the position of the block
+     * @param state     the block state
+     * @param entity    the block entity (can be null)
+     * @param direction the direction (can be null)
      * @return the API EnergyContainer object
      */
     public static <T extends EnergyContainer & Updatable> T getAPIEnergyContainer(Level level, BlockPos pos, BlockState state, @Nullable BlockEntity entity, @Nullable Direction direction) {
@@ -122,9 +115,9 @@ public class EnergyApi {
     /**
      * Automatically transfers energy from an energy block to surrounding blocks
      *
-     * @param energyBlock A block entity that is an instance of {@link BotariumEnergyBlock}
+     * @param energyBlock      A block entity that is an instance of {@link BotariumEnergyBlock}
      * @param extractDirection The direction to extract energy from the energy block
-     * @param amount      The total amount that will be distributed as equally it can be. If one block cannot receive all the energy, it will be distributed evenly to the other blocks.
+     * @param amount           The total amount that will be distributed as equally it can be. If one block cannot receive all the energy, it will be distributed evenly to the other blocks.
      * @return The amount of energy that was distributed
      */
     public static long distributeEnergyNearby(BlockEntity energyBlock, @Nullable Direction extractDirection, long amount) {
@@ -145,9 +138,9 @@ public class EnergyApi {
     /**
      * Automatically transfers energy from an energy block to surrounding blocks
      *
-     * @param level         The level of the energy block
-     * @param energyPos     The position of the energy block
-     * @param amount        The total amount that will be distributed as equally it can be. If one block cannot receive all the energy, it will be distributed evenly to the other blocks.
+     * @param level            The level of the energy block
+     * @param energyPos        The position of the energy block
+     * @param amount           The total amount that will be distributed as equally it can be. If one block cannot receive all the energy, it will be distributed evenly to the other blocks.
      * @param extractDirection The direction to extract energy from the energy block
      * @return The amount of energy that was distributed
      */

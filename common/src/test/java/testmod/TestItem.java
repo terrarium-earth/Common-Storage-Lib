@@ -1,11 +1,9 @@
 package testmod;
 
-import earth.terrarium.botarium.common.energy.EnergyApi;
 import earth.terrarium.botarium.common.energy.base.BotariumEnergyItem;
 import earth.terrarium.botarium.common.energy.base.EnergyContainer;
 import earth.terrarium.botarium.common.energy.impl.SimpleEnergyContainer;
 import earth.terrarium.botarium.common.energy.impl.WrappedItemEnergyContainer;
-import earth.terrarium.botarium.common.fluid.FluidApi;
 import earth.terrarium.botarium.common.fluid.FluidConstants;
 import earth.terrarium.botarium.common.fluid.base.BotariumFluidItem;
 import earth.terrarium.botarium.common.fluid.base.FluidContainer;
@@ -57,6 +55,13 @@ public class TestItem extends Item implements BotariumEnergyItem<WrappedItemEner
             long energy = energyManager.getStoredEnergy();
             long energyCapacity = energyManager.getMaxCapacity();
             tooltip.add(Component.literal("Energy: " + energy + "FE / " + energyCapacity + "FE").setStyle(Style.EMPTY.withColor(ChatFormatting.GRAY)));
+        }
+
+        ManaContainerItem manaContainer = TestMod.MANA_ITEM_LOOKUP.getContainer(stack, null);
+        if (manaContainer != null) {
+            long mana = manaContainer.getStoredAmount();
+            long manaCapacity = manaContainer.getCapacity();
+            tooltip.add(Component.literal("Mana: " + mana + " / " + manaCapacity).setStyle(Style.EMPTY.withColor(ChatFormatting.GRAY)));
         }
     }
 

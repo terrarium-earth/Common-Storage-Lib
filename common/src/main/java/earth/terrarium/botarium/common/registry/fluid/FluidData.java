@@ -11,8 +11,8 @@ import java.util.function.Supplier;
 public interface FluidData {
 
     /**
-     * @deprecated Use {@link #getInformation()} instead, this method will be removed in the future.
      * @return The properties of this fluid.
+     * @deprecated Use {@link #getInformation()} instead, this method will be removed in the future.
      */
     @Deprecated
     @ApiStatus.ScheduledForRemoval(inVersion = "1.21")

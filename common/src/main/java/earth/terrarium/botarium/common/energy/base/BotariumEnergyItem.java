@@ -1,8 +1,8 @@
 package earth.terrarium.botarium.common.energy.base;
 
+import earth.terrarium.botarium.common.energy.impl.WrappedItemEnergyContainer;
 import earth.terrarium.botarium.util.Updatable;
 import net.minecraft.world.item.ItemStack;
-import earth.terrarium.botarium.common.energy.impl.WrappedItemEnergyContainer;
 
 /**
  * Functional interface that represents an item that can provide an energy storage container.

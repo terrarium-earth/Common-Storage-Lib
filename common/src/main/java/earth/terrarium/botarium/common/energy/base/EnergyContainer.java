@@ -105,7 +105,7 @@ public interface EnergyContainer extends Serializable, Clearable {
     static boolean holdsEnergy(Level level, BlockPos pos, @Nullable BlockState state, @Nullable BlockEntity entity, @Nullable Direction direction) {
         throw new NotImplementedException();
     }
-    
+
     /**
      * Checks if the given block at the specified position and state holds energy.
      * This method can be used to check blocks from Botarium and any other mod that uses the modloader's Energy API.

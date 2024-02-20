@@ -1,31 +1,31 @@
 {
-    "schemaVersion": 1,
-    "id": "testmod",
-    "version": "1.0.0",
-    "name": "Botarium Test Mod",
-    "description": "A crossplatform API for devs that makes transfer and storage of items, fluids and energy easier, as well as some other helpful things",
-    "authors": [
-        "CodexAdrian"
-    ],
-    "contributors": [
-        "ThatGravyBoat",
-        "Alex Nijjar"
-    ],
-    "contact": {
-        "website": "https://modrinth.com/mod/botarium",
-        "repo": "https://github.com/terrarium-earth/botarium",
-        "issues": "https://github.com/terrarium-earth/botarium/issues"
-    },
-    "license": "MIT",
-    "icon": "icon.png",
-    "environment": "*",
-    "entrypoints": {
-        "main": [
-            "testmod.TestMod::init"
-        ]
-    },
-    "depends": {
-        "fabric": "*",
-        "minecraft": ">=1.20"
-    }
+  "schemaVersion": 1,
+  "id": "testmod",
+  "version": "1.0.0",
+  "name": "Botarium Test Mod",
+  "description": "A crossplatform API for devs that makes transfer and storage of items, fluids and energy easier, as well as some other helpful things",
+  "authors": [
+    "CodexAdrian"
+  ],
+  "contributors": [
+    "ThatGravyBoat",
+    "Alex Nijjar"
+  ],
+  "contact": {
+    "website": "https://modrinth.com/mod/botarium",
+    "repo": "https://github.com/terrarium-earth/botarium",
+    "issues": "https://github.com/terrarium-earth/botarium/issues"
+  },
+  "license": "MIT",
+  "icon": "icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "testmod.TestMod::init"
+    ]
+  },
+  "depends": {
+    "fabric": "*",
+    "minecraft": ">=1.20"
+  }
 }

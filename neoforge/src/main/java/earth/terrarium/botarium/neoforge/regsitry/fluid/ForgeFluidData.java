@@ -22,6 +22,7 @@ public class ForgeFluidData implements FluidData {
         this.type = type;
         this.information = properties;
     }
+
     public ForgeFluidData(Supplier<BotariumFluidType> type, FluidInformation information) {
         this.type = type;
         this.information = information;

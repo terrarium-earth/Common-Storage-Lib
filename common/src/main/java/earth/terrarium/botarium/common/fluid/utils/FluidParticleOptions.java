@@ -14,33 +14,33 @@ import org.jetbrains.annotations.NotNull;
 
 public record FluidParticleOptions(FluidHolder fluid) implements ParticleOptions {
 
-	@Override
-	public @NotNull ParticleType<?> getType() {
-		return Botarium.FLUID_PARTICLE.get();
-	}
+    @Override
+    public @NotNull ParticleType<?> getType() {
+        return Botarium.FLUID_PARTICLE.get();
+    }
 
-	@Override
-	public void writeToNetwork(FriendlyByteBuf buffer) {
-		fluid.writeToBuffer(buffer);
-	}
+    @Override
+    public void writeToNetwork(FriendlyByteBuf buffer) {
+        fluid.writeToBuffer(buffer);
+    }
 
-	@Override
-	public @NotNull String writeToString() {
-		return String.format("%s %s", BuiltInRegistries.PARTICLE_TYPE.getKey(this.getType()), BuiltInRegistries.FLUID.getKey(fluid.getFluid()));
-	}
+    @Override
+    public @NotNull String writeToString() {
+        return String.format("%s %s", BuiltInRegistries.PARTICLE_TYPE.getKey(this.getType()), BuiltInRegistries.FLUID.getKey(fluid.getFluid()));
+    }
 
-	public static final Codec<FluidParticleOptions> CODEC = FluidHolder.CODEC.xmap(FluidParticleOptions::new, FluidParticleOptions::fluid);
+    public static final Codec<FluidParticleOptions> CODEC = FluidHolder.CODEC.xmap(FluidParticleOptions::new, FluidParticleOptions::fluid);
 
-	public static final Deserializer<FluidParticleOptions> DESERIALIZER = new Deserializer<>() {
+    public static final Deserializer<FluidParticleOptions> DESERIALIZER = new Deserializer<>() {
 
-		public @NotNull FluidParticleOptions fromCommand(ParticleType<FluidParticleOptions> particleTypeIn, StringReader reader)
-				throws CommandSyntaxException {
-			reader.expect(' ');
-			return new FluidParticleOptions(FluidHolder.of(BuiltInRegistries.FLUID.get(ResourceLocation.tryParse(reader.readQuotedString()))));
-		}
+        public @NotNull FluidParticleOptions fromCommand(ParticleType<FluidParticleOptions> particleTypeIn, StringReader reader)
+                throws CommandSyntaxException {
+            reader.expect(' ');
+            return new FluidParticleOptions(FluidHolder.of(BuiltInRegistries.FLUID.get(ResourceLocation.tryParse(reader.readQuotedString()))));
+        }
 
-		public @NotNull FluidParticleOptions fromNetwork(ParticleType<FluidParticleOptions> particleTypeIn, FriendlyByteBuf buffer) {
-			return new FluidParticleOptions(FluidHolder.readFromBuffer(buffer));
-		}
-	};
+        public @NotNull FluidParticleOptions fromNetwork(ParticleType<FluidParticleOptions> particleTypeIn, FriendlyByteBuf buffer) {
+            return new FluidParticleOptions(FluidHolder.readFromBuffer(buffer));
+        }
+    };
 }

@@ -31,19 +31,18 @@ public class BotariumFabric implements ModInitializer {
             if (blockEntity instanceof BotariumEnergyBlock<?> attachment) {
                 var container = attachment.getEnergyStorage(world, pos, state, blockEntity, context);
                 return container == null ? null : new FabricBlockEnergyContainer<>(container);
-            } else if(state.getBlock() instanceof BotariumEnergyBlock<?> attachment) {
+            } else if (state.getBlock() instanceof BotariumEnergyBlock<?> attachment) {
                 var container = attachment.getEnergyStorage(world, pos, state, blockEntity, context);
                 return container == null ? null : new FabricBlockEnergyContainer<>(container);
-            }
-            else {
+            } else {
                 BotariumEnergyBlock<?> blockEnergyGetter = EnergyApi.getEnergyBlock(state.getBlock());
                 if (blockEnergyGetter != null) {
-                   var container = blockEnergyGetter.getEnergyStorage(world, pos, state, blockEntity, context);
-                   if (container != null) {
-                       return new FabricBlockEnergyContainer<>(container);
-                   }
+                    var container = blockEnergyGetter.getEnergyStorage(world, pos, state, blockEntity, context);
+                    if (container != null) {
+                        return new FabricBlockEnergyContainer<>(container);
+                    }
                 }
-                if(blockEntity != null) {
+                if (blockEntity != null) {
                     BotariumEnergyBlock<?> entityEnergyGetter = EnergyApi.getEnergyBlock(blockEntity.getType());
                     if (entityEnergyGetter == null) return null;
                     var entityContainer = entityEnergyGetter.getEnergyStorage(world, pos, state, blockEntity, context);

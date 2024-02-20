@@ -14,12 +14,6 @@
                     "label": "NeoForge",
                     "style": 5,
                     "url": "https://modrinth.com/mod/botarium/version/${neoforge_link}"
-                },
-                {
-                    "type": 2,
-                    "label": "Forge",
-                    "style": 5,
-                    "url": "https://modrinth.com/mod/botarium/version/${forge_link}"
                 }
             ]
         }

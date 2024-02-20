@@ -1,7 +1,6 @@
 package testmod;
 
 import com.mojang.serialization.MapCodec;
-import earth.terrarium.botarium.common.energy.EnergyApi;
 import earth.terrarium.botarium.common.energy.base.EnergyContainer;
 import earth.terrarium.botarium.common.fluid.base.FluidContainer;
 import earth.terrarium.botarium.common.fluid.base.FluidHolder;
@@ -41,23 +40,23 @@ public class TestBlock extends BaseEntityBlock {
     @Override
     public InteractionResult use(BlockState blockState, Level level, BlockPos blockPos, Player player, InteractionHand interactionHand, BlockHitResult blockHitResult) {
         if (player.isShiftKeyDown()
-            && level.getBlockEntity(blockPos) instanceof TestBlockEntity testBlockEntity
-            && testBlockEntity.getFluidContainer(level, blockPos, blockState, testBlockEntity, null).container() instanceof SimpleFluidContainer fluidContainer
+                && level.getBlockEntity(blockPos) instanceof TestBlockEntity testBlockEntity
+                && testBlockEntity.getFluidContainer(level, blockPos, blockState, testBlockEntity, null).container() instanceof SimpleFluidContainer fluidContainer
         ) {
             fluidContainer.clearContent();
         }
 
         if (!level.isClientSide()) {
             player.sendSystemMessage(Component.literal("Energy: " + EnergyContainer.of(
-                level.getBlockEntity(blockPos),
-                blockHitResult.getDirection()
+                    level.getBlockEntity(blockPos),
+                    blockHitResult.getDirection()
             ).getStoredEnergy()));
 
             if (level.getBlockEntity(blockPos) instanceof TestBlockEntity testBlockEntity) {
                 player.sendSystemMessage(Component.literal("Fluid: " + FluidContainer.of(level, blockPos, blockState, testBlockEntity, null).getFluids().stream()
-                    .mapToLong(FluidHolder::getFluidAmount)
-                    .mapToObj(Long::toString)
-                    .collect(Collectors.joining(", "))
+                        .mapToLong(FluidHolder::getFluidAmount)
+                        .mapToObj(Long::toString)
+                        .collect(Collectors.joining(", "))
                 ));
             }
 

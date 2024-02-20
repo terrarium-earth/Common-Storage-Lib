@@ -11,7 +11,7 @@ import net.minecraft.world.item.ItemStack;
  * This class implements the EnergyContainer interface and the Updatable interface.
  * It delegates energy-related operations to the wrapped energy container, and updates the item when the energy is changed.
  *
- * @param stack The item stack.
+ * @param stack     The item stack.
  * @param container The wrapped energy container. Botarium provides a default implementation for this with {@link SimpleEnergyContainer}.
  */
 public record WrappedItemEnergyContainer(ItemStack stack,

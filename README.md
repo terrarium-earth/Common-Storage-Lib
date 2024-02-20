@@ -11,6 +11,7 @@
 To add this library to your project, do the following:
 
 Kotlin DSL:
+
 ```kotlin
 repositories {
     maven(url = "https://maven.resourcefulbees.com/repository/maven-public/")
@@ -22,6 +23,7 @@ dependencies {
 ```
 
 Groovy DSL:
+
 ```groovy
 repositories {
     maven {

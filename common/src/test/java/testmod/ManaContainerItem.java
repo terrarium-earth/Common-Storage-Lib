@@ -1,7 +1,5 @@
 package testmod;
 
-import earth.terrarium.botarium.common.generic.util.AmountBasedContainer;
-import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
 
 public class ManaContainerItem extends ManaContainer {

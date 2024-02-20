@@ -1,13 +1,15 @@
 package earth.terrarium.botarium.common.fluid;
 
 import earth.terrarium.botarium.Botarium;
-import earth.terrarium.botarium.common.fluid.base.*;
+import earth.terrarium.botarium.common.fluid.base.BotariumFluidBlock;
+import earth.terrarium.botarium.common.fluid.base.BotariumFluidItem;
+import earth.terrarium.botarium.common.fluid.base.FluidContainer;
+import earth.terrarium.botarium.common.fluid.base.FluidHolder;
 import earth.terrarium.botarium.common.item.ItemStackHolder;
 import earth.terrarium.botarium.util.Updatable;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -58,12 +60,12 @@ public class FluidApi {
      * Retrieves the Botarium specific FluidContainer object from a block entity or block. This method is used internally
      * by the Botarium API and should not be used by other mods.
      *
-     * @param <T>        the type of FluidContainer
-     * @param level      the game level
-     * @param pos        the position of the block
-     * @param state      the block state
-     * @param entity     the block entity (can be null)
-     * @param direction  the direction (can be null)
+     * @param <T>       the type of FluidContainer
+     * @param level     the game level
+     * @param pos       the position of the block
+     * @param state     the block state
+     * @param entity    the block entity (can be null)
+     * @param direction the direction (can be null)
      * @return the API FluidContainer object
      */
     public static <T extends FluidContainer & Updatable> T getAPIFluidContainer(Level level, BlockPos pos, BlockState state, @Nullable BlockEntity entity, @Nullable Direction direction) {
@@ -135,14 +137,14 @@ public class FluidApi {
     /**
      * Moves energy from one energy container to another
      *
-     * @param from   The energy container to move energy from
-     * @param to     The energy container to move energy to
+     * @param from        The energy container to move energy from
+     * @param to          The energy container to move energy to
      * @param fluidHolder The fluidHolder to move
      * @return The amount of fluid that was moved
      */
     public static long moveFluid(ItemStackHolder from, ItemStackHolder to, FluidHolder fluidHolder, boolean simulate) {
-        FluidContainer fromFluid =  FluidContainer.of(from);
-        FluidContainer toFluid =  FluidContainer.of(to);
+        FluidContainer fromFluid = FluidContainer.of(from);
+        FluidContainer toFluid = FluidContainer.of(to);
         if (fromFluid == null || toFluid == null) return 0;
         return moveFluid(fromFluid, toFluid, fluidHolder, simulate);
     }
@@ -150,21 +152,21 @@ public class FluidApi {
     /**
      * Moves energy from one energy container to another
      *
-     * @param from   The energy container to move energy from
-     * @param to     The energy container to move energy to
+     * @param from        The energy container to move energy from
+     * @param to          The energy container to move energy to
      * @param fluidHolder The amount of energy to move
      * @return The amount of energy that was moved
      */
     public static long moveFluid(BlockEntity from, BlockEntity to, FluidHolder fluidHolder, boolean simulate) {
-        FluidContainer fromFluid =  FluidContainer.of(from, null);
-        FluidContainer toFluid =  FluidContainer.of(to, null);
+        FluidContainer fromFluid = FluidContainer.of(from, null);
+        FluidContainer toFluid = FluidContainer.of(to, null);
         if (fromFluid == null || toFluid == null) return 0;
         return moveFluid(fromFluid, toFluid, fluidHolder, simulate);
     }
 
     public static long moveFluid(Level level, BlockPos fromPos, @Nullable Direction fromDirection, BlockPos toPos, @Nullable Direction toDirection, FluidHolder fluidHolder, boolean simulate) {
-        FluidContainer fromFluid =  FluidContainer.of(level, fromPos, fromDirection);
-        FluidContainer toFluid =  FluidContainer.of(level, toPos, toDirection);
+        FluidContainer fromFluid = FluidContainer.of(level, fromPos, fromDirection);
+        FluidContainer toFluid = FluidContainer.of(level, toPos, toDirection);
         if (fromFluid == null || toFluid == null) return 0;
         return moveFluid(fromFluid, toFluid, fluidHolder, simulate);
     }
@@ -172,14 +174,14 @@ public class FluidApi {
     /**
      * Moves energy from one energy container to another
      *
-     * @param from   The energy container to move energy from
-     * @param to     The energy container to move energy to
+     * @param from        The energy container to move energy from
+     * @param to          The energy container to move energy to
      * @param fluidHolder The amount of energy to move
      * @return The amount of energy that was moved
      */
     public static long moveFluid(BlockEntity from, Direction direction, ItemStackHolder to, FluidHolder fluidHolder, boolean simulate) {
         FluidContainer fromFluid = FluidContainer.of(from, direction);
-        FluidContainer toFluid =  FluidContainer.of(to);
+        FluidContainer toFluid = FluidContainer.of(to);
         if (fromFluid == null || toFluid == null) return 0;
         return moveFluid(fromFluid, toFluid, fluidHolder, simulate);
     }
@@ -187,14 +189,14 @@ public class FluidApi {
     /**
      * Moves energy from one energy container to another
      *
-     * @param from   The energy container to move energy from
-     * @param to     The energy container to move energy to
+     * @param from        The energy container to move energy from
+     * @param to          The energy container to move energy to
      * @param fluidHolder The amount of energy to move
      * @return The amount of energy that was moved
      */
     public static long moveFluid(ItemStackHolder from, BlockEntity to, Direction direction, FluidHolder fluidHolder, boolean simulate) {
-        FluidContainer fromFluid =  FluidContainer.of(from);
-        FluidContainer toFluid =  FluidContainer.of(to, direction);
+        FluidContainer fromFluid = FluidContainer.of(from);
+        FluidContainer toFluid = FluidContainer.of(to, direction);
         if (fromFluid == null || toFluid == null) return 0;
         return moveFluid(fromFluid, toFluid, fluidHolder, simulate);
     }

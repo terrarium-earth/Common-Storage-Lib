@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.stream.IntStream;
 
 @SuppressWarnings("UnstableApiUsage")
-public class FabricItemFluidContainer <T extends ItemFluidContainer & Updatable> extends ExtendedFluidContainer implements Storage<FluidVariant> {
+public class FabricItemFluidContainer<T extends ItemFluidContainer & Updatable> extends ExtendedFluidContainer implements Storage<FluidVariant> {
     protected final T container;
     private final ContainerItemContext ctx;
 

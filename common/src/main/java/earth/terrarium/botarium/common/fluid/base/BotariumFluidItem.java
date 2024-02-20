@@ -1,8 +1,8 @@
 package earth.terrarium.botarium.common.fluid.base;
 
+import earth.terrarium.botarium.common.fluid.impl.WrappedItemFluidContainer;
 import earth.terrarium.botarium.util.Updatable;
 import net.minecraft.world.item.ItemStack;
-import earth.terrarium.botarium.common.fluid.impl.WrappedItemFluidContainer;
 
 /**
  * An interface that represents an item that can provide a fluid container for a Botarium block.

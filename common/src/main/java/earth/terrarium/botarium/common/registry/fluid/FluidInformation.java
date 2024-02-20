@@ -10,7 +10,7 @@ public interface FluidInformation {
 
     double motionScale();
 
-    boolean canPushEntity() ;
+    boolean canPushEntity();
 
     boolean canSwim();
 

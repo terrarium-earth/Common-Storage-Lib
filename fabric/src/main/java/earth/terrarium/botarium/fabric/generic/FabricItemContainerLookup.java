@@ -28,4 +28,8 @@ public class FabricItemContainerLookup<T, C> implements ItemContainerLookup<T, C
             lookupMap.registerForItems(getter::getContainer, container.get());
         }
     }
+
+    public ItemApiLookup<T, C> getLookupMap() {
+        return lookupMap;
+    }
 }

@@ -168,7 +168,6 @@ resourcefulGradle {
             val version: String by project
             val changelog: String = file("changelog.md").readText(Charsets.UTF_8)
             val fabricLink: String? = System.getenv("FABRIC_RELEASE_URL")
-            val forgeLink: String? = System.getenv("FORGE_RELEASE_URL")
             val neoForgeLink = System.getenv("NEOFORGE_RELEASE_URL")
 
             source.set(file("templates/embed.json.template"))
@@ -177,7 +176,6 @@ resourcefulGradle {
                     "version" to version,
                     "changelog" to StringEscapeUtils.escapeJava(changelog),
                     "fabric_link" to fabricLink,
-                    "forge_link" to forgeLink,
                     "neoforge_link" to neoForgeLink
             ))
         }
