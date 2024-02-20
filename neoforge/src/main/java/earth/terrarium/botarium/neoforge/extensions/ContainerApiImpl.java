@@ -1,16 +1,15 @@
 package earth.terrarium.botarium.neoforge.extensions;
 
+import earth.terrarium.botarium.common.generic.LookupApi;
 import earth.terrarium.botarium.common.generic.base.BlockContainerLookup;
-import earth.terrarium.botarium.common.generic.ContainerApi;
 import earth.terrarium.botarium.common.generic.base.EntityContainerLookup;
 import earth.terrarium.botarium.common.generic.base.ItemContainerLookup;
 import earth.terrarium.botarium.neoforge.generic.NeoForgeCapsHandler;
 import net.minecraft.resources.ResourceLocation;
 import net.msrandom.extensions.annotations.ClassExtension;
 import net.msrandom.extensions.annotations.ImplementedByExtension;
-import org.apache.commons.lang3.NotImplementedException;
 
-@ClassExtension(ContainerApi.class)
+@ClassExtension(LookupApi.class)
 public class ContainerApiImpl {
     @ImplementedByExtension
     public static <T, C> BlockContainerLookup<T, C> createBlockLookup(ResourceLocation name, Class<T> typeClass, Class<C> contextClass) {

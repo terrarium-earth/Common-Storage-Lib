@@ -76,6 +76,10 @@ public class FluidApi {
             if (getter == null && entity instanceof BotariumFluidBlock<?> fluidGetter) {
                 getter = fluidGetter;
             }
+
+            if (getter == null && state.getBlock() instanceof BotariumFluidBlock<?> fluidGetter) {
+                getter = fluidGetter;
+            }
         }
         if (getter == null) return null;
         return (T) getter.getFluidContainer(level, pos, state, entity, direction);

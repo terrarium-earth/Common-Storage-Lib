@@ -9,7 +9,7 @@ import earth.terrarium.botarium.common.fluid.FluidConstants;
 import earth.terrarium.botarium.common.fluid.impl.SimpleFluidContainer;
 import earth.terrarium.botarium.common.fluid.impl.UnlimitedFluidContainer;
 import earth.terrarium.botarium.common.fluid.impl.WrappedItemFluidContainer;
-import earth.terrarium.botarium.common.generic.ContainerApi;
+import earth.terrarium.botarium.common.generic.LookupApi;
 import earth.terrarium.botarium.common.generic.base.BlockContainerLookup;
 import earth.terrarium.botarium.common.generic.base.ItemContainerLookup;
 import earth.terrarium.botarium.common.registry.RegistryHelpers;
@@ -59,8 +59,8 @@ public class TestMod {
     public static final Supplier<Block> TEST_FLUID_BLOCK = BLOCKS.register("test_fluid_block", () -> new BotariumLiquidBlock(TEST_FLUID, BlockBehaviour.Properties.ofFullCopy(Blocks.WATER)));
     public static final Supplier<FluidBucketItem> TEST_BUCKET = ITEMS.register("test_bucket", () -> new FluidBucketItem(TEST_FLUID, new Item.Properties()));
 
-    public static final BlockContainerLookup<ManaContainer, @Nullable Direction> MANA_LOOKUP_BLOCK = ContainerApi.createBlockLookup(new ResourceLocation(MOD_ID, "mana"), ManaContainer.class);
-    public static final ItemContainerLookup<ManaContainerItem, Void> MANA_ITEM_LOOKUP = ContainerApi.createItemLookup(new ResourceLocation(MOD_ID, "mana"), ManaContainerItem.class);
+    public static final BlockContainerLookup<ManaContainer, @Nullable Direction> MANA_LOOKUP_BLOCK = LookupApi.createBlockLookup(new ResourceLocation(MOD_ID, "mana"), ManaContainer.class);
+    public static final ItemContainerLookup<ManaContainerItem, Void> MANA_ITEM_LOOKUP = LookupApi.createItemLookup(new ResourceLocation(MOD_ID, "mana"), ManaContainerItem.class);
 
 
     @SuppressWarnings("unchecked")

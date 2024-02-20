@@ -72,6 +72,10 @@ public class EnergyApi {
             if (getter == null && entity instanceof BotariumEnergyBlock<?> energyGetter) {
                 getter = energyGetter;
             }
+
+            if (getter == null && state.getBlock() instanceof BotariumEnergyBlock<?> energyGetter) {
+                getter = energyGetter;
+            }
         }
         if (getter == null) {
             return null;

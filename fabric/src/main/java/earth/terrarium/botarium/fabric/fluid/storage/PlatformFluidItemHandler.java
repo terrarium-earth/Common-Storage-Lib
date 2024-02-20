@@ -11,8 +11,10 @@ import earth.terrarium.botarium.fabric.ItemStackStorage;
 import net.fabricmc.fabric.api.transfer.v1.context.ContainerItemContext;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
+import net.fabricmc.fabric.api.transfer.v1.storage.SlottedStorage;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.fabricmc.fabric.api.transfer.v1.storage.StorageView;
+import net.fabricmc.fabric.api.transfer.v1.storage.base.SingleSlotStorage;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
@@ -109,6 +111,22 @@ public record PlatformFluidItemHandler(ItemStackHolder stack, ContainerItemConte
     @Override
     public long extractFromSlot(FluidHolder fluidHolder, FluidHolder toInsert, Runnable snapshot) {
         throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public long extractFromSlot(int slot, FluidHolder toExtract, boolean simulate) {
+        if (storage instanceof SlottedStorage<FluidVariant> slottedStorage) {
+            try (Transaction transaction = Transaction.openOuter()) {
+                SingleSlotStorage<FluidVariant> fluidSlot = slottedStorage.getSlot(slot);
+                long extracted = fluidSlot.extract(FabricFluidHolder.of(toExtract).getResource(), toExtract.getFluidAmount(), transaction);
+                if (!simulate) {
+                    transaction.commit();
+                    stack.setStack(context.getItemVariant().toStack());
+                }
+                return extracted;
+            }
+        }
+        return extractFluid(toExtract, simulate).getFluidAmount();
     }
 
     @Override

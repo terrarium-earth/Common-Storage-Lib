@@ -7,12 +7,16 @@ import earth.terrarium.botarium.common.energy.base.BotariumEnergyItem;
 import earth.terrarium.botarium.common.fluid.FluidApi;
 import earth.terrarium.botarium.common.fluid.base.BotariumFluidBlock;
 import earth.terrarium.botarium.common.fluid.base.BotariumFluidItem;
+import earth.terrarium.botarium.common.item.ItemApi;
 import earth.terrarium.botarium.common.item.ItemContainerBlock;
+import earth.terrarium.botarium.common.item.base.BotariumItemBlock;
 import earth.terrarium.botarium.common.registry.fluid.FluidBucketItem;
 import earth.terrarium.botarium.neoforge.energy.ForgeEnergyContainer;
 import earth.terrarium.botarium.neoforge.fluid.ForgeFluidContainer;
 import earth.terrarium.botarium.neoforge.fluid.ForgeItemFluidContainer;
 import earth.terrarium.botarium.neoforge.generic.NeoForgeCapsHandler;
+import earth.terrarium.botarium.neoforge.item.ForgeItemContainer;
+import earth.terrarium.botarium.neoforge.item.PlatformItemContainer;
 import earth.terrarium.botarium.neoforge.item.ItemContainerWrapper;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.neoforged.bus.api.IEventBus;
@@ -34,13 +38,37 @@ public class BotariumNeoForge {
     }
 
     public static void registerItem(RegisterCapabilitiesEvent event) {
+        ItemApi.getBlockEntityRegistry().forEach((blockEntityType, blockFluidGetter1) -> {
+            event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, blockEntityType, (blockEntity, direction) -> {
+                return new ForgeItemContainer<>(blockFluidGetter1.getItemContainer(blockEntity.getLevel(), blockEntity.getBlockPos(), blockEntity.getBlockState(), blockEntity, direction));
+            });
+        });
+
+        ItemApi.getBlockRegistry().forEach((block, blockFluidGetter) -> {
+            event.registerBlock(Capabilities.ItemHandler.BLOCK, (level, blockPos, blockState, blockEntity, direction) -> {
+                return new ForgeItemContainer<>(blockFluidGetter.getItemContainer(level, blockPos, blockState, blockEntity, direction));
+            }, block);
+        });
+
         BuiltInRegistries.BLOCK_ENTITY_TYPE.forEach(blockEntityType -> {
             event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, blockEntityType, (blockEntity, object2) -> {
                 if (blockEntity instanceof ItemContainerBlock itemContainerBlock) {
                     return new ItemContainerWrapper(itemContainerBlock.getContainer());
                 }
+                if (blockEntity instanceof BotariumItemBlock<?> itemBlock) {
+                    return new ForgeItemContainer<>(itemBlock.getItemContainer(blockEntity.getLevel(), blockEntity.getBlockPos(), blockEntity.getBlockState(), blockEntity, object2));
+                }
                 return null;
             });
+        });
+
+        BuiltInRegistries.BLOCK.stream().filter(block -> block instanceof BotariumItemBlock<?>).forEach(block -> {
+            event.registerBlock(Capabilities.ItemHandler.BLOCK, (level, blockPos, blockState, blockEntity, direction) -> {
+                if (blockState.getBlock() instanceof BotariumItemBlock<?> itemContainerBlock) {
+                    return new ForgeItemContainer<>(itemContainerBlock.getItemContainer(level, blockPos, blockState, blockEntity, direction));
+                }
+                return null;
+            }, block);
         });
     }
 
@@ -65,6 +93,15 @@ public class BotariumNeoForge {
                 }
                 return null;
             }, item);
+        });
+
+        BuiltInRegistries.BLOCK.stream().filter(block -> block instanceof BotariumEnergyBlock<?>).forEach(block -> {
+            event.registerBlock(Capabilities.EnergyStorage.BLOCK, (level, blockPos, blockState, blockEntity, direction) -> {
+                if (blockState.getBlock() instanceof BotariumEnergyBlock<?> energyBlock) {
+                    return new ForgeEnergyContainer<>(energyBlock.getEnergyStorage(level, blockPos, blockState, blockEntity, direction));
+                }
+                return null;
+            }, block);
         });
 
         BuiltInRegistries.BLOCK_ENTITY_TYPE.forEach(blockEntityType -> {
@@ -114,6 +151,15 @@ public class BotariumNeoForge {
                 }
                 return null;
             });
+        });
+
+        BuiltInRegistries.BLOCK.stream().filter(block -> block instanceof BotariumFluidBlock<?>).forEach(block -> {
+            event.registerBlock(Capabilities.FluidHandler.BLOCK, (level, blockPos, blockState, blockEntity, direction) -> {
+                if (blockState.getBlock() instanceof BotariumFluidBlock<?> fluidBlock) {
+                    return new ForgeFluidContainer<>(fluidBlock.getFluidContainer(level, blockPos, blockState, blockEntity, direction));
+                }
+                return null;
+            }, block);
         });
 
         BuiltInRegistries.ITEM.stream().filter(item -> item instanceof BotariumFluidItem<?>).forEach(item -> {

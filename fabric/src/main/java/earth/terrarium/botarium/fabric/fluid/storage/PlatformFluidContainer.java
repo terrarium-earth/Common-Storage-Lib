@@ -7,8 +7,10 @@ import earth.terrarium.botarium.common.fluid.impl.SimpleFluidSnapshot;
 import earth.terrarium.botarium.fabric.fluid.holder.FabricFluidHolder;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
+import net.fabricmc.fabric.api.transfer.v1.storage.SlottedStorage;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.fabricmc.fabric.api.transfer.v1.storage.StorageView;
+import net.fabricmc.fabric.api.transfer.v1.storage.base.SingleSlotStorage;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -19,6 +21,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.apache.http.MethodNotSupportedException;
 import org.jetbrains.annotations.Nullable;
 
+import javax.naming.OperationNotSupportedException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -55,7 +58,7 @@ public record PlatformFluidContainer(Storage<FluidVariant> storage) implements F
 
     @Override
     public void setFluid(int slot, FluidHolder fluid) {
-
+        throw new UnsupportedOperationException("You may not set a fluid in a PlatformFluidContainer");
     }
 
     @Override
@@ -95,6 +98,21 @@ public record PlatformFluidContainer(Storage<FluidVariant> storage) implements F
     @Override
     public long extractFromSlot(FluidHolder fluidHolder, FluidHolder toInsert, Runnable snapshot) {
         throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public long extractFromSlot(int slot, FluidHolder toExtract, boolean simulate) {
+        if (storage instanceof SlottedStorage<FluidVariant> slottedStorage) {
+            try (Transaction transaction = Transaction.openOuter()) {
+                SingleSlotStorage<FluidVariant> fluidSlot = slottedStorage.getSlot(slot);
+                long extracted = fluidSlot.extract(FabricFluidHolder.of(toExtract).getResource(), toExtract.getFluidAmount(), transaction);
+                if (!simulate) {
+                    transaction.commit();
+                }
+                return extracted;
+            }
+        }
+        return extractFluid(toExtract, simulate).getFluidAmount();
     }
 
     @Override

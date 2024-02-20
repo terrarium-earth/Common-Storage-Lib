@@ -9,7 +9,7 @@ import net.msrandom.extensions.annotations.ImplementedByExtension;
 import org.apache.commons.lang3.NotImplementedException;
 import org.jetbrains.annotations.Nullable;
 
-public class ContainerApi {
+public class LookupApi {
 
     @ImplementedByExtension
     public static <T, C> BlockContainerLookup<T, C> createBlockLookup(ResourceLocation name, Class<T> typeClass, Class<C> contextClass) {

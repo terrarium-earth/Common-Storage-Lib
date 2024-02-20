@@ -1,4 +1,6 @@
-package earth.terrarium.botarium.common.item;
+package earth.terrarium.botarium.common.item.base;
+
+import earth.terrarium.botarium.common.item.base.ItemContainer;
 
 public interface ItemSnapshot {
     /**

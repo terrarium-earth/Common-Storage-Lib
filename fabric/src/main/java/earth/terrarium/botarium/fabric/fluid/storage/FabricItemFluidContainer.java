@@ -61,7 +61,19 @@ public class FabricItemFluidContainer<T extends ItemFluidContainer & Updatable> 
 
     @Override
     public @NotNull Iterator<StorageView<FluidVariant>> iterator() {
-        return IntStream.range(0, container.getSize()).mapToObj(index -> new SingleItemFluidSlot(this, index)).map(holder -> (StorageView<FluidVariant>) holder).iterator();
+        return new Iterator<>() {
+            int index = 0;
+
+            @Override
+            public boolean hasNext() {
+                return index < container.getSize();
+            }
+
+            @Override
+            public StorageView<FluidVariant> next() {
+                return new SingleItemFluidSlot(FabricItemFluidContainer.this, index++);
+            }
+        };
     }
 
     public void setChanged(TransactionContext transaction) {

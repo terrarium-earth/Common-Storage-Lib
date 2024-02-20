@@ -1,77 +1,43 @@
 package earth.terrarium.botarium.neoforge.item;
 
-import earth.terrarium.botarium.common.item.ItemContainer;
+import earth.terrarium.botarium.common.item.base.ItemContainer;
+import earth.terrarium.botarium.util.Updatable;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.items.IItemHandler;
 import org.jetbrains.annotations.NotNull;
 
-public record ForgeItemContainer(IItemHandler itemHandler) implements ItemContainer {
-
+public record ForgeItemContainer<T extends ItemContainer & Updatable>(T container) implements IItemHandler {
     @Override
     public int getSlots() {
-        return itemHandler.getSlots();
+        return container.getSlots();
     }
 
     @Override
-    public @NotNull ItemStack getStackInSlot(int slot) {
-        return itemHandler.getStackInSlot(slot);
+    public @NotNull ItemStack getStackInSlot(int i) {
+        return container.getStackInSlot(i);
     }
 
     @Override
-    public int getSlotLimit(int slot) {
-        return itemHandler.getSlotLimit(slot);
+    public @NotNull ItemStack insertItem(int i, @NotNull ItemStack arg, boolean simulate) {
+        ItemStack stack = container.insertIntoSlot(i, arg, simulate);
+        if (!simulate) container.update();
+        return stack;
     }
 
     @Override
-    public boolean isItemValid(int slot, @NotNull ItemStack stack) {
-        return itemHandler.isItemValid(slot, stack);
+    public @NotNull ItemStack extractItem(int i, int j, boolean simulate) {
+        ItemStack stack = container.extractFromSlot(i, j, simulate);
+        if (!simulate) container.update();
+        return stack;
     }
 
     @Override
-    public @NotNull ItemStack insertItem(@NotNull ItemStack stack, boolean simulate) {
-        ItemStack leftover = stack;
-        for (int i = 0; i < itemHandler.getSlots(); i++) {
-            stack = itemHandler.insertItem(i, leftover, simulate);
-            if (stack.isEmpty()) {
-                return ItemStack.EMPTY;
-            } else if (stack.getCount() < leftover.getCount()) {
-                leftover = stack;
-            }
-        }
-        return leftover;
+    public int getSlotLimit(int i) {
+        return container.getSlotLimit(i);
     }
 
     @Override
-    public @NotNull ItemStack extractItem(int amount, boolean simulate) {
-        ItemStack extracted = ItemStack.EMPTY;
-        for (int i = 0; i < itemHandler.getSlots(); i++) {
-            extracted = itemHandler.extractItem(i, amount, simulate);
-            if (!extracted.isEmpty()) {
-                return extracted;
-            }
-        }
-        return extracted;
-    }
-
-    @Override
-    public @NotNull ItemStack extractFromSlot(int slot, int amount, boolean simulate) {
-        return itemHandler.extractItem(slot, amount, simulate);
-    }
-
-    @Override
-    public boolean isEmpty() {
-        for (int i = 0; i < itemHandler.getSlots(); i++) {
-            if (!itemHandler.getStackInSlot(i).isEmpty()) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    @Override
-    public void clearContent() {
-        for (int i = 0; i < itemHandler.getSlots(); i++) {
-            itemHandler.extractItem(i, itemHandler.getStackInSlot(i).getCount(), false);
-        }
+    public boolean isItemValid(int i, @NotNull ItemStack arg) {
+        return container.isItemValid(i, arg);
     }
 }

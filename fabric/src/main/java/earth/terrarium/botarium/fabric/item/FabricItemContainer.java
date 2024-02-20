@@ -1,138 +1,91 @@
 package earth.terrarium.botarium.fabric.item;
 
-import earth.terrarium.botarium.common.item.ItemContainer;
-import net.fabricmc.fabric.api.transfer.v1.item.ItemStorage;
+import earth.terrarium.botarium.common.item.base.ItemContainer;
+import earth.terrarium.botarium.common.item.base.ItemSnapshot;
+import earth.terrarium.botarium.util.Updatable;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
-import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
+import net.fabricmc.fabric.api.transfer.v1.storage.SlottedStorage;
 import net.fabricmc.fabric.api.transfer.v1.storage.StorageView;
-import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.state.BlockState;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import net.fabricmc.fabric.api.transfer.v1.storage.base.SingleSlotStorage;
+import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
+import net.fabricmc.fabric.api.transfer.v1.transaction.base.SnapshotParticipant;
 
 import java.util.Iterator;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.NoSuchElementException;
 
-public record FabricItemContainer(Storage<ItemVariant> storage) implements ItemContainer {
+public class FabricItemContainer<T extends ItemContainer & Updatable> extends SnapshotParticipant<ItemSnapshot> implements SlottedStorage<ItemVariant> {
+    protected final T container;
 
-    @Nullable
-    public static FabricItemContainer of(Level level, BlockPos pos, BlockState state, @Nullable BlockEntity entity, @Nullable Direction direction) {
-        var itemStorage = ItemStorage.SIDED.find(level, pos, state, entity, direction);
-        return itemStorage == null ? null : new FabricItemContainer(itemStorage);
+    public FabricItemContainer(T container) {
+        this.container = container;
     }
 
     @Override
-    public int getSlots() {
-        AtomicInteger count = new AtomicInteger();
-        storage.iterator().forEachRemaining(t -> count.incrementAndGet());
-        return count.get();
+    public int getSlotCount() {
+        return container.getSlots();
     }
 
     @Override
-    public @NotNull ItemStack getStackInSlot(int slot) {
-        Iterator<StorageView<ItemVariant>> it = storage.iterator();
-        for (int i = 0; i < slot; i++) {
-            it.next();
+    public SingleSlotStorage<ItemVariant> getSlot(int slot) {
+        if (slot < 0 || slot >= container.getSlots()) {
+            throw new IndexOutOfBoundsException("Slot index out of bounds: " + slot);
         }
-        return it.next().getResource().toStack();
+        return new SingleItemSlot(slot, this);
     }
 
     @Override
-    public int getSlotLimit(int slot) {
-        Iterator<StorageView<ItemVariant>> it = storage.iterator();
-        for (int i = 0; i < slot; i++) {
-            it.next();
-        }
-        return (int) it.next().getCapacity();
+    public long insert(ItemVariant resource, long maxAmount, TransactionContext transaction) {
+        updateSnapshots(transaction);
+        return container.insertItem(resource.toStack((int) maxAmount), false).getCount();
     }
 
     @Override
-    public boolean isItemValid(int slot, @NotNull ItemStack stack) {
-        Iterator<StorageView<ItemVariant>> it = storage.iterator();
-        for (int i = 0; i < slot; i++) {
-            it.next();
-        }
-        return it.next().getResource().matches(stack);
-    }
-
-    @Override
-    public @NotNull ItemStack insertItem(@NotNull ItemStack stack, boolean simulate) {
-        try (Transaction tx = Transaction.openOuter()) {
-            long inserted = storage.insert(ItemVariant.of(stack), stack.getCount(), tx);
-            if (inserted == 0) {
-                return stack;
-            } else {
-                ItemStack result = stack.copy();
-                result.setCount((int) (stack.getCount() - inserted));
-                if (!simulate) {
-                    tx.commit();
-                }
-                return result;
-            }
-        }
-    }
-
-    @Override
-    public @NotNull ItemStack extractItem(int amount, boolean simulate) {
-        try (Transaction tx = Transaction.openOuter()) {
-            for (Iterator<StorageView<ItemVariant>> it = storage.nonEmptyIterator(); it.hasNext(); ) {
-                StorageView<ItemVariant> view = it.next();
-                long extracted = storage.extract(view.getResource(), amount, tx);
-                if (extracted > 0) {
-                    ItemStack result = view.getResource().toStack();
-                    result.setCount((int) extracted);
-                    if (!simulate) {
-                        tx.commit();
-                    }
-                    return result;
+    public long extract(ItemVariant resource, long maxAmount, TransactionContext transaction) {
+        updateSnapshots(transaction);
+        long extracted = 0;
+        for (int i = 0; i < container.getSlots(); i++) {
+            if (resource.matches(container.getStackInSlot(i))) {
+                extracted += container.extractFromSlot(i, (int) maxAmount, false).getCount();
+                if (extracted >= maxAmount) {
+                    break;
                 }
             }
-            return ItemStack.EMPTY;
         }
+        return extracted;
     }
 
     @Override
-    public @NotNull ItemStack extractFromSlot(int slot, int amount, boolean simulate) {
-        Iterator<StorageView<ItemVariant>> it = storage.iterator();
-        for (int i = 0; i < slot; i++) {
-            it.next();
-        }
-        try (Transaction tx = Transaction.openOuter()) {
-            StorageView<ItemVariant> selectedStorage = it.next();
-            ItemVariant resource = selectedStorage.getResource();
-            long extracted = selectedStorage.extract(resource, amount, tx);
-            if (extracted == 0) {
-                return ItemStack.EMPTY;
-            } else {
-                ItemStack result = resource.toStack();
-                result.setCount((int) extracted);
-                if (!simulate) {
-                    tx.commit();
+    public Iterator<StorageView<ItemVariant>> iterator() {
+        return new Iterator<>() {
+            private int slot = 0;
+
+            @Override
+            public boolean hasNext() {
+                return slot < container.getSlots();
+            }
+
+            @Override
+            public StorageView<ItemVariant> next() {
+                if (!hasNext()) {
+                    throw new NoSuchElementException("Element does not exist at index " + slot);
                 }
-                return result;
+                return getSlot(slot++);
             }
-        }
+        };
     }
 
     @Override
-    public boolean isEmpty() {
-        for (Iterator<StorageView<ItemVariant>> it = storage.nonEmptyIterator(); it.hasNext(); ) {
-            if (it.next().getAmount() > 0) {
-                return false;
-            }
-        }
-        return true;
+    protected ItemSnapshot createSnapshot() {
+        return container.createSnapshot();
     }
 
     @Override
-    public void clearContent() {
-        for (StorageView<ItemVariant> itemVariantStorageView : storage) {
-            itemVariantStorageView.extract(itemVariantStorageView.getResource(), itemVariantStorageView.getAmount(), Transaction.openOuter());
-        }
+    protected void readSnapshot(ItemSnapshot snapshot) {
+        container.loadSnapshot(snapshot);
+    }
+
+    @Override
+    protected void onFinalCommit() {
+        container.update();
     }
 }

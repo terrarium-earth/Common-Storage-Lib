@@ -1,4 +1,4 @@
-package earth.terrarium.botarium.common.item;
+package earth.terrarium.botarium.common.item.base;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -40,10 +40,17 @@ public interface ItemContainer extends Clearable {
     ItemStack insertItem(@NotNull ItemStack stack, boolean simulate);
 
     @NotNull
+    ItemStack insertIntoSlot(int slot, @NotNull ItemStack stack, boolean simulate);
+
+    @NotNull
     ItemStack extractItem(int amount, boolean simulate);
 
     @NotNull
     ItemStack extractFromSlot(int slot, int amount, boolean simulate);
 
     boolean isEmpty();
+
+    ItemSnapshot createSnapshot();
+
+    void loadSnapshot(ItemSnapshot snapshot);
 }

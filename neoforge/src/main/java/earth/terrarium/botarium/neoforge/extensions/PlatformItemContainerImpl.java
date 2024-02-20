@@ -1,7 +1,7 @@
 package earth.terrarium.botarium.neoforge.extensions;
 
-import earth.terrarium.botarium.common.item.ItemContainer;
-import earth.terrarium.botarium.neoforge.item.ForgeItemContainer;
+import earth.terrarium.botarium.common.item.base.ItemContainer;
+import earth.terrarium.botarium.neoforge.item.PlatformItemContainer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.Level;
@@ -19,6 +19,6 @@ public class PlatformItemContainerImpl {
     @ImplementsBaseElement
     static ItemContainer of(Level level, BlockPos pos, BlockState state, @Nullable BlockEntity entity, @Nullable Direction direction) {
         IItemHandler capability = level.getCapability(Capabilities.ItemHandler.BLOCK, pos, state, entity, direction);
-        return capability != null ? new ForgeItemContainer(capability) : null;
+        return capability != null ? new PlatformItemContainer(capability) : null;
     }
 }

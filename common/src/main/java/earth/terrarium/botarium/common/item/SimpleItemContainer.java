@@ -9,6 +9,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 
 import java.util.function.Predicate;
 
+@Deprecated
 public class SimpleItemContainer implements SerializableContainer {
 
     private final NonNullList<ItemStack> items;

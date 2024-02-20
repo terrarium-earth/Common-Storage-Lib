@@ -10,6 +10,7 @@ import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.fabricmc.fabric.api.transfer.v1.storage.StorageView;
 import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Iterator;
@@ -46,8 +47,20 @@ public class FabricBlockFluidContainer<T extends FluidContainer & Updatable> ext
     }
 
     @Override
-    public Iterator<StorageView<FluidVariant>> iterator() {
-        return IntStream.range(0, container.getSize()).mapToObj(index -> new SingleFluidSlot(this, index)).map(holder -> (StorageView<FluidVariant>) holder).iterator();
+    public @NotNull Iterator<StorageView<FluidVariant>> iterator() {
+        return new Iterator<>() {
+            int index = 0;
+
+            @Override
+            public boolean hasNext() {
+                return index < container.getSize();
+            }
+
+            @Override
+            public StorageView<FluidVariant> next() {
+                return new SingleFluidSlot(FabricBlockFluidContainer.this, index++);
+            }
+        };
     }
 
     @Override
