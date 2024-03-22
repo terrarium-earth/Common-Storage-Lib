@@ -67,16 +67,11 @@ public record PlatformItemContainer(Storage<ItemVariant> storage) implements Ite
     public @NotNull ItemStack insertItem(@NotNull ItemStack stack, boolean simulate) {
         try (Transaction tx = Transaction.openOuter()) {
             long inserted = storage.insert(ItemVariant.of(stack), stack.getCount(), tx);
-            if (inserted == 0) {
-                return stack;
-            } else {
-                ItemStack result = stack.copy();
-                result.setCount((int) (stack.getCount() - inserted));
-                if (!simulate) {
-                    tx.commit();
-                }
-                return result;
+            ItemStack result = stack.copyWithCount((int) inserted);
+            if (!simulate) {
+                tx.commit();
             }
+            return result;
         }
     }
 
@@ -86,16 +81,11 @@ public record PlatformItemContainer(Storage<ItemVariant> storage) implements Ite
             try (Transaction tx = Transaction.openOuter()) {
                 SingleSlotStorage<ItemVariant> slotStorage = slottedStorage.getSlot(slotIndex);
                 long inserted = slotStorage.insert(ItemVariant.of(stack), stack.getCount(), tx);
-                if (inserted == 0) {
-                    return stack;
-                } else {
-                    ItemStack result = stack.copy();
-                    result.setCount((int) (stack.getCount() - inserted));
-                    if (!simulate) {
-                        tx.commit();
-                    }
-                    return result;
+                ItemStack result = stack.copyWithCount((int) inserted);
+                if (!simulate) {
+                    tx.commit();
                 }
+                return result;
             }
         } else {
             return insertItem(stack, simulate);
@@ -105,19 +95,25 @@ public record PlatformItemContainer(Storage<ItemVariant> storage) implements Ite
     @Override
     public @NotNull ItemStack extractItem(int amount, boolean simulate) {
         try (Transaction tx = Transaction.openOuter()) {
+            ItemVariant itemVariant = null;
+            int amountExtracted = 0;
             for (Iterator<StorageView<ItemVariant>> it = storage.nonEmptyIterator(); it.hasNext(); ) {
                 StorageView<ItemVariant> view = it.next();
-                long extracted = storage.extract(view.getResource(), amount, tx);
-                if (extracted > 0) {
-                    ItemStack result = view.getResource().toStack();
-                    result.setCount((int) extracted);
-                    if (!simulate) {
-                        tx.commit();
+                if (itemVariant == null) itemVariant = view.getResource();
+                if (itemVariant.equals(view.getResource())) {
+                    amountExtracted += (int) view.extract(itemVariant, amount - amountExtracted, tx);
+                    if (amountExtracted >= amount) {
+                        break;
                     }
-                    return result;
                 }
             }
-            return ItemStack.EMPTY;
+            if (itemVariant == null || amountExtracted == 0) {
+                return ItemStack.EMPTY;
+            }
+            if (!simulate) {
+                tx.commit();
+            }
+            return itemVariant.toStack(amountExtracted);
         }
     }
 
@@ -128,8 +124,7 @@ public record PlatformItemContainer(Storage<ItemVariant> storage) implements Ite
                 SingleSlotStorage<ItemVariant> slotStorage = slottedStorage.getSlot(slot);
                 long extracted = slotStorage.extract(slotStorage.getResource(), amount, tx);
                 if (extracted > 0) {
-                    ItemStack result = slotStorage.getResource().toStack();
-                    result.setCount((int) extracted);
+                    ItemStack result = slotStorage.getResource().toStack((int) extracted);
                     if (!simulate) {
                         tx.commit();
                     }
@@ -148,16 +143,6 @@ public record PlatformItemContainer(Storage<ItemVariant> storage) implements Ite
             }
         }
         return true;
-    }
-
-    @Override
-    public ItemSnapshot createSnapshot() {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public void loadSnapshot(ItemSnapshot snapshot) {
-        throw new UnsupportedOperationException();
     }
 
     @Override

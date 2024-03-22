@@ -5,6 +5,9 @@ import earth.terrarium.botarium.common.energy.base.EnergyContainer;
 import earth.terrarium.botarium.common.fluid.FluidApi;
 import earth.terrarium.botarium.common.fluid.base.FluidContainer;
 import earth.terrarium.botarium.common.item.ItemContainerBlock;
+import earth.terrarium.botarium.common.item.base.BotariumItemBlock;
+import earth.terrarium.botarium.common.item.base.ItemContainer;
+import earth.terrarium.botarium.util.Serializable;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.Level;
@@ -43,6 +46,12 @@ public abstract class BlockEntityMixin {
         if (this instanceof ItemContainerBlock itemContainerBlock) {
             itemContainerBlock.getContainer().deserialize(compoundTag);
         }
+        if (this instanceof BotariumItemBlock<?> botariumItemBlock) {
+            ItemContainer itemContainer = botariumItemBlock.getItemContainer(this.getLevel(), this.getBlockPos(), this.getBlockState(), (BlockEntity) (Object) this, null);
+            if (itemContainer instanceof Serializable serializable) {
+                serializable.deserialize(compoundTag);
+            }
+        }
     }
 
     @Inject(method = "saveAdditional", at = @At("TAIL"))
@@ -57,6 +66,12 @@ public abstract class BlockEntityMixin {
         }
         if (this instanceof ItemContainerBlock itemContainerBlock) {
             itemContainerBlock.getContainer().serialize(compoundTag);
+        }
+        if (this instanceof BotariumItemBlock<?> botariumItemBlock) {
+            ItemContainer itemContainer = botariumItemBlock.getItemContainer(this.getLevel(), this.getBlockPos(), this.getBlockState(), (BlockEntity) (Object) this, null);
+            if (itemContainer instanceof Serializable serializable) {
+                serializable.serialize(compoundTag);
+            }
         }
     }
 }

@@ -1,35 +1,38 @@
-package earth.terrarium.botarium.common.item;
+package earth.terrarium.botarium.neoforge.extensions;
 
 import earth.terrarium.botarium.common.generic.base.BlockContainerLookup;
 import earth.terrarium.botarium.common.generic.base.EntityContainerLookup;
 import earth.terrarium.botarium.common.generic.base.ItemContainerLookup;
 import earth.terrarium.botarium.common.item.base.ItemContainer;
 import earth.terrarium.botarium.common.item.base.ItemSnapshot;
+import earth.terrarium.botarium.neoforge.item.ForgeItemApiBlockLookup;
+import earth.terrarium.botarium.neoforge.item.ForgeItemApiEntityAutomationLookup;
+import earth.terrarium.botarium.neoforge.item.ForgeItemApiEntityLookup;
+import earth.terrarium.botarium.neoforge.item.ForgeItemApiItemLookup;
 import earth.terrarium.botarium.util.Snapshotable;
 import earth.terrarium.botarium.util.Updatable;
 import net.minecraft.core.Direction;
+import net.msrandom.extensions.annotations.ClassExtension;
 import net.msrandom.extensions.annotations.ImplementedByExtension;
+import net.msrandom.extensions.annotations.ImplementsBaseElement;
 import org.apache.commons.lang3.NotImplementedException;
 
-public class ItemApi {
-    public static final ItemContainerLookup<ItemContainer, Void> ITEM = getItemLookup();
-    public static final BlockContainerLookup<ItemContainer, Direction> SIDED = getBlockLookup();
-    public static final EntityContainerLookup<ItemContainer, Void> ENTITY = getEntityLookup();
-    public static final EntityContainerLookup<ItemContainer, Direction> ENTITY_AUTOMATION = getEntityAutomationLookup();
+@ClassExtension(ItemApiImpl.class)
+public class ItemApiImpl {
 
     private static ItemContainerLookup<ItemContainer, Void> getItemLookup() {
-        throw new NotImplementedException();
+        return ForgeItemApiItemLookup.INSTANCE;
     }
 
     private static BlockContainerLookup<ItemContainer, Direction> getBlockLookup() {
-        throw new NotImplementedException();
+        return ForgeItemApiBlockLookup.INSTANCE;
     }
 
     private static EntityContainerLookup<ItemContainer, Void> getEntityLookup() {
-        throw new NotImplementedException();
+        return ForgeItemApiEntityLookup.INSTANCE;
     }
 
     private static EntityContainerLookup<ItemContainer, Direction> getEntityAutomationLookup() {
-        throw new NotImplementedException();
+        return ForgeItemApiEntityAutomationLookup.INSTANCE;
     }
 }

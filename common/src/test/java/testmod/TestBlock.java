@@ -61,7 +61,7 @@ public class TestBlock extends BaseEntityBlock {
             }
 
             BlockEntity blockEntity = level.getBlockEntity(blockPos);
-            ManaContainer container = TestMod.MANA_LOOKUP_BLOCK.getContainer(level, blockPos, blockState, blockEntity, null);
+            ManaContainer container = TestMod.MANA_LOOKUP_BLOCK.find(level, blockPos, blockState, blockEntity, null);
             if (container != null) {
                 player.sendSystemMessage(Component.literal("Mana: " + container.getStoredAmount()));
                 container.insert(100, false);

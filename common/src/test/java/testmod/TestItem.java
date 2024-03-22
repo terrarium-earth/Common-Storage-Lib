@@ -57,7 +57,7 @@ public class TestItem extends Item implements BotariumEnergyItem<WrappedItemEner
             tooltip.add(Component.literal("Energy: " + energy + "FE / " + energyCapacity + "FE").setStyle(Style.EMPTY.withColor(ChatFormatting.GRAY)));
         }
 
-        ManaContainerItem manaContainer = TestMod.MANA_ITEM_LOOKUP.getContainer(stack, null);
+        ManaContainerItem manaContainer = TestMod.MANA_ITEM_LOOKUP.find(stack, null);
         if (manaContainer != null) {
             long mana = manaContainer.getStoredAmount();
             long manaCapacity = manaContainer.getCapacity();

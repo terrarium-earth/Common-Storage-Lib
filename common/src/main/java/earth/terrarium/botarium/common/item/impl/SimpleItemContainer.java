@@ -2,15 +2,52 @@ package earth.terrarium.botarium.common.item.impl;
 
 import earth.terrarium.botarium.common.item.base.ItemContainer;
 import earth.terrarium.botarium.common.item.base.ItemSnapshot;
+import earth.terrarium.botarium.util.Serializable;
+import earth.terrarium.botarium.util.Snapshotable;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.util.Mth;
+import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import org.jetbrains.annotations.NotNull;
 
-public class SimpleItemContainer implements ItemContainer {
-    NonNullList<ItemStack> stacks;
+public class SimpleItemContainer implements ItemContainer, Serializable, Snapshotable<ItemSnapshot> {
+    private final NonNullList<ItemStack> stacks;
+    private Runnable onUpdate = () -> {};
 
     public SimpleItemContainer(int capacity) {
         this.stacks = NonNullList.withSize(capacity, ItemStack.EMPTY);
+    }
+
+    public SimpleItemContainer(int capacity, ItemStack stack) {
+        this(capacity);
+        onUpdate = () -> serialize(stack.getOrCreateTag());
+        this.deserialize(stack.getOrCreateTag());
+    }
+
+    public SimpleItemContainer(int capacity, Level level, BlockPos blockPos) {
+        this(capacity);
+        onUpdate = () -> {
+            if (level != null) {
+                BlockEntity blockEntity = level.getBlockEntity(blockPos);
+                if (blockEntity != null) {
+                    blockEntity.setChanged();
+                }
+            }
+        };
+    }
+
+    public SimpleItemContainer(int capacity, BlockEntity blockEntity) {
+        this(capacity);
+        onUpdate = blockEntity::setChanged;
+    }
+
+    public SimpleItemContainer(int capacity, Runnable onUpdate) {
+        this(capacity);
+        this.onUpdate = onUpdate;
     }
 
     @Override
@@ -25,7 +62,7 @@ public class SimpleItemContainer implements ItemContainer {
 
     @Override
     public int getSlotLimit(int slot) {
-        return 64;
+        return getStackInSlot(slot).getMaxStackSize();
     }
 
     @Override
@@ -35,65 +72,39 @@ public class SimpleItemContainer implements ItemContainer {
 
     @Override
     public @NotNull ItemStack insertItem(@NotNull ItemStack stack, boolean simulate) {
-        if (stack.isEmpty()) return ItemStack.EMPTY;
-        if (!isItemValid(0, stack)) return stack;
-        ItemStack leftover = stack.copy();
+        if (stack.isEmpty() || !isItemValid(0, stack)) return ItemStack.EMPTY;
+        int insertedAmount = 0;
+        ItemStack initial = stack.copy();
         for (int i = 0; i < stacks.size(); i++) {
-            ItemStack itemStack = stacks.get(i);
-            if (itemStack.isEmpty()) {
-                int amount = Math.min(leftover.getCount(), getSlotLimit(0));
-                if (!simulate) {
-                    itemStack = leftover.copy();
-                    itemStack.setCount(amount);
-                    stacks.set(i, itemStack);
-                }
-                leftover.shrink(amount);
-                if (leftover.isEmpty()) {
-                    return ItemStack.EMPTY;
-                }
-            } else if (ItemStack.isSameItemSameTags(leftover, itemStack)) {
-                int amount = Math.min(leftover.getCount(), getSlotLimit(0) - itemStack.getCount());
-                if (!simulate) {
-                    itemStack.grow(amount);
-                    stacks.set(i, itemStack);
-                }
-                leftover.shrink(amount);
-                if (leftover.isEmpty()) {
-                    return ItemStack.EMPTY;
-                }
+            insertedAmount += insertIntoSlot(i, stack, simulate).getCount();
+            stack = stack.copyWithCount(stack.getCount() - insertedAmount);
+            if (insertedAmount >= initial.getCount()) {
+                break;
             }
         }
-        return leftover;
+        return initial.copyWithCount(insertedAmount);
     }
 
     @Override
     public @NotNull ItemStack insertIntoSlot(int slot, @NotNull ItemStack stack, boolean simulate) {
-        if (stack.isEmpty()) return ItemStack.EMPTY;
-        if (!isItemValid(slot, stack)) return stack;
+        if (stack.isEmpty() || !isItemValid(slot, stack)) return ItemStack.EMPTY;
         ItemStack itemStack = stacks.get(slot);
         if (itemStack.isEmpty()) {
             int amount = Math.min(stack.getCount(), getSlotLimit(slot));
+            itemStack = stack.copyWithCount(amount);
             if (!simulate) {
-                itemStack = stack.copy();
-                itemStack.setCount(amount);
                 stacks.set(slot, itemStack);
             }
-            stack.shrink(amount);
-            if (stack.isEmpty()) {
-                return ItemStack.EMPTY;
-            }
+            return itemStack;
         } else if (ItemStack.isSameItemSameTags(stack, itemStack)) {
-            int amount = Math.min(stack.getCount(), getSlotLimit(slot) - itemStack.getCount());
+            int amount = Math.min(stack.getCount(), itemStack.getMaxStackSize() - itemStack.getCount());
             if (!simulate) {
                 itemStack.grow(amount);
                 stacks.set(slot, itemStack);
             }
-            stack.shrink(amount);
-            if (stack.isEmpty()) {
-                return ItemStack.EMPTY;
-            }
+            return stack.copyWithCount(amount);
         }
-        return stack;
+        return ItemStack.EMPTY;
     }
 
     @Override
@@ -127,8 +138,7 @@ public class SimpleItemContainer implements ItemContainer {
         int toExtract = Math.min(amount, stack.getCount());
         ItemStack extracted = stack.copyWithCount(toExtract);
         if (!simulate) {
-            stack.shrink(toExtract);
-            stacks.set(slot, stack);
+            stacks.set(slot, stacks.get(slot).copyWithCount(stack.getCount() - toExtract));
         }
         return extracted;
     }
@@ -139,17 +149,40 @@ public class SimpleItemContainer implements ItemContainer {
     }
 
     @Override
-    public ItemSnapshot createSnapshot() {
-        return new SimpleItemSnapshot(stacks);
-    }
-
-    @Override
-    public void loadSnapshot(ItemSnapshot snapshot) {
-        snapshot.loadSnapshot(this);
-    }
-
-    @Override
     public void clearContent() {
         stacks.clear();
+    }
+
+    @Override
+    public void deserialize(CompoundTag nbt) {
+        ContainerHelper.loadAllItems(nbt, stacks);
+    }
+
+    @Override
+    public CompoundTag serialize(CompoundTag nbt) {
+        return ContainerHelper.saveAllItems(nbt, stacks);
+    }
+
+    @Override
+    public SimpleItemSnapshot createSnapshot() {
+        return new SimpleItemSnapshot();
+    }
+
+    @Override
+    public void update() {
+        onUpdate.run();
+    }
+
+    public class SimpleItemSnapshot implements ItemSnapshot {
+        CompoundTag tag;
+
+        public SimpleItemSnapshot() {
+            this.tag = SimpleItemContainer.this.serialize(new CompoundTag());
+        }
+
+        @Override
+        public void loadSnapshot() {
+            SimpleItemContainer.this.deserialize(tag);
+        }
     }
 }

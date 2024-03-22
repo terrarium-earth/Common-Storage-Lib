@@ -38,25 +38,13 @@ public class BotariumNeoForge {
     }
 
     public static void registerItem(RegisterCapabilitiesEvent event) {
-        ItemApi.getBlockEntityRegistry().forEach((blockEntityType, blockFluidGetter1) -> {
-            event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, blockEntityType, (blockEntity, direction) -> {
-                return new ForgeItemContainer<>(blockFluidGetter1.getItemContainer(blockEntity.getLevel(), blockEntity.getBlockPos(), blockEntity.getBlockState(), blockEntity, direction));
-            });
-        });
-
-        ItemApi.getBlockRegistry().forEach((block, blockFluidGetter) -> {
-            event.registerBlock(Capabilities.ItemHandler.BLOCK, (level, blockPos, blockState, blockEntity, direction) -> {
-                return new ForgeItemContainer<>(blockFluidGetter.getItemContainer(level, blockPos, blockState, blockEntity, direction));
-            }, block);
-        });
-
         BuiltInRegistries.BLOCK_ENTITY_TYPE.forEach(blockEntityType -> {
             event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, blockEntityType, (blockEntity, object2) -> {
                 if (blockEntity instanceof ItemContainerBlock itemContainerBlock) {
                     return new ItemContainerWrapper(itemContainerBlock.getContainer());
                 }
                 if (blockEntity instanceof BotariumItemBlock<?> itemBlock) {
-                    return new ForgeItemContainer<>(itemBlock.getItemContainer(blockEntity.getLevel(), blockEntity.getBlockPos(), blockEntity.getBlockState(), blockEntity, object2));
+                    return new ForgeItemContainer(itemBlock.getItemContainer(blockEntity.getLevel(), blockEntity.getBlockPos(), blockEntity.getBlockState(), blockEntity, object2));
                 }
                 return null;
             });
@@ -65,7 +53,7 @@ public class BotariumNeoForge {
         BuiltInRegistries.BLOCK.stream().filter(block -> block instanceof BotariumItemBlock<?>).forEach(block -> {
             event.registerBlock(Capabilities.ItemHandler.BLOCK, (level, blockPos, blockState, blockEntity, direction) -> {
                 if (blockState.getBlock() instanceof BotariumItemBlock<?> itemContainerBlock) {
-                    return new ForgeItemContainer<>(itemContainerBlock.getItemContainer(level, blockPos, blockState, blockEntity, direction));
+                    return new ForgeItemContainer(itemContainerBlock.getItemContainer(level, blockPos, blockState, blockEntity, direction));
                 }
                 return null;
             }, block);

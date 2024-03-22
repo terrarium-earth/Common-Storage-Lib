@@ -43,7 +43,7 @@ public abstract class BlockEntityMixin {
         if (energyContainer != null) {
             energyContainer.deserialize(compoundTag);
         }
-        ItemContainer itemContainer = ItemApi.getAPIItemContainer(this.getLevel(), this.getBlockPos(), this.getBlockState(), (BlockEntity) (Object) this, null);
+        ItemContainer itemContainer = ItemApi.SIDED.find(this.getLevel(), this.getBlockPos(), this.getBlockState(), (BlockEntity) (Object) this, null);
         if (itemContainer instanceof Serializable container) {
             container.deserialize(compoundTag);
         }
@@ -63,7 +63,7 @@ public abstract class BlockEntityMixin {
         if (energyContainer != null) {
             energyContainer.serialize(compoundTag);
         }
-        ItemContainer itemContainer = ItemApi.getAPIItemContainer(this.getLevel(), this.getBlockPos(), this.getBlockState(), (BlockEntity) (Object) this, null);
+        ItemContainer itemContainer = ItemApi.SIDED.find(this.getLevel(), this.getBlockPos(), this.getBlockState(), (BlockEntity) (Object) this, null);
         if (itemContainer instanceof Serializable container) {
             container.serialize(compoundTag);
         }

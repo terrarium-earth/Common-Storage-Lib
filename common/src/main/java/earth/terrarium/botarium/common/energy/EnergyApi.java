@@ -29,15 +29,15 @@ public class EnergyApi {
     private static Map<Item, BotariumEnergyItem<?>> FINALIZED_ITEM_LOOKUP_MAP = null;
 
     public static Map<BlockEntityType<?>, BotariumEnergyBlock<?>> getBlockEntityRegistry() {
-        return FINALIZED_BLOCK_ENTITY_LOOKUP_MAP = Botarium.finalizeRegistration(BLOCK_ENTITY_LOOKUP_MAP, FINALIZED_BLOCK_ENTITY_LOOKUP_MAP, "energy block entity");
+        return FINALIZED_BLOCK_ENTITY_LOOKUP_MAP = Botarium.finalizeRegistration(BLOCK_ENTITY_LOOKUP_MAP, FINALIZED_BLOCK_ENTITY_LOOKUP_MAP);
     }
 
     public static Map<Block, BotariumEnergyBlock<?>> getBlockRegistry() {
-        return FINALIZED_BLOCK_LOOKUP_MAP = Botarium.finalizeRegistration(BLOCK_LOOKUP_MAP, FINALIZED_BLOCK_LOOKUP_MAP, "energy block");
+        return FINALIZED_BLOCK_LOOKUP_MAP = Botarium.finalizeRegistration(BLOCK_LOOKUP_MAP, FINALIZED_BLOCK_LOOKUP_MAP);
     }
 
     public static Map<Item, BotariumEnergyItem<?>> getItemRegistry() {
-        return FINALIZED_ITEM_LOOKUP_MAP = Botarium.finalizeRegistration(ITEM_LOOKUP_MAP, FINALIZED_ITEM_LOOKUP_MAP, "energy item");
+        return FINALIZED_ITEM_LOOKUP_MAP = Botarium.finalizeRegistration(ITEM_LOOKUP_MAP, FINALIZED_ITEM_LOOKUP_MAP);
     }
 
     public static BotariumEnergyBlock<?> getEnergyBlock(Block block) {

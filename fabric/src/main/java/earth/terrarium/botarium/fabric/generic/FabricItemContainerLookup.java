@@ -18,7 +18,7 @@ public class FabricItemContainerLookup<T, C> implements ItemContainerLookup<T, C
     }
 
     @Override
-    public T getContainer(ItemStack stack, C context) {
+    public T find(ItemStack stack, C context) {
         return lookupMap.find(stack, null);
     }
 

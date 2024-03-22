@@ -5,13 +5,13 @@ import net.fabricmc.fabric.api.transfer.v1.storage.base.SingleSlotStorage;
 import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
 import net.minecraft.world.item.ItemStack;
 
-public record SingleItemSlot(int slot, FabricItemContainer<?> container) implements SingleSlotStorage<ItemVariant> {
+public record SingleItemSlot(int slot, FabricItemContainer container) implements SingleSlotStorage<ItemVariant> {
 
     @Override
     public long insert(ItemVariant resource, long maxAmount, TransactionContext transaction) {
         container.updateSnapshots(transaction);
         ItemStack inserted = container.container.insertIntoSlot(slot, resource.toStack((int) Math.min(maxAmount, container.container.getSlotLimit(slot))), false);
-        return maxAmount - inserted.getCount();
+        return inserted.getCount();
     }
 
     @Override

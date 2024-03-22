@@ -11,7 +11,8 @@ public interface ItemContainerLookup<T, C> {
     /**
      * @return The {@link T} for the block.
      */
-    T getContainer(ItemStack stack, @Nullable C context);
+    @Nullable
+    T find(ItemStack stack, @Nullable C context);
 
     void registerItems(ItemGetter<T, C> getter, Supplier<Item>... containers);
 

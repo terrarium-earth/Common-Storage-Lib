@@ -17,10 +17,16 @@ public interface BlockContainerLookup<T, C> {
      * @return The {@link T} for the block.
      */
     @Nullable
-    T getContainer(Level level, BlockPos pos, BlockState state, @Nullable BlockEntity entity, @Nullable C direction);
+    T find(Level level, BlockPos pos, @Nullable BlockState state, @Nullable BlockEntity entity, @Nullable C direction);
 
-    default T getContainer(BlockEntity block, @Nullable C direction) {
-        return getContainer(block.getLevel(), block.getBlockPos(), block.getBlockState(), block, direction);
+    @Nullable
+    default T find(BlockEntity block, @Nullable C direction) {
+        return find(block.getLevel(), block.getBlockPos(), block.getBlockState(), block, direction);
+    }
+
+    @Nullable
+    default T find(Level level, BlockPos pos, @Nullable C direction) {
+        return find(level, pos, null, null, direction);
     }
 
     void registerBlocks(BlockGetter<T, C> getter, Supplier<Block>... containers);

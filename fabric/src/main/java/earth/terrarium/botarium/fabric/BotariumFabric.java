@@ -115,24 +115,10 @@ public class BotariumFabric implements ModInitializer {
         ItemStorage.SIDED.registerFallback((world, pos, state, blockEntity, context) -> {
             if (blockEntity instanceof BotariumItemBlock<?> attachment) {
                 var container = attachment.getItemContainer(world, pos, state, blockEntity, context);
-                return container == null ? null : new FabricItemContainer<>(container);
+                return container == null ? null : new FabricItemContainer(container);
             } else if (state.getBlock() instanceof BotariumItemBlock<?> attachment) {
                 var container = attachment.getItemContainer(world, pos, state, blockEntity, context);
-                return container == null ? null : new FabricItemContainer<>(container);
-            } else {
-                var blockEnergyGetter = ItemApi.getItemBlock(state.getBlock());
-                if (blockEnergyGetter != null) {
-                    var container = blockEnergyGetter.getItemContainer(world, pos, state, blockEntity, context);
-                    if (container != null) {
-                        return new FabricItemContainer<>(container);
-                    }
-                }
-                if (blockEntity != null) {
-                    var entityEnergyGetter = ItemApi.getItemBlock(blockEntity.getType());
-                    if (entityEnergyGetter == null) return null;
-                    var entityContainer = entityEnergyGetter.getItemContainer(world, pos, state, blockEntity, context);
-                    return entityContainer == null ? null : new FabricItemContainer<>(entityContainer);
-                }
+                return container == null ? null : new FabricItemContainer(container);
             }
             return null;
         });

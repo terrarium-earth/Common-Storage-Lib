@@ -49,8 +49,4 @@ public interface ItemContainer extends Clearable {
     ItemStack extractFromSlot(int slot, int amount, boolean simulate);
 
     boolean isEmpty();
-
-    ItemSnapshot createSnapshot();
-
-    void loadSnapshot(ItemSnapshot snapshot);
 }

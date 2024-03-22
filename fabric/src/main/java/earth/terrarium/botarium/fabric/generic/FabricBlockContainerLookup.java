@@ -23,7 +23,7 @@ public class FabricBlockContainerLookup<T, C> implements BlockContainerLookup<T,
     }
 
     @Override
-    public @Nullable T getContainer(Level level, BlockPos pos, BlockState state, @Nullable BlockEntity entity, @Nullable C direction) {
+    public @Nullable T find(Level level, BlockPos pos, BlockState state, @Nullable BlockEntity entity, @Nullable C direction) {
         return lookupMap.find(level, pos, state, entity, direction);
     }
 

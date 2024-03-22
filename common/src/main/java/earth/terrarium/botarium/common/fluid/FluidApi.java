@@ -33,15 +33,15 @@ public class FluidApi {
     private static Map<Item, BotariumFluidItem<?>> FINALIZED_ITEM_LOOKUP_MAP = null;
 
     public static Map<BlockEntityType<?>, BotariumFluidBlock<?>> getBlockEntityRegistry() {
-        return FINALIZED_BLOCK_ENTITY_LOOKUP_MAP = Botarium.finalizeRegistration(BLOCK_ENTITY_LOOKUP_MAP, FINALIZED_BLOCK_ENTITY_LOOKUP_MAP, "fluid containing block entity");
+        return FINALIZED_BLOCK_ENTITY_LOOKUP_MAP = Botarium.finalizeRegistration(BLOCK_ENTITY_LOOKUP_MAP, FINALIZED_BLOCK_ENTITY_LOOKUP_MAP);
     }
 
     public static Map<Block, BotariumFluidBlock<?>> getBlockRegistry() {
-        return FINALIZED_BLOCK_LOOKUP_MAP = Botarium.finalizeRegistration(BLOCK_LOOKUP_MAP, FINALIZED_BLOCK_LOOKUP_MAP, "fluid containing block");
+        return FINALIZED_BLOCK_LOOKUP_MAP = Botarium.finalizeRegistration(BLOCK_LOOKUP_MAP, FINALIZED_BLOCK_LOOKUP_MAP);
     }
 
     public static Map<Item, BotariumFluidItem<?>> getItemRegistry() {
-        return FINALIZED_ITEM_LOOKUP_MAP = Botarium.finalizeRegistration(ITEM_LOOKUP_MAP, FINALIZED_ITEM_LOOKUP_MAP, "fluid containing item");
+        return FINALIZED_ITEM_LOOKUP_MAP = Botarium.finalizeRegistration(ITEM_LOOKUP_MAP, FINALIZED_ITEM_LOOKUP_MAP);
     }
 
     public static BotariumFluidBlock<?> getFluidBlock(Block block) {

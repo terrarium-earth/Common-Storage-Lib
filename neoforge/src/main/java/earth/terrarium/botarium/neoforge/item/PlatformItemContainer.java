@@ -5,8 +5,12 @@ import earth.terrarium.botarium.common.item.base.ItemSnapshot;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.items.IItemHandler;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public record PlatformItemContainer(IItemHandler itemHandler) implements ItemContainer {
+    public static PlatformItemContainer of(@Nullable IItemHandler itemHandler) {
+        return itemHandler == null ? null : new PlatformItemContainer(itemHandler);
+    }
 
     @Override
     public int getSlots() {
@@ -43,12 +47,24 @@ public record PlatformItemContainer(IItemHandler itemHandler) implements ItemCon
     }
 
     @Override
+    public @NotNull ItemStack insertIntoSlot(int slot, @NotNull ItemStack stack, boolean simulate) {
+        return itemHandler.insertItem(slot, stack, simulate);
+    }
+
+    @Override
     public @NotNull ItemStack extractItem(int amount, boolean simulate) {
         ItemStack extracted = ItemStack.EMPTY;
         for (int i = 0; i < itemHandler.getSlots(); i++) {
-            extracted = itemHandler.extractItem(i, amount, simulate);
-            if (!extracted.isEmpty()) {
-                return extracted;
+            if (itemHandler.getStackInSlot(i).isEmpty()) continue;
+            if (extracted.isEmpty()) {
+                extracted = itemHandler.extractItem(i, amount, simulate);
+            } else {
+                if (ItemStack.isSameItemSameTags(extracted, itemHandler.getStackInSlot(i))) {
+                    extracted.grow(itemHandler.extractItem(i, amount - extracted.getCount(), simulate).getCount());
+                }
+            }
+            if (extracted.getCount() >= amount) {
+                break;
             }
         }
         return extracted;
@@ -67,16 +83,6 @@ public record PlatformItemContainer(IItemHandler itemHandler) implements ItemCon
             }
         }
         return true;
-    }
-
-    @Override
-    public ItemSnapshot createSnapshot() {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public void loadSnapshot(ItemSnapshot snapshot) {
-        throw new UnsupportedOperationException();
     }
 
     @Override

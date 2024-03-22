@@ -2,6 +2,7 @@ package earth.terrarium.botarium.fabric.item;
 
 import earth.terrarium.botarium.common.item.base.ItemContainer;
 import earth.terrarium.botarium.common.item.base.ItemSnapshot;
+import earth.terrarium.botarium.util.Snapshotable;
 import earth.terrarium.botarium.util.Updatable;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.SlottedStorage;
@@ -9,14 +10,19 @@ import net.fabricmc.fabric.api.transfer.v1.storage.StorageView;
 import net.fabricmc.fabric.api.transfer.v1.storage.base.SingleSlotStorage;
 import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
 import net.fabricmc.fabric.api.transfer.v1.transaction.base.SnapshotParticipant;
+import org.apache.commons.lang3.NotImplementedException;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-public class FabricItemContainer<T extends ItemContainer & Updatable> extends SnapshotParticipant<ItemSnapshot> implements SlottedStorage<ItemVariant> {
-    protected final T container;
+public class FabricItemContainer extends SnapshotParticipant<ItemSnapshot> implements SlottedStorage<ItemVariant> {
+    protected final ItemContainer container;
 
-    public FabricItemContainer(T container) {
+    public static FabricItemContainer of(ItemContainer container) {
+        return container == null ? null : new FabricItemContainer(container);
+    }
+
+    public FabricItemContainer(ItemContainer container) {
         this.container = container;
     }
 
@@ -76,16 +82,22 @@ public class FabricItemContainer<T extends ItemContainer & Updatable> extends Sn
 
     @Override
     protected ItemSnapshot createSnapshot() {
-        return container.createSnapshot();
+        if (container instanceof Snapshotable<?> snapshotable) {
+            return (ItemSnapshot) snapshotable.createSnapshot();
+        } else {
+            throw new NotImplementedException("Container does not implement Snapshotable of ItemSnapshot");
+        }
     }
 
     @Override
     protected void readSnapshot(ItemSnapshot snapshot) {
-        container.loadSnapshot(snapshot);
+        snapshot.loadSnapshot();
     }
 
     @Override
     protected void onFinalCommit() {
-        container.update();
+        if (container instanceof Updatable updatable) {
+            updatable.update();
+        }
     }
 }

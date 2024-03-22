@@ -18,20 +18,22 @@ import java.util.Map;
 import java.util.function.Supplier;
 
 public class NeoForgeBlockContainerLookup<T, C> implements BlockContainerLookup<T, C> {
-    private final ResourceLocation name;
     private final BlockCapability<T, @Nullable C> capability;
     private final Map<Supplier<Block>, BlockGetter<T, C>> blockGetterMap = new HashMap<>();
     private final Map<Supplier<BlockEntityType<?>>, BlockGetter<T, C>> blockEntityGetterMap = new HashMap<>();
     private Map<Block, BlockGetter<T, C>> blockMap = null;
     private Map<BlockEntityType<?>, BlockGetter<T, C>> blockEntityMap = null;
 
+    public NeoForgeBlockContainerLookup(BlockCapability<T, C> cap) {
+        capability = cap;
+    }
+
     public NeoForgeBlockContainerLookup(ResourceLocation name, Class<T> typeClass, Class<C> contextClass) {
-        this.name = name;
-        capability = BlockCapability.create(name, typeClass, contextClass);
+        this(BlockCapability.create(name, typeClass, contextClass));
     }
 
     @Override
-    public @Nullable T getContainer(Level level, BlockPos pos, BlockState state, @Nullable BlockEntity entity, @Nullable C direction) {
+    public @Nullable T find(Level level, BlockPos pos, BlockState state, @Nullable BlockEntity entity, @Nullable C direction) {
         return level.getCapability(capability, pos, state, entity, direction);
     }
 
@@ -55,12 +57,12 @@ public class NeoForgeBlockContainerLookup<T, C> implements BlockContainerLookup<
     }
 
     public Map<Block, BlockGetter<T, C>> getBlockMap() {
-        blockMap = Botarium.finalizeRegistration(blockGetterMap, blockMap, name.getNamespace() + " " + name.getPath() + " block");
+        blockMap = Botarium.finalizeRegistration(blockGetterMap, blockMap);
         return blockMap;
     }
 
     public Map<BlockEntityType<?>, BlockGetter<T, C>> getBlockEntityMap() {
-        blockEntityMap = Botarium.finalizeRegistration(blockEntityGetterMap, blockEntityMap, name.getNamespace() + " " + name.getPath() + " block entity");
+        blockEntityMap = Botarium.finalizeRegistration(blockEntityGetterMap, blockEntityMap);
         return blockEntityMap;
     }
 

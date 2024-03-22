@@ -33,9 +33,8 @@ public class Botarium {
         PARTICLES.initialize();
     }
 
-    public static <T, U> Map<T, U> finalizeRegistration(Map<Supplier<T>, U> unfinalized, @Nullable Map<T, U> finalized, String type) {
+    public static <T, U> Map<T, U> finalizeRegistration(Map<Supplier<T>, U> unfinalized, @Nullable Map<T, U> finalized) {
         if (finalized == null) {
-            Botarium.LOGGER.debug("Finalizing {} registration", type);
             Map<T, U> collected = unfinalized.entrySet().stream().map(entry -> Pair.of(entry.getKey().get(), entry.getValue())).collect(Collectors.toUnmodifiableMap(Pair::getFirst, Pair::getSecond));
             unfinalized.clear();
             return collected;

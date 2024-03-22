@@ -18,7 +18,7 @@ public class FabricEntityContainerLookup<T, C> implements EntityContainerLookup<
     }
 
     @Override
-    public T getContainer(Entity stack, C context) {
+    public T find(Entity stack, C context) {
         return lookupMap.find(stack, context);
     }
 

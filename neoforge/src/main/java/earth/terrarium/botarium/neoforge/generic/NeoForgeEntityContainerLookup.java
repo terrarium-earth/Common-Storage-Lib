@@ -14,18 +14,20 @@ import java.util.Map;
 import java.util.function.Supplier;
 
 public class NeoForgeEntityContainerLookup<T, C> implements EntityContainerLookup<T, C> {
-    private final ResourceLocation name;
     private final EntityCapability<T, C> capability;
     private final Map<Supplier<EntityType<?>>, EntityGetter<T, C>> blockEntityGetterMap = new HashMap<>();
     private Map<EntityType<?>, EntityGetter<T, C>> blockEntityMap = null;
 
+    public NeoForgeEntityContainerLookup(EntityCapability<T, C> cap) {
+        capability = cap;
+    }
+
     public NeoForgeEntityContainerLookup(ResourceLocation name, Class<T> typeClass, Class<C> contextClass) {
-        this.name = name;
-        capability = EntityCapability.create(name, typeClass, contextClass);
+        this(EntityCapability.create(name, typeClass, contextClass));
     }
 
     @Override
-    public T getContainer(Entity stack, @Nullable C context) {
+    public T find(Entity stack, @Nullable C context) {
         return stack.getCapability(capability, context);
     }
 
@@ -41,7 +43,7 @@ public class NeoForgeEntityContainerLookup<T, C> implements EntityContainerLooku
     }
 
     public Map<EntityType<?>, EntityGetter<T, C>> getBlockEntityMap() {
-        blockEntityMap = Botarium.finalizeRegistration(blockEntityGetterMap, blockEntityMap, name.getNamespace() + " " + name.getPath() + " items");
+        blockEntityMap = Botarium.finalizeRegistration(blockEntityGetterMap, blockEntityMap);
         return blockEntityMap;
     }
 
