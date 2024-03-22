@@ -1,6 +1,6 @@
 package testmod;
 
-import earth.terrarium.botarium.common.generic.util.AmountBasedContainer;
+import earth.terrarium.botarium.common.generic.utils.AmountBasedContainer;
 import earth.terrarium.botarium.util.Serializable;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Mth;

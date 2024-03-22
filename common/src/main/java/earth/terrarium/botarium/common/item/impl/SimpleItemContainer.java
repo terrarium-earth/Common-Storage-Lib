@@ -1,6 +1,7 @@
 package earth.terrarium.botarium.common.item.impl;
 
 import earth.terrarium.botarium.common.item.base.ItemContainer;
+import earth.terrarium.botarium.common.item.base.ItemContainerExtras;
 import earth.terrarium.botarium.common.item.base.ItemSnapshot;
 import earth.terrarium.botarium.util.Serializable;
 import earth.terrarium.botarium.util.Snapshotable;
@@ -14,7 +15,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import org.jetbrains.annotations.NotNull;
 
-public class SimpleItemContainer implements ItemContainer, Serializable, Snapshotable<ItemSnapshot> {
+public class SimpleItemContainer implements ItemContainer, ItemContainerExtras, Serializable, Snapshotable<ItemSnapshot> {
     private final NonNullList<ItemStack> stacks;
     private Runnable onUpdate = () -> {};
 
@@ -82,27 +83,28 @@ public class SimpleItemContainer implements ItemContainer, Serializable, Snapsho
                 break;
             }
         }
-        return initial.copyWithCount(insertedAmount);
+        return insertedAmount == 0 ? ItemStack.EMPTY : initial.copyWithCount(insertedAmount);
     }
 
     @Override
     public @NotNull ItemStack insertIntoSlot(int slot, @NotNull ItemStack stack, boolean simulate) {
         if (stack.isEmpty() || !isItemValid(slot, stack)) return ItemStack.EMPTY;
-        ItemStack itemStack = stacks.get(slot);
+        ItemStack itemStack = stacks.get(slot).copy();
         if (itemStack.isEmpty()) {
             int amount = Math.min(stack.getCount(), getSlotLimit(slot));
-            itemStack = stack.copyWithCount(amount);
             if (!simulate) {
-                stacks.set(slot, itemStack);
-            }
-            return itemStack;
-        } else if (ItemStack.isSameItemSameTags(stack, itemStack)) {
-            int amount = Math.min(stack.getCount(), itemStack.getMaxStackSize() - itemStack.getCount());
-            if (!simulate) {
-                itemStack.grow(amount);
-                stacks.set(slot, itemStack);
+                stacks.set(slot, stack.copyWithCount(amount));
             }
             return stack.copyWithCount(amount);
+        } else if (ItemStack.isSameItemSameTags(stack, itemStack)) {
+            int amount = Math.min(stack.getCount(), getSlotLimit(slot) - itemStack.getCount());
+            if (amount > 0) {
+                if (!simulate) {
+                    itemStack.grow(amount);
+                    stacks.set(slot, itemStack);
+                }
+                return stack.copyWithCount(amount);
+            }
         }
         return ItemStack.EMPTY;
     }
@@ -173,6 +175,11 @@ public class SimpleItemContainer implements ItemContainer, Serializable, Snapsho
         onUpdate.run();
     }
 
+    @Override
+    public void setStackInSlot(int slot, ItemStack stack) {
+        stacks.set(slot, stack);
+    }
+
     public class SimpleItemSnapshot implements ItemSnapshot {
         CompoundTag tag;
 
@@ -182,6 +189,7 @@ public class SimpleItemContainer implements ItemContainer, Serializable, Snapsho
 
         @Override
         public void loadSnapshot() {
+            SimpleItemContainer.this.stacks.clear();
             SimpleItemContainer.this.deserialize(tag);
         }
     }

@@ -56,11 +56,7 @@ public record PlatformItemContainer(Storage<ItemVariant> storage) implements Ite
 
     @Override
     public boolean isItemValid(int slot, @NotNull ItemStack stack) {
-        Iterator<StorageView<ItemVariant>> it = storage.iterator();
-        for (int i = 0; i < slot; i++) {
-            it.next();
-        }
-        return it.next().getResource().matches(stack);
+        return true;
     }
 
     @Override

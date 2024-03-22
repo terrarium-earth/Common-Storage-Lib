@@ -1,4 +1,4 @@
-package earth.terrarium.botarium.common.generic.util;
+package earth.terrarium.botarium.common.generic.utils;
 
 import net.minecraft.world.Clearable;
 

@@ -90,8 +90,8 @@ public class TestBlockEntity extends BlockEntity implements BotariumEnergyBlock<
                 ItemStack itemStack = container.extractItem(1, true);
                 ItemStack inserted = thisContainer.insertItem(itemStack, true);
                 if (!itemStack.isEmpty() && itemStack.getCount() == inserted.getCount()) {
-                    ItemStack itemStack1 = container.extractItem(1, false);
-                    thisContainer.insertItem(itemStack1, false);
+                    container.extractItem(1, false);
+                    thisContainer.insertItem(inserted, false);
                 }
             }
         }
