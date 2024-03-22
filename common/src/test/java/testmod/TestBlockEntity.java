@@ -7,18 +7,23 @@ import earth.terrarium.botarium.common.fluid.base.BotariumFluidBlock;
 import earth.terrarium.botarium.common.fluid.impl.SimpleFluidContainer;
 import earth.terrarium.botarium.common.fluid.impl.WrappedBlockFluidContainer;
 import earth.terrarium.botarium.common.fluid.utils.FluidHooks;
-import earth.terrarium.botarium.common.item.ItemContainerBlock;
-import earth.terrarium.botarium.common.item.SerializableContainer;
-import earth.terrarium.botarium.common.item.SimpleItemContainer;
+import earth.terrarium.botarium.common.item.base.BotariumItemBlock;
+import earth.terrarium.botarium.common.item.base.ItemContainer;
+import earth.terrarium.botarium.common.item.impl.SimpleItemContainer;
+import earth.terrarium.botarium.common.item.impl.WrappedBlockItemContainer;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import org.jetbrains.annotations.Nullable;
 
-public class TestBlockEntity extends BlockEntity implements BotariumEnergyBlock<WrappedBlockEnergyContainer>, BotariumFluidBlock<WrappedBlockFluidContainer>, ItemContainerBlock {
+public class TestBlockEntity extends BlockEntity implements BotariumEnergyBlock<WrappedBlockEnergyContainer>, BotariumFluidBlock<WrappedBlockFluidContainer>, BotariumItemBlock<WrappedBlockItemContainer<SimpleItemContainer>> {
     public WrappedBlockFluidContainer fluidContainer;
-    private SimpleItemContainer itemContainer;
+    private WrappedBlockItemContainer<SimpleItemContainer> container;
     private WrappedBlockEnergyContainer energyContainer;
 
     public TestBlockEntity(BlockPos blockPos, BlockState blockState) {
@@ -40,16 +45,36 @@ public class TestBlockEntity extends BlockEntity implements BotariumEnergyBlock<
     }
 
     @Override
-    public SerializableContainer getContainer() {
-        return itemContainer == null ? this.itemContainer = new SimpleItemContainer(this, 1) : this.itemContainer;
-    }
-
-    @Override
     public CompoundTag getUpdateTag() {
         CompoundTag tag = new CompoundTag();
         this.saveAdditional(tag);
         return tag;
     }
 
-    public void tick() {}
+    public void tick() {
+        ItemContainer insertContainer = ItemContainer.of(level, getBlockPos().below(), null);
+        if (insertContainer != null) {
+            WrappedBlockItemContainer<SimpleItemContainer> itemContainer = getItemContainer();
+            if (itemContainer != null) {
+                ItemStack extracted = itemContainer.extractItem(1, true);
+                if (!extracted.isEmpty()) {
+                    ItemStack inserted = insertContainer.insertItem(extracted, true);
+                    if (!inserted.isEmpty()) {
+                        container.extractItem(1, false);
+                        insertContainer.insertItem(extracted, false);
+                    }
+                }
+            }
+        }
+    }
+
+    @Override
+    public @Nullable WrappedBlockItemContainer<SimpleItemContainer> getItemContainer(Level level, BlockPos pos, BlockState state, @Nullable BlockEntity entity, @Nullable Direction direction) {
+        return container == null ? this.container = new WrappedBlockItemContainer<>(new SimpleItemContainer(9), level, pos, state) : this.container;
+    }
+
+    public WrappedBlockItemContainer<SimpleItemContainer> getItemContainer() {
+        if (getLevel() == null) return null;
+        return getItemContainer(getLevel(), getBlockPos(), getBlockState(), this, null);
+    }
 }
