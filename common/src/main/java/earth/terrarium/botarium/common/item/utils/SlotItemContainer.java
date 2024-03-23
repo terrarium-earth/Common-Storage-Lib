@@ -31,16 +31,8 @@ public class SlotItemContainer<T extends ItemContainer & ItemContainerExtras> ex
         return container.getStackInSlot(index);
     }
 
-    // Override if your IItemHandler does not implement IItemHandlerModifiable
     @Override
     public void set(@NotNull ItemStack stack) {
-        container.setStackInSlot(index, stack);
-        this.setChanged();
-    }
-
-    // Override if your IItemHandler does not implement IItemHandlerModifiable
-    // @Override
-    public void initialize(ItemStack stack) {
         container.setStackInSlot(index, stack);
         this.setChanged();
     }
@@ -60,9 +52,9 @@ public class SlotItemContainer<T extends ItemContainer & ItemContainerExtras> ex
         ItemStack maxAdd = stack.copyWithCount(maxInput);
         ItemStack currentStack = container.getStackInSlot(index);
         container.setStackInSlot(index, ItemStack.EMPTY);
-        ItemStack remainder = container.insertIntoSlot(index, maxAdd, true);
+        ItemStack inserted = container.insertIntoSlot(index, maxAdd, true);
         container.setStackInSlot(index, currentStack);
-        return maxInput - remainder.getCount();
+        return inserted.getCount();
     }
 
     @Override

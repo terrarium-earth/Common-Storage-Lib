@@ -34,21 +34,20 @@ public record PlatformItemContainer(IItemHandler itemHandler) implements ItemCon
 
     @Override
     public @NotNull ItemStack insertItem(@NotNull ItemStack stack, boolean simulate) {
-        ItemStack leftover = stack;
+        ItemStack leftover = stack.copy();
         for (int i = 0; i < itemHandler.getSlots(); i++) {
-            stack = itemHandler.insertItem(i, leftover, simulate);
-            if (stack.isEmpty()) {
-                return ItemStack.EMPTY;
-            } else if (stack.getCount() < leftover.getCount()) {
-                leftover = stack;
+            leftover = itemHandler.insertItem(i, leftover, simulate);
+            if (leftover.isEmpty()) {
+                return stack.copy();
             }
         }
-        return leftover;
+        return stack.copyWithCount(stack.getCount() - leftover.getCount());
     }
 
     @Override
     public @NotNull ItemStack insertIntoSlot(int slot, @NotNull ItemStack stack, boolean simulate) {
-        return itemHandler.insertItem(slot, stack, simulate);
+        ItemStack itemStack = itemHandler.insertItem(slot, stack, simulate);
+        return itemStack.getCount() >= stack.getCount() ? ItemStack.EMPTY : stack.copyWithCount(stack.getCount() - itemStack.getCount());
     }
 
     @Override

@@ -28,7 +28,10 @@ public record ForgeItemContainer(ItemContainer container) implements IItemHandle
         if (!simulate && container instanceof Updatable updatable) {
             updatable.update();
         }
-        return stack;
+        if (stack.getCount() >= arg.getCount()) {
+            return ItemStack.EMPTY;
+        }
+        return arg.copyWithCount(arg.getCount() - stack.getCount());
     }
 
     @Override
