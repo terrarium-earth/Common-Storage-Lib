@@ -1,3 +1,3 @@
-# 3.1.1
+# 3.2.0
 
-- Fixed item handlers not returning the right value on insert
+- NEW Data attachment cross platform API
