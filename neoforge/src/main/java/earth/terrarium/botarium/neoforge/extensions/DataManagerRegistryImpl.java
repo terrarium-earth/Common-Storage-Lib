@@ -5,7 +5,7 @@ import earth.terrarium.botarium.neoforge.data.NeoDataManagerRegistry;
 import net.msrandom.extensions.annotations.ClassExtension;
 
 @ClassExtension(DataManagerRegistry.class)
-public class DataManagerRegistryImpl {
+public interface DataManagerRegistryImpl {
     static DataManagerRegistry create(String modid) {
         return new NeoDataManagerRegistry(modid);
     }

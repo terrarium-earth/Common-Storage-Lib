@@ -1,4 +1,3 @@
-# 3.2.1
+# 3.2.2
 
-- Fix class loading error with Neo
-- Item containers are no longer serialized. Use the new DataManager api
+- Fix class loading error (again)
