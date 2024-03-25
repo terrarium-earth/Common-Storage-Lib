@@ -46,12 +46,6 @@ public abstract class BlockEntityMixin {
         if (this instanceof ItemContainerBlock itemContainerBlock) {
             itemContainerBlock.getContainer().deserialize(compoundTag);
         }
-        if (this instanceof BotariumItemBlock<?> botariumItemBlock) {
-            ItemContainer itemContainer = botariumItemBlock.getItemContainer(this.getLevel(), this.getBlockPos(), this.getBlockState(), (BlockEntity) (Object) this, null);
-            if (itemContainer instanceof Serializable serializable) {
-                serializable.deserialize(compoundTag);
-            }
-        }
     }
 
     @Inject(method = "saveAdditional", at = @At("TAIL"))
@@ -66,12 +60,6 @@ public abstract class BlockEntityMixin {
         }
         if (this instanceof ItemContainerBlock itemContainerBlock) {
             itemContainerBlock.getContainer().serialize(compoundTag);
-        }
-        if (this instanceof BotariumItemBlock<?> botariumItemBlock) {
-            ItemContainer itemContainer = botariumItemBlock.getItemContainer(this.getLevel(), this.getBlockPos(), this.getBlockState(), (BlockEntity) (Object) this, null);
-            if (itemContainer instanceof Serializable serializable) {
-                serializable.serialize(compoundTag);
-            }
         }
     }
 }

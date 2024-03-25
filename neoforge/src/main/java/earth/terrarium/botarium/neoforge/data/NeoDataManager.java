@@ -1,11 +1,9 @@
 package earth.terrarium.botarium.neoforge.data;
 
-import com.mojang.datafixers.util.Pair;
 import earth.terrarium.botarium.common.data.DataManager;
 import net.neoforged.neoforge.attachment.AttachmentHolder;
 import net.neoforged.neoforge.attachment.AttachmentType;
 
-import javax.naming.OperationNotSupportedException;
 import java.util.function.Supplier;
 
 public class NeoDataManager<T> implements DataManager<T> {
