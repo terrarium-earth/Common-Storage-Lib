@@ -22,6 +22,28 @@ public class NeoDataManager<T> implements DataManager<T> {
     }
 
     @Override
+    public T getDataOrThrow(Object dataHolder) {
+        if (!hasData(dataHolder)) {
+            throw new RuntimeException(dataHolder + "is not initialized");
+        } else {
+            return getData(dataHolder);
+        }
+    }
+
+    @Override
+    public T getDataOrInit(Object dataHolder) {
+        return getData(dataHolder);
+    }
+
+    @Override
+    public T getDataOrInit(Object dataHolder, T data) {
+        if (!hasData(dataHolder)) {
+            setData(dataHolder, data);
+        }
+        return getData(dataHolder);
+    }
+
+    @Override
     public T setData(Object dataHolder, T data) {
         if (dataHolder instanceof AttachmentHolder holder) {
             return holder.setData(attachmentType, data);

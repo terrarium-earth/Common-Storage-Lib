@@ -14,7 +14,7 @@ import net.neoforged.neoforge.items.IItemHandler;
 import org.jetbrains.annotations.Nullable;
 
 @ClassExtension(ItemContainer.class)
-public class PlatformItemContainerImpl {
+public interface ItemContainerImpl {
 
     @ImplementsBaseElement
     static ItemContainer of(Level level, BlockPos pos, BlockState state, @Nullable BlockEntity entity, @Nullable Direction direction) {

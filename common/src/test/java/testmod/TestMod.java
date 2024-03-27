@@ -1,5 +1,7 @@
 package testmod;
 
+import earth.terrarium.botarium.common.data.DataManager;
+import earth.terrarium.botarium.common.data.DataManagerRegistry;
 import earth.terrarium.botarium.common.energy.EnergyApi;
 import earth.terrarium.botarium.common.energy.impl.SimpleEnergyContainer;
 import earth.terrarium.botarium.common.energy.impl.UnlimitedEnergyContainer;
@@ -37,6 +39,7 @@ public class TestMod {
     public static final RegistryHolder<Item> ITEMS = new RegistryHolder<>(BuiltInRegistries.ITEM, MOD_ID);
 
     public static final RegistryHolder<Fluid> FLUIDS = new RegistryHolder<>(BuiltInRegistries.FLUID, MOD_ID);
+    public static final DataManagerRegistry DATA_REG = DataManagerRegistry.create(MOD_ID);
     public static final FluidRegistry FLUID_TYPES = new FluidRegistry(MOD_ID);
 
 
@@ -62,6 +65,7 @@ public class TestMod {
     public static final BlockContainerLookup<ManaContainer, @Nullable Direction> MANA_LOOKUP_BLOCK = LookupApi.createBlockLookup(new ResourceLocation(MOD_ID, "mana"), ManaContainer.class);
     public static final ItemContainerLookup<ManaContainerItem, Void> MANA_ITEM_LOOKUP = LookupApi.createItemLookup(new ResourceLocation(MOD_ID, "mana"), ManaContainerItem.class);
 
+    public static final DataManager<ManaContainer> MANA_DATA = DATA_REG.register("mana", ManaContainer::new, ManaContainer.CODEC, true);
 
     @SuppressWarnings("unchecked")
     public static void init() {
@@ -71,6 +75,8 @@ public class TestMod {
 
         FLUID_TYPES.initialize();
         FLUIDS.initialize();
+
+        DATA_REG.initialize();
 
         FluidApi.registerFluidItem(EXAMPLE_ITEM_NO_INTERFACE, stack -> new WrappedItemFluidContainer(stack, new SimpleFluidContainer(FluidConstants.fromMillibuckets(4000), 1, (integer, fluidHolder) -> true)));
         FluidApi.registerFluidItem(EXAMPLE_ITEM_UNLIMITED, stack -> new WrappedItemFluidContainer(stack, new UnlimitedFluidContainer(TEST_FLUID_SOURCE.get())));

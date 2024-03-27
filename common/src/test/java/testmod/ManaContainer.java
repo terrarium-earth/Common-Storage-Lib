@@ -1,12 +1,24 @@
 package testmod;
 
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import earth.terrarium.botarium.common.generic.utils.AmountBasedContainer;
 import earth.terrarium.botarium.util.Serializable;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Mth;
 
 public class ManaContainer implements AmountBasedContainer, Serializable {
+    public static final Codec<ManaContainer> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+            Codec.LONG.fieldOf("Mana").forGetter(ManaContainer::getStoredAmount)
+    ).apply(instance, ManaContainer::new));
+
     long storedAmount = 0;
+
+    public ManaContainer() {}
+
+    public ManaContainer(long amt) {
+        storedAmount = amt;
+    }
 
     @Override
     public long getStoredAmount() {

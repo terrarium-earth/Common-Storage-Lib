@@ -4,6 +4,8 @@ import com.mojang.serialization.Codec;
 import earth.terrarium.botarium.common.data.DataManager;
 import earth.terrarium.botarium.common.data.DataManagerBuilder;
 import earth.terrarium.botarium.common.data.DataManagerRegistry;
+import net.fabricmc.fabric.api.attachment.v1.AttachmentRegistry;
+import net.fabricmc.fabric.impl.attachment.AttachmentRegistryImpl;
 import net.fabricmc.fabric.impl.attachment.AttachmentTypeImpl;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
@@ -23,6 +25,7 @@ public class FabricDataManagerRegistry implements DataManagerRegistry {
     public <T> DataManager<T> register(@NotNull String name, @NotNull Supplier<T> factory, @Nullable Codec<T> codec, boolean copyOnDeath) {
         ResourceLocation id = new ResourceLocation(modid, name);
         var type = new AttachmentTypeImpl<>(id, factory, codec, copyOnDeath);
+        AttachmentRegistryImpl.register(id, type);
         return new FabricDataManager<>(type);
     }
 

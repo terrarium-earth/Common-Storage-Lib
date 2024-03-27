@@ -22,6 +22,33 @@ public class FabricDataManager<T> implements DataManager<T> {
     }
 
     @Override
+    public T getDataOrThrow(Object dataHolder) {
+        if (dataHolder instanceof AttachmentTarget target) {
+            return target.getAttachedOrThrow(this.attachmentType);
+        } else {
+            throw new IllegalArgumentException(dataHolder + " is not an attachment target");
+        }
+    }
+
+    @Override
+    public T getDataOrInit(Object dataHolder) {
+        if (dataHolder instanceof AttachmentTarget target) {
+            return target.getAttachedOrCreate(this.attachmentType);
+        } else {
+            throw new IllegalArgumentException(dataHolder + " is not an attachment target");
+        }
+    }
+
+    @Override
+    public T getDataOrInit(Object dataHolder, T data) {
+        if (dataHolder instanceof AttachmentTarget target) {
+            return target.getAttachedOrSet(this.attachmentType, data);
+        } else {
+            throw new IllegalArgumentException(dataHolder + " is not an attachment target");
+        }
+    }
+
+    @Override
     public T setData(Object dataHolder, T data) {
         if (dataHolder instanceof AttachmentTarget target) {
             return target.setAttached(this.attachmentType, data);

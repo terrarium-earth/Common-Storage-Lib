@@ -1,3 +1,3 @@
-# 3.2.2
+# 3.2.3
 
-- Fix class loading error (again)
+- Implement Attachments on ItemStacks

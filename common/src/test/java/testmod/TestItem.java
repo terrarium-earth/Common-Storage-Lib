@@ -63,6 +63,11 @@ public class TestItem extends Item implements BotariumEnergyItem<WrappedItemEner
             long manaCapacity = manaContainer.getCapacity();
             tooltip.add(Component.literal("Mana: " + mana + " / " + manaCapacity).setStyle(Style.EMPTY.withColor(ChatFormatting.GRAY)));
         }
+
+        if (TestMod.MANA_DATA.hasData(stack)) {
+            ManaContainer dataMana = TestMod.MANA_DATA.getData(stack);
+            tooltip.add(Component.literal("Mana DATA: " + dataMana.storedAmount + " / " + dataMana.getCapacity()).setStyle(Style.EMPTY.withColor(ChatFormatting.GRAY)));
+        }
     }
 
     /*
@@ -80,6 +85,7 @@ public class TestItem extends Item implements BotariumEnergyItem<WrappedItemEner
             if (energyManager != null) {
                 energyManager.setEnergy(100000);
             }
+            TestMod.MANA_DATA.getDataOrInit(stack).insert(100, false);
         }
         return InteractionResultHolder.success(player.getMainHandItem());
     }

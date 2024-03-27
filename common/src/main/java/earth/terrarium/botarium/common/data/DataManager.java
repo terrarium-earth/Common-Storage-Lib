@@ -10,6 +10,12 @@ import java.util.function.UnaryOperator;
 public interface DataManager<T> {
     T getData(Object dataHolder);
 
+    T getDataOrThrow(Object dataHolder);
+
+    T getDataOrInit(Object dataHolder);
+
+    T getDataOrInit(Object dataHolder, T data);
+
     T setData(Object dataHolder, T data);
 
     boolean hasData(Object dataHolder);
