@@ -12,8 +12,6 @@ public interface DataManager<T> {
 
     T getDataOrThrow(Object dataHolder);
 
-    T getDataOrInit(Object dataHolder);
-
     T getDataOrInit(Object dataHolder, T data);
 
     T setData(Object dataHolder, T data);
