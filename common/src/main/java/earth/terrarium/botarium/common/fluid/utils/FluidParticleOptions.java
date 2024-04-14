@@ -3,12 +3,16 @@ package earth.terrarium.botarium.common.fluid.utils;
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import earth.terrarium.botarium.Botarium;
 import earth.terrarium.botarium.common.fluid.base.FluidHolder;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 
@@ -19,28 +23,19 @@ public record FluidParticleOptions(FluidHolder fluid) implements ParticleOptions
         return Botarium.FLUID_PARTICLE.get();
     }
 
-    @Override
-    public void writeToNetwork(FriendlyByteBuf buffer) {
-        fluid.writeToBuffer(buffer);
-    }
+    public static final MapCodec<FluidParticleOptions> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
+            FluidHolder.CODEC.fieldOf("fluid").forGetter(FluidParticleOptions::fluid)
+    ).apply(instance, FluidParticleOptions::new));
 
-    @Override
-    public @NotNull String writeToString() {
-        return String.format("%s %s", BuiltInRegistries.PARTICLE_TYPE.getKey(this.getType()), BuiltInRegistries.FLUID.getKey(fluid.getFluid()));
-    }
+    public static final StreamCodec<? super RegistryFriendlyByteBuf, FluidParticleOptions> STREAM_CODEC = new StreamCodec<>() {
+        @Override
+        public void encode(RegistryFriendlyByteBuf object, FluidParticleOptions object2) {
 
-    public static final Codec<FluidParticleOptions> CODEC = FluidHolder.CODEC.xmap(FluidParticleOptions::new, FluidParticleOptions::fluid);
-
-    public static final Deserializer<FluidParticleOptions> DESERIALIZER = new Deserializer<>() {
-
-        public @NotNull FluidParticleOptions fromCommand(ParticleType<FluidParticleOptions> particleTypeIn, StringReader reader)
-                throws CommandSyntaxException {
-            reader.expect(' ');
-            return new FluidParticleOptions(FluidHolder.of(BuiltInRegistries.FLUID.get(ResourceLocation.tryParse(reader.readQuotedString()))));
         }
 
-        public @NotNull FluidParticleOptions fromNetwork(ParticleType<FluidParticleOptions> particleTypeIn, FriendlyByteBuf buffer) {
-            return new FluidParticleOptions(FluidHolder.readFromBuffer(buffer));
+        @Override
+        public FluidParticleOptions decode(RegistryFriendlyByteBuf object) {
+            return null;
         }
     };
 }

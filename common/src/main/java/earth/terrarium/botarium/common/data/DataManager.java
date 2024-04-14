@@ -14,6 +14,8 @@ public interface DataManager<T> {
 
     T setData(Object dataHolder, T data);
 
+    T removeData(Object dataHolder);
+
     boolean hasData(Object dataHolder);
 
     @Nullable

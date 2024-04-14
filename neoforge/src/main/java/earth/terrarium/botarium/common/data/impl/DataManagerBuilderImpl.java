@@ -15,6 +15,7 @@ public class DataManagerBuilderImpl<T> implements DataManagerBuilder<T> {
     private final DeferredRegister<AttachmentType<?>> registry;
     private final DeferredRegister<DataComponentType<?>> componentRegistry;
     private final AttachmentType.Builder<T> builder;
+    private final Supplier<T> factory;
 
     private Codec<T> codec;
     private StreamCodec<? super RegistryFriendlyByteBuf, T> clientCodec;
@@ -24,6 +25,7 @@ public class DataManagerBuilderImpl<T> implements DataManagerBuilder<T> {
         this.registry = registry;
         this.componentRegistry = componentRegistry;
         this.builder = AttachmentType.builder(factory);
+        this.factory = factory;
     }
 
     @Override
@@ -59,6 +61,6 @@ public class DataManagerBuilderImpl<T> implements DataManagerBuilder<T> {
             DataComponentType.Builder<T> componentBuilder = DataComponentType.<T>builder().persistent(codec).networkSynchronized(clientCodec);
             component = componentRegistry.register(name, componentBuilder::build);
         }
-        return new DataManagerImpl<>(type, component);
+        return new DataManagerImpl<>(type, component, factory);
     }
 }

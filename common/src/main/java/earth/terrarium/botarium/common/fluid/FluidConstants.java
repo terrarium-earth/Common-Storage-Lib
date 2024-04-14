@@ -1,7 +1,6 @@
 package earth.terrarium.botarium.common.fluid;
 
 import net.msrandom.multiplatform.annotations.Expect;
-import org.apache.commons.lang3.NotImplementedException;
 
 @Expect
 public class FluidConstants {
@@ -24,21 +23,21 @@ public class FluidConstants {
     /**
      * @return The amount of fluid a bucket is for the platform.
      */
-    public static final long BUCKET_VOLUME;
+    public static final long BUCKET;
     /**
      * @return The amount of fluid a bottle is for the platform.
      */
-    public static final long BOTTLE_VOLUME;
+    public static final long BOTTLE;
     /**
      * @return The amount of fluid a block is for the platform.
      */
-    public static final long BLOCK_VOLUME;
+    public static final long BLOCK;
     /**
      * @return The amount of fluid an ingot is for the platform.
      */
-    public static final long INGOT_VOLUME;
+    public static final long INGOT;
     /**
      * @return The amount of fluid a nugget is for the platform.
      */
-    public static final long NUGGET_VOLUME;
+    public static final long NUGGET;
 }

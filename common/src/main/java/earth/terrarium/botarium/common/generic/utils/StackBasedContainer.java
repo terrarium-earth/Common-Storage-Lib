@@ -1,10 +1,8 @@
 package earth.terrarium.botarium.common.generic.utils;
 
-import net.minecraft.world.Clearable;
-import net.msrandom.multiplatform.annotations.Expect;
 import org.jetbrains.annotations.NotNull;
 
-public interface StackBasedContainer<T> extends Clearable {
+public interface StackBasedContainer<T> {
 
     int getSlotCount();
 
