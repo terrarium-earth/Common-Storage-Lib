@@ -3,8 +3,10 @@ architectury {
     common(enabledPlatforms.split(","))
 }
 
-tasks.compileJava {
-    options.compilerArgs.add("-AgenerateExpectStubs=true")
+tasks.jar {
+    manifest {
+        attributes["Fabric-Loom-Remap"] = true
+    }
 }
 
 dependencies {

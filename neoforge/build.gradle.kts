@@ -1,5 +1,9 @@
-architectury {
-    forge()
+loom {
+    mods {
+        create("testmod") {
+            sourceSet(sourceSets.test.get())
+        }
+    }
 }
 
 val common: Configuration by configurations.creating {

@@ -1,4 +1,3 @@
-import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 import dev.architectury.plugin.ArchitectPluginExtension
 import groovy.json.StringEscapeUtils
 import net.fabricmc.loom.api.LoomGradleExtensionAPI
@@ -10,8 +9,6 @@ plugins {
     id("com.teamresourceful.resourcefulgradle") version "0.0.+"
     id("dev.architectury.loom") version "1.6-SNAPSHOT" apply false
     id("architectury-plugin") version "3.4-SNAPSHOT"
-    id("com.github.johnrengelman.shadow") version "7.1.2" apply false
-    id("jvm-class-extensions") version "1.3"
 }
 
 architectury {
@@ -35,6 +32,16 @@ subprojects {
 
     configure<LoomGradleExtensionAPI> {
         silentMojangMappingsLicense()
+        runs {
+            named("client") {
+                name("Test Client")
+                source(sourceSets.test.get())
+            }
+            named("server") {
+                name("Test Server")
+                source(sourceSets.test.get())
+            }
+        }
     }
 
     repositories {
@@ -52,7 +59,6 @@ subprojects {
     }
 
     dependencies {
-        val reiVersion: String by project
 
         "minecraft"("::$minecraftVersion")
 
@@ -89,28 +95,23 @@ subprojects {
     }
 
     if (!isCommon) {
-        apply(plugin = "com.github.johnrengelman.shadow")
         configure<ArchitectPluginExtension> {
             platformSetupLoomIde()
         }
 
-        val shadowCommon by configurations.creating {
-            isCanBeConsumed = false
-            isCanBeResolved = true
-        }
+        sourceSets {
+            val commonSourceSets = project(":common").sourceSets
+            val commonTest = commonSourceSets.getByName("test")
+            val commonMain = commonSourceSets.getByName("main")
 
-        tasks {
-            "shadowJar"(ShadowJar::class) {
-                archiveClassifier.set("dev-shadow")
-                configurations = listOf(shadowCommon)
-
-                exclude(".cache/**") // Remove datagen cache from jar.
-                exclude("**/botarium/datagen/**") // Remove data gen code from jar.
+            getByName("test") {
+                java.srcDirs(commonTest.java.srcDirs)
+                resources.srcDirs(commonTest.resources.srcDirs)
             }
 
-            "remapJar"(RemapJarTask::class) {
-                dependsOn("shadowJar")
-                inputFile.set(named<ShadowJar>("shadowJar").flatMap { it.archiveFile })
+            getByName("main") {
+                java.srcDirs(commonMain.java.srcDirs)
+                resources.srcDirs(commonMain.resources.srcDirs)
             }
         }
     }
@@ -133,7 +134,7 @@ subprojects {
 
                     licenses {
                         license {
-                            name.set("ARR")
+                            name.set("MIT")
                         }
                     }
                 }
@@ -162,11 +163,11 @@ resourcefulGradle {
 
             source.set(file("templates/embed.json.template"))
             injectedValues.set(mapOf(
-                    "minecraft" to minecraftVersion,
-                    "version" to version,
-                    "changelog" to StringEscapeUtils.escapeJava(changelog),
-                    "fabric_link" to fabricLink,
-                    "forge_link" to forgeLink,
+                "minecraft" to minecraftVersion,
+                "version" to version,
+                "changelog" to StringEscapeUtils.escapeJava(changelog),
+                "fabric_link" to fabricLink,
+                "forge_link" to forgeLink,
             ))
         }
     }
