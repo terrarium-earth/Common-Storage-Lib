@@ -4,6 +4,7 @@ import net.msrandom.multiplatform.annotations.Expect;
 
 @Expect
 public class FluidConstants {
+
     /**
      * Converts the given amount of millibuckets to the platform-specific amount of fluid.
      *

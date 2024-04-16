@@ -9,12 +9,8 @@ val common: Configuration by configurations.creating {
 }
 
 dependencies {
-    common(project(":common", configuration = "namedElements")) {
-        isTransitive = false
-    }
-    shadowCommon(project(path = ":common", configuration = "transformProductionFabric")) {
-        isTransitive = false
-    }
+    // common(project(":common", configuration = "namedElements")) { isTransitive = false }
+    // shadowCommon(project(path = ":common", configuration = "transformProductionFabric")) { isTransitive = false }
 
     val minecraftVersion: String by project
     val fabricLoaderVersion: String by project

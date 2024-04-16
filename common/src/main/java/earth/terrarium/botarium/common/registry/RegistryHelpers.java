@@ -1,7 +1,6 @@
 package earth.terrarium.botarium.common.registry;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
@@ -9,9 +8,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.msrandom.extensions.annotations.ImplementedByExtension;
 import net.msrandom.multiplatform.annotations.Expect;
-import org.apache.commons.lang3.NotImplementedException;
 import org.jetbrains.annotations.NotNull;
 
 public class RegistryHelpers {
@@ -22,18 +19,14 @@ public class RegistryHelpers {
      * @return The created block entity type instance for the given factory.
      */
     @Expect
-    public static <E extends BlockEntity> BlockEntityType<E> createBlockEntityType(BlockEntityFactory<E> factory, Block... blocks) {
-        throw new AssertionError();
-    }
+    public static <E extends BlockEntity> BlockEntityType<E> createBlockEntityType(BlockEntityFactory<E> factory, Block... blocks);
 
     /**
      * @param factory The factory to create the menu.
      * @return The created menu type instance for the given factory.
      */
     @Expect
-    public static <T extends AbstractContainerMenu> MenuType<T> createMenuType(MenuFactory<T> factory) {
-        throw new NotImplementedException();
-    }
+    public static <T extends AbstractContainerMenu, D> MenuType<T> createMenuType(MenuFactory<T, D> factory);
 
     @FunctionalInterface
     public interface BlockEntityFactory<T extends BlockEntity> {
@@ -51,7 +44,7 @@ public class RegistryHelpers {
 
         /**
          * @param syncId    The internal id for the menu.
-         * @param inventory The inventory of the player.
+         * @param inventory The container of the player.
          * @param extraData The extra data for the menu.
          * @return The created menu instance.
          */

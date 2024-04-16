@@ -1,6 +1,6 @@
 package earth.terrarium.botarium.common.fluid.base;
 
-import earth.terrarium.botarium.common.generic.utils.StackBasedContainer;
+import earth.terrarium.botarium.common.storage.base.SlottedContainer;
 
-public interface FluidContainer extends StackBasedContainer<FluidHolder> {
+public interface FluidContainer extends SlottedContainer<FluidHolder> {
 }

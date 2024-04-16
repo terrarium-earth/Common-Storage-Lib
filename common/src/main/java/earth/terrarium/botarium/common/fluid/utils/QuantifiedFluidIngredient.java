@@ -12,7 +12,7 @@ public class QuantifiedFluidIngredient extends FluidIngredient {
     public static final Codec<QuantifiedFluidIngredient> CODEC = RecordCodecBuilder.create(instance -> instance.group(
             FluidIngredient.CODEC.fieldOf("ingredient").forGetter(QuantifiedFluidIngredient::getIngredient),
             Codec.LONG.fieldOf("millibuckets").orElse(1000L).forGetter(o -> FluidConstants.toMillibuckets(o.getFluidAmount()))
-    ).apply(instance, (fluidIngredient, aLong) -> new QuantifiedFluidIngredient(fluidIngredient, FluidConstants.fromMillibuckets(aLong))));
+    ).apply(instance, (fluidIngredient, aLong) -> new QuantifiedFluidIngredient(fluidIngredient, FluidConstants.toPlatformAmount(aLong))));
 
     private final long fluidAmount;
     private final FluidIngredient ingredient;
@@ -33,7 +33,7 @@ public class QuantifiedFluidIngredient extends FluidIngredient {
 
     @Override
     public boolean test(FluidHolder fluidHolder) {
-        return ingredient.test(fluidHolder) && fluidHolder.getFluidAmount() >= this.fluidAmount;
+        return ingredient.test(fluidHolder) && fluidHolder.getAmount() >= this.fluidAmount;
     }
 
     @Override
