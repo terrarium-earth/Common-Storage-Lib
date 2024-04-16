@@ -56,6 +56,7 @@ subprojects {
                 includeModule("net.neoforged", "testframework")
             }
         }
+        mavenLocal()
     }
 
     dependencies {
@@ -72,7 +73,7 @@ subprojects {
         })
 
         compileOnly(group = "net.msrandom", name = "multiplatform-annotations", version = "1.0.0")
-        annotationProcessor(group = "net.msrandom", name = "multiplatform-processor", version = "1.0.0")
+        annotationProcessor(group = "net.msrandom", name = "multiplatform-processor", version = "1.0.1")
     }
 
     java {
