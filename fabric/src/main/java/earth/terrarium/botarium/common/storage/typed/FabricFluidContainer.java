@@ -13,7 +13,7 @@ public class FabricFluidContainer extends FabricWrappedContainer<Fluid, FluidUni
     }
 
     @Override
-    public FluidUnit fromVariant(FluidVariant variant) {
+    public FluidUnit toUnit(FluidVariant variant) {
         return FluidUnit.of(variant.getFluid(), variant.getComponents());
     }
 

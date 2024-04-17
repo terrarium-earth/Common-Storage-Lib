@@ -1,37 +1,38 @@
 package earth.terrarium.botarium.common.storage.fabric;
 
-import earth.terrarium.botarium.common.storage.base.SingleSlotContainer;
+import earth.terrarium.botarium.common.storage.base.ContainerSlot;
 import earth.terrarium.botarium.common.transfer.base.TransferUnit;
-import earth.terrarium.botarium.common.transfer.base.UnitHolder;
-import net.fabricmc.fabric.api.transfer.v1.storage.StorageView;
 import net.fabricmc.fabric.api.transfer.v1.storage.TransferVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.base.SingleSlotStorage;
 import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
 import net.fabricmc.fabric.api.transfer.v1.transaction.base.SnapshotParticipant;
 import net.minecraft.core.component.DataComponentPatch;
 
-public class FabricWrappedSlot<T, U extends TransferUnit<T>, V extends TransferVariant<T>, H extends UnitHolder<U>, C extends SingleSlotContainer<U, H>> extends SnapshotParticipant<DataComponentPatch> implements SingleSlotStorage<V> {
-    private final C container;
-    private final FabricWrappedContainer<T, U, V, ?, ?> wrappedContainer;
+import java.util.function.Function;
 
-    public FabricWrappedSlot(C container, FabricWrappedContainer<T, U, V, ?, ?> wrappedContainer) {
+public class FabricWrappedSlot<T, U extends TransferUnit<T>, V extends TransferVariant<T>, C extends ContainerSlot<U>> extends SnapshotParticipant<DataComponentPatch> implements SingleSlotStorage<V> {
+    private final C container;
+    private final Function<V, U> toUnit;
+    private final Function<U, V> toVariant;
+
+    public FabricWrappedSlot(C container, Function<V, U> toUnit, Function<U, V> toVariant) {
         this.container = container;
-        this.wrappedContainer = wrappedContainer;
+        this.toVariant = toVariant;
+        this.toUnit = toUnit;
     }
 
     @Override
     public long insert(V resource, long maxAmount, TransactionContext transaction) {
-        U holder = wrappedContainer.fromVariant(resource);
+        U holder = toUnit.apply(resource);
         updateSnapshots(transaction);
         return container.insert(holder, maxAmount, false);
     }
 
     @Override
     public long extract(V resource, long maxAmount, TransactionContext transaction) {
-        U holder = wrappedContainer.fromVariant(resource);
+        U holder = toUnit.apply(resource);
         updateSnapshots(transaction);
-        H extracted = container.extract(u -> u.matches(holder), maxAmount, false);
-        return extracted.getHeldAmount();
+        return container.extract(holder, maxAmount, false);
     }
 
     @Override
@@ -41,12 +42,12 @@ public class FabricWrappedSlot<T, U extends TransferUnit<T>, V extends TransferV
 
     @Override
     public V getResource() {
-        return wrappedContainer.toVariant(container.getUnit());
+        return toVariant.apply(container.getUnit());
     }
 
     @Override
     public long getAmount() {
-        return container.getHeldAmount();
+        return container.getAmount();
     }
 
     @Override

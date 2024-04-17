@@ -4,8 +4,6 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import earth.terrarium.botarium.common.data.utils.ComponentExtras;
 import earth.terrarium.botarium.common.fluid.FluidConstants;
-import earth.terrarium.botarium.common.transfer.impl.FluidUnit;
-import earth.terrarium.botarium.common.transfer.base.UnitHolder;
 import net.minecraft.core.component.*;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -16,7 +14,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 
-public final class FluidHolder implements DataComponentHolder, ComponentExtras, UnitHolder<FluidUnit> {
+public final class FluidHolder implements DataComponentHolder, ComponentExtras {
     public static final FluidHolder EMPTY = new FluidHolder(null, 0, new PatchedDataComponentMap(DataComponentMap.EMPTY));
 
     public static final Codec<FluidHolder> MILLIBUCKET_CODEC = RecordCodecBuilder.create(instance -> instance.group(
@@ -27,7 +25,7 @@ public final class FluidHolder implements DataComponentHolder, ComponentExtras, 
 
     public static final Codec<FluidHolder> CODEC = RecordCodecBuilder.create(instance -> instance.group(
             BuiltInRegistries.FLUID.byNameCodec().fieldOf("fluid").forGetter(FluidHolder::getFluid),
-            Codec.LONG.fieldOf("amount").forGetter(FluidHolder::getHeldAmount),
+            Codec.LONG.fieldOf("amount").forGetter(FluidHolder::getAmount),
             DataComponentPatch.CODEC.optionalFieldOf("components", DataComponentPatch.EMPTY).forGetter(FluidHolder::getPatch)
     ).apply(instance, FluidHolder::of));
 
@@ -76,12 +74,7 @@ public final class FluidHolder implements DataComponentHolder, ComponentExtras, 
         return isEmpty() ? Fluids.EMPTY : fluid;
     }
 
-    @Override
-    public FluidUnit getUnit() {
-        return FluidUnit.of(this);
-    }
-
-    public long getHeldAmount() {
+    public long getAmount() {
         return isEmpty() ? 0 : amount;
     }
 
@@ -113,7 +106,7 @@ public final class FluidHolder implements DataComponentHolder, ComponentExtras, 
         if (first == second) {
             return true;
         } else {
-            return first.getHeldAmount() == second.getHeldAmount() && isSameFluidSameComponents(first, second);
+            return first.getAmount() == second.getAmount() && isSameFluidSameComponents(first, second);
         }
     }
 

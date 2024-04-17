@@ -1,8 +1,7 @@
 package earth.terrarium.botarium.common.storage.fabric;
 
-import earth.terrarium.botarium.common.storage.base.BasicContainer;
+import earth.terrarium.botarium.common.storage.base.UnitContainer;
 import earth.terrarium.botarium.common.transfer.base.TransferUnit;
-import earth.terrarium.botarium.common.transfer.base.UnitHolder;
 import net.fabricmc.fabric.api.transfer.v1.storage.SlottedStorage;
 import net.fabricmc.fabric.api.transfer.v1.storage.StorageView;
 import net.fabricmc.fabric.api.transfer.v1.storage.TransferVariant;
@@ -14,30 +13,29 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Iterator;
 
-public abstract class FabricWrappedContainer<T, U extends TransferUnit<T>, V extends TransferVariant<T>, H extends UnitHolder<U>, C extends BasicContainer<U, H>> extends SnapshotParticipant<DataComponentPatch> implements SlottedStorage<V> {
+public abstract class FabricWrappedContainer<T, U extends TransferUnit<T>, V extends TransferVariant<T>, C extends UnitContainer<U>> extends SnapshotParticipant<DataComponentPatch> implements SlottedStorage<V> {
     private final C container;
 
     public FabricWrappedContainer(C container) {
         this.container = container;
     }
 
-    public abstract U fromVariant(V variant);
+    public abstract U toUnit(V variant);
 
     public abstract V toVariant(U unit);
 
     @Override
     public long insert(V resource, long maxAmount, TransactionContext transaction) {
-        U holder = fromVariant(resource);
+        U holder = toUnit(resource);
         updateSnapshots(transaction);
         return container.insert(holder, maxAmount, false);
     }
 
     @Override
     public long extract(V resource, long maxAmount, TransactionContext transaction) {
-        U holder = fromVariant(resource);
+        U holder = toUnit(resource);
         updateSnapshots(transaction);
-        H extracted = container.extract(u -> u.matches(holder), maxAmount, false);
-        return extracted.getHeldAmount();
+        return container.extract(holder, maxAmount, false);
     }
 
     @Override
@@ -79,7 +77,7 @@ public abstract class FabricWrappedContainer<T, U extends TransferUnit<T>, V ext
 
     @Override
     public SingleSlotStorage<V> getSlot(int slot) {
-        return new FabricWrappedSlot<>(container.getSlot(slot), this);
+        return new FabricWrappedSlot<>(container.getSlot(slot), this::toUnit, this::toVariant);
     }
 
     public C getContainer() {

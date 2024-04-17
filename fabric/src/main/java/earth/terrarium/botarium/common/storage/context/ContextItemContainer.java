@@ -1,8 +1,7 @@
 package earth.terrarium.botarium.common.storage.context;
 
 import earth.terrarium.botarium.common.item.base.ItemContainer;
-import earth.terrarium.botarium.common.storage.base.SingleSlotContainer;
-import earth.terrarium.botarium.common.transfer.impl.ItemHolder;
+import earth.terrarium.botarium.common.storage.base.ContainerSlot;
 import earth.terrarium.botarium.common.transfer.impl.ItemUnit;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.base.SingleSlotStorage;
@@ -11,7 +10,6 @@ import net.minecraft.core.component.DataComponentPatch;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
-import java.util.function.Predicate;
 
 public record ContextItemContainer(List<SingleSlotStorage<ItemVariant>> storage) implements ItemContainer {
     public static ItemUnit of(ItemVariant variant) {
@@ -28,8 +26,8 @@ public record ContextItemContainer(List<SingleSlotStorage<ItemVariant>> storage)
     }
 
     @Override
-    public @NotNull SingleSlotContainer<ItemUnit, ItemHolder> getSlot(int slot) {
-        return new SingleSlotContainerImpl(storage.get(slot));
+    public @NotNull ContainerSlot<ItemUnit> getSlot(int slot) {
+        return new ContainerSlotImpl(storage.get(slot));
     }
 
     @Override
@@ -48,27 +46,22 @@ public record ContextItemContainer(List<SingleSlotStorage<ItemVariant>> storage)
     }
 
     @Override
-    public @NotNull ItemHolder extract(Predicate<ItemUnit> predicate, long amount, boolean simulate) {
+    public long extract(ItemUnit predicate, long amount, boolean simulate) {
         long leftover = amount;
-        ItemVariant variant = null;
+        ItemVariant variant = of(predicate);
         try (var transaction = Transaction.openOuter()) {
             for (SingleSlotStorage<ItemVariant> view : storage) {
-                if (variant == null && predicate.test(of(view.getResource()))) {
-                    variant = view.getResource();
-                }
-                if (variant != null) {
-                    long extractedAmount = view.extract(variant, leftover, transaction);
-                    leftover -= extractedAmount;
-                    if (leftover <= 0) {
-                        break;
-                    }
+                long extractedAmount = view.extract(variant, leftover, transaction);
+                leftover -= extractedAmount;
+                if (leftover <= 0) {
+                    break;
                 }
             }
             if (!simulate) {
                 transaction.commit();
             }
         }
-        return variant == null ? ItemHolder.EMPTY : ItemHolder.of(of(variant), (int) (amount - leftover));
+        return amount - leftover;
     }
 
     @Override
@@ -84,7 +77,7 @@ public record ContextItemContainer(List<SingleSlotStorage<ItemVariant>> storage)
     public void update() {
     }
 
-    public record SingleSlotContainerImpl(SingleSlotStorage<ItemVariant> storage) implements SingleSlotContainer<ItemUnit, ItemHolder> {
+    public record ContainerSlotImpl(SingleSlotStorage<ItemVariant> storage) implements ContainerSlot<ItemUnit> {
 
         @Override
         public long getLimit() {
@@ -97,9 +90,9 @@ public record ContextItemContainer(List<SingleSlotStorage<ItemVariant>> storage)
         }
 
         @Override
-        public long insert(ItemUnit value, long amount, boolean simulate) {
+        public long insert(ItemUnit unit, long amount, boolean simulate) {
             try (var transaction = Transaction.openOuter()) {
-                long inserted = storage.insert(ItemVariant.of(value.unit(), value.components()), amount, transaction);
+                long inserted = storage.insert(of(unit), amount, transaction);
                 if (!simulate) {
                     transaction.commit();
                 }
@@ -108,18 +101,14 @@ public record ContextItemContainer(List<SingleSlotStorage<ItemVariant>> storage)
         }
 
         @Override
-        public ItemHolder extract(Predicate<ItemUnit> predicate, long amount, boolean simulate) {
-            ItemUnit unit = of(storage.getResource());
-            if (predicate.test(unit)) {
-                try (var transaction = Transaction.openOuter()) {
-                    long extracted = storage.extract(ItemVariant.of(unit.unit(), unit.components()), amount, transaction);
-                    if (!simulate) {
-                        transaction.commit();
-                    }
-                    return ItemHolder.of(unit, (int) extracted);
+        public long extract(ItemUnit unit, long amount, boolean simulate) {
+            try (var transaction = Transaction.openOuter()) {
+                long extracted = storage.extract(of(unit), amount, transaction);
+                if (!simulate) {
+                    transaction.commit();
                 }
+                return extracted;
             }
-            return ItemHolder.EMPTY;
         }
 
         @Override
@@ -139,7 +128,7 @@ public record ContextItemContainer(List<SingleSlotStorage<ItemVariant>> storage)
         }
 
         @Override
-        public long getHeldAmount() {
+        public long getAmount() {
             return storage.getAmount();
         }
     }

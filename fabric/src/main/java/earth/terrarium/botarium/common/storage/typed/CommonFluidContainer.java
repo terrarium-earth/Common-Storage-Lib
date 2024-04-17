@@ -15,7 +15,7 @@ public class CommonFluidContainer extends CommonWrappedContainer<Fluid, FluidUni
     }
 
     @Override
-    public FluidUnit fromVariant(FluidVariant variant) {
+    public FluidUnit toUnit(FluidVariant variant) {
         return FluidUnit.of(variant.getFluid(), variant.getComponents());
     }
 

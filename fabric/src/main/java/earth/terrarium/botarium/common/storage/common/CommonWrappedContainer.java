@@ -1,31 +1,25 @@
 package earth.terrarium.botarium.common.storage.common;
 
-import earth.terrarium.botarium.common.storage.base.BasicContainer;
-import earth.terrarium.botarium.common.storage.base.SingleSlotContainer;
+import earth.terrarium.botarium.common.storage.base.UnitContainer;
+import earth.terrarium.botarium.common.storage.base.ContainerSlot;
 import earth.terrarium.botarium.common.transfer.base.TransferUnit;
-import earth.terrarium.botarium.common.transfer.base.UnitHolder;
 import net.fabricmc.fabric.api.transfer.v1.storage.SlottedStorage;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.fabricmc.fabric.api.transfer.v1.storage.TransferVariant;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.core.component.DataComponentPatch;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
-import java.util.function.Predicate;
-
-public abstract class CommonWrappedContainer<T, U extends TransferUnit<T>, V extends TransferVariant<T>, H extends UnitHolder<U>> implements BasicContainer<U, H> {
+public abstract class CommonWrappedContainer<T, U extends TransferUnit<T>, V extends TransferVariant<T>> implements UnitContainer<U> {
     private final Storage<V> storage;
 
     public CommonWrappedContainer(Storage<V> storage) {
         this.storage = storage;
     }
 
-    public abstract U fromVariant(V variant);
+    public abstract U toUnit(V variant);
 
     public abstract V toVariant(U unit);
-
-    public abstract H createHolder(@Nullable U unit, long amount);
 
     @Override
     public int getSlotCount() {
@@ -40,14 +34,14 @@ public abstract class CommonWrappedContainer<T, U extends TransferUnit<T>, V ext
     }
 
     @Override
-    public @NotNull SingleSlotContainer<U, H> getSlot(int slot) {
+    public @NotNull ContainerSlot<U> getSlot(int slot) {
         if (storage instanceof SlottedStorage<V> slotted) {
-            return new CommonWrappedSlot<>(this, slotted.getSlot(slot));
+            return new CommonWrappedSlotSlot<>(slotted.getSlot(slot), this::toVariant, this::toUnit);
         }
         int i = 0;
         for (var view : storage) {
             if (i == slot) {
-                return new CommonWrappedSlot<>(this, view);
+                return new CommonWrappedSlotSlot<>(view, this::toVariant, this::toUnit);
             }
             i++;
         }
@@ -66,18 +60,13 @@ public abstract class CommonWrappedContainer<T, U extends TransferUnit<T>, V ext
     }
 
     @Override
-    public @NotNull H extract(Predicate<U> predicate, long amount, boolean simulate) {
+    public long extract(U unit, long amount, boolean simulate) {
         try (var transaction = Transaction.openOuter()) {
-            U unit = null;
-            for (var view : storage.nonEmptyViews()) {
-                if (!predicate.test(fromVariant(view.getResource()))) continue;
-                long extracted = view.extract(view.getResource(), amount, transaction);
-                if (extracted > 0) {
-                    unit = fromVariant(view.getResource());
-                    break;
-                }
+            long extracted = storage.extract(toVariant(unit), amount, transaction);
+            if (!simulate) {
+                transaction.commit();
             }
-            return createHolder(unit, amount);
+            return extracted;
         }
     }
 

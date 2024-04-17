@@ -72,6 +72,10 @@ subprojects {
             parchment(create(group = "org.parchmentmc.data", name = "parchment-1.20.4", version = parchmentVersion))
         })
 
+        if (isCommon) {
+            implementation("io.github.llamalad7:mixinextras-common:0.3.2")
+        }
+
         annotationProcessor(group = "net.msrandom", name = "multiplatform-processor", version = "1.0.1")
         compileOnly(group = "net.msrandom", name = "multiplatform-annotations", version = "1.0.0")
     }

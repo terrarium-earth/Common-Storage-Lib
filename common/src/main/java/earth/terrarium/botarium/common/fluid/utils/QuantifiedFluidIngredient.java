@@ -33,7 +33,7 @@ public class QuantifiedFluidIngredient extends FluidIngredient {
 
     @Override
     public boolean test(FluidHolder fluidHolder) {
-        return ingredient.test(fluidHolder) && fluidHolder.getHeldAmount() >= this.fluidAmount;
+        return ingredient.test(fluidHolder) && fluidHolder.getAmount() >= this.fluidAmount;
     }
 
     @Override

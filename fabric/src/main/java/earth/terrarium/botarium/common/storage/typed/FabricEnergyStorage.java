@@ -1,15 +1,15 @@
 package earth.terrarium.botarium.common.storage.typed;
 
-import earth.terrarium.botarium.common.storage.base.ValueContainer;
+import earth.terrarium.botarium.common.storage.base.LongContainer;
 import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
 import net.fabricmc.fabric.api.transfer.v1.transaction.base.SnapshotParticipant;
 import net.minecraft.core.component.DataComponentPatch;
 import team.reborn.energy.api.EnergyStorage;
 
 public class FabricEnergyStorage extends SnapshotParticipant<DataComponentPatch> implements EnergyStorage {
-    private final ValueContainer container;
+    private final LongContainer container;
 
-    public FabricEnergyStorage(ValueContainer container) {
+    public FabricEnergyStorage(LongContainer container) {
         this.container = container;
     }
 

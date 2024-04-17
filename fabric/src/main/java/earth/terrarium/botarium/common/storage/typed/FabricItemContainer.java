@@ -13,7 +13,7 @@ public class FabricItemContainer<S> extends FabricWrappedContainer<Item, ItemUni
     }
 
     @Override
-    public ItemUnit fromVariant(ItemVariant variant) {
+    public ItemUnit toUnit(ItemVariant variant) {
         return ItemUnit.of(variant.getItem(), variant.getComponents());
     }
 
