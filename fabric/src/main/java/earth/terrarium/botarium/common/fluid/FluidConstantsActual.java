@@ -3,7 +3,6 @@ package earth.terrarium.botarium.common.fluid;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
 import net.msrandom.multiplatform.annotations.Actual;
 
-@Actual
 public class FluidConstantsActual {
     @Actual
     public static long toPlatformAmount(long millibuckets) {

@@ -1,8 +1,8 @@
 package earth.terrarium.botarium.common.storage.base;
 
-import net.minecraft.world.Clearable;
+import earth.terrarium.botarium.common.storage.util.UpdateManager;
 
-public interface NumericContainer extends Clearable {
+public interface ValueContainer extends UpdateManager {
 
     long getStoredAmount();
 
@@ -15,8 +15,4 @@ public interface NumericContainer extends Clearable {
     long insert(long amount, boolean simulate);
 
     long extract(long amount, boolean simulate);
-
-    long maxInsert();
-
-    long maxExtract();
 }

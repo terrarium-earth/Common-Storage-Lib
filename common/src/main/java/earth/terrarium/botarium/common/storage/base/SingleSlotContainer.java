@@ -1,39 +1,18 @@
 package earth.terrarium.botarium.common.storage.base;
 
-import earth.terrarium.botarium.common.storage.impl.ContainerSlotWrapper;
+import earth.terrarium.botarium.common.storage.util.UpdateManager;
+import earth.terrarium.botarium.common.transfer.base.TransferUnit;
+import earth.terrarium.botarium.common.transfer.base.UnitHolder;
+import net.minecraft.util.Tuple;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import java.util.function.Predicate;
 
-public interface SingleSlotContainer<T> extends BasicContainer<T> {
-    T getValue();
-
-    int getLimit();
+public interface SingleSlotContainer<T extends TransferUnit<?>, U extends UnitHolder<T>> extends UpdateManager, UnitHolder<T> {
+    long getLimit();
 
     boolean isValueValid(T value);
 
-    static <T> Iterator<SingleSlotContainer<T>> iterator(SlottedContainer<T> container) {
-        return new Iterator<>() {
-            private int slot = 0;
+    long insert(T value, long amount, boolean simulate);
 
-            @Override
-            public boolean hasNext() {
-                return slot < container.getSlotCount();
-            }
-
-            @Override
-            public SingleSlotContainer<T> next() {
-                return new ContainerSlotWrapper<>(container, slot++);
-            }
-        };
-    }
-
-    static <T> List<SingleSlotContainer<T>> list(SlottedContainer<T> container) {
-        ArrayList<SingleSlotContainer<T>> list = new ArrayList<>();
-        for (int slot = 0; slot < container.getSlotCount(); slot++) {
-            list.add(new ContainerSlotWrapper<>(container, slot));
-        }
-        return list;
-    }
+    U extract(Predicate<T> predicate, long amount, boolean simulate);
 }

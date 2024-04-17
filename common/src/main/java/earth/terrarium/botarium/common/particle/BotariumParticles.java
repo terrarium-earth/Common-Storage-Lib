@@ -6,7 +6,8 @@ import net.msrandom.multiplatform.annotations.Expect;
 
 import java.util.function.Supplier;
 
+@Expect
 public class BotariumParticles {
-    @Expect
+
     public static final Supplier<ParticleType<FluidParticleOptions>> FLUID_PARTICLE;
 }

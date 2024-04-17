@@ -3,7 +3,6 @@ package earth.terrarium.botarium.common.fluid;
 import net.msrandom.multiplatform.annotations.Actual;
 import net.neoforged.neoforge.fluids.FluidType;
 
-@Actual
 public class FluidConstantsActual {
     @Actual
     public static long toPlatformAmount(long millibuckets) {

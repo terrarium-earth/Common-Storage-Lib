@@ -9,6 +9,10 @@ tasks.jar {
     }
 }
 
+tasks.compileJava {
+
+}
+
 dependencies {
     modCompileOnly(group = "tech.thatgravyboat", name = "commonats", version = "2.0")
 }

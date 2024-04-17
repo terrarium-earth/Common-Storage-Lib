@@ -1,9 +1,17 @@
 package earth.terrarium.botarium.common.storage.util;
 
-public interface UpdateManager<T> {
-    T createSnapshot();
+import net.minecraft.core.component.DataComponentPatch;
 
-    void readSnapshot(T snapshot);
+public interface UpdateManager {
+    DataComponentPatch createSnapshot();
+
+    void readSnapshot(DataComponentPatch snapshot);
 
     void update();
+
+    static void update(UpdateManager... managers) {
+        for (UpdateManager manager : managers) {
+            manager.update();
+        }
+    }
 }

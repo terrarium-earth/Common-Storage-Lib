@@ -8,12 +8,10 @@ val common: Configuration by configurations.creating {
 }
 
 dependencies {
-    /*
     common(project(":common", configuration = "namedElements")) {
         isTransitive = false
     }
     testImplementation(project(":common", configuration = "namedElements"))
-     */
 
     val minecraftVersion: String by project
     val fabricLoaderVersion: String by project
@@ -24,4 +22,8 @@ dependencies {
     modApi(group = "net.fabricmc.fabric-api", name = "fabric-api", version = fabricApiVersion)
 
     modApi(group = "com.terraformersmc", name = "modmenu", version = modMenuVersion)
+
+    "include"(modApi(group = "teamreborn", name = "energy", version = "4.0.0")) {
+        exclude(group = "net.fabricmc", module = "fabric-api")
+    }
 }

@@ -1,8 +1,8 @@
 package earth.terrarium.botarium.common.item.base;
 
-import earth.terrarium.botarium.common.storage.base.SlottedContainer;
-import earth.terrarium.botarium.common.storage.util.UpdateManager;
-import net.minecraft.world.item.ItemStack;
+import earth.terrarium.botarium.common.storage.base.BasicContainer;
+import earth.terrarium.botarium.common.transfer.impl.ItemHolder;
+import earth.terrarium.botarium.common.transfer.impl.ItemUnit;
 
-public interface ItemContainer<T> extends SlottedContainer<ItemStack>, UpdateManager<T> {
+public interface ItemContainer extends BasicContainer<ItemUnit, ItemHolder> {
 }
