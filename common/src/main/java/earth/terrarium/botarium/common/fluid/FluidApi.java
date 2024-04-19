@@ -14,5 +14,5 @@ import org.jetbrains.annotations.Nullable;
 public class FluidApi {
     public static final BlockLookup<UnitContainer<FluidUnit>, @Nullable Direction> BLOCK;
     public static final ItemLookup<UnitContainer<FluidUnit>, ItemContext> ITEM;
-    public static final EntityLookup<UnitContainer<FluidUnit>, Void> ENTITY;
+    public static final EntityLookup<UnitContainer<FluidUnit>, Direction> ENTITY;
 }

@@ -15,6 +15,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 import team.reborn.energy.api.EnergyStorage;
 
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 public class EnergyBlockLookup implements BlockLookup<LongContainer, @Nullable Direction> {
@@ -32,28 +33,31 @@ public class EnergyBlockLookup implements BlockLookup<LongContainer, @Nullable D
     }
 
     @Override
-    public void registerBlocks(BlockGetter<LongContainer, @Nullable Direction> getter, Supplier<Block>... containers) {
-        for (Supplier<Block> block : containers) {
+    public void onRegister(Consumer<BlockRegistrar<LongContainer, @Nullable Direction>> registrar) {
+        registrar.accept(new LookupRegistrar());
+    }
+
+    public static class LookupRegistrar implements BlockRegistrar<LongContainer, @Nullable Direction> {
+        @Override
+        public void registerBlocks(BlockGetter<LongContainer, @Nullable Direction> getter, Block... blocks) {
             EnergyStorage.SIDED.registerForBlocks((world, pos, state, blockEntity, context) -> {
                 LongContainer container = getter.getContainer(world, pos, state, blockEntity, context);
                 if (container instanceof UpdateManager<?> updateManager) {
                     return new FabricLongStorage<>(container, updateManager);
                 }
                 return null;
-            }, block.get());
+            }, blocks);
         }
-    }
 
-    @Override
-    public void registerBlockEntities(BlockGetter<LongContainer, @Nullable Direction> getter, Supplier<BlockEntityType<?>>... containers) {
-        for (Supplier<BlockEntityType<?>> blockEntity : containers) {
+        @Override
+        public void registerBlockEntities(BlockEntityGetter<LongContainer, @Nullable Direction> getter, BlockEntityType<?>... containers) {
             EnergyStorage.SIDED.registerForBlockEntities((entity, context) -> {
-                LongContainer container = getter.getContainer(entity.getLevel(), entity.getBlockPos(), entity.getBlockState(), entity, context);
+                LongContainer container = getter.getContainer(entity, context);
                 if (container instanceof UpdateManager<?> updateManager) {
                     return new FabricLongStorage<>(container, updateManager);
                 }
                 return null;
-            }, blockEntity.get());
+            }, containers);
         }
     }
 }

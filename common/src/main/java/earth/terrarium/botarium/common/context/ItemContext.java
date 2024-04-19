@@ -1,13 +1,19 @@
 package earth.terrarium.botarium.common.context;
 
+import earth.terrarium.botarium.common.lookup.ItemLookup;
 import earth.terrarium.botarium.common.storage.base.UnitContainer;
+import earth.terrarium.botarium.common.storage.base.UnitIO;
 import earth.terrarium.botarium.common.storage.base.UnitSlot;
 import earth.terrarium.botarium.common.storage.util.TransferUtil;
 import earth.terrarium.botarium.common.transfer.impl.ItemUnit;
 import net.minecraft.core.component.DataComponentPatch;
 import net.minecraft.world.item.ItemStack;
 
-public interface ItemContext {
+public interface ItemContext extends UnitIO<ItemUnit> {
+    default <T> T find(ItemLookup<T, ItemContext> lookup) {
+        return lookup.find(getUnit().toStack((int) getAmount()), this);
+    }
+
     default ItemUnit getUnit() {
         return mainSlot().getUnit();
     }

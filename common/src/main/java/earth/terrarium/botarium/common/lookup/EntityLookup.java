@@ -12,6 +12,7 @@ import java.util.function.Supplier;
 
 public interface EntityLookup<T, C> {
 
+    @Expect
     static <T, C> EntityLookup<T, C> create(ResourceLocation name, Class<T> typeClass, Class<C> contextClass) {
         return null;
     }

@@ -4,6 +4,7 @@ import earth.terrarium.botarium.common.context.ItemContext;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.msrandom.multiplatform.annotations.Expect;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Consumer;
@@ -11,6 +12,7 @@ import java.util.function.Supplier;
 
 public interface ItemLookup<T, C> {
 
+    @Expect
     static <T, C> ItemLookup<T, C> create(ResourceLocation name, Class<T> typeClass, Class<C> contextClass) {
         return null;
     }

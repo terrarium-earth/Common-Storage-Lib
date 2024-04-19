@@ -1,6 +1,7 @@
 package earth.terrarium.botarium.common.storage.util;
 
 import earth.terrarium.botarium.common.storage.base.UnitContainer;
+import earth.terrarium.botarium.common.storage.base.UnitIO;
 import earth.terrarium.botarium.common.storage.base.UnitSlot;
 import earth.terrarium.botarium.common.storage.base.LongContainer;
 import earth.terrarium.botarium.common.transfer.base.TransferUnit;
@@ -28,6 +29,10 @@ public class TransferUtil {
         return Optional.empty();
     }
 
+    public static <T extends TransferUnit<?>> Optional<T> findFirstUnit(UnitContainer<T> container) {
+        return findUnit(container, unit -> !unit.isBlank());
+    }
+
     public static Predicate<ItemUnit> byItemTag(TagKey<Item> tag) {
         return unit -> unit.unit().builtInRegistryHolder().is(tag);
     }
@@ -36,7 +41,7 @@ public class TransferUtil {
         return unit -> unit.unit().builtInRegistryHolder().is(tag);
     }
 
-    public static <T extends TransferUnit<?>> long move(UnitContainer<T> from, UnitContainer<T> to, T unit, long amount, boolean simulate) {
+    public static <T extends TransferUnit<?>> long move(UnitIO<T> from, UnitIO<T> to, T unit, long amount, boolean simulate) {
         long extracted = from.extract(unit, amount, true);
         long inserted = to.insert(unit, extracted, true);
         if (extracted > 0 && inserted > 0) {
@@ -54,7 +59,7 @@ public class TransferUtil {
         return 0;
     }
 
-    public static <T extends TransferUnit<?>> Tuple<T, Long> moveFiltered(UnitContainer<T> from, UnitContainer<T> to, Predicate<T> filter, long amount, boolean simulate) {
+    public static <T extends TransferUnit<?>> Tuple<T, Long> moveFiltered(UnitContainer<T> from, UnitIO<T> to, Predicate<T> filter, long amount, boolean simulate) {
         Optional<T> optional = findUnit(from, filter);
         if (optional.isPresent()) {
             T unit = optional.get();
@@ -64,7 +69,7 @@ public class TransferUtil {
         return new Tuple<>(null, 0L);
     }
 
-    public static <T extends TransferUnit<?>> Tuple<T, Long> moveAny(UnitContainer<T> from, UnitContainer<T> to, long amount, boolean simulate) {
+    public static <T extends TransferUnit<?>> Tuple<T, Long> moveAny(UnitContainer<T> from, UnitIO<T> to, long amount, boolean simulate) {
         for (int i = 0; i < from.getSlotCount(); i++) {
             T unit = from.getSlot(i).getUnit();
             if (unit.isBlank()) continue;
@@ -76,7 +81,7 @@ public class TransferUtil {
         return new Tuple<>(null, 0L);
     }
 
-    public static <T extends TransferUnit<?>> void moveAll(UnitContainer<T> from, UnitContainer<T> to, boolean simulate) {
+    public static <T extends TransferUnit<?>> void moveAll(UnitContainer<T> from, UnitIO<T> to, boolean simulate) {
         for (int i = 0; i < from.getSlotCount(); i++) {
             T unit = from.getSlot(i).getUnit();
             if (unit.isBlank()) continue;
@@ -148,5 +153,15 @@ public class TransferUtil {
             }
         }
         return extracted;
+    }
+
+    public static <T extends TransferUnit<?>> void equalize(UnitSlot<T> slot, long amount) {
+        T unit = slot.getUnit();
+        long current = slot.getAmount();
+        if (current < amount) {
+            slot.insert(unit, amount - current, false);
+        } else if (current > amount) {
+            slot.extract(unit, current - amount, false);
+        }
     }
 }

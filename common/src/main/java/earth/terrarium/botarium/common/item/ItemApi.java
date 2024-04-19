@@ -15,4 +15,5 @@ public class ItemApi {
     public static final BlockLookup<UnitContainer<ItemUnit>, @Nullable Direction> BLOCK;
     public static final ItemLookup<UnitContainer<ItemUnit>, ItemContext> ITEM;
     public static final EntityLookup<UnitContainer<ItemUnit>, Void> ENTITY;
+    public static final EntityLookup<UnitContainer<ItemUnit>, Direction> ENTITY_AUTOMATION;
 }

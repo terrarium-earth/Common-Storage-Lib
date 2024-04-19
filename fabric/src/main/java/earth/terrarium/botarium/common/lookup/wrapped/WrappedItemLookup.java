@@ -1,7 +1,7 @@
-package earth.terrarium.botarium.common.lookup;
+package earth.terrarium.botarium.common.lookup.wrapped;
 
 import earth.terrarium.botarium.common.context.ItemContext;
-import earth.terrarium.botarium.common.storage.ConversionUtils;
+import earth.terrarium.botarium.common.lookup.ItemLookup;
 import earth.terrarium.botarium.common.storage.base.UnitContainer;
 import earth.terrarium.botarium.common.storage.common.CommonWrappedContainer;
 import earth.terrarium.botarium.common.storage.context.CommonItemContext;
@@ -9,21 +9,16 @@ import earth.terrarium.botarium.common.storage.context.FabricItemContext;
 import earth.terrarium.botarium.common.storage.fabric.FabricWrappedContainer;
 import earth.terrarium.botarium.common.storage.util.UpdateManager;
 import earth.terrarium.botarium.common.transfer.base.TransferUnit;
-import earth.terrarium.botarium.common.transfer.impl.FluidUnit;
 import net.fabricmc.fabric.api.lookup.v1.item.ItemApiLookup;
 import net.fabricmc.fabric.api.transfer.v1.context.ContainerItemContext;
-import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
-import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.fabricmc.fabric.api.transfer.v1.storage.TransferVariant;
-import net.minecraft.core.Direction;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.material.Fluid;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.function.Consumer;
 import java.util.function.Function;
-import java.util.function.Supplier;
 
 public class WrappedItemLookup<T, U extends TransferUnit<T>, V extends TransferVariant<T>> implements ItemLookup<UnitContainer<U>, ItemContext> {
     private final ItemApiLookup<Storage<V>, ContainerItemContext> fabricLookup;
@@ -49,15 +44,17 @@ public class WrappedItemLookup<T, U extends TransferUnit<T>, V extends TransferV
     }
 
     @Override
-    public void registerItems(ItemGetter<UnitContainer<U>, ItemContext> getter, Supplier<Item>... items) {
-        for (Supplier<Item> item : items) {
-            fabricLookup.registerForItems((stack, context) -> {
-                UnitContainer<U> container = getter.getContainer(stack, new CommonItemContext(context));
-                if (container instanceof UpdateManager<?> updateManager) {
-                    return new FabricWrappedContainer<>(container, updateManager, toVariant, toUnit);
-                }
-                return null;
-            }, item.get());
-        }
+    public void onRegister(Consumer<ItemRegistrar<UnitContainer<U>, ItemContext>> registrar) {
+        registrar.accept(this::registerItems);
+    }
+
+    public void registerItems(ItemGetter<UnitContainer<U>, ItemContext> getter, Item... items) {
+        fabricLookup.registerForItems((stack, context) -> {
+            UnitContainer<U> container = getter.getContainer(stack, new CommonItemContext(context));
+            if (container instanceof UpdateManager<?> updateManager) {
+                return new FabricWrappedContainer<>(container, updateManager, toVariant, toUnit);
+            }
+            return null;
+        }, items);
     }
 }

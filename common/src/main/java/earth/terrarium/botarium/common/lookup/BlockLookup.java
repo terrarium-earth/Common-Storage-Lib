@@ -17,6 +17,7 @@ import java.util.function.Supplier;
 @SuppressWarnings("unchecked")
 public interface BlockLookup<T, C> {
 
+    @Expect
     static <T, C> BlockLookup<T, C> create(ResourceLocation name, Class<T> typeClass, Class<C> contextClass) {
         return null;
     }
@@ -48,9 +49,14 @@ public interface BlockLookup<T, C> {
         T getContainer(Level level, BlockPos pos, BlockState state, @Nullable BlockEntity entity, @Nullable C direction);
     }
 
+    interface BlockEntityGetter<T, C> {
+        @Nullable
+        T getContainer(BlockEntity entity, @Nullable C direction);
+    }
+
     interface BlockRegistrar<T, C> {
         void registerBlocks(BlockGetter<T, C> getter, Block... containers);
 
-        void registerBlockEntities(BlockGetter<T, C> getter, BlockEntityType<?>... containers);
+        void registerBlockEntities(BlockEntityGetter<T, C> getter, BlockEntityType<?>... containers);
     }
 }

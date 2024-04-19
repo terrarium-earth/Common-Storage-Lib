@@ -3,7 +3,7 @@ package earth.terrarium.botarium.common.storage.base;
 import earth.terrarium.botarium.common.storage.util.UpdateManager;
 import earth.terrarium.botarium.common.transfer.base.TransferUnit;
 
-public interface UnitSlot<T extends TransferUnit<?>> {
+public interface UnitSlot<T extends TransferUnit<?>> extends UnitIO<T> {
     long getLimit();
 
     boolean isValueValid(T unit);
@@ -11,8 +11,4 @@ public interface UnitSlot<T extends TransferUnit<?>> {
     T getUnit();
 
     long getAmount();
-
-    long insert(T unit, long amount, boolean simulate);
-
-    long extract(T unit, long amount, boolean simulate);
 }

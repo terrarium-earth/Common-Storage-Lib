@@ -1,12 +1,12 @@
-package earth.terrarium.botarium.common.lookup;
+package earth.terrarium.botarium.common.lookup.wrapped;
 
+import earth.terrarium.botarium.common.lookup.BlockLookup;
 import earth.terrarium.botarium.common.storage.base.UnitContainer;
 import earth.terrarium.botarium.common.storage.common.CommonWrappedContainer;
 import earth.terrarium.botarium.common.storage.fabric.FabricWrappedContainer;
 import earth.terrarium.botarium.common.storage.util.UpdateManager;
 import earth.terrarium.botarium.common.transfer.base.TransferUnit;
 import net.fabricmc.fabric.api.lookup.v1.block.BlockApiLookup;
-import net.fabricmc.fabric.api.transfer.v1.context.ContainerItemContext;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.fabricmc.fabric.api.transfer.v1.storage.TransferVariant;
 import net.minecraft.core.BlockPos;
@@ -18,8 +18,8 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.function.Consumer;
 import java.util.function.Function;
-import java.util.function.Supplier;
 
 public class WrappedBlockLookup<T, U extends TransferUnit<T>, V extends TransferVariant<T>> implements BlockLookup<UnitContainer<U>, @Nullable Direction> {
     private final BlockApiLookup<Storage<V>, Direction> fabricLookup;
@@ -45,28 +45,31 @@ public class WrappedBlockLookup<T, U extends TransferUnit<T>, V extends Transfer
     }
 
     @Override
-    public void registerBlocks(BlockGetter<UnitContainer<U>, @Nullable Direction> getter, Supplier<Block>... containers) {
-        for (Supplier<Block> block : containers) {
+    public void onRegister(Consumer<BlockRegistrar<UnitContainer<U>, @Nullable Direction>> registrar) {
+        registrar.accept(new LookupRegistrar());
+    }
+
+    public class LookupRegistrar implements BlockRegistrar<UnitContainer<U>, @Nullable Direction> {
+        @Override
+        public void registerBlocks(BlockGetter<UnitContainer<U>, @Nullable Direction> getter, Block... blocks) {
             fabricLookup.registerForBlocks((world, pos, state, blockEntity, context) -> {
                 UnitContainer<U> container = getter.getContainer(world, pos, state, blockEntity, context);
                 if (container instanceof UpdateManager<?> updateManager) {
                     return new FabricWrappedContainer<>(container, updateManager, toVariant, toUnit);
                 }
                 return null;
-            }, block.get());
+            }, blocks);
         }
-    }
 
-    @Override
-    public void registerBlockEntities(BlockGetter<UnitContainer<U>, @Nullable Direction> getter, Supplier<BlockEntityType<?>>... containers) {
-        for (Supplier<BlockEntityType<?>> blockEntity : containers) {
+        @Override
+        public void registerBlockEntities(BlockEntityGetter<UnitContainer<U>, @Nullable Direction> getter, BlockEntityType<?>... blockEntities) {
             fabricLookup.registerForBlockEntities((entity, context) -> {
-                UnitContainer<U> container = getter.getContainer(entity.getLevel(), entity.getBlockPos(), entity.getBlockState(), entity, context);
+                UnitContainer<U> container = getter.getContainer(entity, context);
                 if (container instanceof UpdateManager<?> updateManager) {
                     return new FabricWrappedContainer<>(container, updateManager, toVariant, toUnit);
                 }
                 return null;
-            }, blockEntity.get());
+            }, blockEntities);
         }
     }
 }
