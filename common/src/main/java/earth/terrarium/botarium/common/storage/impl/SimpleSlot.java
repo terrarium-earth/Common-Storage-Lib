@@ -1,29 +1,21 @@
 package earth.terrarium.botarium.common.storage.impl;
 
-import com.mojang.serialization.Codec;
-import earth.terrarium.botarium.common.storage.base.ContainerSlot;
+import earth.terrarium.botarium.common.storage.base.UnitSlot;
+import earth.terrarium.botarium.common.storage.util.UpdateManager;
 import earth.terrarium.botarium.common.transfer.base.TransferUnit;
-import net.minecraft.core.component.DataComponentPatch;
-import net.minecraft.core.component.DataComponents;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.NbtOps;
-import net.minecraft.world.item.component.CustomData;
+import net.minecraft.util.Tuple;
 
-import java.util.Optional;
-
-public class SimpleSlot<T extends TransferUnit<?>> implements ContainerSlot<T> {
-    private final Codec<T> unitCodec;
+public class SimpleSlot<T extends TransferUnit<?>> implements UnitSlot<T>, UpdateManager<Tuple<T, Long>> {
     private final T initialUnit;
     private final long slotLimit;
     private final Runnable onUpdate;
     private T unit;
     private long amount = 0;
 
-    public SimpleSlot(T initialUnit, long slotLimit, Codec<T> unitCodec, Runnable onUpdate) {
+    public SimpleSlot(T initialUnit, long slotLimit, Runnable onUpdate) {
         this.unit = initialUnit;
         this.initialUnit = initialUnit;
         this.slotLimit = slotLimit;
-        this.unitCodec = unitCodec;
         this.onUpdate = onUpdate;
     }
 
@@ -88,26 +80,14 @@ public class SimpleSlot<T extends TransferUnit<?>> implements ContainerSlot<T> {
     }
 
     @Override
-    public DataComponentPatch createSnapshot() {
-        CompoundTag tag = new CompoundTag();
-        unitCodec.encode(unit, NbtOps.INSTANCE, tag);
-        tag.putLong("amount", 0);
-        return DataComponentPatch.builder().set(DataComponents.CUSTOM_DATA, CustomData.of(tag)).build();
+    public Tuple<T, Long> createSnapshot() {
+        return new Tuple<>(this.unit, this.amount);
     }
 
     @Override
-    public void readSnapshot(DataComponentPatch snapshot) {
-        Optional<? extends CustomData> data = snapshot.get(DataComponents.CUSTOM_DATA);
-        if (data != null) {
-            data.ifPresent(customData -> {
-                CompoundTag compound = customData.copyTag();
-                this.unit = unitCodec.parse(NbtOps.INSTANCE, compound).result().orElse(this.initialUnit);
-                this.amount = compound.getLong("amount");
-            });
-        } else {
-            this.unit = this.initialUnit;
-            this.amount = 0;
-        }
+    public void readSnapshot(Tuple<T, Long> snapshot) {
+        this.unit = snapshot.getA();
+        this.amount = snapshot.getB();
     }
 
     public boolean match(T unit) {

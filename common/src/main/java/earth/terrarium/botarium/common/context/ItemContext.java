@@ -1,19 +1,24 @@
 package earth.terrarium.botarium.common.context;
 
-import earth.terrarium.botarium.common.item.base.ItemContainer;
-import earth.terrarium.botarium.common.storage.base.ContainerSlot;
+import earth.terrarium.botarium.common.storage.base.UnitContainer;
+import earth.terrarium.botarium.common.storage.base.UnitSlot;
 import earth.terrarium.botarium.common.storage.util.TransferUtil;
-import earth.terrarium.botarium.common.transfer.impl.ItemHolder;
 import earth.terrarium.botarium.common.transfer.impl.ItemUnit;
-
-import java.util.function.Predicate;
+import net.minecraft.core.component.DataComponentPatch;
+import net.minecraft.world.item.ItemStack;
 
 public interface ItemContext {
-    Predicate<ItemUnit> ANY = (ignored) -> true;
+    default ItemUnit getUnit() {
+        return mainSlot().getUnit();
+    }
+
+    default long getAmount() {
+        return mainSlot().getAmount();
+    }
 
     default long insert(ItemUnit unit, long amount, boolean simulate) {
         long inserted = mainSlot().insert(unit, amount, simulate);
-        long overflow = insertIndiscriminately(unit, amount - inserted, simulate);
+        long overflow = outerContainer().insert(unit, amount - inserted, simulate);
         return inserted + overflow;
     }
 
@@ -25,11 +30,14 @@ public interface ItemContext {
         return TransferUtil.exchange(mainSlot(), unit, amount, simulate);
     }
 
-    default long insertIndiscriminately(ItemUnit unit, long amount, boolean simulate) {
-        return outerContainer().insert(unit, amount, simulate);
+    default boolean modify(DataComponentPatch patch, boolean simulate) {
+        ItemStack modifyStack = mainSlot().getUnit().toStack();
+        modifyStack.applyComponents(patch);
+        long amount = mainSlot().getAmount();
+        return amount == exchange(ItemUnit.of(modifyStack), amount, simulate);
     }
 
-    ItemContainer outerContainer();
+    UnitContainer<ItemUnit> outerContainer();
 
-    ContainerSlot<ItemUnit> mainSlot();
+    UnitSlot<ItemUnit> mainSlot();
 }

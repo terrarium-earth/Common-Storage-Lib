@@ -1,17 +1,19 @@
 package earth.terrarium.botarium.common.storage.context;
 
-import earth.terrarium.botarium.common.item.base.ItemContainer;
-import earth.terrarium.botarium.common.storage.base.ContainerSlot;
+import earth.terrarium.botarium.common.storage.ConversionUtils;
+import earth.terrarium.botarium.common.storage.base.UnitContainer;
+import earth.terrarium.botarium.common.storage.base.UnitSlot;
 import earth.terrarium.botarium.common.transfer.impl.ItemUnit;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.base.SingleSlotStorage;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
-import net.minecraft.core.component.DataComponentPatch;
+import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
+import org.apache.commons.lang3.function.TriFunction;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-public record ContextItemContainer(List<SingleSlotStorage<ItemVariant>> storage) implements ItemContainer {
+public record ContextItemContainer(List<SingleSlotStorage<ItemVariant>> storage, TriFunction<ItemVariant, Long, TransactionContext, Long> insert) implements UnitContainer<ItemUnit> {
     public static ItemUnit of(ItemVariant variant) {
         return ItemUnit.of(variant.getItem(), variant.getComponents());
     }
@@ -26,23 +28,19 @@ public record ContextItemContainer(List<SingleSlotStorage<ItemVariant>> storage)
     }
 
     @Override
-    public @NotNull ContainerSlot<ItemUnit> getSlot(int slot) {
-        return new ContainerSlotImpl(storage.get(slot));
+    public @NotNull UnitSlot<ItemUnit> getSlot(int slot) {
+        return new UnitSlotImpl(storage.get(slot));
     }
 
     @Override
     public long insert(ItemUnit unit, long amount, boolean simulate) {
-        long leftover = amount;
         try (var transaction = Transaction.openOuter()) {
-            for (SingleSlotStorage<ItemVariant> view : storage) {
-                long inserted = view.insert(of(unit), leftover, transaction);
-                leftover -= inserted;
-            }
+            long inserted = insert.apply(ConversionUtils.toVariant(unit), amount, transaction);
             if (!simulate) {
                 transaction.commit();
             }
+            return inserted;
         }
-        return amount - leftover;
     }
 
     @Override
@@ -64,20 +62,7 @@ public record ContextItemContainer(List<SingleSlotStorage<ItemVariant>> storage)
         return amount - leftover;
     }
 
-    @Override
-    public DataComponentPatch createSnapshot() {
-        return DataComponentPatch.EMPTY;
-    }
-
-    @Override
-    public void readSnapshot(DataComponentPatch snapshot) {
-    }
-
-    @Override
-    public void update() {
-    }
-
-    public record ContainerSlotImpl(SingleSlotStorage<ItemVariant> storage) implements ContainerSlot<ItemUnit> {
+    public record UnitSlotImpl(SingleSlotStorage<ItemVariant> storage) implements UnitSlot<ItemUnit> {
 
         @Override
         public long getLimit() {
@@ -110,17 +95,6 @@ public record ContextItemContainer(List<SingleSlotStorage<ItemVariant>> storage)
                 return extracted;
             }
         }
-
-        @Override
-        public DataComponentPatch createSnapshot() {
-            return DataComponentPatch.EMPTY;
-        }
-
-        @Override
-        public void readSnapshot(DataComponentPatch snapshot) {}
-
-        @Override
-        public void update() {}
 
         @Override
         public ItemUnit getUnit() {

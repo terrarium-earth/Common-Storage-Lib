@@ -2,7 +2,7 @@ package earth.terrarium.botarium.common.storage.base;
 
 import earth.terrarium.botarium.common.storage.util.UpdateManager;
 
-public interface LongContainer extends UpdateManager {
+public interface LongContainer {
 
     long getStoredAmount();
 

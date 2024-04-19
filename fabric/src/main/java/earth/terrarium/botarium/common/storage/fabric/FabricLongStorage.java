@@ -1,16 +1,18 @@
-package earth.terrarium.botarium.common.storage.typed;
+package earth.terrarium.botarium.common.storage.fabric;
 
 import earth.terrarium.botarium.common.storage.base.LongContainer;
+import earth.terrarium.botarium.common.storage.util.UpdateManager;
 import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
 import net.fabricmc.fabric.api.transfer.v1.transaction.base.SnapshotParticipant;
-import net.minecraft.core.component.DataComponentPatch;
 import team.reborn.energy.api.EnergyStorage;
 
-public class FabricEnergyStorage extends SnapshotParticipant<DataComponentPatch> implements EnergyStorage {
+public class FabricLongStorage<S> extends SnapshotParticipant<S> implements EnergyStorage {
     private final LongContainer container;
+    private final UpdateManager<S> updateManager;
 
-    public FabricEnergyStorage(LongContainer container) {
+    public FabricLongStorage(LongContainer container, UpdateManager<S> updateManager) {
         this.container = container;
+        this.updateManager = updateManager;
     }
 
     @Override
@@ -37,16 +39,20 @@ public class FabricEnergyStorage extends SnapshotParticipant<DataComponentPatch>
 
     @Override
     protected void onFinalCommit() {
-        container.update();
+        updateManager.update();
     }
 
     @Override
-    protected DataComponentPatch createSnapshot() {
-        return container.createSnapshot();
+    protected S createSnapshot() {
+        return updateManager.createSnapshot();
     }
 
     @Override
-    protected void readSnapshot(DataComponentPatch snapshot) {
-        container.readSnapshot(snapshot);
+    protected void readSnapshot(S snapshot) {
+        updateManager.readSnapshot(snapshot);
+    }
+
+    public LongContainer getContainer() {
+        return container;
     }
 }

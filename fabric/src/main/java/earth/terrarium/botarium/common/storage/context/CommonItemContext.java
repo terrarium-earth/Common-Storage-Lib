@@ -1,8 +1,9 @@
 package earth.terrarium.botarium.common.storage.context;
 
 import earth.terrarium.botarium.common.context.ItemContext;
-import earth.terrarium.botarium.common.item.base.ItemContainer;
-import earth.terrarium.botarium.common.storage.base.ContainerSlot;
+import earth.terrarium.botarium.common.storage.ConversionUtils;
+import earth.terrarium.botarium.common.storage.base.UnitContainer;
+import earth.terrarium.botarium.common.storage.base.UnitSlot;
 import earth.terrarium.botarium.common.storage.common.CommonWrappedSlotSlot;
 import earth.terrarium.botarium.common.transfer.impl.ItemUnit;
 import it.unimi.dsi.fastutil.objects.Object2LongLinkedOpenHashMap;
@@ -15,7 +16,7 @@ public record CommonItemContext(ContainerItemContext context) implements ItemCon
     public long insert(ItemUnit unit, long amount, boolean simulate) {
         Object2LongLinkedOpenHashMap<ItemVariant> map = new Object2LongLinkedOpenHashMap<>();
         try (var transaction = Transaction.openOuter()) {
-            long inserted = context.insert(toVariant(unit), amount, transaction);
+            long inserted = context.insert(ConversionUtils.toVariant(unit), amount, transaction);
             if (!simulate) {
                 transaction.commit();
             }
@@ -26,7 +27,7 @@ public record CommonItemContext(ContainerItemContext context) implements ItemCon
     @Override
     public long extract(ItemUnit unit, long amount, boolean simulate) {
         try (var transaction = Transaction.openOuter()) {
-            long extracted = context.extract(toVariant(unit), amount, transaction);
+            long extracted = context.extract(ConversionUtils.toVariant(unit), amount, transaction);
             if (!simulate) {
                 transaction.commit();
             }
@@ -37,7 +38,7 @@ public record CommonItemContext(ContainerItemContext context) implements ItemCon
     @Override
     public long exchange(ItemUnit unit, long amount, boolean simulate) {
         try (var transaction = Transaction.openOuter()) {
-            long exchanged = context.exchange(toVariant(unit), amount, transaction);
+            long exchanged = context.exchange(ConversionUtils.toVariant(unit), amount, transaction);
             if (!simulate) {
                 transaction.commit();
             }
@@ -46,31 +47,12 @@ public record CommonItemContext(ContainerItemContext context) implements ItemCon
     }
 
     @Override
-    public long insertIndiscriminately(ItemUnit unit, long amount, boolean simulate) {
-        try (var transaction = Transaction.openOuter()) {
-            long inserted = context.insertOverflow(toVariant(unit), amount, transaction);
-            if (!simulate) {
-                transaction.commit();
-            }
-            return inserted;
-        }
+    public UnitContainer<ItemUnit> outerContainer() {
+        return new ContextItemContainer(context.getAdditionalSlots(), context::insertOverflow);
     }
 
     @Override
-    public ItemContainer outerContainer() {
-        return new ContextItemContainer(context.getAdditionalSlots());
-    }
-
-    @Override
-    public ContainerSlot<ItemUnit> mainSlot() {
-        return new CommonWrappedSlotSlot<>(context.getMainSlot(), CommonItemContext::toVariant, CommonItemContext::toUnit);
-    }
-
-    public static ItemUnit toUnit(ItemVariant variant) {
-        return ItemUnit.of(variant.getItem(), variant.getComponents());
-    }
-
-    public static ItemVariant toVariant(ItemUnit unit) {
-        return ItemVariant.of(unit.unit(), unit.components());
+    public UnitSlot<ItemUnit> mainSlot() {
+        return new CommonWrappedSlotSlot<>(context.getMainSlot(), ConversionUtils::toVariant, ConversionUtils::toUnit);
     }
 }

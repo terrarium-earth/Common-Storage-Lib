@@ -1,6 +1,6 @@
 package earth.terrarium.botarium.common.storage.common;
 
-import earth.terrarium.botarium.common.storage.base.ContainerSlot;
+import earth.terrarium.botarium.common.storage.base.UnitSlot;
 import earth.terrarium.botarium.common.transfer.base.TransferUnit;
 import net.fabricmc.fabric.api.transfer.v1.storage.StorageView;
 import net.fabricmc.fabric.api.transfer.v1.storage.TransferVariant;
@@ -11,7 +11,7 @@ import net.minecraft.core.component.DataComponentPatch;
 import java.util.function.Function;
 
 public record CommonWrappedSlotSlot<T, U extends TransferUnit<T>, V extends TransferVariant<T>>(
-        StorageView<V> view, Function<U, V> toVariant, Function<V, U> toUnit) implements ContainerSlot<U> {
+        StorageView<V> view, Function<U, V> toVariant, Function<V, U> toUnit) implements UnitSlot<U> {
 
     @Override
     public long getLimit() {
@@ -47,21 +47,6 @@ public record CommonWrappedSlotSlot<T, U extends TransferUnit<T>, V extends Tran
             }
             return extracted;
         }
-    }
-
-    @Override
-    public DataComponentPatch createSnapshot() {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public void readSnapshot(DataComponentPatch snapshot) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public void update() {
-        throw new UnsupportedOperationException();
     }
 
     @Override

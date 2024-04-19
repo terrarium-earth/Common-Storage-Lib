@@ -1,6 +1,7 @@
 package earth.terrarium.botarium.common.storage.fabric;
 
-import earth.terrarium.botarium.common.storage.base.ContainerSlot;
+import earth.terrarium.botarium.common.storage.base.UnitSlot;
+import earth.terrarium.botarium.common.storage.util.UpdateManager;
 import earth.terrarium.botarium.common.transfer.base.TransferUnit;
 import net.fabricmc.fabric.api.transfer.v1.storage.TransferVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.base.SingleSlotStorage;
@@ -10,15 +11,17 @@ import net.minecraft.core.component.DataComponentPatch;
 
 import java.util.function.Function;
 
-public class FabricWrappedSlot<T, U extends TransferUnit<T>, V extends TransferVariant<T>, C extends ContainerSlot<U>> extends SnapshotParticipant<DataComponentPatch> implements SingleSlotStorage<V> {
+public class FabricWrappedSlot<T, U extends TransferUnit<T>, V extends TransferVariant<T>, S, C extends UnitSlot<U>> extends SnapshotParticipant<S> implements SingleSlotStorage<V> {
     private final C container;
+    private final UpdateManager<S> updateManager;
     private final Function<V, U> toUnit;
     private final Function<U, V> toVariant;
 
-    public FabricWrappedSlot(C container, Function<V, U> toUnit, Function<U, V> toVariant) {
+    public FabricWrappedSlot(C container, UpdateManager<S> updateManager, Function<V, U> toUnit, Function<U, V> toVariant) {
         this.container = container;
         this.toVariant = toVariant;
         this.toUnit = toUnit;
+        this.updateManager = updateManager;
     }
 
     @Override
@@ -56,17 +59,17 @@ public class FabricWrappedSlot<T, U extends TransferUnit<T>, V extends TransferV
     }
 
     @Override
-    protected DataComponentPatch createSnapshot() {
-        return container.createSnapshot();
+    protected S createSnapshot() {
+        return updateManager.createSnapshot();
     }
 
     @Override
-    protected void readSnapshot(DataComponentPatch snapshot) {
-        container.readSnapshot(snapshot);
+    protected void readSnapshot(S snapshot) {
+        updateManager.readSnapshot(snapshot);
     }
 
     @Override
     protected void onFinalCommit() {
-        container.update();
+        updateManager.update();
     }
 }

@@ -21,13 +21,6 @@ public class RegistryHelpers {
     @Expect
     public static <E extends BlockEntity> BlockEntityType<E> createBlockEntityType(BlockEntityFactory<E> factory, Block... blocks);
 
-    /**
-     * @param factory The factory to create the menu.
-     * @return The created menu type instance for the given factory.
-     */
-    @Expect
-    public static <T extends AbstractContainerMenu, D> MenuType<T> createMenuType(MenuFactory<T, D> factory);
-
     @FunctionalInterface
     public interface BlockEntityFactory<T extends BlockEntity> {
 
@@ -37,17 +30,5 @@ public class RegistryHelpers {
          * @return The created block entity.
          */
         @NotNull T create(BlockPos blockPos, BlockState blockState);
-    }
-
-    @FunctionalInterface
-    public interface MenuFactory<T extends AbstractContainerMenu, D> {
-
-        /**
-         * @param syncId    The internal id for the menu.
-         * @param inventory The container of the player.
-         * @param extraData The extra data for the menu.
-         * @return The created menu instance.
-         */
-        T create(int syncId, Inventory inventory, D extraData);
     }
 }

@@ -7,6 +7,7 @@ import net.minecraft.world.entity.EntityType;
 import net.msrandom.multiplatform.annotations.Expect;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 public interface EntityLookup<T, C> {
@@ -29,10 +30,14 @@ public interface EntityLookup<T, C> {
     @Nullable
     T find(Entity entity, C context);
 
-    @SuppressWarnings("unchecked")
-    void registerEntityTypes(EntityGetter<T, C> getter, Supplier<EntityType<?>>... containers);
+    void onRegister(Consumer<EntityRegistrar<T, C>> registrar);
+
+    interface EntityRegistrar<T, C> {
+        void register(EntityGetter<T, C> getter, EntityType<?>... containers);
+    }
 
     interface EntityGetter<T, C> {
         T getContainer(Entity entity, C context);
+
     }
 }

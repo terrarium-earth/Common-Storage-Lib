@@ -11,6 +11,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.msrandom.multiplatform.annotations.Expect;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 @SuppressWarnings("unchecked")
@@ -40,12 +41,16 @@ public interface BlockLookup<T, C> {
         return find(level, pos, null, null, direction);
     }
 
-    void registerBlocks(BlockGetter<T, C> getter, Supplier<Block>... containers);
-
-    void registerBlockEntities(BlockGetter<T, C> getter, Supplier<BlockEntityType<?>>... containers);
+    void onRegister(Consumer<BlockRegistrar<T, C>> registrar);
 
     interface BlockGetter<T, C> {
         @Nullable
         T getContainer(Level level, BlockPos pos, BlockState state, @Nullable BlockEntity entity, @Nullable C direction);
+    }
+
+    interface BlockRegistrar<T, C> {
+        void registerBlocks(BlockGetter<T, C> getter, Block... containers);
+
+        void registerBlockEntities(BlockGetter<T, C> getter, BlockEntityType<?>... containers);
     }
 }

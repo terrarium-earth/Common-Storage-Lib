@@ -1,7 +1,7 @@
 package earth.terrarium.botarium.common.storage.common;
 
 import earth.terrarium.botarium.common.storage.base.UnitContainer;
-import earth.terrarium.botarium.common.storage.base.ContainerSlot;
+import earth.terrarium.botarium.common.storage.base.UnitSlot;
 import earth.terrarium.botarium.common.transfer.base.TransferUnit;
 import net.fabricmc.fabric.api.transfer.v1.storage.SlottedStorage;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
@@ -10,16 +10,26 @@ import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.core.component.DataComponentPatch;
 import org.jetbrains.annotations.NotNull;
 
-public abstract class CommonWrappedContainer<T, U extends TransferUnit<T>, V extends TransferVariant<T>> implements UnitContainer<U> {
-    private final Storage<V> storage;
+import java.util.function.Function;
 
-    public CommonWrappedContainer(Storage<V> storage) {
+public final class CommonWrappedContainer<T, U extends TransferUnit<T>, V extends TransferVariant<T>> implements UnitContainer<U> {
+    private final Storage<V> storage;
+    private final Function<U, V> toVariant;
+    private final Function<V, U> toUnit;
+
+    public CommonWrappedContainer(Storage<V> storage, Function<U, V> toVariant, Function<V, U> toUnit) {
         this.storage = storage;
+        this.toVariant = toVariant;
+        this.toUnit = toUnit;
     }
 
-    public abstract U toUnit(V variant);
+    public U toUnit(V variant) {
+        return toUnit.apply(variant);
+    }
 
-    public abstract V toVariant(U unit);
+    public V toVariant(U unit) {
+        return toVariant.apply(unit);
+    }
 
     @Override
     public int getSlotCount() {
@@ -34,7 +44,7 @@ public abstract class CommonWrappedContainer<T, U extends TransferUnit<T>, V ext
     }
 
     @Override
-    public @NotNull ContainerSlot<U> getSlot(int slot) {
+    public @NotNull UnitSlot<U> getSlot(int slot) {
         if (storage instanceof SlottedStorage<V> slotted) {
             return new CommonWrappedSlotSlot<>(slotted.getSlot(slot), this::toVariant, this::toUnit);
         }
@@ -68,18 +78,5 @@ public abstract class CommonWrappedContainer<T, U extends TransferUnit<T>, V ext
             }
             return extracted;
         }
-    }
-
-    @Override
-    public DataComponentPatch createSnapshot() {
-        return DataComponentPatch.EMPTY;
-    }
-
-    @Override
-    public void readSnapshot(DataComponentPatch snapshot) {
-    }
-
-    @Override
-    public void update() {
     }
 }

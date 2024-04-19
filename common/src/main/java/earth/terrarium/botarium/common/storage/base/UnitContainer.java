@@ -1,18 +1,22 @@
 package earth.terrarium.botarium.common.storage.base;
 
-import earth.terrarium.botarium.common.storage.util.UpdateManager;
+import earth.terrarium.botarium.common.storage.util.TransferUtil;
 import earth.terrarium.botarium.common.transfer.base.TransferUnit;
 import org.jetbrains.annotations.NotNull;
 
-public interface UnitContainer<T extends TransferUnit<?>> extends UpdateManager {
+public interface UnitContainer<T extends TransferUnit<?>> {
     int getSlotCount();
 
     @NotNull
-    ContainerSlot<T> getSlot(int slot);
+    UnitSlot<T> getSlot(int slot);
 
-    long insert(T unit, long amount, boolean simulate);
+    default long insert(T unit, long amount, boolean simulate) {
+        return TransferUtil.insertSlots(this, unit, amount, simulate);
+    }
 
-    long extract(T unit, long amount, boolean simulate);
+    default long extract(T unit, long amount, boolean simulate) {
+        return TransferUtil.extractSlots(this, unit, amount, simulate);
+    }
 
     default boolean allowsInsertion() {
         return true;
@@ -20,5 +24,10 @@ public interface UnitContainer<T extends TransferUnit<?>> extends UpdateManager 
 
     default boolean allowsExtraction() {
         return true;
+    }
+
+    @SuppressWarnings("unchecked")
+    static <T extends TransferUnit<?>> Class<UnitContainer<T>> asClass() {
+        return (Class<UnitContainer<T>>) (Object) UnitContainer.class;
     }
 }

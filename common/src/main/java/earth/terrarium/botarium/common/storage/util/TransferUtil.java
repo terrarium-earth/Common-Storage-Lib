@@ -1,16 +1,19 @@
 package earth.terrarium.botarium.common.storage.util;
 
 import earth.terrarium.botarium.common.storage.base.UnitContainer;
-import earth.terrarium.botarium.common.storage.base.ContainerSlot;
+import earth.terrarium.botarium.common.storage.base.UnitSlot;
 import earth.terrarium.botarium.common.storage.base.LongContainer;
 import earth.terrarium.botarium.common.transfer.base.TransferUnit;
 import earth.terrarium.botarium.common.transfer.impl.FluidUnit;
 import earth.terrarium.botarium.common.transfer.impl.ItemUnit;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.Tuple;
+import net.minecraft.world.Container;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.material.Fluid;
 
+import java.util.Iterator;
+import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
 
@@ -99,7 +102,7 @@ public class TransferUtil {
         return 0;
     }
 
-    public static <T extends TransferUnit<?>> long exchange(ContainerSlot<T> slot, T newItem, long amount, boolean simulate) {
+    public static <T extends TransferUnit<?>> long exchange(UnitSlot<T> slot, T newItem, long amount, boolean simulate) {
         T unit = slot.getUnit();
         long extracted = slot.extract(unit, amount, false);
         if (extracted > 0) {
@@ -114,5 +117,36 @@ public class TransferUtil {
             }
         }
         return 0;
+    }
+
+    public static <T extends TransferUnit<?>> long insertSlots(UnitContainer<T> container, T unit, long amount, boolean simulate) {
+        long inserted = 0;
+        for (int i = 0; i < container.getSlotCount(); i++) {
+            UnitSlot<T> slot = container.getSlot(i);
+            if (!slot.getUnit().isBlank()) {
+                inserted += slot.insert(unit, amount - inserted, simulate);
+                if (inserted >= amount) {
+                    return inserted;
+                }
+            }
+        }
+        for (int i = 0; i < container.getSlotCount(); i++) {
+            inserted += container.getSlot(i).insert(unit, amount - inserted, simulate);
+            if (inserted >= amount) {
+                return inserted;
+            }
+        }
+        return inserted;
+    }
+
+    public static <T extends TransferUnit<?>> long extractSlots(UnitContainer<T> container, T unit, long amount, boolean simulate) {
+        long extracted = 0;
+        for (int i = 0; i < container.getSlotCount(); i++) {
+            extracted += container.getSlot(i).extract(unit, amount - extracted, simulate);
+            if (extracted >= amount) {
+                return extracted;
+            }
+        }
+        return extracted;
     }
 }

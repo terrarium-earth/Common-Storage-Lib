@@ -1,11 +1,10 @@
-package earth.terrarium.botarium.common.storage.typed;
+package earth.terrarium.botarium.common.storage.common;
 
 import earth.terrarium.botarium.common.storage.base.LongContainer;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
-import net.minecraft.core.component.DataComponentPatch;
 import team.reborn.energy.api.EnergyStorage;
 
-public record CommonEnergyContainer(EnergyStorage storage) implements LongContainer {
+public record CommonLongContainer(EnergyStorage storage) implements LongContainer {
     @Override
     public long getStoredAmount() {
         return storage.getAmount();
@@ -47,15 +46,4 @@ public record CommonEnergyContainer(EnergyStorage storage) implements LongContai
             return extracted;
         }
     }
-
-    @Override
-    public DataComponentPatch createSnapshot() {
-        return DataComponentPatch.EMPTY;
-    }
-
-    @Override
-    public void readSnapshot(DataComponentPatch snapshot) {}
-
-    @Override
-    public void update() {}
 }

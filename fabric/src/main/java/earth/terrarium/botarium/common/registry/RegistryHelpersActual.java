@@ -1,5 +1,6 @@
 package earth.terrarium.botarium.common.registry;
 
+import earth.terrarium.botarium.common.menu.ExtraDataMenu;
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerType;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -20,7 +21,7 @@ public class RegistryHelpersActual {
     }
 
     @Actual
-    public static <T extends AbstractContainerMenu, D> MenuType<T> createMenuType(RegistryHelpers.MenuFactory<T, D> factory, StreamCodec<RegistryFriendlyByteBuf, D> codec) {
-        return new ExtendedScreenHandlerType<>(factory::create, codec);
+    public static <T extends AbstractContainerMenu & ExtraDataMenu<?>, D> MenuType<T> createMenuType(RegistryHelpers.MenuFactory<T, D> factory) {
+        return new ExtendedScreenHandlerType<>(factory::create, factory.getCodec);
     }
 }

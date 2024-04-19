@@ -6,6 +6,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 public interface ItemLookup<T, C> {
@@ -22,12 +23,15 @@ public interface ItemLookup<T, C> {
      * @return The {@link T} for the block.
      */
     @Nullable
-    T find(ItemStack stack, @Nullable C context);
+    T find(ItemStack stack, C context);
 
-    @SuppressWarnings("unchecked")
-    void registerItems(ItemGetter<T, C> getter, Supplier<Item>... containers);
+    void onRegister(Consumer<ItemRegistrar<T, C>> registrar);
 
     interface ItemGetter<T, C> {
-        T getContainer(ItemStack stack, @Nullable C context);
+        T getContainer(ItemStack stack, C context);
+    }
+
+    interface ItemRegistrar<T, C> {
+        void register(ItemGetter<T, C> getter, Item... containers);
     }
 }
