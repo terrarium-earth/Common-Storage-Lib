@@ -3,10 +3,15 @@ package earth.terrarium.botarium.common.transfer.impl;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import earth.terrarium.botarium.common.fluid.FluidConstants;
-import earth.terrarium.botarium.common.fluid.base.FluidHolder;
+import earth.terrarium.botarium.common.fluid.base.FluidStack;
 import earth.terrarium.botarium.common.transfer.base.TransferUnit;
+import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponentPatch;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
 
@@ -18,6 +23,23 @@ public record FluidUnit(Fluid unit, DataComponentPatch components) implements Tr
             DataComponentPatch.CODEC.optionalFieldOf("components", DataComponentPatch.EMPTY).forGetter(FluidUnit::components)
     ).apply(instance, FluidUnit::new));
 
+    public static final StreamCodec<? super RegistryFriendlyByteBuf, Holder<Fluid>> FLUID_STREAM_CODEC = ByteBufCodecs.holderRegistry(Registries.FLUID);
+
+    public static final StreamCodec<? super RegistryFriendlyByteBuf, FluidUnit> STREAM_CODEC = new StreamCodec<>() {
+        @Override
+        public FluidUnit decode(RegistryFriendlyByteBuf object) {
+            Holder<Fluid> holder = FLUID_STREAM_CODEC.decode(object);
+            DataComponentPatch dataComponentPatch = DataComponentPatch.STREAM_CODEC.decode(object);
+            return new FluidUnit(holder.value(), dataComponentPatch);
+        }
+
+        @Override
+        public void encode(RegistryFriendlyByteBuf object, FluidUnit object2) {
+            FLUID_STREAM_CODEC.encode(object, object2.unit.builtInRegistryHolder());
+            DataComponentPatch.STREAM_CODEC.encode(object, object2.components);
+        }
+    };
+
     public static FluidUnit of(Fluid fluid) {
         return new FluidUnit(fluid, DataComponentPatch.EMPTY);
     }
@@ -26,7 +48,7 @@ public record FluidUnit(Fluid unit, DataComponentPatch components) implements Tr
         return new FluidUnit(fluid, components);
     }
 
-    public static FluidUnit of(FluidHolder holder) {
+    public static FluidUnit of(FluidStack holder) {
         return new FluidUnit(holder.getFluid(), holder.getPatch());
     }
 
@@ -35,15 +57,15 @@ public record FluidUnit(Fluid unit, DataComponentPatch components) implements Tr
         return unit == Fluids.EMPTY;
     }
 
-    public boolean matches(FluidHolder holder) {
+    public boolean matches(FluidStack holder) {
         return isOf(holder.getFluid()) && componentsMatch(holder.getPatch());
     }
 
-    public FluidHolder toHolder(long amount) {
-        return FluidHolder.of(unit, amount, components);
+    public FluidStack toHolder(long amount) {
+        return FluidStack.of(unit, amount, components);
     }
 
-    public FluidHolder toHolder() {
+    public FluidStack toHolder() {
         return toHolder(FluidConstants.BUCKET);
     }
 }

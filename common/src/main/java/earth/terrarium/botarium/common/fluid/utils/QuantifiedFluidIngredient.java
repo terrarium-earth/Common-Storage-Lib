@@ -4,7 +4,7 @@ import com.mojang.datafixers.util.Either;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import earth.terrarium.botarium.common.fluid.FluidConstants;
-import earth.terrarium.botarium.common.fluid.base.FluidHolder;
+import earth.terrarium.botarium.common.fluid.base.FluidStack;
 
 import java.util.List;
 
@@ -32,12 +32,12 @@ public class QuantifiedFluidIngredient extends FluidIngredient {
     }
 
     @Override
-    public boolean test(FluidHolder fluidHolder) {
+    public boolean test(FluidStack fluidHolder) {
         return ingredient.test(fluidHolder) && fluidHolder.getAmount() >= this.fluidAmount;
     }
 
     @Override
-    public List<FluidHolder> getFluids() {
+    public List<FluidStack> getFluids() {
         return ingredient.getFluids();
     }
 

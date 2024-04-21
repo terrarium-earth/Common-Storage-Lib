@@ -1,7 +1,5 @@
 package earth.terrarium.botarium.common.storage.util;
 
-import net.minecraft.core.component.DataComponentPatch;
-
 public interface UpdateManager<T> {
     T createSnapshot();
 
@@ -9,7 +7,7 @@ public interface UpdateManager<T> {
 
     void update();
 
-    static void update(Object... managers) {
+    static void batch(Object... managers) {
         for (Object potential : managers) {
             if (potential instanceof UpdateManager) {
                 ((UpdateManager<?>) potential).update();

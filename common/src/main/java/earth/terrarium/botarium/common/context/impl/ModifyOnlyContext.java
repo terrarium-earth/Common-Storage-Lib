@@ -11,24 +11,21 @@ import net.minecraft.world.item.ItemStack;
 
 public record ModifyOnlyContext(ItemStack stack) implements ItemContext {
     @Override
-    public long exchange(ItemUnit unit, long amount, boolean simulate) {
-        if (!unit.isOf(stack.getItem()) || amount != stack.getCount()) return 0;
+    public long exchange(ItemUnit newUnit, long amount, boolean simulate) {
+        if (!newUnit.isOf(stack.getItem()) || amount != stack.getCount()) return 0;
         if (!simulate) {
             if (stack.getComponents() instanceof PatchedDataComponentMap map) {
-                map.restorePatch(unit.components());
+                map.restorePatch(newUnit.components());
             } else {
-                stack.applyComponents(unit.components());
+                stack.applyComponents(newUnit.components());
             }
         }
         return amount;
     }
 
     @Override
-    public boolean modify(DataComponentPatch patch, boolean simulate) {
-        if (!simulate) {
-            stack.applyComponents(patch);
-        }
-        return true;
+    public void modify(DataComponentPatch patch) {
+        stack.applyComponents(patch);
     }
 
     @Override

@@ -19,5 +19,5 @@ public class EnergyApiActual {
     @Actual
     public static final ItemLookup<LongContainer, ItemContext> ITEM = new EnergyItemLookup();
     @Actual
-    public static final EntityLookup<LongContainer, Void> ENTITY = EntityLookup.create(new ResourceLocation(Botarium.MOD_ID, "entity_energy"), LongContainer.class, Void.class);
+    public static final EntityLookup<LongContainer, Direction> ENTITY = EntityLookup.create(new ResourceLocation(Botarium.MOD_ID, "entity_energy"), LongContainer.class, Direction.class);
 }

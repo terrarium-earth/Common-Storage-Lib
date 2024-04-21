@@ -21,4 +21,6 @@ public class ItemApiActual {
     public static final ItemLookup<UnitContainer<ItemUnit>, ItemContext> ITEM = ItemLookup.create(new ResourceLocation(Botarium.MOD_ID, "item_item"), UnitContainer.asClass(), ItemContext.class);
     @Actual
     public static final EntityLookup<UnitContainer<ItemUnit>, Void> ENTITY = EntityLookup.create(new ResourceLocation(Botarium.MOD_ID, "entity_item"), UnitContainer.asClass(), Void.class);
+    @Actual
+    public static final EntityLookup<UnitContainer<ItemUnit>, Direction> ENTITY_AUTOMATION = EntityLookup.create(new ResourceLocation(Botarium.MOD_ID, "entity_item_automation"), UnitContainer.asClass(), Direction.class);
 }

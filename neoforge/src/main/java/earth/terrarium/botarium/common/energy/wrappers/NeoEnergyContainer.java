@@ -8,14 +8,14 @@ public record NeoEnergyContainer(LongContainer container) implements IEnergyStor
     @Override
     public int receiveEnergy(int i, boolean bl) {
         long inserted = container.insert(i, bl);
-        if (!bl) UpdateManager.update(container);
+        if (!bl) UpdateManager.batch(container);
         return (int) inserted;
     }
 
     @Override
     public int extractEnergy(int i, boolean bl) {
         long extracted = container.extract(i, bl);
-        if (!bl) UpdateManager.update(container);
+        if (!bl) UpdateManager.batch(container);
         return (int) extracted;
     }
 

@@ -5,6 +5,7 @@ import earth.terrarium.botarium.common.storage.base.UnitContainer;
 import earth.terrarium.botarium.common.storage.base.UnitIO;
 import earth.terrarium.botarium.common.storage.base.UnitSlot;
 import earth.terrarium.botarium.common.storage.util.TransferUtil;
+import earth.terrarium.botarium.common.storage.util.UpdateManager;
 import earth.terrarium.botarium.common.transfer.impl.ItemUnit;
 import net.minecraft.core.component.DataComponentPatch;
 import net.minecraft.world.item.ItemStack;
@@ -24,7 +25,7 @@ public interface ItemContext extends UnitIO<ItemUnit> {
 
     default long insert(ItemUnit unit, long amount, boolean simulate) {
         long inserted = mainSlot().insert(unit, amount, simulate);
-        long overflow = outerContainer().insert(unit, amount - inserted, simulate);
+        long overflow = inserted < amount ? outerContainer().insert(unit, amount - inserted, simulate) : 0;
         return inserted + overflow;
     }
 
@@ -32,18 +33,22 @@ public interface ItemContext extends UnitIO<ItemUnit> {
         return mainSlot().extract(unit, amount, simulate);
     }
 
-    default long exchange(ItemUnit unit, long amount, boolean simulate) {
-        return TransferUtil.exchange(mainSlot(), unit, amount, simulate);
+    default long exchange(ItemUnit newUnit, long amount, boolean simulate) {
+        return TransferUtil.exchange(this, getUnit(), newUnit, amount, simulate);
     }
 
-    default boolean modify(DataComponentPatch patch, boolean simulate) {
+    default void modify(DataComponentPatch patch) {
         ItemStack modifyStack = mainSlot().getUnit().toStack();
         modifyStack.applyComponents(patch);
         long amount = mainSlot().getAmount();
-        return amount == exchange(ItemUnit.of(modifyStack), amount, simulate);
+        exchange(ItemUnit.of(modifyStack), amount, false);
     }
 
     UnitContainer<ItemUnit> outerContainer();
 
     UnitSlot<ItemUnit> mainSlot();
+
+    default void updateAll() {
+        UpdateManager.batch(outerContainer(), mainSlot());
+    }
 }

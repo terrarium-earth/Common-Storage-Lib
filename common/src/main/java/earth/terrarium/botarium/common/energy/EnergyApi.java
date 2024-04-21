@@ -13,5 +13,5 @@ import org.jetbrains.annotations.Nullable;
 public class EnergyApi {
     public static final BlockLookup<LongContainer, Direction> BLOCK;
     public static final ItemLookup<LongContainer, ItemContext> ITEM;
-    public static final EntityLookup<LongContainer, Void> ENTITY;
+    public static final EntityLookup<LongContainer, Direction> ENTITY;
 }

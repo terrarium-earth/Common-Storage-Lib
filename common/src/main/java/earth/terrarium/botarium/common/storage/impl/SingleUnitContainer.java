@@ -1,17 +1,52 @@
 package earth.terrarium.botarium.common.storage.impl;
 
+import earth.terrarium.botarium.common.context.ItemContext;
+import earth.terrarium.botarium.common.data.DataManager;
+import earth.terrarium.botarium.common.data.impl.SingleFluidData;
+import earth.terrarium.botarium.common.data.impl.SingleItemData;
+import earth.terrarium.botarium.common.data.utils.ContainerDataManagers;
+import earth.terrarium.botarium.common.data.utils.ContainerSerializer;
 import earth.terrarium.botarium.common.storage.base.UnitContainer;
 import earth.terrarium.botarium.common.storage.base.UnitSlot;
 import earth.terrarium.botarium.common.storage.util.UpdateManager;
 import earth.terrarium.botarium.common.transfer.base.TransferUnit;
-import net.minecraft.util.Tuple;
+import earth.terrarium.botarium.common.transfer.impl.FluidUnit;
+import earth.terrarium.botarium.common.transfer.impl.ItemUnit;
+import net.minecraft.core.component.DataComponentPatch;
+import net.minecraft.core.component.DataComponentType;
+import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
-public abstract class SingleUnitContainer<T extends TransferUnit<?>> implements UnitContainer<T>, UpdateManager<Tuple<T, Long>> {
-    private final SimpleSlot<T> slot;
+import java.util.function.Consumer;
 
-    public SingleUnitContainer(T blankValue, long limit) {
-        this.slot = new SimpleSlot<>(blankValue, limit, this::update);
+public abstract class SingleUnitContainer<T extends TransferUnit<?>, D> extends SimpleSlot<T, D> implements UnitContainer<T>, UpdateManager<D> {
+    private final Consumer<SingleUnitContainer<T, D>> onUpdate;
+
+    public SingleUnitContainer(T initialUnit, long slotLimit, ContainerSerializer<SimpleSlot<T, ?>, D> serializer, Consumer<SingleUnitContainer<T, D>> onUpdate) {
+        super(initialUnit, slotLimit, () -> {}, serializer);
+        this.onUpdate = onUpdate;
+    }
+
+    public SingleUnitContainer(T initialUnit, long slotLimit, ContainerSerializer<SimpleSlot<T, ?>, D> serializer, DataComponentType<D> type, ItemStack stack, ItemContext context) {
+        this(initialUnit, slotLimit, serializer, container -> {
+            D data = serializer.captureData(container);
+            DataComponentPatch update = DataComponentPatch.builder().set(type, data).build();
+            context.modify(update);
+            context.updateAll();
+        });
+        if (stack.has(type)) {
+            D data = stack.get(type);
+            this.readSnapshot(data);
+        }
+    }
+
+    public SingleUnitContainer(T initialUnit, long slotLimit, ContainerSerializer<SimpleSlot<T, ?>, D> serializer, DataManager<D> dataManager, Object entityOrBlockEntity) {
+        this(initialUnit, slotLimit, serializer, container -> {
+            D data = serializer.captureData(container);
+            dataManager.setData(entityOrBlockEntity, data);
+        });
+        D data = dataManager.getData(entityOrBlockEntity);
+        this.readSnapshot(data);
     }
 
     @Override
@@ -21,27 +56,39 @@ public abstract class SingleUnitContainer<T extends TransferUnit<?>> implements 
 
     @Override
     public @NotNull UnitSlot<T> getSlot(int slot) {
-        return this.slot;
+        return this;
     }
 
     @Override
-    public long extract(T unit, long amount, boolean simulate) {
-        return this.slot.extract(unit, amount, simulate);
+    public void update() {
+        this.onUpdate.accept(this);
     }
 
-    @Override
-    public long insert(T unit, long amount, boolean simulate) {
-        return this.slot.insert(unit, amount, simulate);
+    public static class Item extends SingleUnitContainer<ItemUnit, SingleItemData> {
+        public Item(long slotLimit, Consumer<SingleUnitContainer<ItemUnit, SingleItemData>> onUpdate) {
+            super(ItemUnit.BLANK, slotLimit, SingleItemData.SERIALIZER, onUpdate);
+        }
+
+        public Item(long slotLimit, ItemStack stack, ItemContext context) {
+            super(ItemUnit.BLANK, slotLimit, SingleItemData.SERIALIZER, ContainerDataManagers.SINGLE_ITEM_CONTENTS.componentType(), stack, context);
+        }
+
+        public Item(long slotLimit, Object entityOrBlockEntity) {
+            super(ItemUnit.BLANK, slotLimit, SingleItemData.SERIALIZER, ContainerDataManagers.SINGLE_ITEM_CONTENTS, entityOrBlockEntity);
+        }
     }
 
-    @Override
-    public Tuple<T, Long> createSnapshot() {
-        return new Tuple<>(slot.getUnit(), slot.getAmount());
-    }
+    public static class Fluid extends SingleUnitContainer<FluidUnit, SingleFluidData> {
+        public Fluid(long slotLimit, Consumer<SingleUnitContainer<FluidUnit, SingleFluidData>> onUpdate) {
+            super(FluidUnit.BLANK, slotLimit, SingleFluidData.SERIALIZER, onUpdate);
+        }
 
-    @Override
-    public void readSnapshot(Tuple<T, Long> snapshot) {
-        slot.setUnit(snapshot.getA());
-        slot.setAmount(snapshot.getB());
+        public Fluid(long slotLimit, ItemStack stack, ItemContext context) {
+            super(FluidUnit.BLANK, slotLimit, SingleFluidData.SERIALIZER, ContainerDataManagers.SINGLE_FLUID_CONTENTS.componentType(), stack, context);
+        }
+
+        public Fluid(long slotLimit, Object entityOrBlockEntity) {
+            super(FluidUnit.BLANK, slotLimit, SingleFluidData.SERIALIZER, ContainerDataManagers.SINGLE_FLUID_CONTENTS, entityOrBlockEntity);
+        }
     }
 }

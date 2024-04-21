@@ -2,6 +2,7 @@ package earth.terrarium.botarium.common.lookup;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -12,6 +13,7 @@ import net.msrandom.multiplatform.annotations.Expect;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Consumer;
+import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 @SuppressWarnings("unchecked")
@@ -42,6 +44,54 @@ public interface BlockLookup<T, C> {
         return find(level, pos, null, null, direction);
     }
 
+    default void registerSelf(BlockGetter<T, C> getter, Block ... blocks) {
+        onRegister(registrar -> registrar.registerBlocks(getter, blocks));
+    }
+
+    default void registerSelf(BlockEntityGetter<T, C> getter, Supplier<BlockEntityType<?>> ... entities) {
+        onRegister(registrar -> {
+            for (Supplier<BlockEntityType<?>> entityTypeSupplier : entities) {
+                registrar.registerBlockEntities(getter, entityTypeSupplier.get());
+            }
+        });
+    }
+
+    default void registerFallback(BlockGetter<T, C> getter, Predicate<Block> blockPredicate) {
+        onRegister(registrar -> {
+            for (Block block : BuiltInRegistries.BLOCK) {
+                if (blockPredicate.test(block)) {
+                    registrar.registerBlocks(getter, block);
+                }
+            }
+        });
+    }
+
+    default void registerFallback(BlockGetter<T, C> getter) {
+        onRegister(registrar -> {
+            for (Block block : BuiltInRegistries.BLOCK) {
+                registrar.registerBlocks(getter, block);
+            }
+        });
+    }
+
+    default void registerFallback(BlockEntityGetter<T, C> getter, Predicate<BlockEntityType<?>> entityTypePredicate) {
+        onRegister(registrar -> {
+            for (BlockEntityType<?> entityType : BuiltInRegistries.BLOCK_ENTITY_TYPE) {
+                if (entityTypePredicate.test(entityType)) {
+                    registrar.registerBlockEntities(getter, entityType);
+                }
+            }
+        });
+    }
+
+    default void registerFallback(BlockEntityGetter<T, C> getter) {
+        onRegister(registrar -> {
+            for (BlockEntityType<?> entityType : BuiltInRegistries.BLOCK_ENTITY_TYPE) {
+                registrar.registerBlockEntities(getter, entityType);
+            }
+        });
+    }
+
     void onRegister(Consumer<BlockRegistrar<T, C>> registrar);
 
     interface BlockGetter<T, C> {
@@ -55,8 +105,8 @@ public interface BlockLookup<T, C> {
     }
 
     interface BlockRegistrar<T, C> {
-        void registerBlocks(BlockGetter<T, C> getter, Block... containers);
+        void registerBlocks(BlockGetter<T, C> getter, Block... blocks);
 
-        void registerBlockEntities(BlockEntityGetter<T, C> getter, BlockEntityType<?>... containers);
+        void registerBlockEntities(BlockEntityGetter<T, C> getter, BlockEntityType<?>... blockEntityTypes);
     }
 }

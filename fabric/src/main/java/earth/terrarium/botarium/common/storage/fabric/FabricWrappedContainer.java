@@ -4,6 +4,7 @@ import earth.terrarium.botarium.common.storage.base.UnitContainer;
 import earth.terrarium.botarium.common.storage.base.UnitSlot;
 import earth.terrarium.botarium.common.storage.util.UpdateManager;
 import earth.terrarium.botarium.common.transfer.base.TransferUnit;
+import earth.terrarium.botarium.common.transfer.impl.ItemUnit;
 import net.fabricmc.fabric.api.transfer.v1.storage.SlottedStorage;
 import net.fabricmc.fabric.api.transfer.v1.storage.StorageView;
 import net.fabricmc.fabric.api.transfer.v1.storage.TransferVariant;
@@ -16,13 +17,13 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Iterator;
 import java.util.function.Function;
 
-public final class FabricWrappedContainer<T, U extends TransferUnit<T>, V extends TransferVariant<T>, S, C extends UnitContainer<U>> extends SnapshotParticipant<S> implements SlottedStorage<V> {
-    private final C container;
+public final class FabricWrappedContainer<T, U extends TransferUnit<T>, V extends TransferVariant<T>, S> extends SnapshotParticipant<S> implements SlottedStorage<V> {
+    private final UnitContainer<U> container;
     private final UpdateManager<S> updateManager;
     private final Function<U, V> toVariant;
     private final Function<V, U> toUnit;
 
-    public FabricWrappedContainer(C container, UpdateManager<S> updateManager, Function<U, V> toVariant, Function<V, U> toUnit) {
+    public FabricWrappedContainer(UnitContainer<U> container, UpdateManager<S> updateManager, Function<V, U> toUnit, Function<U, V> toVariant) {
         this.container = container;
         this.updateManager = updateManager;
         this.toVariant = toVariant;
@@ -97,7 +98,7 @@ public final class FabricWrappedContainer<T, U extends TransferUnit<T>, V extend
         throw new IllegalArgumentException("UnitSlot must implement UpdateManager");
     }
 
-    public C getContainer() {
+    public UnitContainer<U> getContainer() {
         return container;
     }
 }

@@ -1,6 +1,7 @@
 package earth.terrarium.botarium.common.lookup;
 
 import net.minecraft.core.Direction;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -8,6 +9,7 @@ import net.msrandom.multiplatform.annotations.Expect;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Consumer;
+import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 public interface EntityLookup<T, C> {
@@ -31,10 +33,37 @@ public interface EntityLookup<T, C> {
     @Nullable
     T find(Entity entity, C context);
 
+    @SuppressWarnings("unchecked")
+    default void registerSelf(EntityGetter<T, C> getter, Supplier<EntityType<?>>... type) {
+        onRegister(registrar -> {
+            for (Supplier<EntityType<?>> entityTypeSupplier : type) {
+                registrar.register(getter, entityTypeSupplier.get());
+            }
+        });
+    }
+
+    default void registerFallback(EntityGetter<T, C> getter) {
+        onRegister(registrar -> {
+            for (EntityType<?> entityType : BuiltInRegistries.ENTITY_TYPE) {
+                registrar.register(getter, entityType);
+            }
+        });
+    }
+
+    default void registerFallback(EntityGetter<T, C> getter, Predicate<EntityType<?>> predicate) {
+        onRegister(registrar -> {
+            for (EntityType<?> entityType : BuiltInRegistries.ENTITY_TYPE) {
+                if (predicate.test(entityType)) {
+                    registrar.register(getter, entityType);
+                }
+            }
+        });
+    }
+
     void onRegister(Consumer<EntityRegistrar<T, C>> registrar);
 
     interface EntityRegistrar<T, C> {
-        void register(EntityGetter<T, C> getter, EntityType<?>... containers);
+        void register(EntityGetter<T, C> getter, EntityType<?>... entityTypes);
     }
 
     interface EntityGetter<T, C> {

@@ -23,7 +23,7 @@ public record NeoItemHandler(UnitContainer<ItemUnit> container) implements IItem
     public ItemStack insertItem(int i, ItemStack arg, boolean bl) {
         long inserted = container.getSlot(i).insert(ItemUnit.of(arg), arg.getCount(), bl);
         if (!bl) {
-            UpdateManager.update(container);
+            UpdateManager.batch(container);
         }
         return arg.getCount() == inserted ? ItemStack.EMPTY : arg.copyWithCount((int) (arg.getCount() - inserted));
     }
@@ -32,7 +32,7 @@ public record NeoItemHandler(UnitContainer<ItemUnit> container) implements IItem
     public ItemStack extractItem(int i, int j, boolean bl) {
         long extracted = container.getSlot(i).extract(ItemUnit.of(getStackInSlot(i)), j, bl);
         if (!bl) {
-            UpdateManager.update(container);
+            UpdateManager.batch(container);
         }
         return getStackInSlot(i).copyWithCount((int) extracted);
     }

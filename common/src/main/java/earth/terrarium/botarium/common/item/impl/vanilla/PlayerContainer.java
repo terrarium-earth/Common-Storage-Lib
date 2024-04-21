@@ -1,8 +1,11 @@
 package earth.terrarium.botarium.common.item.impl.vanilla;
 
+import earth.terrarium.botarium.common.storage.base.UnitSlot;
+import earth.terrarium.botarium.common.storage.util.TransferUtil;
 import earth.terrarium.botarium.common.storage.util.UpdateManager;
 import earth.terrarium.botarium.common.transfer.impl.ItemUnit;
 import net.minecraft.core.NonNullList;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
 
@@ -20,17 +23,63 @@ public class PlayerContainer extends AbstractVanillaContainer implements UpdateM
 
     @Override
     public long insert(ItemUnit unit, long amount, boolean simulate) {
-        long leftover = amount - super.insert(unit, amount, simulate);
-        if (leftover > 0 && !simulate) {
+        return offer(unit, amount, simulate);
+    }
+
+    public long offer(ItemUnit unit, long amount, boolean simulate) {
+        // try inserting into main hands first, then a subset of the slots between 0 and Inventory.INVENTORY_SIZE, then just the rest of the slots
+        long initialAmount = amount;
+
+        // Stack into the main stack first and the offhand stack second.
+        for (InteractionHand hand : InteractionHand.values()) {
+            UnitSlot<ItemUnit> handSlot = getHandSlot(hand);
+
+            if (handSlot.getUnit().equals(unit)) {
+                amount -= handSlot.insert(unit, amount, simulate);
+
+                if (amount == 0) return initialAmount;
+            }
+        }
+
+        // Otherwise insert into the main slots, stacking first.
+        amount -= TransferUtil.insertSubset(this, 0, Inventory.INVENTORY_SIZE, unit, amount, simulate);
+
+        return initialAmount - amount;
+    }
+
+    public long offerOrDrop(ItemUnit unit, long amount, boolean simulate) {
+        long inserted = offer(unit, amount, simulate);
+        if (inserted < amount) {
+            drop(unit, amount - inserted, simulate);
+        }
+        return amount;
+    }
+
+    public void drop(ItemUnit unit, long amount, boolean simulate) {
+        long leftover = amount;
+        if (!simulate) {
             ItemStack fakeStack = unit.toStack();
-            // add as many item stacks as needed to toDrop that are each less than or equal to the max stack size, but totalling the leftover amount
+            // add as many fluid stacks as needed to toDrop that are each less than or equal to the max stack size, but totalling the leftover amount
             while (leftover > 0) {
                 int stackSize = (int) Math.min(leftover, fakeStack.getMaxStackSize());
                 leftover -= stackSize;
                 toDrop.add(unit.toStack(stackSize));
             }
         }
-        return amount;
+    }
+
+    public UnitSlot<ItemUnit> getHandSlot(InteractionHand hand) {
+        if (hand == InteractionHand.MAIN_HAND) {
+            if (Inventory.isHotbarSlot(inventory.selected)) {
+                return getSlot(inventory.selected);
+            } else {
+                throw new IllegalArgumentException("Main hand is not a hotbar slot: " + inventory.selected);
+            }
+        } else if (hand == InteractionHand.OFF_HAND) {
+            return getSlot(Inventory.SLOT_OFFHAND);
+        } else {
+            throw new IllegalArgumentException("Invalid hand: " + hand);
+        }
     }
 
     @Override
@@ -48,9 +97,11 @@ public class PlayerContainer extends AbstractVanillaContainer implements UpdateM
             inventory.setItem(i, snapshot.items.get(i));
         }
         if (toDrop.size() > snapshot.droppedItemCount) {
-            List<ItemStack> itemStacks = toDrop.subList(0, snapshot.droppedItemCount);
-            toDrop.clear();
-            toDrop.addAll(itemStacks);
+            int previousSize = snapshot.droppedItemCount;
+
+            while (toDrop.size() > previousSize) {
+                toDrop.removeLast();
+            }
         }
     }
 
@@ -63,4 +114,15 @@ public class PlayerContainer extends AbstractVanillaContainer implements UpdateM
     }
 
     public record InventoryState(NonNullList<ItemStack> items, int droppedItemCount) {}
+
+    public static class AutoDrop extends PlayerContainer {
+        public AutoDrop(Inventory container) {
+            super(container);
+        }
+
+        @Override
+        public long insert(ItemUnit unit, long amount, boolean simulate) {
+            return offerOrDrop(unit, amount, simulate);
+        }
+    }
 }

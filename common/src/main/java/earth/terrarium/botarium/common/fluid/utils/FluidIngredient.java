@@ -4,7 +4,7 @@ import com.google.common.collect.Lists;
 import com.mojang.datafixers.util.Either;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import earth.terrarium.botarium.common.fluid.base.FluidHolder;
+import earth.terrarium.botarium.common.fluid.base.FluidStack;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.tags.TagKey;
@@ -16,10 +16,10 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class FluidIngredient implements Predicate<FluidHolder> {
+public class FluidIngredient implements Predicate<FluidStack> {
     public static final Codec<FluidIngredient> CODEC = listAndObjectCodec(Codec.either(FluidValue.CODEC, TagValue.CODEC), FluidIngredient::getRawValues, FluidIngredient::new);
     private final List<Either<FluidValue, TagValue>> values;
-    private List<FluidHolder> cachedFluids;
+    private List<FluidStack> cachedFluids;
 
     public static <A, B> Codec<B> listAndObjectCodec(Codec<A> codec, Function<B, List<A>> from, Function<List<A>, B> to) {
         return Codec.either(codec, codec.listOf()).xmap(eitherListEither -> eitherListEither.map(
@@ -37,16 +37,16 @@ public class FluidIngredient implements Predicate<FluidHolder> {
     }
 
     public static FluidIngredient of(Fluid... fluids) {
-        return FluidIngredient.of(Arrays.stream(fluids).map(FluidHolder::of));
+        return FluidIngredient.of(Arrays.stream(fluids).map(FluidStack::of));
     }
 
-    public static FluidIngredient of(FluidHolder... fluids) {
+    public static FluidIngredient of(FluidStack... fluids) {
         return FluidIngredient.of(Arrays.stream(fluids));
     }
 
-    public static FluidIngredient of(Stream<FluidHolder> fluids) {
+    public static FluidIngredient of(Stream<FluidStack> fluids) {
         List<Either<FluidValue, TagValue>> values = new ArrayList<>();
-        for (FluidHolder fluid : fluids.filter(Predicate.not(FluidHolder::isEmpty)).toList()) {
+        for (FluidStack fluid : fluids.filter(Predicate.not(FluidStack::isEmpty)).toList()) {
             values.add(Either.left(new FluidValue(fluid.getFluid())));
         }
         return new FluidIngredient(values);
@@ -57,11 +57,11 @@ public class FluidIngredient implements Predicate<FluidHolder> {
     }
 
     @Override
-    public boolean test(FluidHolder fluidHolder) {
+    public boolean test(FluidStack fluidHolder) {
         if (this.values.isEmpty()) {
             return fluidHolder.isEmpty();
         } else {
-            for (FluidHolder value : getFluids()) {
+            for (FluidStack value : getFluids()) {
                 if (fluidHolder.is(value.getFluid())) {
                     return true;
                 }
@@ -70,7 +70,7 @@ public class FluidIngredient implements Predicate<FluidHolder> {
         }
     }
 
-    public List<FluidHolder> getFluids() {
+    public List<FluidStack> getFluids() {
         dissolve();
         return cachedFluids;
     }
@@ -78,7 +78,7 @@ public class FluidIngredient implements Predicate<FluidHolder> {
     public void dissolve() {
         if (this.cachedFluids == null) {
             this.cachedFluids = this.values.stream().flatMap(either -> either.map(
-                    fluidValue -> Stream.of(FluidHolder.of(fluidValue.fluid())),
+                    fluidValue -> Stream.of(FluidStack.of(fluidValue.fluid())),
                     tagValue -> tagValue.getFluids().stream()
             )).collect(Collectors.toList());
         }
@@ -91,7 +91,7 @@ public class FluidIngredient implements Predicate<FluidHolder> {
     public interface Value {
         // Codec<Value> CODEC = Codec.either(FluidValue.CODEC, TagValue.CODEC).xmap(fluidValueTagValueEither -> fluidValueTagValueEither.map(Function.identity(), Function.identity()), value -> value instanceof FluidValue ? Either.left((FluidValue) value) : Either.right((TagValue) value));
 
-        Collection<FluidHolder> getFluids();
+        Collection<FluidStack> getFluids();
     }
 
     public record FluidValue(Fluid fluid) implements Value {
@@ -100,8 +100,8 @@ public class FluidIngredient implements Predicate<FluidHolder> {
         ).apply(instance, FluidValue::new));
 
         @Override
-        public Collection<FluidHolder> getFluids() {
-            return Collections.singleton(FluidHolder.of(this.fluid));
+        public Collection<FluidStack> getFluids() {
+            return Collections.singleton(FluidStack.of(this.fluid));
         }
     }
 
@@ -111,11 +111,11 @@ public class FluidIngredient implements Predicate<FluidHolder> {
         ).apply(instance, TagValue::new));
 
         @Override
-        public Collection<FluidHolder> getFluids() {
-            List<FluidHolder> list = Lists.newArrayList();
+        public Collection<FluidStack> getFluids() {
+            List<FluidStack> list = Lists.newArrayList();
 
             for (Holder<Fluid> holder : BuiltInRegistries.FLUID.getTagOrEmpty(this.tag)) {
-                list.add(FluidHolder.of(holder.value()));
+                list.add(FluidStack.of(holder.value()));
             }
 
             return list;

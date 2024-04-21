@@ -1,22 +1,29 @@
 package earth.terrarium.botarium.common.storage.impl;
 
+import earth.terrarium.botarium.common.data.impl.SingleFluidData;
+import earth.terrarium.botarium.common.data.impl.SingleItemData;
+import earth.terrarium.botarium.common.data.utils.ContainerSerializer;
 import earth.terrarium.botarium.common.storage.base.UnitSlot;
 import earth.terrarium.botarium.common.storage.util.UpdateManager;
 import earth.terrarium.botarium.common.transfer.base.TransferUnit;
+import earth.terrarium.botarium.common.transfer.impl.FluidUnit;
+import earth.terrarium.botarium.common.transfer.impl.ItemUnit;
 import net.minecraft.util.Tuple;
 
-public class SimpleSlot<T extends TransferUnit<?>> implements UnitSlot<T>, UpdateManager<Tuple<T, Long>> {
+public class SimpleSlot<T extends TransferUnit<?>, S> implements UnitSlot<T>, UpdateManager<S> {
     private final T initialUnit;
     private final long slotLimit;
     private final Runnable onUpdate;
+    private final ContainerSerializer<SimpleSlot<T, ?>, S> serializer;
     private T unit;
     private long amount = 0;
 
-    public SimpleSlot(T initialUnit, long slotLimit, Runnable onUpdate) {
+    public SimpleSlot(T initialUnit, long slotLimit, Runnable onUpdate, ContainerSerializer<SimpleSlot<T, ?>, S> serializer) {
         this.unit = initialUnit;
         this.initialUnit = initialUnit;
         this.slotLimit = slotLimit;
         this.onUpdate = onUpdate;
+        this.serializer = serializer;
     }
 
     @Override
@@ -39,11 +46,11 @@ public class SimpleSlot<T extends TransferUnit<?>> implements UnitSlot<T>, Updat
         return amount;
     }
 
-    protected void setUnit(T unit) {
+    public void setUnit(T unit) {
         this.unit = unit;
     }
 
-    protected void setAmount(long amount) {
+    public void setAmount(long amount) {
         this.amount = amount;
     }
 
@@ -80,14 +87,13 @@ public class SimpleSlot<T extends TransferUnit<?>> implements UnitSlot<T>, Updat
     }
 
     @Override
-    public Tuple<T, Long> createSnapshot() {
-        return new Tuple<>(this.unit, this.amount);
+    public S createSnapshot() {
+        return serializer.captureData(this);
     }
 
     @Override
-    public void readSnapshot(Tuple<T, Long> snapshot) {
-        this.unit = snapshot.getA();
-        this.amount = snapshot.getB();
+    public void readSnapshot(S snapshot) {
+        serializer.applyData(this, snapshot);
     }
 
     public boolean match(T unit) {
@@ -97,5 +103,17 @@ public class SimpleSlot<T extends TransferUnit<?>> implements UnitSlot<T>, Updat
     @Override
     public void update() {
         onUpdate.run();
+    }
+
+    public static class Item extends SimpleSlot<ItemUnit, SingleItemData> {
+        public Item(long slotLimit, Runnable onUpdate) {
+            super(ItemUnit.BLANK, slotLimit, onUpdate, SingleItemData.SERIALIZER);
+        }
+    }
+
+    public static class Fluid extends SimpleSlot<FluidUnit, SingleFluidData> {
+        public Fluid(long slotLimit, Runnable onUpdate) {
+            super(FluidUnit.BLANK, slotLimit, onUpdate, SingleFluidData.SERIALIZER);
+        }
     }
 }

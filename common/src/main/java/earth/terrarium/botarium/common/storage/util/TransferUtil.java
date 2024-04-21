@@ -9,12 +9,9 @@ import earth.terrarium.botarium.common.transfer.impl.FluidUnit;
 import earth.terrarium.botarium.common.transfer.impl.ItemUnit;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.Tuple;
-import net.minecraft.world.Container;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.material.Fluid;
 
-import java.util.Iterator;
-import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
 
@@ -52,7 +49,7 @@ public class TransferUtil {
             if (extracted == inserted) {
                 from.extract(unit, extracted, simulate);
                 to.insert(unit, extracted, simulate);
-                UpdateManager.update(from, to);
+                UpdateManager.batch(from, to);
                 return extracted;
             }
         }
@@ -100,33 +97,34 @@ public class TransferUtil {
             if (extracted == inserted) {
                 from.extract(extracted, simulate);
                 to.insert(extracted, simulate);
-                UpdateManager.update(from, to);
+                UpdateManager.batch(from, to);
                 return extracted;
             }
         }
         return 0;
     }
 
-    public static <T extends TransferUnit<?>> long exchange(UnitSlot<T> slot, T newItem, long amount, boolean simulate) {
-        T unit = slot.getUnit();
-        long extracted = slot.extract(unit, amount, false);
+    public static <T extends TransferUnit<?>> long exchange(UnitIO<T> io, T oldUnit, T newUnit, long amount, boolean simulate) {
+        long extracted = io.extract(oldUnit, amount, false);
         if (extracted > 0) {
-            long inserted = slot.insert(newItem, extracted, true);
-            if (extracted == inserted) {
-                slot.extract(unit, extracted, simulate);
-                slot.insert(newItem, extracted, simulate);
-                UpdateManager.update(slot);
-                return extracted;
+            long inserted = io.insert(newUnit, extracted, true);
+            if (extracted == inserted && !simulate) {
+                io.insert(newUnit, extracted, false);
             } else {
-                slot.insert(unit, extracted, false);
+                io.insert(oldUnit, extracted, false);
             }
+            return extracted == inserted ? extracted : 0;
         }
         return 0;
     }
 
     public static <T extends TransferUnit<?>> long insertSlots(UnitContainer<T> container, T unit, long amount, boolean simulate) {
+        return insertSubset(container, 0, container.getSlotCount(), unit, amount, simulate);
+    }
+
+    public static <T extends TransferUnit<?>> long insertSubset(UnitContainer<T> container, int start, int end, T unit, long amount, boolean simulate) {
         long inserted = 0;
-        for (int i = 0; i < container.getSlotCount(); i++) {
+        for (int i = start; i < end; i++) {
             UnitSlot<T> slot = container.getSlot(i);
             if (!slot.getUnit().isBlank()) {
                 inserted += slot.insert(unit, amount - inserted, simulate);
@@ -135,7 +133,7 @@ public class TransferUtil {
                 }
             }
         }
-        for (int i = 0; i < container.getSlotCount(); i++) {
+        for (int i = start; i < end; i++) {
             inserted += container.getSlot(i).insert(unit, amount - inserted, simulate);
             if (inserted >= amount) {
                 return inserted;
@@ -145,8 +143,12 @@ public class TransferUtil {
     }
 
     public static <T extends TransferUnit<?>> long extractSlots(UnitContainer<T> container, T unit, long amount, boolean simulate) {
+        return extractSubset(container, 0, container.getSlotCount(), unit, amount, simulate);
+    }
+
+    public static <T extends TransferUnit<?>> long extractSubset(UnitContainer<T> container, int start, int end, T unit, long amount, boolean simulate) {
         long extracted = 0;
-        for (int i = 0; i < container.getSlotCount(); i++) {
+        for (int i = start; i < end; i++) {
             extracted += container.getSlot(i).extract(unit, amount - extracted, simulate);
             if (extracted >= amount) {
                 return extracted;

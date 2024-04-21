@@ -3,14 +3,14 @@ package earth.terrarium.botarium.common.fluid.utils;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import earth.terrarium.botarium.Botarium;
-import earth.terrarium.botarium.common.fluid.base.FluidHolder;
+import earth.terrarium.botarium.common.fluid.base.FluidStack;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import org.jetbrains.annotations.NotNull;
 
-public record FluidParticleOptions(FluidHolder fluid) implements ParticleOptions {
+public record FluidParticleOptions(FluidStack fluid) implements ParticleOptions {
 
     @Override
     public @NotNull ParticleType<?> getType() {
@@ -18,7 +18,7 @@ public record FluidParticleOptions(FluidHolder fluid) implements ParticleOptions
     }
 
     public static final MapCodec<FluidParticleOptions> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-            FluidHolder.CODEC.fieldOf("fluid").forGetter(FluidParticleOptions::fluid)
+            FluidStack.CODEC.fieldOf("fluid").forGetter(FluidParticleOptions::fluid)
     ).apply(instance, FluidParticleOptions::new));
 
     public static final StreamCodec<? super RegistryFriendlyByteBuf, FluidParticleOptions> STREAM_CODEC = new StreamCodec<>() {

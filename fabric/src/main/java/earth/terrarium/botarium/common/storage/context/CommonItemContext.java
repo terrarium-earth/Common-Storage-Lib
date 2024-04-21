@@ -36,9 +36,9 @@ public record CommonItemContext(ContainerItemContext context) implements ItemCon
     }
 
     @Override
-    public long exchange(ItemUnit unit, long amount, boolean simulate) {
+    public long exchange(ItemUnit newUnit, long amount, boolean simulate) {
         try (var transaction = Transaction.openOuter()) {
-            long exchanged = context.exchange(ConversionUtils.toVariant(unit), amount, transaction);
+            long exchanged = context.exchange(ConversionUtils.toVariant(newUnit), amount, transaction);
             if (!simulate) {
                 transaction.commit();
             }

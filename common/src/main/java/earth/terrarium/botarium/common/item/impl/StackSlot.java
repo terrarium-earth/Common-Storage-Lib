@@ -1,11 +1,12 @@
 package earth.terrarium.botarium.common.item.impl;
 
-import earth.terrarium.botarium.common.energy.EnergyApi;
+import earth.terrarium.botarium.common.data.impl.SingleItemData;
 import earth.terrarium.botarium.common.storage.base.UnitSlot;
+import earth.terrarium.botarium.common.storage.util.UpdateManager;
 import earth.terrarium.botarium.common.transfer.impl.ItemUnit;
 import net.minecraft.world.item.ItemStack;
 
-public class StackSlot implements UnitSlot<ItemUnit> {
+public class StackSlot implements UnitSlot<ItemUnit>, UpdateManager<SingleItemData> {
     private ItemUnit unit = ItemUnit.BLANK;
     private int amount = 0;
     private int limit = 99;
@@ -78,5 +79,21 @@ public class StackSlot implements UnitSlot<ItemUnit> {
             return extracted;
         }
         return 0;
+    }
+
+    @Override
+    public SingleItemData createSnapshot() {
+        return new SingleItemData(unit, amount);
+    }
+
+    @Override
+    public void readSnapshot(SingleItemData snapshot) {
+        setUnit(snapshot.item());
+        this.amount = (int) snapshot.amount();
+    }
+
+    @Override
+    public void update() {
+
     }
 }
