@@ -1,11 +1,1 @@
 # Botarium
-
-TransferVariants are very useful, and great for inserting into containers. But they arent the best for extractions. Instead, I think a solution using a predicate of some kind would be better here.
-
-Extracting any fluid from a container, most of the time, requires a query to that container. This is best for mod compatibility imo. For example, if Ad Astra wants to drain 500 mb of Oxygen from tank, it'd need to know what oxygen is inside the tank, because it allows any fluid of the tag `c:oxygen` to be input into the tank. It wouldn't know what fluid might be inside the tank, so AA needs to query it, get the fluid in the tank, and then do `extract(oxygen-variant, 500mb, no-simulate)`. This is alot of steps to do something that should be quite simple. A query to know whats in the container is almost always needed to extract from the container for these reasons.
-
-The simple task of draining a non descript liquid from a tank requires a query as well, because we need to know what to extract. To just extract the first non empty fluid in a container, id need to loop through all the fluids in the slots, get the first non empty one, and then extract *that* from a container. Forge solves this by requiring devs implement their own nondescript method for extracting, and just not having a unit needed for items, instead opting for a slot based system where you have to match whats in the slot itself. These are not elegant solutions, and both ultimately are work arounds for ItemStacks/FluidStacks being terrible units for matching for extracting, and TransferVariants dont really solve this problem either.
-
-This change would require some kind of Variant + Components + Amount object being the return type of extract. The transfer system on fabric returns the amount extracted because it requires an exact unit to be passed into extract, so you already have enough information there to form the stack or do what you need to do. Not really sure what would be the best thing here. It could be a `VariantHolder` interface thats implemented onto FluidStacks and ItemStacks, that allows you to grab the variant, the components, the amount, and, for the purposes of transfer, allow you to make a TransferVariant of that type from it.
-
-TL;DR TransferVariants are good for inserting, but bad for extracting, and a predicate should be used instead.
