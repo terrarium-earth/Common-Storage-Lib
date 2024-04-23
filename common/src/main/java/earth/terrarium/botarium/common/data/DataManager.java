@@ -18,7 +18,6 @@ public interface DataManager<T> {
 
     boolean hasData(Object dataHolder);
 
-    @Nullable
     DataComponentType<T> componentType();
 
     default T modifyData(Object dataHolder, UnaryOperator<T> modifier) {

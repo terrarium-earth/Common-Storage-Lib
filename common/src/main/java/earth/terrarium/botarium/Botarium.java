@@ -6,6 +6,8 @@ import earth.terrarium.botarium.common.energy.EnergyApi;
 import earth.terrarium.botarium.common.energy.EnergyProvider;
 import earth.terrarium.botarium.common.fluid.FluidApi;
 import earth.terrarium.botarium.common.fluid.FluidProvider;
+import earth.terrarium.botarium.common.heat.HeatApi;
+import earth.terrarium.botarium.common.heat.HeatProvider;
 import earth.terrarium.botarium.common.item.ItemApi;
 import earth.terrarium.botarium.common.item.ItemProvider;
 
@@ -124,5 +126,39 @@ public class Botarium {
                 return null;
             }
         });
+
+        // Heat
+
+        HeatApi.BLOCK.registerFallback((level, pos, state, entity, direction) -> {
+            if (state.getBlock() instanceof HeatProvider.Block provider) {
+                return provider.getHeat(level, pos, state, entity, direction);
+            } else {
+                return null;
+            }
+        }, block -> block instanceof HeatProvider.Block);
+
+        HeatApi.BLOCK.registerFallback((entity, direction) -> {
+            if (entity instanceof HeatProvider.BlockEntity provider) {
+                return provider.getHeat(direction);
+            } else {
+                return null;
+            }
+        });
+
+        HeatApi.ENTITY.registerFallback((entity, ignored) -> {
+            if (entity instanceof HeatProvider.Entity provider) {
+                return provider.getHeat();
+            } else {
+                return null;
+            }
+        });
+
+        HeatApi.ITEM.registerFallback((stack, context) -> {
+            if (stack.getItem() instanceof HeatProvider.Item provider) {
+                return provider.getHeat(stack, context);
+            } else {
+                return null;
+            }
+        }, item -> item instanceof HeatProvider.Item);
     }
 }

@@ -118,6 +118,19 @@ public class TransferUtil {
         return 0;
     }
 
+    public static <T extends TransferUnit<?>> long replace(UnitIO<T> io, T oldUnit, T newUnit, long amount, boolean simulate) {
+        long extracted = io.extract(oldUnit, amount, false);
+        if (extracted > 0) {
+            long inserted = io.insert(newUnit, amount, true);
+            if (!simulate) {
+                io.insert(newUnit, amount, false);
+            } else {
+                io.insert(oldUnit, extracted, false);
+            }
+        }
+        return 0;
+    }
+
     public static <T extends TransferUnit<?>> long insertSlots(UnitContainer<T> container, T unit, long amount, boolean simulate) {
         return insertSubset(container, 0, container.getSlotCount(), unit, amount, simulate);
     }

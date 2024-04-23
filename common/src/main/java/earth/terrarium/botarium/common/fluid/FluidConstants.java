@@ -2,6 +2,7 @@ package earth.terrarium.botarium.common.fluid;
 
 import net.msrandom.multiplatform.annotations.Expect;
 
+@Expect
 public class FluidConstants {
 
     /**
@@ -10,7 +11,6 @@ public class FluidConstants {
      * @param millibuckets The amount of millibuckets to convert.
      * @return The converted value as a long.
      */
-    @Expect
     public static long toPlatformAmount(long millibuckets);
 
     /**
@@ -19,36 +19,30 @@ public class FluidConstants {
      * @param platformAmount The amount of platform specific liquid to convert.
      * @return The converted millibuckets as a long.
      */
-    @Expect
     public static long toMillibuckets(long platformAmount);
 
     /**
      * @return The amount of fluid a bucket is for the platform.
      */
-    @Expect
     public static final long BUCKET;
 
     /**
      * @return The amount of fluid a bottle is for the platform.
      */
-    @Expect
     public static final long BOTTLE;
 
     /**
      * @return The amount of fluid a block is for the platform.
      */
-    @Expect
     public static final long BLOCK;
 
     /**
      * @return The amount of fluid an ingot is for the platform.
      */
-    @Expect
     public static final long INGOT;
 
     /**
      * @return The amount of fluid a nugget is for the platform.
      */
-    @Expect
     public static final long NUGGET;
 }

@@ -8,6 +8,8 @@ import earth.terrarium.botarium.common.data.impl.FluidContainerData;
 import earth.terrarium.botarium.common.data.impl.ItemContainerData;
 import earth.terrarium.botarium.common.data.impl.SingleFluidData;
 import earth.terrarium.botarium.common.data.impl.SingleItemData;
+import earth.terrarium.botarium.common.transfer.impl.FluidUnit;
+import earth.terrarium.botarium.common.transfer.impl.ItemUnit;
 import net.minecraft.network.codec.ByteBufCodecs;
 
 public class ContainerDataManagers {
@@ -20,6 +22,10 @@ public class ContainerDataManagers {
     public static final DataManager<SingleItemData> SINGLE_ITEM_CONTENTS = REGISTRY.builder(SingleItemData.DEFAULT).serialize(SingleItemData.CODEC).syncToClient(SingleItemData.STREAM_CODEC).withDataComponent().copyOnDeath().buildAndRegister("single_item_contents");
 
     public static final DataManager<SingleFluidData> SINGLE_FLUID_CONTENTS = REGISTRY.builder(SingleFluidData.DEFAULT).serialize(SingleFluidData.CODEC).syncToClient(SingleFluidData.STREAM_CODEC).withDataComponent().copyOnDeath().buildAndRegister("single_fluid_contents");
+
+    public static final DataManager<FluidUnit> FLUID_UNIT = REGISTRY.builder(() -> FluidUnit.BLANK).serialize(FluidUnit.CODEC).syncToClient(FluidUnit.STREAM_CODEC).withDataComponent().copyOnDeath().buildAndRegister("fluid_unit");
+
+    public static final DataManager<ItemUnit> ITEM_UNIT = REGISTRY.builder(() -> ItemUnit.BLANK).serialize(ItemUnit.CODEC).syncToClient(ItemUnit.STREAM_CODEC).withDataComponent().copyOnDeath().buildAndRegister("item_unit");
 
     public static final DataManager<Long> LONG_CONTENTS = REGISTRY.builder(() -> 0L).serialize(Codec.LONG).syncToClient(ByteBufCodecs.VAR_LONG).withDataComponent().copyOnDeath().buildAndRegister("energy_contents");
 }
