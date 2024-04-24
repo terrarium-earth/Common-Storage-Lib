@@ -17,11 +17,11 @@ import net.minecraft.world.level.ItemLike;
 
 import java.util.function.Predicate;
 
-public record ItemUnit(Item unit, DataComponentPatch components) implements TransferUnit<Item>, Predicate<ItemUnit> {
+public record ItemUnit(Item type, DataComponentPatch components) implements TransferUnit<Item>, Predicate<ItemUnit> {
     public static final ItemUnit BLANK = new ItemUnit(Items.AIR, DataComponentPatch.EMPTY);
 
     public static final Codec<ItemUnit> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-            BuiltInRegistries.ITEM.byNameCodec().fieldOf("id").forGetter(ItemUnit::unit),
+            BuiltInRegistries.ITEM.byNameCodec().fieldOf("id").forGetter(ItemUnit::type),
             DataComponentPatch.CODEC.optionalFieldOf("components", DataComponentPatch.EMPTY).forGetter(ItemUnit::components)
     ).apply(instance, ItemUnit::new));
 
@@ -37,7 +37,7 @@ public record ItemUnit(Item unit, DataComponentPatch components) implements Tran
 
         @Override
         public void encode(RegistryFriendlyByteBuf object, ItemUnit object2) {
-            ITEM_HOLDER_STREAM_CODEC.encode(object, object2.unit.builtInRegistryHolder());
+            ITEM_HOLDER_STREAM_CODEC.encode(object, object2.type.builtInRegistryHolder());
             DataComponentPatch.STREAM_CODEC.encode(object, object2.components);
         }
     };
@@ -56,7 +56,7 @@ public record ItemUnit(Item unit, DataComponentPatch components) implements Tran
 
     @Override
     public boolean isBlank() {
-        return unit == Items.AIR;
+        return type == Items.AIR;
     }
 
     public boolean matches(ItemStack stack) {
@@ -64,7 +64,7 @@ public record ItemUnit(Item unit, DataComponentPatch components) implements Tran
     }
 
     public ItemStack toStack(int count) {
-        ItemStack stack = new ItemStack(unit, count);
+        ItemStack stack = new ItemStack(type, count);
         stack.applyComponents(components);
         return stack;
     }
@@ -75,6 +75,6 @@ public record ItemUnit(Item unit, DataComponentPatch components) implements Tran
 
     @Override
     public boolean test(ItemUnit unit) {
-        return isOf(unit.unit) && componentsMatch(unit.components);
+        return isOf(unit.type) && componentsMatch(unit.components);
     }
 }

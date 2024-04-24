@@ -31,11 +31,11 @@ public class TransferUtil {
     }
 
     public static Predicate<ItemUnit> byItemTag(TagKey<Item> tag) {
-        return unit -> unit.unit().builtInRegistryHolder().is(tag);
+        return unit -> unit.type().builtInRegistryHolder().is(tag);
     }
 
     public static Predicate<FluidUnit> byFluidTag(TagKey<Fluid> tag) {
-        return unit -> unit.unit().builtInRegistryHolder().is(tag);
+        return unit -> unit.type().builtInRegistryHolder().is(tag);
     }
 
     public static <T extends TransferUnit<?>> long move(UnitIO<T> from, UnitIO<T> to, T unit, long amount, boolean simulate) {

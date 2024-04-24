@@ -6,13 +6,17 @@ import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
 import net.fabricmc.fabric.api.transfer.v1.transaction.base.SnapshotParticipant;
 import team.reborn.energy.api.EnergyStorage;
 
-public class FabricLongStorage<S> extends SnapshotParticipant<S> implements EnergyStorage {
+public class FabricLongStorage implements EnergyStorage {
     private final LongContainer container;
-    private final UpdateManager<S> updateManager;
+    private final OptionalSnapshotParticipant<?> snapshotParticipant;
 
-    public FabricLongStorage(LongContainer container, UpdateManager<S> updateManager) {
+    public FabricLongStorage(LongContainer container) {
         this.container = container;
-        this.updateManager = updateManager;
+        if (container instanceof UpdateManager<?> updateManager) {
+            this.snapshotParticipant = new OptionalSnapshotParticipant<>(updateManager);
+        } else {
+            this.snapshotParticipant = null;
+        }
     }
 
     @Override
@@ -37,22 +41,13 @@ public class FabricLongStorage<S> extends SnapshotParticipant<S> implements Ener
         return container.getCapacity();
     }
 
-    @Override
-    protected void onFinalCommit() {
-        updateManager.update();
-    }
-
-    @Override
-    protected S createSnapshot() {
-        return updateManager.createSnapshot();
-    }
-
-    @Override
-    protected void readSnapshot(S snapshot) {
-        updateManager.readSnapshot(snapshot);
-    }
-
     public LongContainer getContainer() {
         return container;
+    }
+
+    private void updateSnapshots(TransactionContext transaction) {
+        if (snapshotParticipant != null) {
+            snapshotParticipant.updateSnapshots(transaction);
+        }
     }
 }

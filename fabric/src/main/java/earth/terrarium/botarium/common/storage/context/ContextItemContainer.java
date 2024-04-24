@@ -19,7 +19,7 @@ public record ContextItemContainer(List<SingleSlotStorage<ItemVariant>> storage,
     }
 
     public static ItemVariant of(ItemUnit unit) {
-        return ItemVariant.of(unit.unit(), unit.components());
+        return ItemVariant.of(unit.type(), unit.components());
     }
 
     @Override

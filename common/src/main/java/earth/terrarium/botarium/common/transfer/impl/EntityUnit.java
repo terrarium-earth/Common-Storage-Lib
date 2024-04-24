@@ -21,7 +21,7 @@ public record EntityUnit(@Nullable EntityType<?> unit, DataComponentPatch compon
     public static final EntityUnit BLANK = new EntityUnit(null, DataComponentPatch.EMPTY);
 
     public static final Codec<EntityUnit> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-            BuiltInRegistries.ENTITY_TYPE.byNameCodec().fieldOf("id").forGetter(EntityUnit::unit),
+            BuiltInRegistries.ENTITY_TYPE.byNameCodec().fieldOf("id").forGetter(EntityUnit::type),
             CompoundTag.CODEC.optionalFieldOf("entityData", new CompoundTag()).forGetter(EntityUnit::getEntityData)
     ).apply(instance, EntityUnit::of));
 

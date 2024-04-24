@@ -7,22 +7,11 @@ import net.fabricmc.fabric.api.transfer.v1.storage.SlottedStorage;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.fabricmc.fabric.api.transfer.v1.storage.TransferVariant;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
-import net.minecraft.core.component.DataComponentPatch;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Function;
 
-public final class CommonWrappedContainer<T, U extends TransferUnit<T>, V extends TransferVariant<T>> implements UnitContainer<U> {
-    private final Storage<V> storage;
-    private final Function<U, V> toVariant;
-    private final Function<V, U> toUnit;
-
-    public CommonWrappedContainer(Storage<V> storage, Function<U, V> toVariant, Function<V, U> toUnit) {
-        this.storage = storage;
-        this.toVariant = toVariant;
-        this.toUnit = toUnit;
-    }
-
+public record CommonWrappedContainer<T, U extends TransferUnit<T>, V extends TransferVariant<T>>(Storage<V> storage, Function<U, V> toVariant, Function<V, U> toUnit) implements UnitContainer<U> {
     public U toUnit(V variant) {
         return toUnit.apply(variant);
     }

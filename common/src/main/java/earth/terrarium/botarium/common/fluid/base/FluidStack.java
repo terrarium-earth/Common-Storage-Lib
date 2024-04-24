@@ -23,13 +23,13 @@ public final class FluidStack implements DataComponentHolder, ComponentExtras {
     public static final FluidStack EMPTY = new FluidStack(null, 0, new PatchedDataComponentMap(DataComponentMap.EMPTY));
 
     public static final Codec<FluidStack> MILLIBUCKET_CODEC = RecordCodecBuilder.create(instance -> instance.group(
-            BuiltInRegistries.FLUID.byNameCodec().fieldOf("fluid").forGetter(FluidStack::getFluid),
+            BuiltInRegistries.FLUID.byNameCodec().fieldOf("id").forGetter(FluidStack::getFluid),
             Codec.LONG.fieldOf("millibuckets").forGetter(FluidStack::getAmountAsMb),
             DataComponentPatch.CODEC.optionalFieldOf("components", DataComponentPatch.EMPTY).forGetter(FluidStack::getPatch)
     ).apply(instance, FluidStack::ofMb));
 
     public static final Codec<FluidStack> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-            BuiltInRegistries.FLUID.byNameCodec().fieldOf("fluid").forGetter(FluidStack::getFluid),
+            BuiltInRegistries.FLUID.byNameCodec().fieldOf("id").forGetter(FluidStack::getFluid),
             Codec.LONG.fieldOf("amount").forGetter(FluidStack::getAmount),
             DataComponentPatch.CODEC.optionalFieldOf("components", DataComponentPatch.EMPTY).forGetter(FluidStack::getPatch)
     ).apply(instance, FluidStack::of));

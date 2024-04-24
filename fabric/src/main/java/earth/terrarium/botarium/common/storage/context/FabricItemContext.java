@@ -20,16 +20,8 @@ public final class FabricItemContext implements ContainerItemContext {
     private final SlottedStorage<ItemVariant> container;
 
     public FabricItemContext(ItemContext context) {
-        if(context.mainSlot() instanceof UpdateManager<?> manager) {
-            this.mainSlot = new FabricWrappedSlot<>(context.mainSlot(), manager, ConversionUtils::toUnit, ConversionUtils::toVariant);
-        } else {
-            throw new IllegalArgumentException("Main slot must be an UpdateManager");
-        }
-        if (context.outerContainer() instanceof UpdateManager<?> manager3) {
-            this.container = new FabricWrappedContainer<>(context.outerContainer(), manager3, ConversionUtils::toUnit, ConversionUtils::toVariant);
-        } else {
-            throw new IllegalArgumentException("Container must be an UpdateManager");
-        }
+        this.mainSlot = new FabricWrappedSlot<>(context.mainSlot(), ConversionUtils::toVariant, ConversionUtils::toUnit);
+        this.container = new FabricWrappedContainer<>(context.outerContainer(), ConversionUtils::toVariant, ConversionUtils::toUnit);
     }
 
     @Override

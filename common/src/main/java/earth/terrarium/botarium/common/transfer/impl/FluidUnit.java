@@ -15,11 +15,11 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
 
-public record FluidUnit(Fluid unit, DataComponentPatch components) implements TransferUnit<Fluid> {
+public record FluidUnit(Fluid type, DataComponentPatch components) implements TransferUnit<Fluid> {
     public static final FluidUnit BLANK = new FluidUnit(Fluids.EMPTY, DataComponentPatch.EMPTY);
 
     public static final Codec<FluidUnit> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-            BuiltInRegistries.FLUID.byNameCodec().fieldOf("id").forGetter(FluidUnit::unit),
+            BuiltInRegistries.FLUID.byNameCodec().fieldOf("id").forGetter(FluidUnit::type),
             DataComponentPatch.CODEC.optionalFieldOf("components", DataComponentPatch.EMPTY).forGetter(FluidUnit::components)
     ).apply(instance, FluidUnit::new));
 
@@ -35,7 +35,7 @@ public record FluidUnit(Fluid unit, DataComponentPatch components) implements Tr
 
         @Override
         public void encode(RegistryFriendlyByteBuf object, FluidUnit object2) {
-            FLUID_STREAM_CODEC.encode(object, object2.unit.builtInRegistryHolder());
+            FLUID_STREAM_CODEC.encode(object, object2.type.builtInRegistryHolder());
             DataComponentPatch.STREAM_CODEC.encode(object, object2.components);
         }
     };
@@ -54,7 +54,7 @@ public record FluidUnit(Fluid unit, DataComponentPatch components) implements Tr
 
     @Override
     public boolean isBlank() {
-        return unit == Fluids.EMPTY;
+        return type == Fluids.EMPTY;
     }
 
     public boolean matches(FluidStack holder) {
@@ -62,7 +62,7 @@ public record FluidUnit(Fluid unit, DataComponentPatch components) implements Tr
     }
 
     public FluidStack toHolder(long amount) {
-        return FluidStack.of(unit, amount, components);
+        return FluidStack.of(type, amount, components);
     }
 
     public FluidStack toHolder() {

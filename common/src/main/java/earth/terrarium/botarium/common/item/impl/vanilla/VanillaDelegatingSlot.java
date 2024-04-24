@@ -9,9 +9,11 @@ import net.minecraft.world.item.ItemStack;
 public class VanillaDelegatingSlot implements UnitSlot<ItemUnit>, UpdateManager<ItemStack> {
     private final int slot;
     private final Container container;
+    private final Runnable update;
 
-    public VanillaDelegatingSlot(Container container, int slot) {
-        this.container = container;
+    public VanillaDelegatingSlot(AbstractVanillaContainer container, int slot) {
+        this.container = container.container;
+        this.update = container instanceof UpdateManager<?> manager ? manager::update : () -> {};
         this.slot = slot;
     }
 
@@ -85,6 +87,6 @@ public class VanillaDelegatingSlot implements UnitSlot<ItemUnit>, UpdateManager<
 
     @Override
     public void update() {
-
+        update.run();
     }
 }

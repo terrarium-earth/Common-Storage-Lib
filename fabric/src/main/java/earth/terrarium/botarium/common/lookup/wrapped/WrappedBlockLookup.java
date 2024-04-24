@@ -38,7 +38,7 @@ public class WrappedBlockLookup<T, U extends TransferUnit<T>, V extends Transfer
         if (storage == null) {
             return null;
         }
-        if (storage instanceof FabricWrappedContainer<?, U, V, ?, ?> fabric) {
+        if (storage instanceof FabricWrappedContainer<T, U, V> fabric) {
             return fabric.getContainer();
         }
         return new CommonWrappedContainer<>(storage, toVariant, toUnit);
@@ -54,8 +54,8 @@ public class WrappedBlockLookup<T, U extends TransferUnit<T>, V extends Transfer
         public void registerBlocks(BlockGetter<UnitContainer<U>, @Nullable Direction> getter, Block... blocks) {
             fabricLookup.registerForBlocks((world, pos, state, blockEntity, context) -> {
                 UnitContainer<U> container = getter.getContainer(world, pos, state, blockEntity, context);
-                if (container instanceof UpdateManager<?> updateManager) {
-                    return new FabricWrappedContainer<>(container, updateManager, toVariant, toUnit);
+                if (container != null) {
+                    return new FabricWrappedContainer<>(container, toVariant, toUnit);
                 }
                 return null;
             }, blocks);
@@ -65,8 +65,8 @@ public class WrappedBlockLookup<T, U extends TransferUnit<T>, V extends Transfer
         public void registerBlockEntities(BlockEntityGetter<UnitContainer<U>, @Nullable Direction> getter, BlockEntityType<?>... blockEntities) {
             fabricLookup.registerForBlockEntities((entity, context) -> {
                 UnitContainer<U> container = getter.getContainer(entity, context);
-                if (container instanceof UpdateManager<?> updateManager) {
-                    return new FabricWrappedContainer<>(container, updateManager, toVariant, toUnit);
+                if (container != null) {
+                    return new FabricWrappedContainer<>(container, toVariant, toUnit);
                 }
                 return null;
             }, blockEntities);

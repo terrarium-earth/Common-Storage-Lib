@@ -17,17 +17,22 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Iterator;
 import java.util.function.Function;
 
-public final class FabricWrappedContainer<T, U extends TransferUnit<T>, V extends TransferVariant<T>, S> extends SnapshotParticipant<S> implements SlottedStorage<V> {
+public final class FabricWrappedContainer<T, U extends TransferUnit<T>, V extends TransferVariant<T>> implements SlottedStorage<V> {
     private final UnitContainer<U> container;
-    private final UpdateManager<S> updateManager;
+    private final OptionalSnapshotParticipant<?> updateManager;
     private final Function<U, V> toVariant;
     private final Function<V, U> toUnit;
 
-    public FabricWrappedContainer(UnitContainer<U> container, UpdateManager<S> updateManager, Function<V, U> toUnit, Function<U, V> toVariant) {
+    public FabricWrappedContainer(UnitContainer<U> container, Function<U, V> toVariant, Function<V, U> toUnit) {
         this.container = container;
-        this.updateManager = updateManager;
         this.toVariant = toVariant;
         this.toUnit = toUnit;
+
+        if (container instanceof UpdateManager<?> updater) {
+            this.updateManager = new OptionalSnapshotParticipant<>(updater);
+        } else {
+            this.updateManager = null;
+        }
     }
 
     public U toUnit(V variant) {
@@ -70,21 +75,6 @@ public final class FabricWrappedContainer<T, U extends TransferUnit<T>, V extend
     }
 
     @Override
-    protected S createSnapshot() {
-        return updateManager.createSnapshot();
-    }
-
-    @Override
-    protected void readSnapshot(S snapshot) {
-        updateManager.readSnapshot(snapshot);
-    }
-
-    @Override
-    protected void onFinalCommit() {
-        updateManager.update();
-    }
-
-    @Override
     public int getSlotCount() {
         return container.getSlotCount();
     }
@@ -92,13 +82,16 @@ public final class FabricWrappedContainer<T, U extends TransferUnit<T>, V extend
     @Override
     public SingleSlotStorage<V> getSlot(int slot) {
         UnitSlot<U> unitSlot = container.getSlot(slot);
-        if (unitSlot instanceof UpdateManager<?> updater) {
-            return new FabricWrappedSlot<>(unitSlot, updater, this::toUnit, this::toVariant);
-        }
-        throw new IllegalArgumentException("UnitSlot must implement UpdateManager");
+        return new FabricWrappedSlot<>(unitSlot, this::toVariant, this::toUnit);
     }
 
     public UnitContainer<U> getContainer() {
         return container;
+    }
+
+    private void updateSnapshots(TransactionContext transaction) {
+        if (updateManager != null) {
+            updateManager.updateSnapshots(transaction);
+        }
     }
 }

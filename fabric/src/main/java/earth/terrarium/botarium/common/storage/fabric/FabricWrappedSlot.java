@@ -11,17 +11,22 @@ import net.minecraft.core.component.DataComponentPatch;
 
 import java.util.function.Function;
 
-public class FabricWrappedSlot<T, U extends TransferUnit<T>, V extends TransferVariant<T>, S, C extends UnitSlot<U>> extends SnapshotParticipant<S> implements SingleSlotStorage<V> {
-    private final C container;
-    private final UpdateManager<S> updateManager;
+public class FabricWrappedSlot<T, U extends TransferUnit<T>, V extends TransferVariant<T>> implements SingleSlotStorage<V> {
+    private final UnitSlot<U> container;
+    private final OptionalSnapshotParticipant<?> updateManager;
     private final Function<V, U> toUnit;
     private final Function<U, V> toVariant;
 
-    public FabricWrappedSlot(C container, UpdateManager<S> updateManager, Function<V, U> toUnit, Function<U, V> toVariant) {
+    public FabricWrappedSlot(UnitSlot<U> container, Function<U, V> toVariant, Function<V, U> toUnit) {
         this.container = container;
         this.toVariant = toVariant;
         this.toUnit = toUnit;
-        this.updateManager = updateManager;
+
+        if (container instanceof UpdateManager<?> updater) {
+            this.updateManager = new OptionalSnapshotParticipant<>(updater);
+        } else {
+            this.updateManager = null;
+        }
     }
 
     @Override
@@ -58,18 +63,9 @@ public class FabricWrappedSlot<T, U extends TransferUnit<T>, V extends TransferV
         return container.getLimit();
     }
 
-    @Override
-    protected S createSnapshot() {
-        return updateManager.createSnapshot();
-    }
-
-    @Override
-    protected void readSnapshot(S snapshot) {
-        updateManager.readSnapshot(snapshot);
-    }
-
-    @Override
-    protected void onFinalCommit() {
-        updateManager.update();
+    private void updateSnapshots(TransactionContext transaction) {
+        if (updateManager != null) {
+            updateManager.updateSnapshots(transaction);
+        }
     }
 }

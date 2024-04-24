@@ -1,10 +1,9 @@
 package earth.terrarium.botarium.common.data.impl;
 
 import com.mojang.serialization.Codec;
-import earth.terrarium.botarium.common.data.utils.ContainerSerializer;
+import earth.terrarium.botarium.common.storage.util.ContainerExtras;
+import earth.terrarium.botarium.common.storage.base.UnitContainer;
 import earth.terrarium.botarium.common.storage.base.UnitSlot;
-import earth.terrarium.botarium.common.storage.impl.SimpleContainer;
-import earth.terrarium.botarium.common.storage.impl.SimpleSlot;
 import earth.terrarium.botarium.common.transfer.impl.ItemUnit;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -24,25 +23,12 @@ public record ItemContainerData(List<SingleItemData> stacks) {
 
     public static final StreamCodec<RegistryFriendlyByteBuf, ItemContainerData> NETWORK_CODEC = ByteBufCodecs.collection(size -> (List<SingleItemData>) new ArrayList<SingleItemData>(), SingleItemData.STREAM_CODEC).map(ItemContainerData::new, ItemContainerData::stacks);
 
-    public static final ContainerSerializer<SimpleContainer<ItemUnit, ?, ?>, ItemContainerData> SERIALIZER = new ContainerSerializer<>() {
-        @Override
-        public ItemContainerData captureData(SimpleContainer<ItemUnit, ?, ?> buf) {
-            List<SingleItemData> stacks = NonNullList.withSize(buf.getSlotCount(), SingleItemData.EMPTY);
-            for (int i = 0; i < buf.getSlotCount(); i++) {
-                UnitSlot<ItemUnit> slot = buf.getSlot(i);
-                stacks.set(i, new SingleItemData(slot.getUnit(), slot.getAmount()));
-            }
-            return new ItemContainerData(stacks);
+    public static ItemContainerData of(UnitContainer<ItemUnit> container) {
+        List<SingleItemData> stacks = NonNullList.withSize(container.getSlotCount(), SingleItemData.EMPTY);
+        for (int i = 0; i < container.getSlotCount(); i++) {
+            UnitSlot<ItemUnit> slot = container.getSlot(i);
+            stacks.set(i, new SingleItemData(slot.getUnit(), slot.getAmount()));
         }
-
-        @Override
-        public void applyData(SimpleContainer<ItemUnit, ?, ?> object, ItemContainerData data) {
-            for (int i = 0; i < Math.min(object.getSlotCount(), data.stacks.size()); i++) {
-                SimpleSlot<ItemUnit, ?> slot = object.getSlots().get(i);
-                SingleItemData stack = data.stacks.get(i);
-                slot.setUnit(stack.item());
-                slot.setAmount(stack.amount());
-            }
-        }
-    };
+        return new ItemContainerData(stacks);
+    }
 }

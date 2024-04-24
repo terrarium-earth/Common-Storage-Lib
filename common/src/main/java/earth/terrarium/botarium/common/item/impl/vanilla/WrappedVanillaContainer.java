@@ -1,11 +1,13 @@
 package earth.terrarium.botarium.common.item.impl.vanilla;
 
+import earth.terrarium.botarium.common.data.impl.ItemContainerData;
+import earth.terrarium.botarium.common.data.impl.SingleItemData;
 import earth.terrarium.botarium.common.storage.util.UpdateManager;
 import net.minecraft.core.NonNullList;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
 
-public class WrappedVanillaContainer extends AbstractVanillaContainer implements UpdateManager<NonNullList<ItemStack>> {
+public class WrappedVanillaContainer extends AbstractVanillaContainer implements UpdateManager<ItemContainerData> {
     private final Runnable update;
 
     public WrappedVanillaContainer(Container container, Runnable update) {
@@ -14,18 +16,14 @@ public class WrappedVanillaContainer extends AbstractVanillaContainer implements
     }
 
     @Override
-    public NonNullList<ItemStack> createSnapshot() {
-        NonNullList<ItemStack> snapshot = NonNullList.withSize(container.getContainerSize(), ItemStack.EMPTY);
-        for (int i = 0; i < container.getContainerSize(); i++) {
-            snapshot.set(i, container.getItem(i).copy());
-        }
-        return snapshot;
+    public ItemContainerData createSnapshot() {
+        return ItemContainerData.of(this);
     }
 
     @Override
-    public void readSnapshot(NonNullList<ItemStack> snapshot) {
+    public void readSnapshot(ItemContainerData snapshot) {
         for (int i = 0; i < container.getContainerSize(); i++) {
-            container.setItem(i, snapshot.get(i));
+            container.setItem(i, snapshot.stacks().get(i).createStack());
         }
     }
 

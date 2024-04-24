@@ -2,26 +2,26 @@ package earth.terrarium.botarium.common.data.impl;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import earth.terrarium.botarium.common.data.utils.ContainerSerializer;
-import earth.terrarium.botarium.common.storage.impl.SimpleSlot;
-import earth.terrarium.botarium.common.storage.impl.SingleUnitContainer;
+import earth.terrarium.botarium.common.storage.util.SlotExtras;
+import earth.terrarium.botarium.common.storage.base.UnitSlot;
 import earth.terrarium.botarium.common.transfer.impl.ItemUnit;
 import net.minecraft.core.component.DataComponentPatch;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 
 import java.util.function.Supplier;
 
-public record SingleItemData(ItemUnit item, long amount) {
+public record SingleItemData(ItemUnit unit, long amount) {
     public static final SingleItemData EMPTY = new SingleItemData(ItemUnit.BLANK, 0);
 
     public static final Supplier<SingleItemData> DEFAULT = () -> EMPTY;
 
     public static final Codec<SingleItemData> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-            BuiltInRegistries.ITEM.byNameCodec().fieldOf("id").forGetter(data -> data.item.unit()),
-            DataComponentPatch.CODEC.fieldOf("components").forGetter(data -> data.item.components()),
+            BuiltInRegistries.ITEM.byNameCodec().fieldOf("id").forGetter(data -> data.unit.type()),
+            DataComponentPatch.CODEC.fieldOf("components").forGetter(data -> data.unit.components()),
             Codec.LONG.fieldOf("amount").forGetter(SingleItemData::amount)
     ).apply(instance, SingleItemData::of));
 
@@ -36,26 +36,21 @@ public record SingleItemData(ItemUnit item, long amount) {
 
         @Override
         public void encode(RegistryFriendlyByteBuf buf, SingleItemData data) {
-            buf.writeVarInt(BuiltInRegistries.ITEM.getId(data.item.unit()));
-            DataComponentPatch.STREAM_CODEC.encode(buf, data.item.components());
+            buf.writeVarInt(BuiltInRegistries.ITEM.getId(data.unit.type()));
+            DataComponentPatch.STREAM_CODEC.encode(buf, data.unit.components());
             buf.writeLong(data.amount);
-        }
-    };
-
-    public static final ContainerSerializer<SimpleSlot<ItemUnit, ?>, SingleItemData> SERIALIZER = new ContainerSerializer<>() {
-        @Override
-        public SingleItemData captureData(SimpleSlot<ItemUnit, ?> container) {
-            return new SingleItemData(container.getUnit(), container.getAmount());
-        }
-
-        @Override
-        public void applyData(SimpleSlot<ItemUnit, ?> container, SingleItemData data) {
-            container.setUnit(data.item);
-            container.setAmount(data.amount);
         }
     };
 
     private static SingleItemData of(Item item, DataComponentPatch components, long amount) {
         return new SingleItemData(ItemUnit.of(item, components), amount);
+    }
+
+    public static SingleItemData of(UnitSlot<ItemUnit> stack) {
+        return new SingleItemData(stack.getUnit(), stack.getAmount());
+    }
+
+    public ItemStack createStack() {
+        return unit.toStack((int) amount);
     }
 }

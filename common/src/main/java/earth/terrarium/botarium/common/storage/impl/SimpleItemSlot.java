@@ -1,21 +1,23 @@
-package earth.terrarium.botarium.common.item.impl;
+package earth.terrarium.botarium.common.storage.impl;
 
 import earth.terrarium.botarium.common.data.impl.SingleItemData;
 import earth.terrarium.botarium.common.storage.base.UnitSlot;
 import earth.terrarium.botarium.common.storage.util.UpdateManager;
 import earth.terrarium.botarium.common.transfer.impl.ItemUnit;
-import net.minecraft.world.item.ItemStack;
 
-public class StackSlot implements UnitSlot<ItemUnit>, UpdateManager<SingleItemData> {
-    private ItemUnit unit = ItemUnit.BLANK;
-    private int amount = 0;
-    private int limit = 99;
+import java.util.function.Predicate;
 
-    public StackSlot(ItemStack stack) {
-        if (!stack.isEmpty()) {
-            setUnit(ItemUnit.of(stack));
-            this.amount = stack.getCount();
-        }
+public class SimpleItemSlot implements UnitSlot<ItemUnit>, UpdateManager<SingleItemData> {
+    private final long limit;
+    private final Runnable update;
+    private ItemUnit unit;
+    private long amount;
+
+    public SimpleItemSlot(long limit, Runnable update) {
+        this.unit = ItemUnit.BLANK;
+        this.amount = getAmount();
+        this.limit = limit;
+        this.update = update;
     }
 
     @Override
@@ -33,33 +35,25 @@ public class StackSlot implements UnitSlot<ItemUnit>, UpdateManager<SingleItemDa
         return unit;
     }
 
-    public void setUnit(ItemUnit unit) {
-        this.unit = unit;
-        this.limit = unit.toStack().getMaxStackSize();
-    }
-
     @Override
     public long getAmount() {
         return amount;
     }
 
-    public ItemStack getStack() {
-        return unit.toStack(amount);
-    }
-
     @Override
     public long insert(ItemUnit unit, long amount, boolean simulate) {
+        if (!isValueValid(unit)) return 0;
         if (this.unit.isBlank()) {
             long inserted = Math.min(amount, limit);
             if (!simulate) {
-                setUnit(unit);
-                this.amount = (int) inserted;
+                this.unit = unit;
+                this.amount = inserted;
             }
             return inserted;
         } else if (this.unit.matches(unit)) {
             long inserted = Math.min(amount, limit - this.amount);
             if (!simulate) {
-                this.amount += (int) inserted;
+                this.amount += inserted;
             }
             return inserted;
         }
@@ -71,10 +65,7 @@ public class StackSlot implements UnitSlot<ItemUnit>, UpdateManager<SingleItemDa
         if (this.unit.matches(unit)) {
             long extracted = Math.min(amount, this.amount);
             if (!simulate) {
-                this.amount -= (int) extracted;
-                if (this.amount == 0) {
-                    setUnit(ItemUnit.BLANK);
-                }
+                this.amount -= extracted;
             }
             return extracted;
         }
@@ -83,17 +74,31 @@ public class StackSlot implements UnitSlot<ItemUnit>, UpdateManager<SingleItemDa
 
     @Override
     public SingleItemData createSnapshot() {
-        return new SingleItemData(unit, amount);
+        return SingleItemData.of(this);
     }
 
     @Override
     public void readSnapshot(SingleItemData snapshot) {
-        setUnit(snapshot.unit());
-        this.amount = (int) snapshot.amount();
+        this.unit = snapshot.unit();
+        this.amount = snapshot.amount();
     }
 
     @Override
     public void update() {
+        update.run();
+    }
 
+    public static class Filtered extends SimpleItemSlot {
+        private final Predicate<ItemUnit> filter;
+
+        public Filtered(long limit, Runnable update, Predicate<ItemUnit> filter) {
+            super(limit, update);
+            this.filter = filter;
+        }
+
+        @Override
+        public boolean isValueValid(ItemUnit unit) {
+            return filter.test(unit);
+        }
     }
 }

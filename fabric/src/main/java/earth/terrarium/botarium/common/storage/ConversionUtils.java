@@ -11,7 +11,7 @@ public class ConversionUtils {
     }
 
     public static ItemVariant toVariant(ItemUnit unit) {
-        return ItemVariant.of(unit.unit(), unit.components());
+        return ItemVariant.of(unit.type(), unit.components());
     }
 
     public static FluidUnit toUnit(FluidVariant variant) {
@@ -19,6 +19,6 @@ public class ConversionUtils {
     }
 
     public static FluidVariant toVariant(FluidUnit unit) {
-        return FluidVariant.of(unit.unit(), unit.components());
+        return FluidVariant.of(unit.type(), unit.components());
     }
 }

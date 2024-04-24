@@ -58,13 +58,13 @@ public class StackedFluidContainer implements UnitContainer<FluidUnit>, UnitSlot
     public ItemUnit fill(ItemUnit unit, FluidUnit fluid) {
         PatchedDataComponentMap components = PatchedDataComponentMap.fromPatch(DataComponentMap.EMPTY, unit.components());
         components.set(ContainerDataManagers.FLUID_UNIT.componentType(), fluid);
-        return ItemUnit.of(unit.unit(), components.asPatch());
+        return ItemUnit.of(unit.type(), components.asPatch());
     }
 
     public ItemUnit drain(ItemUnit unit) {
         PatchedDataComponentMap components = PatchedDataComponentMap.fromPatch(DataComponentMap.EMPTY, unit.components());
         components.set(ContainerDataManagers.FLUID_UNIT.componentType(), FluidUnit.BLANK);
-        return ItemUnit.of(unit.unit(), components.asPatch());
+        return ItemUnit.of(unit.type(), components.asPatch());
     }
 
     @Override
@@ -92,7 +92,7 @@ public class StackedFluidContainer implements UnitContainer<FluidUnit>, UnitSlot
 
     @Override
     public void readSnapshot(SingleItemData snapshot) {
-        TransferUtil.replace(context, context.getUnit(), snapshot.item(), snapshot.amount(), false);
+        TransferUtil.replace(context, context.getUnit(), snapshot.unit(), snapshot.amount(), false);
     }
 
     @Override

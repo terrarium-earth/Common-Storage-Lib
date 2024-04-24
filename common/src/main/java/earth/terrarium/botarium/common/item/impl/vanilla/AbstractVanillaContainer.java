@@ -20,6 +20,6 @@ public abstract class AbstractVanillaContainer implements UnitContainer<ItemUnit
 
     @Override
     public @NotNull UnitSlot<ItemUnit> getSlot(int slot) {
-        return new VanillaDelegatingSlot(container, slot);
+        return new VanillaDelegatingSlot(this, slot);
     }
 }

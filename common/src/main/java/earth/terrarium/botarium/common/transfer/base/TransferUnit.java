@@ -7,7 +7,7 @@ import java.util.Objects;
 public interface TransferUnit<T> {
     boolean isBlank();
 
-    T unit();
+    T type();
 
     DataComponentPatch components();
 
@@ -20,10 +20,10 @@ public interface TransferUnit<T> {
     }
 
     default boolean isOf(T unit) {
-        return this.unit() == unit;
+        return this.type() == unit;
     }
 
     default boolean matches(TransferUnit<T> other) {
-        return isOf(other.unit()) && componentsMatch(other.components());
+        return isOf(other.type()) && componentsMatch(other.components());
     }
 }

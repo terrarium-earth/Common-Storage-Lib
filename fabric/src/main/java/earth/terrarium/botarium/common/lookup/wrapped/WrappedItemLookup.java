@@ -35,7 +35,7 @@ public class WrappedItemLookup<T, U extends TransferUnit<T>, V extends TransferV
     public @Nullable UnitContainer<U> find(ItemStack stack, ItemContext context) {
         Storage<V> storage = fabricLookup.find(stack, new FabricItemContext(context));
         if (storage != null) {
-            if (storage instanceof FabricWrappedContainer<?, U, V, ?, ?> fabric) {
+            if (storage instanceof FabricWrappedContainer<T, U, V> fabric) {
                 return fabric.getContainer();
             }
             return new CommonWrappedContainer<>(storage, toVariant, toUnit);
@@ -51,8 +51,8 @@ public class WrappedItemLookup<T, U extends TransferUnit<T>, V extends TransferV
     public void registerItems(ItemGetter<UnitContainer<U>, ItemContext> getter, Item... items) {
         fabricLookup.registerForItems((stack, context) -> {
             UnitContainer<U> container = getter.getContainer(stack, new CommonItemContext(context));
-            if (container instanceof UpdateManager<?> updateManager) {
-                return new FabricWrappedContainer<>(container, updateManager, toVariant, toUnit);
+            if (container != null) {
+                return new FabricWrappedContainer<>(container, toVariant, toUnit);
             }
             return null;
         }, items);
