@@ -13,6 +13,17 @@ pluginManagement {
     }
 }
 
-include("common")
-include("fabric")
-include("neoforge")
+includeSubmodule("data")
+includeSubmodule("lookup")
+includeSubmodule("transfer")
+
+fun includeSubmodule(name: String) {
+    includePlatformModule(name, "common")
+    includePlatformModule(name, "fabric")
+    includePlatformModule(name, "neoforge")
+}
+
+fun includePlatformModule(name: String, platform: String) {
+    include("$name/$platform")
+    project(":$name/$platform").name = "${rootProject.name}-$name-$platform"
+}

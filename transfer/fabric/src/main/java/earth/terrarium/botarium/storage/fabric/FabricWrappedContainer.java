@@ -1,0 +1,117 @@
+package earth.terrarium.botarium.storage.fabric;
+
+import earth.terrarium.botarium.fluid.base.FluidUnit;
+import earth.terrarium.botarium.item.base.ItemUnit;
+import earth.terrarium.botarium.storage.ConversionUtils;
+import earth.terrarium.botarium.storage.unit.TransferUnit;
+import earth.terrarium.botarium.storage.base.CommonStorage;
+import earth.terrarium.botarium.storage.base.StorageSlot;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
+import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
+import net.fabricmc.fabric.api.transfer.v1.storage.SlottedStorage;
+import net.fabricmc.fabric.api.transfer.v1.storage.StorageView;
+import net.fabricmc.fabric.api.transfer.v1.storage.TransferVariant;
+import net.fabricmc.fabric.api.transfer.v1.storage.base.SingleSlotStorage;
+import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.level.material.Fluid;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.Iterator;
+import java.util.function.Function;
+
+public class FabricWrappedContainer<T, U extends TransferUnit<T, U>, V extends TransferVariant<T>> implements SlottedStorage<V> {
+    private final CommonStorage<U> container;
+    private final OptionalSnapshotParticipant<?> updateManager;
+    private final Function<U, V> toVariant;
+    private final Function<V, U> toUnit;
+
+    public FabricWrappedContainer(
+            CommonStorage<U> container, OptionalSnapshotParticipant<?> updateManager, Function<U, V> toVariant,
+            Function<V, U> toUnit) {
+        this.container = container;
+        this.updateManager = updateManager;
+        this.toVariant = toVariant;
+        this.toUnit = toUnit;
+    }
+
+    public FabricWrappedContainer(CommonStorage<U> container, Function<U, V> toVariant, Function<V, U> toUnit) {
+        this(container, OptionalSnapshotParticipant.of(container), toVariant, toUnit);
+    }
+
+    public U toUnit(V variant) {
+        return toUnit.apply(variant);
+    }
+
+    public V toVariant(U unit) {
+        return toVariant.apply(unit);
+    }
+
+    @Override
+    public long insert(V resource, long maxAmount, TransactionContext transaction) {
+        U holder = toUnit(resource);
+        updateSnapshots(transaction);
+        return container.insert(holder, maxAmount, false);
+    }
+
+    @Override
+    public long extract(V resource, long maxAmount, TransactionContext transaction) {
+        U holder = toUnit(resource);
+        updateSnapshots(transaction);
+        return container.extract(holder, maxAmount, false);
+    }
+
+    @Override
+    public @NotNull Iterator<StorageView<V>> iterator() {
+        return new Iterator<>() {
+            int slot = 0;
+
+            @Override
+            public boolean hasNext() {
+                return slot < container.getSlotCount();
+            }
+
+            @Override
+            public StorageView<V> next() {
+                return FabricWrappedContainer.this.getSlot(slot++);
+            }
+        };
+    }
+
+    @Override
+    public int getSlotCount() {
+        return container.getSlotCount();
+    }
+
+    @Override
+    public SingleSlotStorage<V> getSlot(int slot) {
+        StorageSlot<U> unitSlot = container.getSlot(slot);
+        return new FabricWrappedSlot<>(unitSlot, this::toVariant, this::toUnit);
+    }
+
+    private void updateSnapshots(TransactionContext transaction) {
+        if (updateManager != null) {
+            updateManager.updateSnapshots(transaction);
+        }
+    }
+
+    public CommonStorage<U> container() {
+        return container;
+    }
+
+    public OptionalSnapshotParticipant<?> updateManager() {
+        return updateManager;
+    }
+
+    public static class OfFluid extends FabricWrappedContainer<Fluid, FluidUnit, FluidVariant> {
+        public OfFluid(CommonStorage<FluidUnit> container) {
+            super(container, ConversionUtils::toVariant, ConversionUtils::toUnit);
+        }
+    }
+
+    public static class OfItem extends FabricWrappedContainer<Item, ItemUnit, ItemVariant> {
+        public OfItem(CommonStorage<ItemUnit> container) {
+            super(container, ConversionUtils::toVariant, ConversionUtils::toUnit);
+        }
+    }
+}

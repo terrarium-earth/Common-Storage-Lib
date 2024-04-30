@@ -22,12 +22,23 @@ subprojects {
     apply(plugin = "architectury-plugin")
 
     val minecraftVersion: String by project
-    val modLoader = project.name
     val modId = rootProject.name
-    val isCommon = modLoader == rootProject.projects.common.name
+
+    val moduleType = project.layout.projectDirectory.asFile.parentFile.name
+    val modLoader = project.layout.projectDirectory.asFile.name
+    val isCommon = modLoader == "common"
+    val commonPath = if (isCommon) project.name else ":${rootProject.name}-$moduleType-common"
+
+    val isFabric = modLoader == "fabric"
+    val fabricLoaderVersion: String by project
+    val fabricApiVersion: String by project
+    val modMenuVersion: String by project
+
+    val isNeoForge = modLoader == "neoforge"
+    val neoforgeVersion: String by project
 
     base {
-        archivesName.set("$modId-$modLoader-$minecraftVersion")
+        archivesName.set("${project.name}-$minecraftVersion")
     }
 
     configure<LoomGradleExtensionAPI> {
@@ -73,10 +84,27 @@ subprojects {
         })
 
         if (isCommon) {
-            implementation("io.github.llamalad7:mixinextras-common:0.3.2")
+            "modCompileOnly"(group = "tech.thatgravyboat", name = "commonats", version = "2.0")
+        } else {
+            compileOnly(project(commonPath, configuration = "namedElements"))
         }
 
-        annotationProcessor(group = "net.msrandom", name = "multiplatform-processor", version = "1.0.1")
+        if (isFabric) {
+            "modImplementation"(group = "net.fabricmc", name = "fabric-loader", version = fabricLoaderVersion)
+            "modApi"(group = "net.fabricmc.fabric-api", name = "fabric-api", version = fabricApiVersion)
+
+            "modApi"(group = "com.terraformersmc", name = "modmenu", version = modMenuVersion)
+
+            "include"("modApi"(group = "teamreborn", name = "energy", version = "4.0.0")) {
+                exclude(group = "net.fabricmc", module = "fabric-api")
+            }
+        }
+
+        if (isNeoForge) {
+            "neoForge"(group = "net.neoforged", name = "neoforge", version = neoforgeVersion)
+        }
+
+        annotationProcessor(group = "net.msrandom", name = "multiplatform-processor", version = "1.0.5")
         compileOnly(group = "net.msrandom", name = "multiplatform-annotations", version = "1.0.0")
     }
 
@@ -105,7 +133,7 @@ subprojects {
         }
 
         sourceSets {
-            val commonSourceSets = project(":common").sourceSets
+            val commonSourceSets = project(commonPath).sourceSets
             val commonTest = commonSourceSets.getByName("test")
             val commonMain = commonSourceSets.getByName("main")
 
@@ -119,16 +147,20 @@ subprojects {
                 resources.srcDirs(commonMain.resources.srcDirs)
             }
         }
+    } else {
+        tasks.compileJava {
+            options.compilerArgs.add("-AgenerateExpectStubs")
+        }
     }
 
     publishing {
         publications {
             create<MavenPublication>("maven") {
-                artifactId = "$modId-$modLoader-$minecraftVersion"
+                artifactId = "${project.name}-$minecraftVersion"
                 from(components["java"])
 
                 pom {
-                    name.set("Botarium $modLoader")
+                    // name.set("Botarium $modLoader")
                     url.set("https://github.com/terrarium-earth/$modId")
 
                     scm {

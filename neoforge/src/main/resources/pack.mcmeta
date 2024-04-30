@@ -1,7 +1,0 @@
-{
-    "pack": {
-        "description": "botarium resources",
-        "pack_format": ${PACK_FORMAT},
-        "_comment": "${PACK_COMMENT}"
-    }
-}
