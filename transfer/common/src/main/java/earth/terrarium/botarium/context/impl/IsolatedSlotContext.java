@@ -1,7 +1,7 @@
 package earth.terrarium.botarium.context.impl;
 
 import earth.terrarium.botarium.context.ItemContext;
-import earth.terrarium.botarium.item.base.ItemUnit;
+import earth.terrarium.botarium.resource.item.ItemResource;
 import earth.terrarium.botarium.item.impl.SimpleItemSlot;
 import earth.terrarium.botarium.item.impl.noops.NoOpsItemContainer;
 import earth.terrarium.botarium.storage.base.CommonStorage;
@@ -13,7 +13,7 @@ public record IsolatedSlotContext(SimpleItemSlot mainSlot) implements ItemContex
     }
 
     @Override
-    public CommonStorage<ItemUnit> outerContainer() {
+    public CommonStorage<ItemResource> outerContainer() {
         return NoOpsItemContainer.NO_OPS;
     }
 }

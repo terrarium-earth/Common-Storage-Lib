@@ -1,6 +1,6 @@
 package earth.terrarium.botarium.storage.context;
 
-import earth.terrarium.botarium.item.base.ItemUnit;
+import earth.terrarium.botarium.resource.item.ItemResource;
 import earth.terrarium.botarium.storage.ConversionUtils;
 import earth.terrarium.botarium.storage.base.CommonStorage;
 import earth.terrarium.botarium.storage.base.StorageSlot;
@@ -13,19 +13,19 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-public record ContextItemContainer(List<SingleSlotStorage<ItemVariant>> storage, TriFunction<ItemVariant, Long, TransactionContext, Long> insert) implements CommonStorage<ItemUnit> {
+public record ContextItemContainer(List<SingleSlotStorage<ItemVariant>> storage, TriFunction<ItemVariant, Long, TransactionContext, Long> insert) implements CommonStorage<ItemResource> {
     @Override
     public int getSlotCount() {
         return storage.size();
     }
 
     @Override
-    public @NotNull StorageSlot<ItemUnit> getSlot(int slot) {
+    public @NotNull StorageSlot<ItemResource> getSlot(int slot) {
         return new StorageSlotImpl(storage.get(slot));
     }
 
     @Override
-    public long insert(ItemUnit unit, long amount, boolean simulate) {
+    public long insert(ItemResource unit, long amount, boolean simulate) {
         try (var transaction = Transaction.openOuter()) {
             long inserted = insert.apply(ConversionUtils.toVariant(unit), amount, transaction);
             if (!simulate) {
@@ -36,7 +36,7 @@ public record ContextItemContainer(List<SingleSlotStorage<ItemVariant>> storage,
     }
 
     @Override
-    public long extract(ItemUnit predicate, long amount, boolean simulate) {
+    public long extract(ItemResource predicate, long amount, boolean simulate) {
         long leftover = amount;
         ItemVariant variant = ConversionUtils.toVariant(predicate);
         try (var transaction = Transaction.openOuter()) {
@@ -54,7 +54,7 @@ public record ContextItemContainer(List<SingleSlotStorage<ItemVariant>> storage,
         return amount - leftover;
     }
 
-    public record StorageSlotImpl(SingleSlotStorage<ItemVariant> storage) implements StorageSlot<ItemUnit> {
+    public record StorageSlotImpl(SingleSlotStorage<ItemVariant> storage) implements StorageSlot<ItemResource> {
 
         @Override
         public long getLimit() {
@@ -62,12 +62,12 @@ public record ContextItemContainer(List<SingleSlotStorage<ItemVariant>> storage,
         }
 
         @Override
-        public boolean isValueValid(ItemUnit value) {
+        public boolean isValueValid(ItemResource value) {
             return true;
         }
 
         @Override
-        public long insert(ItemUnit unit, long amount, boolean simulate) {
+        public long insert(ItemResource unit, long amount, boolean simulate) {
             try (var transaction = Transaction.openOuter()) {
                 long inserted = storage.insert(ConversionUtils.toVariant(unit), amount, transaction);
                 if (!simulate) {
@@ -78,7 +78,7 @@ public record ContextItemContainer(List<SingleSlotStorage<ItemVariant>> storage,
         }
 
         @Override
-        public long extract(ItemUnit unit, long amount, boolean simulate) {
+        public long extract(ItemResource unit, long amount, boolean simulate) {
             try (var transaction = Transaction.openOuter()) {
                 long extracted = storage.extract(ConversionUtils.toVariant(unit), amount, transaction);
                 if (!simulate) {
@@ -89,7 +89,7 @@ public record ContextItemContainer(List<SingleSlotStorage<ItemVariant>> storage,
         }
 
         @Override
-        public ItemUnit getUnit() {
+        public ItemResource getUnit() {
             return ConversionUtils.toUnit(storage.getResource());
         }
 

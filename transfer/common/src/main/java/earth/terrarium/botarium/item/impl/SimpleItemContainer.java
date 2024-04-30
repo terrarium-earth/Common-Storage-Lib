@@ -2,11 +2,11 @@ package earth.terrarium.botarium.item.impl;
 
 import earth.terrarium.botarium.BotariumTransfer;
 import earth.terrarium.botarium.context.ItemContext;
-import earth.terrarium.botarium.item.base.ItemUnit;
+import earth.terrarium.botarium.resource.item.ItemResource;
 import earth.terrarium.botarium.item.util.ItemStorageData;
 import earth.terrarium.botarium.storage.base.CommonStorage;
 import earth.terrarium.botarium.storage.base.UpdateManager;
-import earth.terrarium.botarium.storage.unit.UnitStack;
+import earth.terrarium.botarium.resource.ResourceStack;
 import earth.terrarium.botarium.storage.util.TransferUtil;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.component.DataComponentPatch;
@@ -15,7 +15,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Predicate;
 
-public class SimpleItemContainer implements CommonStorage<ItemUnit>, UpdateManager<ItemStorageData> {
+public class SimpleItemContainer implements CommonStorage<ItemResource>, UpdateManager<ItemStorageData> {
     protected final NonNullList<SimpleItemSlot> slots;
     private final Runnable onUpdate;
 
@@ -43,7 +43,7 @@ public class SimpleItemContainer implements CommonStorage<ItemUnit>, UpdateManag
         this.readSnapshot(BotariumTransfer.ITEM_CONTENTS.get(entityOrBlockEntity));
     }
 
-    public SimpleItemContainer filter(int slot, Predicate<ItemUnit> predicate) {
+    public SimpleItemContainer filter(int slot, Predicate<ItemResource> predicate) {
         slots.set(slot, new SimpleItemSlot.Filtered(this::update, predicate));
         return this;
     }
@@ -67,7 +67,7 @@ public class SimpleItemContainer implements CommonStorage<ItemUnit>, UpdateManag
     public void readSnapshot(ItemStorageData snapshot) {
         for (int i = 0; i < slots.size(); i++) {
             SimpleItemSlot slot = slots.get(i);
-            UnitStack<ItemUnit> data = snapshot.stacks().get(i);
+            ResourceStack<ItemResource> data = snapshot.stacks().get(i);
             slot.readSnapshot(data);
         }
     }
@@ -78,12 +78,12 @@ public class SimpleItemContainer implements CommonStorage<ItemUnit>, UpdateManag
     }
 
     @Override
-    public long insert(ItemUnit unit, long amount, boolean simulate) {
+    public long insert(ItemResource unit, long amount, boolean simulate) {
         return TransferUtil.insertSlots(this, unit, amount, simulate);
     }
 
     @Override
-    public long extract(ItemUnit unit, long amount, boolean simulate) {
+    public long extract(ItemResource unit, long amount, boolean simulate) {
         return TransferUtil.extractSlots(this, unit, amount, simulate);
     }
 }

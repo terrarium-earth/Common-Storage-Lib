@@ -1,7 +1,7 @@
 package earth.terrarium.botarium.item.wrappers;
 
 import earth.terrarium.botarium.context.ItemContext;
-import earth.terrarium.botarium.item.base.ItemUnit;
+import earth.terrarium.botarium.resource.item.ItemResource;
 import earth.terrarium.botarium.storage.base.CommonStorage;
 import earth.terrarium.botarium.storage.base.StorageSlot;
 import earth.terrarium.botarium.storage.util.TransferUtil;
@@ -9,27 +9,27 @@ import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.items.IItemHandler;
 import org.jetbrains.annotations.NotNull;
 
-public record CommonItemContainerItem(IItemHandler handler, ItemStack stack, ItemContext context) implements CommonStorage<ItemUnit> {
+public record CommonItemContainerItem(IItemHandler handler, ItemStack stack, ItemContext context) implements CommonStorage<ItemResource> {
     @Override
     public int getSlotCount() {
         return handler.getSlots();
     }
 
     @Override
-    public @NotNull StorageSlot<ItemUnit> getSlot(int slot) {
+    public @NotNull StorageSlot<ItemResource> getSlot(int slot) {
         return new DelegatingItemSlot(handler, slot, this::updateContext);
     }
 
     public void updateContext() {
         if (!context.getUnit().matches(stack)) {
-            context.exchange(ItemUnit.of(stack), context.getAmount(), false);
+            context.exchange(ItemResource.of(stack), context.getAmount(), false);
         }
         if (context.getAmount() != stack.getCount()) {
             TransferUtil.equalize(context.mainSlot(), stack.getCount());
         }
     }
 
-    public record DelegatingItemSlot(IItemHandler handler, int slot, Runnable runnable) implements StorageSlot<ItemUnit> {
+    public record DelegatingItemSlot(IItemHandler handler, int slot, Runnable runnable) implements StorageSlot<ItemResource> {
 
         @Override
         public long getLimit() {
@@ -37,13 +37,13 @@ public record CommonItemContainerItem(IItemHandler handler, ItemStack stack, Ite
         }
 
         @Override
-        public boolean isValueValid(ItemUnit unit) {
+        public boolean isValueValid(ItemResource unit) {
             return handler.isItemValid(slot, unit.toItemStack());
         }
 
         @Override
-        public ItemUnit getUnit() {
-            return ItemUnit.of(handler.getStackInSlot(slot));
+        public ItemResource getUnit() {
+            return ItemResource.of(handler.getStackInSlot(slot));
         }
 
         @Override
@@ -57,14 +57,14 @@ public record CommonItemContainerItem(IItemHandler handler, ItemStack stack, Ite
         }
 
         @Override
-        public long insert(ItemUnit unit, long amount, boolean simulate) {
+        public long insert(ItemResource unit, long amount, boolean simulate) {
             ItemStack leftover = handler.insertItem(slot, unit.toItemStack((int) amount), simulate);
             runnable.run();
             return amount - leftover.getCount();
         }
 
         @Override
-        public long extract(ItemUnit unit, long amount, boolean simulate) {
+        public long extract(ItemResource unit, long amount, boolean simulate) {
             if (!unit.matches(handler.getStackInSlot(slot))) {
                 return 0;
             }

@@ -1,13 +1,13 @@
 package earth.terrarium.botarium.fluid.wrappers;
 
 import earth.terrarium.botarium.fluid.util.ConversionUtils;
-import earth.terrarium.botarium.fluid.base.FluidUnit;
+import earth.terrarium.botarium.resource.fluid.FluidResource;
 import earth.terrarium.botarium.storage.base.CommonStorage;
 import earth.terrarium.botarium.storage.base.StorageSlot;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import org.jetbrains.annotations.NotNull;
 
-public interface AbstractCommonFluidContainer extends CommonStorage<FluidUnit> {
+public interface AbstractCommonFluidContainer extends CommonStorage<FluidResource> {
     IFluidHandler handler();
 
     @Override
@@ -16,17 +16,17 @@ public interface AbstractCommonFluidContainer extends CommonStorage<FluidUnit> {
     }
 
     @Override
-    default long insert(FluidUnit unit, long amount, boolean simulate) {
+    default long insert(FluidResource unit, long amount, boolean simulate) {
         return handler().fill(ConversionUtils.convert(unit, amount), simulate ? IFluidHandler.FluidAction.SIMULATE : IFluidHandler.FluidAction.EXECUTE);
     }
 
     @Override
-    default long extract(FluidUnit unit, long amount, boolean simulate) {
+    default long extract(FluidResource unit, long amount, boolean simulate) {
         return handler().drain(ConversionUtils.convert(unit, amount), simulate ? IFluidHandler.FluidAction.SIMULATE : IFluidHandler.FluidAction.EXECUTE).getAmount();
     }
 
     @Override
-    default @NotNull StorageSlot<FluidUnit> getSlot(int slot) {
+    default @NotNull StorageSlot<FluidResource> getSlot(int slot) {
         return new DelegatingFluidHandlerSlot(this, slot);
     }
 }

@@ -1,6 +1,6 @@
 package earth.terrarium.botarium.item.impl.vanilla;
 
-import earth.terrarium.botarium.item.base.ItemUnit;
+import earth.terrarium.botarium.resource.item.ItemResource;
 import earth.terrarium.botarium.storage.base.CommonStorage;
 import earth.terrarium.botarium.storage.base.StorageSlot;
 import earth.terrarium.botarium.storage.util.TransferUtil;
@@ -10,7 +10,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class AbstractVanillaContainer implements CommonStorage<ItemUnit> {
+public abstract class AbstractVanillaContainer implements CommonStorage<ItemResource> {
     Container container;
     List<VanillaDelegatingSlot> slots;
 
@@ -23,12 +23,12 @@ public abstract class AbstractVanillaContainer implements CommonStorage<ItemUnit
     }
 
     @Override
-    public long extract(ItemUnit unit, long amount, boolean simulate) {
+    public long extract(ItemResource unit, long amount, boolean simulate) {
         return TransferUtil.extractSlots(this, unit, amount, simulate);
     }
 
     @Override
-    public long insert(ItemUnit unit, long amount, boolean simulate) {
+    public long insert(ItemResource unit, long amount, boolean simulate) {
         return TransferUtil.insertSlots(this, unit, amount, simulate);
     }
 
@@ -38,7 +38,7 @@ public abstract class AbstractVanillaContainer implements CommonStorage<ItemUnit
     }
 
     @Override
-    public @NotNull StorageSlot<ItemUnit> getSlot(int slot) {
+    public @NotNull StorageSlot<ItemResource> getSlot(int slot) {
         return slots.get(slot);
     }
 }

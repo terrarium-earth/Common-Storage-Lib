@@ -1,6 +1,6 @@
 package earth.terrarium.botarium.item.lookup;
 
-import earth.terrarium.botarium.item.base.ItemUnit;
+import earth.terrarium.botarium.resource.item.ItemResource;
 import earth.terrarium.botarium.item.wrappers.CommonItemContainer;
 import earth.terrarium.botarium.item.wrappers.NeoItemHandler;
 import earth.terrarium.botarium.lookup.BlockLookup;
@@ -21,25 +21,25 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
-public final class ItemBlockLookup implements BlockLookup<CommonStorage<ItemUnit>, Direction>, RegistryEventListener {
+public final class ItemBlockLookup implements BlockLookup<CommonStorage<ItemResource>, Direction>, RegistryEventListener {
     public static final ItemBlockLookup INSTANCE = new ItemBlockLookup();
-    private final List<Consumer<BlockRegistrar<CommonStorage<ItemUnit>, Direction>>> registrars = new ArrayList<>();
+    private final List<Consumer<BlockRegistrar<CommonStorage<ItemResource>, Direction>>> registrars = new ArrayList<>();
 
     private ItemBlockLookup() {
         registerSelf();
     }
 
     @Override
-    public @Nullable CommonStorage<ItemUnit> find(Level level, BlockPos pos, @Nullable BlockState state, @Nullable BlockEntity entity, @Nullable Direction direction) {
+    public @Nullable CommonStorage<ItemResource> find(Level level, BlockPos pos, @Nullable BlockState state, @Nullable BlockEntity entity, @Nullable Direction direction) {
         IItemHandler handler = level.getCapability(Capabilities.ItemHandler.BLOCK, pos, state, entity, direction);
-        if (handler instanceof NeoItemHandler(CommonStorage<ItemUnit> container)) {
+        if (handler instanceof NeoItemHandler(CommonStorage<ItemResource> container)) {
             return container;
         }
         return handler == null ? null : new CommonItemContainer(handler);
     }
 
     @Override
-    public void onRegister(Consumer<BlockRegistrar<CommonStorage<ItemUnit>, Direction>> registrar) {
+    public void onRegister(Consumer<BlockRegistrar<CommonStorage<ItemResource>, Direction>> registrar) {
         registrars.add(registrar);
     }
 
@@ -48,22 +48,22 @@ public final class ItemBlockLookup implements BlockLookup<CommonStorage<ItemUnit
         registrars.forEach(registrar -> registrar.accept(new EventRegistrar(event)));
     }
 
-    public record EventRegistrar(RegisterCapabilitiesEvent event) implements BlockRegistrar<CommonStorage<ItemUnit>, Direction> {
+    public record EventRegistrar(RegisterCapabilitiesEvent event) implements BlockRegistrar<CommonStorage<ItemResource>, Direction> {
         @Override
-        public void registerBlocks(BlockGetter<CommonStorage<ItemUnit>, Direction> getter, net.minecraft.world.level.block.Block... containers) {
+        public void registerBlocks(BlockGetter<CommonStorage<ItemResource>, Direction> getter, net.minecraft.world.level.block.Block... containers) {
             for (net.minecraft.world.level.block.Block block : containers) {
                 event.registerBlock(Capabilities.ItemHandler.BLOCK, (level, pos, state, entity, direction) -> {
-                    CommonStorage<ItemUnit> container = getter.getContainer(level, pos, state, entity, direction);
+                    CommonStorage<ItemResource> container = getter.getContainer(level, pos, state, entity, direction);
                     return container == null ? null : new NeoItemHandler(container);
                 }, block);
             }
         }
 
         @Override
-        public void registerBlockEntities(BlockEntityGetter<CommonStorage<ItemUnit>, Direction> getter, BlockEntityType<?>... containers) {
+        public void registerBlockEntities(BlockEntityGetter<CommonStorage<ItemResource>, Direction> getter, BlockEntityType<?>... containers) {
             for (BlockEntityType<?> blockEntityType : containers) {
                 event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, blockEntityType, (entity, direction) -> {
-                    CommonStorage<ItemUnit> container = getter.getContainer(entity, direction);
+                    CommonStorage<ItemResource> container = getter.getContainer(entity, direction);
                     return container == null ? null : new NeoItemHandler(container);
                 });
             }

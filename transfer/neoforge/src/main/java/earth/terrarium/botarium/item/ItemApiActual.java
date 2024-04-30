@@ -1,7 +1,7 @@
 package earth.terrarium.botarium.item;
 
 import earth.terrarium.botarium.context.ItemContext;
-import earth.terrarium.botarium.item.base.ItemUnit;
+import earth.terrarium.botarium.resource.item.ItemResource;
 import earth.terrarium.botarium.item.lookup.ItemBlockLookup;
 import earth.terrarium.botarium.item.lookup.ItemEntityLookup;
 import earth.terrarium.botarium.item.lookup.ItemItemLookup;
@@ -16,11 +16,11 @@ import org.jetbrains.annotations.Nullable;
 @Actual
 public class ItemApiActual {
     @Actual
-    public static final BlockLookup<CommonStorage<ItemUnit>, @Nullable Direction> BLOCK = ItemBlockLookup.INSTANCE;
+    public static final BlockLookup<CommonStorage<ItemResource>, @Nullable Direction> BLOCK = ItemBlockLookup.INSTANCE;
     @Actual
-    public static final ItemLookup<CommonStorage<ItemUnit>, ItemContext> ITEM = ItemItemLookup.INSTANCE;
+    public static final ItemLookup<CommonStorage<ItemResource>, ItemContext> ITEM = ItemItemLookup.INSTANCE;
     @Actual
-    public static final EntityLookup<CommonStorage<ItemUnit>, Void> ENTITY = ItemEntityLookup.INSTANCE;
+    public static final EntityLookup<CommonStorage<ItemResource>, Void> ENTITY = ItemEntityLookup.INSTANCE;
     @Actual
-    public static final EntityLookup<CommonStorage<ItemUnit>, Direction> ENTITY_AUTOMATION = ItemEntityLookup.AUTOMATION;
+    public static final EntityLookup<CommonStorage<ItemResource>, Direction> ENTITY_AUTOMATION = ItemEntityLookup.AUTOMATION;
 }

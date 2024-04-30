@@ -3,7 +3,7 @@ package earth.terrarium.botarium.item.lookup;
 import earth.terrarium.botarium.BotariumTransfer;
 import earth.terrarium.botarium.context.ItemContext;
 import earth.terrarium.botarium.context.impl.ModifyOnlyContext;
-import earth.terrarium.botarium.item.base.ItemUnit;
+import earth.terrarium.botarium.resource.item.ItemResource;
 import earth.terrarium.botarium.item.wrappers.CommonItemContainerItem;
 import earth.terrarium.botarium.item.wrappers.NeoItemHandler;
 import earth.terrarium.botarium.lookup.RegistryEventListener;
@@ -21,19 +21,19 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
-public final class ItemItemLookup implements ItemLookup<CommonStorage<ItemUnit>, ItemContext>, RegistryEventListener {
+public final class ItemItemLookup implements ItemLookup<CommonStorage<ItemResource>, ItemContext>, RegistryEventListener {
     public static final ItemItemLookup INSTANCE = new ItemItemLookup();
-    private static final ItemCapability<CommonStorage<ItemUnit>, ItemContext> CAPABILITY = ItemCapability.create(new ResourceLocation(BotariumTransfer.MOD_ID, "item_item"), CommonStorage.asClass(), ItemContext.class);
+    private static final ItemCapability<CommonStorage<ItemResource>, ItemContext> CAPABILITY = ItemCapability.create(new ResourceLocation(BotariumTransfer.MOD_ID, "item_item"), CommonStorage.asClass(), ItemContext.class);
 
-    private final List<Consumer<ItemRegistrar<CommonStorage<ItemUnit>, ItemContext>>> registrars = new ArrayList<>();
+    private final List<Consumer<ItemRegistrar<CommonStorage<ItemResource>, ItemContext>>> registrars = new ArrayList<>();
 
     private ItemItemLookup() {
         registerSelf();
     }
 
     @Override
-    public @Nullable CommonStorage<ItemUnit> find(ItemStack stack, ItemContext context) {
-        CommonStorage<ItemUnit> capability = stack.getCapability(CAPABILITY, context);
+    public @Nullable CommonStorage<ItemResource> find(ItemStack stack, ItemContext context) {
+        CommonStorage<ItemResource> capability = stack.getCapability(CAPABILITY, context);
         if (capability != null) {
             return capability;
         }
@@ -42,7 +42,7 @@ public final class ItemItemLookup implements ItemLookup<CommonStorage<ItemUnit>,
     }
 
     @Override
-    public void onRegister(Consumer<ItemRegistrar<CommonStorage<ItemUnit>, ItemContext>> registrar) {
+    public void onRegister(Consumer<ItemRegistrar<CommonStorage<ItemResource>, ItemContext>> registrar) {
         registrars.add(registrar);
     }
 
@@ -53,7 +53,7 @@ public final class ItemItemLookup implements ItemLookup<CommonStorage<ItemUnit>,
 
             event.registerItem(Capabilities.ItemHandler.ITEM, (stack, ignored) -> {
                 ModifyOnlyContext context = new ModifyOnlyContext(stack);
-                CommonStorage<ItemUnit> container = getter.getContainer(stack, context);
+                CommonStorage<ItemResource> container = getter.getContainer(stack, context);
                 return container == null ? null : new NeoItemHandler(container);
             }, containers);
         }));

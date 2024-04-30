@@ -1,6 +1,6 @@
 package earth.terrarium.botarium.item.lookup;
 
-import earth.terrarium.botarium.item.base.ItemUnit;
+import earth.terrarium.botarium.resource.item.ItemResource;
 import earth.terrarium.botarium.item.wrappers.CommonItemContainer;
 import earth.terrarium.botarium.item.wrappers.NeoItemHandler;
 import earth.terrarium.botarium.lookup.RegistryEventListener;
@@ -19,11 +19,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
-public final class ItemEntityLookup<C> implements EntityLookup<CommonStorage<ItemUnit>, C>, RegistryEventListener {
+public final class ItemEntityLookup<C> implements EntityLookup<CommonStorage<ItemResource>, C>, RegistryEventListener {
     public static final ItemEntityLookup<Void> INSTANCE = new ItemEntityLookup<>(Capabilities.ItemHandler.ENTITY);
     public static final ItemEntityLookup<Direction> AUTOMATION = new ItemEntityLookup<>(Capabilities.ItemHandler.ENTITY_AUTOMATION);
 
-    private final List<Consumer<EntityRegistrar<CommonStorage<ItemUnit>, C>>> registrars = new ArrayList<>();
+    private final List<Consumer<EntityRegistrar<CommonStorage<ItemResource>, C>>> registrars = new ArrayList<>();
     private final EntityCapability<IItemHandler, C> capability;
 
     private ItemEntityLookup(EntityCapability<IItemHandler, C> capability) {
@@ -32,9 +32,9 @@ public final class ItemEntityLookup<C> implements EntityLookup<CommonStorage<Ite
     }
 
     @Override
-    public @Nullable CommonStorage<ItemUnit> find(Entity entity, C context) {
+    public @Nullable CommonStorage<ItemResource> find(Entity entity, C context) {
         IItemHandler handler = entity.getCapability(capability, context);
-        if (handler instanceof NeoItemHandler(CommonStorage<ItemUnit> container)) {
+        if (handler instanceof NeoItemHandler(CommonStorage<ItemResource> container)) {
             return container;
         }
 
@@ -42,7 +42,7 @@ public final class ItemEntityLookup<C> implements EntityLookup<CommonStorage<Ite
     }
 
     @Override
-    public void onRegister(Consumer<EntityRegistrar<CommonStorage<ItemUnit>, C>> registrar) {
+    public void onRegister(Consumer<EntityRegistrar<CommonStorage<ItemResource>, C>> registrar) {
         registrars.add(registrar);
     }
 
@@ -51,7 +51,7 @@ public final class ItemEntityLookup<C> implements EntityLookup<CommonStorage<Ite
         registrars.forEach(registrar -> registrar.accept((getter, entityTypes) -> {
             for (EntityType<?> entityType : entityTypes) {
                 event.registerEntity(capability, entityType, (entity, direction) -> {
-                    CommonStorage<ItemUnit> container = getter.getContainer(entity, direction);
+                    CommonStorage<ItemResource> container = getter.getContainer(entity, direction);
                     return container == null ? null : new NeoItemHandler(container);
                 });
             }

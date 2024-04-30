@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "id": "botarium_data",
+  "version": "${version}",
+  "name": "Botarium",
+  "description": "Capabilities, Transfer, Data and more!",
+  "authors": [
+    "CodexAdrian"
+  ],
+  "contact": {
+    "repo": "https://github.com/terrarium-earth/Spirit",
+    "issues": "https://github.com/terrarium-earth/Spirit/issues"
+  },
+  "license": "All-Rights-Reserved",
+  "icon": "icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "main": "net.earth.terrarium.botarium.data.BotariumData::init"
+  },
+  "depends": {
+    "fabric": "*",
+    "minecraft": ">=1.20.5"
+  }
+}

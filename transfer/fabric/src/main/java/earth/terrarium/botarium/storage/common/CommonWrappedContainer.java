@@ -1,6 +1,6 @@
 package earth.terrarium.botarium.storage.common;
 
-import earth.terrarium.botarium.storage.unit.TransferUnit;
+import earth.terrarium.botarium.resource.TransferResource;
 import earth.terrarium.botarium.storage.base.CommonStorage;
 import earth.terrarium.botarium.storage.base.StorageSlot;
 import net.fabricmc.fabric.api.transfer.v1.storage.SlottedStorage;
@@ -11,7 +11,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Function;
 
-public record CommonWrappedContainer<T, U extends TransferUnit<T, U>, V extends TransferVariant<T>>(Storage<V> storage, Function<U, V> toVariant, Function<V, U> toUnit) implements CommonStorage<U> {
+public record CommonWrappedContainer<T, U extends TransferResource<T, U>, V extends TransferVariant<T>>(Storage<V> storage, Function<U, V> toVariant, Function<V, U> toUnit) implements CommonStorage<U> {
     public U toUnit(V variant) {
         return toUnit.apply(variant);
     }

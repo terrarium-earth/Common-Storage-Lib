@@ -13,9 +13,9 @@ import earth.terrarium.botarium.fluid.util.FluidStorageData;
 import earth.terrarium.botarium.item.util.ItemStorageData;
 import earth.terrarium.botarium.item.ItemApi;
 import earth.terrarium.botarium.item.util.ItemProvider;
-import earth.terrarium.botarium.fluid.base.FluidUnit;
-import earth.terrarium.botarium.item.base.ItemUnit;
-import earth.terrarium.botarium.storage.unit.UnitStack;
+import earth.terrarium.botarium.resource.fluid.FluidResource;
+import earth.terrarium.botarium.resource.item.ItemResource;
+import earth.terrarium.botarium.resource.ResourceStack;
 import net.minecraft.network.codec.ByteBufCodecs;
 
 public class BotariumTransfer {
@@ -24,10 +24,10 @@ public class BotariumTransfer {
 
     public static final DataManager<FluidStorageData> FLUID_CONTENTS = REGISTRY.builder(FluidStorageData.DEFAULT).serialize(FluidStorageData.CODEC).networkSerializer(FluidStorageData.NETWORK_CODEC).withDataComponent().copyOnDeath().buildAndRegister("fluid_storage_data");
     public static final DataManager<ItemStorageData> ITEM_CONTENTS = REGISTRY.builder(ItemStorageData.DEFAULT).serialize(ItemStorageData.CODEC).networkSerializer(ItemStorageData.NETWORK_CODEC).withDataComponent().copyOnDeath().buildAndRegister("item_storage_data");
-    public static final DataManager<UnitStack<ItemUnit>> SINGLE_ITEM_CONTENTS = REGISTRY.builder(() -> new UnitStack<>(ItemUnit.BLANK, 0)).serialize(UnitStack.ITEM_CODEC).networkSerializer(UnitStack.ITEM_STREAM_CODEC).withDataComponent().copyOnDeath().buildAndRegister("item_unit_stack");
-    public static final DataManager<UnitStack<FluidUnit>> SINGLE_FLUID_CONTENTS = REGISTRY.builder(() -> new UnitStack<>(FluidUnit.BLANK, 0)).serialize(UnitStack.FLUID_CODEC).networkSerializer(UnitStack.FLUID_STREAM_CODEC).withDataComponent().copyOnDeath().buildAndRegister("fluid_unit_stack");
-    public static final DataManager<FluidUnit> FLUID_UNIT = REGISTRY.builder(() -> FluidUnit.BLANK).serialize(FluidUnit.CODEC).networkSerializer(FluidUnit.STREAM_CODEC).withDataComponent().copyOnDeath().buildAndRegister("fluid_unit");
-    public static final DataManager<ItemUnit> ITEM_UNIT = REGISTRY.builder(() -> ItemUnit.BLANK).serialize(ItemUnit.CODEC).networkSerializer(ItemUnit.STREAM_CODEC).withDataComponent().copyOnDeath().buildAndRegister("item_unit");
+    public static final DataManager<ResourceStack<ItemResource>> SINGLE_ITEM_CONTENTS = REGISTRY.builder(() -> new ResourceStack<>(ItemResource.BLANK, 0)).serialize(ResourceStack.ITEM_CODEC).networkSerializer(ResourceStack.ITEM_STREAM_CODEC).withDataComponent().copyOnDeath().buildAndRegister("item_unit_stack");
+    public static final DataManager<ResourceStack<FluidResource>> SINGLE_FLUID_CONTENTS = REGISTRY.builder(() -> new ResourceStack<>(FluidResource.BLANK, 0)).serialize(ResourceStack.FLUID_CODEC).networkSerializer(ResourceStack.FLUID_STREAM_CODEC).withDataComponent().copyOnDeath().buildAndRegister("fluid_unit_stack");
+    public static final DataManager<FluidResource> FLUID_UNIT = REGISTRY.builder(() -> FluidResource.BLANK).serialize(FluidResource.CODEC).networkSerializer(FluidResource.STREAM_CODEC).withDataComponent().copyOnDeath().buildAndRegister("fluid_unit");
+    public static final DataManager<ItemResource> ITEM_UNIT = REGISTRY.builder(() -> ItemResource.BLANK).serialize(ItemResource.CODEC).networkSerializer(ItemResource.STREAM_CODEC).withDataComponent().copyOnDeath().buildAndRegister("item_unit");
     public static final DataManager<Long> VALUE_CONTENT = REGISTRY.builder(() -> 0L).serialize(Codec.LONG).networkSerializer(ByteBufCodecs.VAR_LONG).withDataComponent().copyOnDeath().buildAndRegister("value_storage_data");
 
     public static void init() {

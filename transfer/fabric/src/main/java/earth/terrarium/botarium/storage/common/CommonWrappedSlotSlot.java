@@ -1,6 +1,6 @@
 package earth.terrarium.botarium.storage.common;
 
-import earth.terrarium.botarium.storage.unit.TransferUnit;
+import earth.terrarium.botarium.resource.TransferResource;
 import earth.terrarium.botarium.storage.base.StorageSlot;
 import net.fabricmc.fabric.api.transfer.v1.storage.StorageView;
 import net.fabricmc.fabric.api.transfer.v1.storage.TransferVariant;
@@ -9,7 +9,7 @@ import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 
 import java.util.function.Function;
 
-public record CommonWrappedSlotSlot<T, U extends TransferUnit<T, U>, V extends TransferVariant<T>>(
+public record CommonWrappedSlotSlot<T, U extends TransferResource<T, U>, V extends TransferVariant<T>>(
         StorageView<V> view, Function<U, V> toVariant, Function<V, U> toUnit) implements StorageSlot<U> {
 
     @Override

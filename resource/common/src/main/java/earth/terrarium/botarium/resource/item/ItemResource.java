@@ -1,10 +1,10 @@
-package earth.terrarium.botarium.item.base;
+package earth.terrarium.botarium.resource.item;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import earth.terrarium.botarium.storage.unit.TransferUnit;
-import earth.terrarium.botarium.storage.unit.UnitStack;
+import earth.terrarium.botarium.resource.TransferResource;
+import earth.terrarium.botarium.resource.ResourceStack;
 import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.core.component.DataComponentPatch;
@@ -24,31 +24,31 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Objects;
 import java.util.function.Predicate;
 
-public final class ItemUnit implements TransferUnit<Item, ItemUnit>, Predicate<ItemUnit> {
-    public static final ItemUnit BLANK = ItemUnit.of(Items.AIR, DataComponentPatch.EMPTY);
+public final class ItemResource implements TransferResource<Item, ItemResource>, Predicate<ItemResource> {
+    public static final ItemResource BLANK = ItemResource.of(Items.AIR, DataComponentPatch.EMPTY);
 
-    public static final Codec<ItemUnit> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-            BuiltInRegistries.ITEM.byNameCodec().fieldOf("id").forGetter(ItemUnit::getType),
-            DataComponentPatch.CODEC.optionalFieldOf("components", DataComponentPatch.EMPTY).forGetter(ItemUnit::getDataPatch)
-    ).apply(instance, ItemUnit::of));
+    public static final Codec<ItemResource> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+            BuiltInRegistries.ITEM.byNameCodec().fieldOf("id").forGetter(ItemResource::getType),
+            DataComponentPatch.CODEC.optionalFieldOf("components", DataComponentPatch.EMPTY).forGetter(ItemResource::getDataPatch)
+    ).apply(instance, ItemResource::of));
 
-    public static final MapCodec<ItemUnit> MAP_CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-            BuiltInRegistries.ITEM.byNameCodec().fieldOf("id").forGetter(ItemUnit::getType),
-            DataComponentPatch.CODEC.optionalFieldOf("components", DataComponentPatch.EMPTY).forGetter(ItemUnit::getDataPatch)
-    ).apply(instance, ItemUnit::of));
+    public static final MapCodec<ItemResource> MAP_CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
+            BuiltInRegistries.ITEM.byNameCodec().fieldOf("id").forGetter(ItemResource::getType),
+            DataComponentPatch.CODEC.optionalFieldOf("components", DataComponentPatch.EMPTY).forGetter(ItemResource::getDataPatch)
+    ).apply(instance, ItemResource::of));
 
     public static final StreamCodec<RegistryFriendlyByteBuf, Holder<Item>> ITEM_HOLDER_STREAM_CODEC = ByteBufCodecs.holderRegistry(Registries.ITEM);
 
-    public static final StreamCodec<RegistryFriendlyByteBuf, ItemUnit> STREAM_CODEC = new StreamCodec<>() {
+    public static final StreamCodec<RegistryFriendlyByteBuf, ItemResource> STREAM_CODEC = new StreamCodec<>() {
         @Override
-        public ItemUnit decode(RegistryFriendlyByteBuf object) {
+        public ItemResource decode(RegistryFriendlyByteBuf object) {
             Holder<Item> holder = ITEM_HOLDER_STREAM_CODEC.decode(object);
             DataComponentPatch dataComponentPatch = DataComponentPatch.STREAM_CODEC.decode(object);
-            return ItemUnit.of(holder.value(), dataComponentPatch);
+            return ItemResource.of(holder.value(), dataComponentPatch);
         }
 
         @Override
-        public void encode(RegistryFriendlyByteBuf object, ItemUnit object2) {
+        public void encode(RegistryFriendlyByteBuf object, ItemResource object2) {
             ITEM_HOLDER_STREAM_CODEC.encode(object, object2.type.builtInRegistryHolder());
             DataComponentPatch.STREAM_CODEC.encode(object, object2.getDataPatch());
         }
@@ -59,20 +59,20 @@ public final class ItemUnit implements TransferUnit<Item, ItemUnit>, Predicate<I
 
     private ItemStack cache;
 
-    public ItemUnit(Item type, PatchedDataComponentMap components) {
+    public ItemResource(Item type, PatchedDataComponentMap components) {
         this.type = type;
         this.components = components;
     }
 
-    public static ItemUnit of(ItemLike item) {
-        return new ItemUnit(item.asItem(), PatchedDataComponentMap.fromPatch(DataComponentMap.EMPTY, DataComponentPatch.EMPTY));
+    public static ItemResource of(ItemLike item) {
+        return new ItemResource(item.asItem(), PatchedDataComponentMap.fromPatch(DataComponentMap.EMPTY, DataComponentPatch.EMPTY));
     }
 
-    public static ItemUnit of(ItemLike item, DataComponentPatch components) {
-        return new ItemUnit(item.asItem(), PatchedDataComponentMap.fromPatch(DataComponentMap.EMPTY, components));
+    public static ItemResource of(ItemLike item, DataComponentPatch components) {
+        return new ItemResource(item.asItem(), PatchedDataComponentMap.fromPatch(DataComponentMap.EMPTY, components));
     }
 
-    public static ItemUnit of(ItemStack stack) {
+    public static ItemResource of(ItemStack stack) {
         return of(stack.getItem(), stack.getComponentsPatch());
     }
 
@@ -106,7 +106,7 @@ public final class ItemUnit implements TransferUnit<Item, ItemUnit>, Predicate<I
     }
 
     @Override
-    public boolean test(ItemUnit unit) {
+    public boolean test(ItemResource unit) {
         return isOf(unit.type) && componentsMatch(unit.components);
     }
 
@@ -121,29 +121,29 @@ public final class ItemUnit implements TransferUnit<Item, ItemUnit>, Predicate<I
     }
 
     @Override
-    public <D> ItemUnit set(DataComponentType<D> type, D value) {
+    public <D> ItemResource set(DataComponentType<D> type, D value) {
         PatchedDataComponentMap copy = components.copy();
         copy.set(type, value);
-        return new ItemUnit(this.type, copy);
+        return new ItemResource(this.type, copy);
     }
 
     @Override
-    public ItemUnit modify(DataComponentPatch patch) {
+    public ItemResource modify(DataComponentPatch patch) {
         PatchedDataComponentMap copy = components.copy();
         copy.applyPatch(patch);
-        return new ItemUnit(this.type, copy);
+        return new ItemResource(this.type, copy);
     }
 
     @Override
-    public UnitStack<ItemUnit> toStack(long amount) {
-        return new UnitStack<>(this, amount);
+    public ResourceStack<ItemResource> toStack(long amount) {
+        return new ResourceStack<>(this, amount);
     }
 
     @Override
     public boolean equals(Object obj) {
         if (obj == this) return true;
         if (obj == null || obj.getClass() != this.getClass()) return false;
-        var that = (ItemUnit) obj;
+        var that = (ItemResource) obj;
         return Objects.equals(this.type, that.type) &&
                 Objects.equals(this.components, that.components);
     }

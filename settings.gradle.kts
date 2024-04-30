@@ -16,6 +16,7 @@ pluginManagement {
 includeSubmodule("data")
 includeSubmodule("lookup")
 includeSubmodule("transfer")
+includeSubmodule("resource")
 
 fun includeSubmodule(name: String) {
     includePlatformModule(name, "common")

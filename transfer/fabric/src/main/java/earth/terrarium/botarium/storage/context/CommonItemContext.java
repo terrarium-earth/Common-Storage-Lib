@@ -1,7 +1,7 @@
 package earth.terrarium.botarium.storage.context;
 
 import earth.terrarium.botarium.context.ItemContext;
-import earth.terrarium.botarium.item.base.ItemUnit;
+import earth.terrarium.botarium.resource.item.ItemResource;
 import earth.terrarium.botarium.storage.ConversionUtils;
 import earth.terrarium.botarium.storage.base.CommonStorage;
 import earth.terrarium.botarium.storage.base.StorageSlot;
@@ -13,7 +13,7 @@ import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 
 public record CommonItemContext(ContainerItemContext context) implements ItemContext {
     @Override
-    public long insert(ItemUnit unit, long amount, boolean simulate) {
+    public long insert(ItemResource unit, long amount, boolean simulate) {
         Object2LongLinkedOpenHashMap<ItemVariant> map = new Object2LongLinkedOpenHashMap<>();
         try (var transaction = Transaction.openOuter()) {
             long inserted = context.insert(ConversionUtils.toVariant(unit), amount, transaction);
@@ -25,7 +25,7 @@ public record CommonItemContext(ContainerItemContext context) implements ItemCon
     }
 
     @Override
-    public long extract(ItemUnit unit, long amount, boolean simulate) {
+    public long extract(ItemResource unit, long amount, boolean simulate) {
         try (var transaction = Transaction.openOuter()) {
             long extracted = context.extract(ConversionUtils.toVariant(unit), amount, transaction);
             if (!simulate) {
@@ -36,7 +36,7 @@ public record CommonItemContext(ContainerItemContext context) implements ItemCon
     }
 
     @Override
-    public long exchange(ItemUnit newUnit, long amount, boolean simulate) {
+    public long exchange(ItemResource newUnit, long amount, boolean simulate) {
         try (var transaction = Transaction.openOuter()) {
             long exchanged = context.exchange(ConversionUtils.toVariant(newUnit), amount, transaction);
             if (!simulate) {
@@ -47,12 +47,12 @@ public record CommonItemContext(ContainerItemContext context) implements ItemCon
     }
 
     @Override
-    public CommonStorage<ItemUnit> outerContainer() {
+    public CommonStorage<ItemResource> outerContainer() {
         return new ContextItemContainer(context.getAdditionalSlots(), context::insertOverflow);
     }
 
     @Override
-    public StorageSlot<ItemUnit> mainSlot() {
+    public StorageSlot<ItemResource> mainSlot() {
         return new CommonWrappedSlotSlot<>(context.getMainSlot(), ConversionUtils::toVariant, ConversionUtils::toUnit);
     }
 }

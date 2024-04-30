@@ -1,7 +1,7 @@
 package earth.terrarium.botarium.energy.wrappers;
 
 import earth.terrarium.botarium.context.ItemContext;
-import earth.terrarium.botarium.item.base.ItemUnit;
+import earth.terrarium.botarium.resource.item.ItemResource;
 import earth.terrarium.botarium.storage.util.TransferUtil;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.energy.IEnergyStorage;
@@ -23,7 +23,7 @@ public record CommonItemEnergyStorage(IEnergyStorage storage, ItemStack stack, I
 
     public void updateContext() {
         if (!context.getUnit().matches(stack)) {
-            context.exchange(ItemUnit.of(stack), context.getAmount(), false);
+            context.exchange(ItemResource.of(stack), context.getAmount(), false);
         }
         if (context.getAmount() != stack.getCount()) {
             TransferUtil.equalize(context.mainSlot(), stack.getCount());

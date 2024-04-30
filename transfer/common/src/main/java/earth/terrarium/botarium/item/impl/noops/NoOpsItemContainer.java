@@ -1,11 +1,11 @@
 package earth.terrarium.botarium.item.impl.noops;
 
-import earth.terrarium.botarium.item.base.ItemUnit;
+import earth.terrarium.botarium.resource.item.ItemResource;
 import earth.terrarium.botarium.storage.base.CommonStorage;
 import earth.terrarium.botarium.storage.base.StorageSlot;
 import org.jetbrains.annotations.NotNull;
 
-public final class NoOpsItemContainer implements CommonStorage<ItemUnit> {
+public final class NoOpsItemContainer implements CommonStorage<ItemResource> {
     public static final NoOpsItemContainer NO_OPS = new NoOpsItemContainer();
 
     @Override
@@ -14,17 +14,17 @@ public final class NoOpsItemContainer implements CommonStorage<ItemUnit> {
     }
 
     @Override
-    public @NotNull StorageSlot<ItemUnit> getSlot(int slot) {
+    public @NotNull StorageSlot<ItemResource> getSlot(int slot) {
         return NoOpsItemSlot.NO_OPS;
     }
 
     @Override
-    public long insert(ItemUnit unit, long amount, boolean simulate) {
+    public long insert(ItemResource unit, long amount, boolean simulate) {
         return 0;
     }
 
     @Override
-    public long extract(ItemUnit unit, long amount, boolean simulate) {
+    public long extract(ItemResource unit, long amount, boolean simulate) {
         return 0;
     }
 

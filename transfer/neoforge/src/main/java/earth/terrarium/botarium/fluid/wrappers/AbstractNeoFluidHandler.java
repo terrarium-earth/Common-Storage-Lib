@@ -1,7 +1,7 @@
 package earth.terrarium.botarium.fluid.wrappers;
 
 import earth.terrarium.botarium.fluid.util.ConversionUtils;
-import earth.terrarium.botarium.fluid.base.FluidUnit;
+import earth.terrarium.botarium.resource.fluid.FluidResource;
 import earth.terrarium.botarium.storage.base.CommonStorage;
 import earth.terrarium.botarium.storage.base.StorageSlot;
 import earth.terrarium.botarium.storage.util.TransferUtil;
@@ -13,7 +13,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Optional;
 
 public interface AbstractNeoFluidHandler extends IFluidHandler {
-    CommonStorage<FluidUnit> container();
+    CommonStorage<FluidResource> container();
 
     @Override
     default int getTanks() {
@@ -22,7 +22,7 @@ public interface AbstractNeoFluidHandler extends IFluidHandler {
 
     @Override
     default @NotNull FluidStack getFluidInTank(int i) {
-        StorageSlot<FluidUnit> slot = container().getSlot(i);
+        StorageSlot<FluidResource> slot = container().getSlot(i);
         return ConversionUtils.convert(slot.getUnit(), slot.getAmount());
     }
 
@@ -33,12 +33,12 @@ public interface AbstractNeoFluidHandler extends IFluidHandler {
 
     @Override
     default boolean isFluidValid(int i, FluidStack fluidStack) {
-        return container().getSlot(i).isValueValid(new FluidUnit(fluidStack.getFluid(), fluidStack.getComponentsPatch()));
+        return container().getSlot(i).isValueValid(new FluidResource(fluidStack.getFluid(), fluidStack.getComponentsPatch()));
     }
 
     @Override
     default int fill(FluidStack fluidStack, FluidAction fluidAction) {
-        FluidUnit unit = ConversionUtils.convert(fluidStack);
+        FluidResource unit = ConversionUtils.convert(fluidStack);
         long amount = container().insert(unit, fluidStack.getAmount(), fluidAction.simulate());
         UpdateManager.batch(container());
         return (int) amount;
@@ -46,7 +46,7 @@ public interface AbstractNeoFluidHandler extends IFluidHandler {
 
     @Override
     default FluidStack drain(FluidStack fluidStack, FluidAction fluidAction) {
-        FluidUnit unit = ConversionUtils.convert(fluidStack);
+        FluidResource unit = ConversionUtils.convert(fluidStack);
         long amount = container().extract(unit, fluidStack.getAmount(), fluidAction.simulate());
         UpdateManager.batch(container());
         return amount > 0 ? ConversionUtils.convert(unit, amount) : FluidStack.EMPTY;
@@ -54,7 +54,7 @@ public interface AbstractNeoFluidHandler extends IFluidHandler {
 
     @Override
     default FluidStack drain(int i, FluidAction fluidAction) {
-        Optional<FluidUnit> unit = TransferUtil.findUnit(container(), (fluidUnit) -> !fluidUnit.isBlank());
+        Optional<FluidResource> unit = TransferUtil.findUnit(container(), (fluidUnit) -> !fluidUnit.isBlank());
         if (unit.isPresent()) {
             long amount = container().extract(unit.get(), i, fluidAction.simulate());
             UpdateManager.batch(container());

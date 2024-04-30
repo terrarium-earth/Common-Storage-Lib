@@ -2,8 +2,8 @@ package earth.terrarium.botarium.fluid.wrappers;
 
 import earth.terrarium.botarium.context.ItemContext;
 import earth.terrarium.botarium.fluid.util.ConversionUtils;
-import earth.terrarium.botarium.fluid.base.FluidUnit;
-import earth.terrarium.botarium.item.base.ItemUnit;
+import earth.terrarium.botarium.resource.fluid.FluidResource;
+import earth.terrarium.botarium.resource.item.ItemResource;
 import earth.terrarium.botarium.storage.util.TransferUtil;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
@@ -26,7 +26,7 @@ public final class CommonFluidItemContainer implements AbstractCommonFluidContai
     }
 
     @Override
-    public long insert(FluidUnit unit, long amount, boolean simulate) {
+    public long insert(FluidResource unit, long amount, boolean simulate) {
         int fill = handler.fill(ConversionUtils.convert(unit, amount), simulate ? IFluidHandler.FluidAction.SIMULATE : IFluidHandler.FluidAction.EXECUTE);
         if (!simulate) {
             updateContext();
@@ -35,7 +35,7 @@ public final class CommonFluidItemContainer implements AbstractCommonFluidContai
     }
 
     @Override
-    public long extract(FluidUnit unit, long amount, boolean simulate) {
+    public long extract(FluidResource unit, long amount, boolean simulate) {
         int drain = handler.drain(ConversionUtils.convert(unit, amount), simulate ? IFluidHandler.FluidAction.SIMULATE : IFluidHandler.FluidAction.EXECUTE).getAmount();
         if (!simulate) {
             updateContext();
@@ -51,9 +51,9 @@ public final class CommonFluidItemContainer implements AbstractCommonFluidContai
         if (context.getUnit().matches(lastContainer)) {
             TransferUtil.equalize(context.mainSlot(), lastContainer.getCount());
         } else {
-            if (context.exchange(ItemUnit.of(lastContainer), lastContainer.getCount(), false) != lastContainer.getCount()) {
-                context.extract(ItemUnit.of(lastContainer), lastContainer.getCount(), false);
-                context.mainSlot().insert(ItemUnit.of(lastContainer), lastContainer.getCount(), false);
+            if (context.exchange(ItemResource.of(lastContainer), lastContainer.getCount(), false) != lastContainer.getCount()) {
+                context.extract(ItemResource.of(lastContainer), lastContainer.getCount(), false);
+                context.mainSlot().insert(ItemResource.of(lastContainer), lastContainer.getCount(), false);
             }
         }
     }

@@ -1,12 +1,12 @@
 package earth.terrarium.botarium.item.impl.vanilla;
 
-import earth.terrarium.botarium.item.base.ItemUnit;
+import earth.terrarium.botarium.resource.item.ItemResource;
 import earth.terrarium.botarium.storage.base.StorageSlot;
 import earth.terrarium.botarium.storage.base.UpdateManager;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
 
-public class VanillaDelegatingSlot implements StorageSlot<ItemUnit>, UpdateManager<ItemStack> {
+public class VanillaDelegatingSlot implements StorageSlot<ItemResource>, UpdateManager<ItemStack> {
     private final int slot;
     private final Container container;
     private final Runnable update;
@@ -23,13 +23,13 @@ public class VanillaDelegatingSlot implements StorageSlot<ItemUnit>, UpdateManag
     }
 
     @Override
-    public boolean isValueValid(ItemUnit unit) {
+    public boolean isValueValid(ItemResource unit) {
         return container.canPlaceItem(slot, unit.toItemStack());
     }
 
     @Override
-    public ItemUnit getUnit() {
-        return ItemUnit.of(container.getItem(slot));
+    public ItemResource getUnit() {
+        return ItemResource.of(container.getItem(slot));
     }
 
     @Override
@@ -43,7 +43,7 @@ public class VanillaDelegatingSlot implements StorageSlot<ItemUnit>, UpdateManag
     }
 
     @Override
-    public long insert(ItemUnit unit, long amount, boolean simulate) {
+    public long insert(ItemResource unit, long amount, boolean simulate) {
         ItemStack stack = container.getItem(slot);
         if (unit.matches(stack) || stack.isEmpty()) {
             if (stack.isEmpty()) {
@@ -64,7 +64,7 @@ public class VanillaDelegatingSlot implements StorageSlot<ItemUnit>, UpdateManag
     }
 
     @Override
-    public long extract(ItemUnit unit, long amount, boolean simulate) {
+    public long extract(ItemResource unit, long amount, boolean simulate) {
         ItemStack stack = container.getItem(slot).copy();
         if (unit.matches(stack)) {
             ItemStack extracted = stack.split((int) amount);

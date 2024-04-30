@@ -2,8 +2,8 @@ package earth.terrarium.botarium.fluid.impl;
 
 import earth.terrarium.botarium.BotariumTransfer;
 import earth.terrarium.botarium.context.ItemContext;
-import earth.terrarium.botarium.fluid.base.FluidUnit;
 import earth.terrarium.botarium.fluid.util.FluidStorageData;
+import earth.terrarium.botarium.resource.fluid.FluidResource;
 import earth.terrarium.botarium.storage.base.CommonStorage;
 import earth.terrarium.botarium.storage.base.UpdateManager;
 import earth.terrarium.botarium.storage.util.TransferUtil;
@@ -14,7 +14,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Predicate;
 
-public class SimpleFluidContainer implements CommonStorage<FluidUnit>, UpdateManager<FluidStorageData> {
+public class SimpleFluidContainer implements CommonStorage<FluidResource>, UpdateManager<FluidStorageData> {
     protected final NonNullList<SimpleFluidSlot> slots;
     private final Runnable update;
     private final long limit;
@@ -47,7 +47,7 @@ public class SimpleFluidContainer implements CommonStorage<FluidUnit>, UpdateMan
         readSnapshot(BotariumTransfer.FLUID_CONTENTS.get(entityOrBlockEntity));
     }
 
-    public SimpleFluidContainer filter(int slot, Predicate<FluidUnit> predicate) {
+    public SimpleFluidContainer filter(int slot, Predicate<FluidResource> predicate) {
         slots.set(slot, new SimpleFluidSlot.Filtered(limit, this::update, predicate));
         return this;
     }
@@ -80,12 +80,12 @@ public class SimpleFluidContainer implements CommonStorage<FluidUnit>, UpdateMan
     }
 
     @Override
-    public long insert(FluidUnit unit, long amount, boolean simulate) {
+    public long insert(FluidResource unit, long amount, boolean simulate) {
         return TransferUtil.insertSlots(this, unit, amount, simulate);
     }
 
     @Override
-    public long extract(FluidUnit unit, long amount, boolean simulate) {
+    public long extract(FluidResource unit, long amount, boolean simulate) {
         return TransferUtil.extractSlots(this, unit, amount, simulate);
     }
 }

@@ -1,6 +1,6 @@
 package earth.terrarium.botarium.item.impl.vanilla;
 
-import earth.terrarium.botarium.item.base.ItemUnit;
+import earth.terrarium.botarium.resource.item.ItemResource;
 import earth.terrarium.botarium.storage.base.StorageSlot;
 import earth.terrarium.botarium.storage.util.TransferUtil;
 import earth.terrarium.botarium.storage.base.UpdateManager;
@@ -22,22 +22,22 @@ public class PlayerContainer extends AbstractVanillaContainer implements UpdateM
     }
 
     @Override
-    public long insert(ItemUnit unit, long amount, boolean simulate) {
+    public long insert(ItemResource unit, long amount, boolean simulate) {
         return offer(unit, amount, simulate);
     }
 
     @Override
-    public long extract(ItemUnit unit, long amount, boolean simulate) {
+    public long extract(ItemResource unit, long amount, boolean simulate) {
         return 0;
     }
 
-    public long offer(ItemUnit unit, long amount, boolean simulate) {
+    public long offer(ItemResource unit, long amount, boolean simulate) {
         // try inserting into main hands first, then a subset of the slots between 0 and Inventory.INVENTORY_SIZE, then just the rest of the slots
         long initialAmount = amount;
 
         // Stack into the main stack first and the offhand stack second.
         for (InteractionHand hand : InteractionHand.values()) {
-            StorageSlot<ItemUnit> handSlot = getHandSlot(hand);
+            StorageSlot<ItemResource> handSlot = getHandSlot(hand);
 
             if (handSlot.getUnit().equals(unit)) {
                 amount -= handSlot.insert(unit, amount, simulate);
@@ -52,7 +52,7 @@ public class PlayerContainer extends AbstractVanillaContainer implements UpdateM
         return initialAmount - amount;
     }
 
-    public long offerOrDrop(ItemUnit unit, long amount, boolean simulate) {
+    public long offerOrDrop(ItemResource unit, long amount, boolean simulate) {
         long inserted = offer(unit, amount, simulate);
         if (inserted < amount) {
             drop(unit, amount - inserted, simulate);
@@ -60,7 +60,7 @@ public class PlayerContainer extends AbstractVanillaContainer implements UpdateM
         return amount;
     }
 
-    public void drop(ItemUnit unit, long amount, boolean simulate) {
+    public void drop(ItemResource unit, long amount, boolean simulate) {
         long leftover = amount;
         if (!simulate) {
             ItemStack fakeStack = unit.toItemStack();
@@ -73,7 +73,7 @@ public class PlayerContainer extends AbstractVanillaContainer implements UpdateM
         }
     }
 
-    public StorageSlot<ItemUnit> getHandSlot(InteractionHand hand) {
+    public StorageSlot<ItemResource> getHandSlot(InteractionHand hand) {
         if (hand == InteractionHand.MAIN_HAND) {
             if (Inventory.isHotbarSlot(inventory.selected)) {
                 return getSlot(inventory.selected);
@@ -126,7 +126,7 @@ public class PlayerContainer extends AbstractVanillaContainer implements UpdateM
         }
 
         @Override
-        public long insert(ItemUnit unit, long amount, boolean simulate) {
+        public long insert(ItemResource unit, long amount, boolean simulate) {
             return offerOrDrop(unit, amount, simulate);
         }
     }

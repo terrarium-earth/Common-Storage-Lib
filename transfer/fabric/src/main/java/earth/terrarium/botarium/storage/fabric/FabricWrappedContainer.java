@@ -1,9 +1,9 @@
 package earth.terrarium.botarium.storage.fabric;
 
-import earth.terrarium.botarium.fluid.base.FluidUnit;
-import earth.terrarium.botarium.item.base.ItemUnit;
+import earth.terrarium.botarium.resource.fluid.FluidResource;
+import earth.terrarium.botarium.resource.item.ItemResource;
 import earth.terrarium.botarium.storage.ConversionUtils;
-import earth.terrarium.botarium.storage.unit.TransferUnit;
+import earth.terrarium.botarium.resource.TransferResource;
 import earth.terrarium.botarium.storage.base.CommonStorage;
 import earth.terrarium.botarium.storage.base.StorageSlot;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
@@ -20,7 +20,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Iterator;
 import java.util.function.Function;
 
-public class FabricWrappedContainer<T, U extends TransferUnit<T, U>, V extends TransferVariant<T>> implements SlottedStorage<V> {
+public class FabricWrappedContainer<T, U extends TransferResource<T, U>, V extends TransferVariant<T>> implements SlottedStorage<V> {
     private final CommonStorage<U> container;
     private final OptionalSnapshotParticipant<?> updateManager;
     private final Function<U, V> toVariant;
@@ -103,14 +103,14 @@ public class FabricWrappedContainer<T, U extends TransferUnit<T, U>, V extends T
         return updateManager;
     }
 
-    public static class OfFluid extends FabricWrappedContainer<Fluid, FluidUnit, FluidVariant> {
-        public OfFluid(CommonStorage<FluidUnit> container) {
+    public static class OfFluid extends FabricWrappedContainer<Fluid, FluidResource, FluidVariant> {
+        public OfFluid(CommonStorage<FluidResource> container) {
             super(container, ConversionUtils::toVariant, ConversionUtils::toUnit);
         }
     }
 
-    public static class OfItem extends FabricWrappedContainer<Item, ItemUnit, ItemVariant> {
-        public OfItem(CommonStorage<ItemUnit> container) {
+    public static class OfItem extends FabricWrappedContainer<Item, ItemResource, ItemVariant> {
+        public OfItem(CommonStorage<ItemResource> container) {
             super(container, ConversionUtils::toVariant, ConversionUtils::toUnit);
         }
     }

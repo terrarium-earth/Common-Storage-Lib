@@ -1,27 +1,27 @@
 package earth.terrarium.botarium.item.impl;
 
-import earth.terrarium.botarium.item.base.ItemUnit;
+import earth.terrarium.botarium.resource.ResourceStack;
+import earth.terrarium.botarium.resource.item.ItemResource;
 import earth.terrarium.botarium.storage.base.StorageSlot;
 import earth.terrarium.botarium.storage.base.UpdateManager;
-import earth.terrarium.botarium.storage.unit.UnitStack;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.function.Predicate;
 
-public class SimpleItemSlot implements StorageSlot<ItemUnit>, UpdateManager<UnitStack<ItemUnit>> {
+public class SimpleItemSlot implements StorageSlot<ItemResource>, UpdateManager<ResourceStack<ItemResource>> {
     private final Runnable update;
-    private ItemUnit unit;
+    private ItemResource unit;
     private long amount;
 
     public SimpleItemSlot(Runnable update) {
-        this.unit = ItemUnit.BLANK;
+        this.unit = ItemResource.BLANK;
         this.amount = getAmount();
         this.update = update;
     }
 
     public SimpleItemSlot(ItemStack stack) {
-        this.unit = ItemUnit.of(stack);
+        this.unit = ItemResource.of(stack);
         this.amount = stack.getCount();
         this.update = () -> {};
     }
@@ -32,12 +32,12 @@ public class SimpleItemSlot implements StorageSlot<ItemUnit>, UpdateManager<Unit
     }
 
     @Override
-    public boolean isValueValid(ItemUnit unit) {
+    public boolean isValueValid(ItemResource unit) {
         return true;
     }
 
     @Override
-    public ItemUnit getUnit() {
+    public ItemResource getUnit() {
         return unit;
     }
 
@@ -51,23 +51,23 @@ public class SimpleItemSlot implements StorageSlot<ItemUnit>, UpdateManager<Unit
         return unit.isBlank();
     }
 
-    public void set(ItemUnit unit, long amount) {
+    public void set(ItemResource unit, long amount) {
         this.unit = unit;
         this.amount = amount;
     }
 
     public void set(ItemStack stack) {
-        this.unit = ItemUnit.of(stack);
+        this.unit = ItemResource.of(stack);
         this.amount = stack.getCount();
     }
 
-    public void set(UnitStack<ItemUnit> data) {
+    public void set(ResourceStack<ItemResource> data) {
         this.unit = data.unit();
         this.amount = data.amount();
     }
 
     @Override
-    public long insert(ItemUnit unit, long amount, boolean simulate) {
+    public long insert(ItemResource unit, long amount, boolean simulate) {
         if (!isValueValid(unit)) return 0;
         if (this.unit.isBlank()) {
             long inserted = Math.min(amount, unit.getCachedStack().getMaxStackSize());
@@ -87,7 +87,7 @@ public class SimpleItemSlot implements StorageSlot<ItemUnit>, UpdateManager<Unit
     }
 
     @Override
-    public long extract(ItemUnit unit, long amount, boolean simulate) {
+    public long extract(ItemResource unit, long amount, boolean simulate) {
         if (this.unit.matches(unit)) {
             long extracted = Math.min(amount, this.amount);
             if (!simulate) {
@@ -99,12 +99,12 @@ public class SimpleItemSlot implements StorageSlot<ItemUnit>, UpdateManager<Unit
     }
 
     @Override
-    public UnitStack<ItemUnit> createSnapshot() {
-        return new UnitStack<>(unit, amount);
+    public ResourceStack<ItemResource> createSnapshot() {
+        return new ResourceStack<>(unit, amount);
     }
 
     @Override
-    public void readSnapshot(UnitStack<ItemUnit> snapshot) {
+    public void readSnapshot(ResourceStack<ItemResource> snapshot) {
         this.unit = snapshot.unit();
         this.amount = snapshot.amount();
     }
@@ -115,15 +115,15 @@ public class SimpleItemSlot implements StorageSlot<ItemUnit>, UpdateManager<Unit
     }
 
     public static class Filtered extends SimpleItemSlot {
-        private final Predicate<ItemUnit> filter;
+        private final Predicate<ItemResource> filter;
 
-        public Filtered(Runnable update, Predicate<ItemUnit> filter) {
+        public Filtered(Runnable update, Predicate<ItemResource> filter) {
             super(update);
             this.filter = filter;
         }
 
         @Override
-        public boolean isValueValid(ItemUnit unit) {
+        public boolean isValueValid(ItemResource unit) {
             return filter.test(unit);
         }
     }

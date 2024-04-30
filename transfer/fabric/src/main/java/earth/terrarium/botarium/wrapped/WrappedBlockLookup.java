@@ -1,9 +1,9 @@
 package earth.terrarium.botarium.wrapped;
 
-import earth.terrarium.botarium.fluid.base.FluidUnit;
-import earth.terrarium.botarium.item.base.ItemUnit;
+import earth.terrarium.botarium.resource.fluid.FluidResource;
+import earth.terrarium.botarium.resource.item.ItemResource;
 import earth.terrarium.botarium.storage.ConversionUtils;
-import earth.terrarium.botarium.storage.unit.TransferUnit;
+import earth.terrarium.botarium.resource.TransferResource;
 import earth.terrarium.botarium.lookup.BlockLookup;
 import earth.terrarium.botarium.storage.base.CommonStorage;
 import earth.terrarium.botarium.storage.common.CommonWrappedContainer;
@@ -28,7 +28,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Consumer;
 
-public abstract class WrappedBlockLookup<T, U extends TransferUnit<T, U>, V extends TransferVariant<T>> implements BlockLookup<CommonStorage<U>, @Nullable Direction> {
+public abstract class WrappedBlockLookup<T, U extends TransferResource<T, U>, V extends TransferVariant<T>> implements BlockLookup<CommonStorage<U>, @Nullable Direction> {
     private final BlockApiLookup<Storage<V>, Direction> fabricLookup;
 
     public WrappedBlockLookup(BlockApiLookup<Storage<V>, Direction> fabricLookup) {
@@ -66,13 +66,13 @@ public abstract class WrappedBlockLookup<T, U extends TransferUnit<T, U>, V exte
 
     public abstract FabricWrappedContainer<T, U, V> wrap(CommonStorage<U> container);
 
-    public static class ofFluid extends WrappedBlockLookup<Fluid, FluidUnit, FluidVariant> {
+    public static class ofFluid extends WrappedBlockLookup<Fluid, FluidResource, FluidVariant> {
         public ofFluid() {
             super(FluidStorage.SIDED);
         }
 
         @Override
-        public @Nullable CommonStorage<FluidUnit> find(Level level, BlockPos pos, @Nullable BlockState state, @Nullable BlockEntity entity, @Nullable Direction direction) {
+        public @Nullable CommonStorage<FluidResource> find(Level level, BlockPos pos, @Nullable BlockState state, @Nullable BlockEntity entity, @Nullable Direction direction) {
             Storage<FluidVariant> storage = FluidStorage.SIDED.find(level, pos, state, entity, direction);
             if (storage != null) {
                 if (storage instanceof FabricWrappedContainer.OfFluid wrappedContainer) {
@@ -84,18 +84,18 @@ public abstract class WrappedBlockLookup<T, U extends TransferUnit<T, U>, V exte
         }
 
         @Override
-        public FabricWrappedContainer<Fluid, FluidUnit, FluidVariant> wrap(CommonStorage<FluidUnit> container) {
+        public FabricWrappedContainer<Fluid, FluidResource, FluidVariant> wrap(CommonStorage<FluidResource> container) {
             return new FabricWrappedContainer.OfFluid(container);
         }
     }
 
-    public static class ofItem extends WrappedBlockLookup<Item, ItemUnit, ItemVariant> {
+    public static class ofItem extends WrappedBlockLookup<Item, ItemResource, ItemVariant> {
         public ofItem() {
             super(ItemStorage.SIDED);
         }
 
         @Override
-        public @Nullable CommonStorage<ItemUnit> find(Level level, BlockPos pos, @Nullable BlockState state, @Nullable BlockEntity entity, @Nullable Direction direction) {
+        public @Nullable CommonStorage<ItemResource> find(Level level, BlockPos pos, @Nullable BlockState state, @Nullable BlockEntity entity, @Nullable Direction direction) {
             Storage<ItemVariant> storage = ItemStorage.SIDED.find(level, pos, state, entity, direction);
             if (storage != null) {
                 if (storage instanceof FabricWrappedContainer.OfItem wrappedContainer) {
@@ -107,7 +107,7 @@ public abstract class WrappedBlockLookup<T, U extends TransferUnit<T, U>, V exte
         }
 
         @Override
-        public FabricWrappedContainer<Item, ItemUnit, ItemVariant> wrap(CommonStorage<ItemUnit> container) {
+        public FabricWrappedContainer<Item, ItemResource, ItemVariant> wrap(CommonStorage<ItemResource> container) {
             return new FabricWrappedContainer.OfItem(container);
         }
     }

@@ -1,9 +1,9 @@
 package earth.terrarium.botarium.item.impl.noops;
 
-import earth.terrarium.botarium.item.base.ItemUnit;
+import earth.terrarium.botarium.resource.item.ItemResource;
 import earth.terrarium.botarium.storage.base.StorageSlot;
 
-public class NoOpsItemSlot implements StorageSlot<ItemUnit> {
+public class NoOpsItemSlot implements StorageSlot<ItemResource> {
     public static final NoOpsItemSlot NO_OPS = new NoOpsItemSlot();
 
     @Override
@@ -12,13 +12,13 @@ public class NoOpsItemSlot implements StorageSlot<ItemUnit> {
     }
 
     @Override
-    public boolean isValueValid(ItemUnit unit) {
+    public boolean isValueValid(ItemResource unit) {
         return false;
     }
 
     @Override
-    public ItemUnit getUnit() {
-        return ItemUnit.BLANK;
+    public ItemResource getUnit() {
+        return ItemResource.BLANK;
     }
 
     @Override
@@ -32,12 +32,12 @@ public class NoOpsItemSlot implements StorageSlot<ItemUnit> {
     }
 
     @Override
-    public long insert(ItemUnit unit, long amount, boolean simulate) {
+    public long insert(ItemResource unit, long amount, boolean simulate) {
         return 0;
     }
 
     @Override
-    public long extract(ItemUnit unit, long amount, boolean simulate) {
+    public long extract(ItemResource unit, long amount, boolean simulate) {
         return 0;
     }
 }

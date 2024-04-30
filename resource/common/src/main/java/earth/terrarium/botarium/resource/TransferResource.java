@@ -1,4 +1,4 @@
-package earth.terrarium.botarium.storage.unit;
+package earth.terrarium.botarium.resource;
 
 import net.minecraft.core.component.DataComponentHolder;
 import net.minecraft.core.component.DataComponentMap;
@@ -7,7 +7,7 @@ import net.minecraft.core.component.DataComponentType;
 
 import java.util.Objects;
 
-public interface TransferUnit<T, U extends TransferUnit<T, U>> extends DataComponentHolder {
+public interface TransferResource<T, R extends TransferResource<T, R>> extends DataComponentHolder {
     boolean isBlank();
 
     T getType();
@@ -26,17 +26,17 @@ public interface TransferUnit<T, U extends TransferUnit<T, U>> extends DataCompo
         return this.getType() == unit;
     }
 
-    default boolean matches(U other) {
+    default boolean matches(R other) {
         return isOf(other.getType()) && componentsMatch(other.getComponents());
     }
 
-    <D> U set(DataComponentType<D> type, D value);
+    <D> R set(DataComponentType<D> type, D value);
 
-    U modify(DataComponentPatch patch);
+    R modify(DataComponentPatch patch);
 
-    UnitStack<U> toStack(long amount);
+    ResourceStack<R> toStack(long amount);
 
-    default UnitStack<U> toStack() {
+    default ResourceStack<R> toStack() {
         return toStack(1);
     }
 }

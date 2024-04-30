@@ -1,7 +1,7 @@
 package earth.terrarium.botarium.item.util;
 
 import earth.terrarium.botarium.context.ItemContext;
-import earth.terrarium.botarium.item.base.ItemUnit;
+import earth.terrarium.botarium.resource.item.ItemResource;
 import earth.terrarium.botarium.storage.base.CommonStorage;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -14,22 +14,22 @@ public class ItemProvider {
     private ItemProvider() {}
 
     public interface Block {
-        CommonStorage<ItemUnit> getItems(Level level, BlockPos pos, @Nullable BlockState state, @Nullable net.minecraft.world.level.block.entity.BlockEntity entity, @Nullable Direction direction);
+        CommonStorage<ItemResource> getItems(Level level, BlockPos pos, @Nullable BlockState state, @Nullable net.minecraft.world.level.block.entity.BlockEntity entity, @Nullable Direction direction);
     }
 
     public interface BlockEntity {
-        CommonStorage<ItemUnit> getItems(@Nullable Direction direction);
+        CommonStorage<ItemResource> getItems(@Nullable Direction direction);
     }
 
     public interface Entity {
-        CommonStorage<ItemUnit> getItems();
+        CommonStorage<ItemResource> getItems();
     }
 
     public interface AutomationEntity {
-        CommonStorage<ItemUnit> getItems(@Nullable Direction entity);
+        CommonStorage<ItemResource> getItems(@Nullable Direction entity);
     }
 
     public interface Item {
-        CommonStorage<ItemUnit> getItems(ItemStack stack, ItemContext context);
+        CommonStorage<ItemResource> getItems(ItemStack stack, ItemContext context);
     }
 }

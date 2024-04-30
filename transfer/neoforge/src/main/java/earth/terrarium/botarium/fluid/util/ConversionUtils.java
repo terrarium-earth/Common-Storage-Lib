@@ -1,16 +1,16 @@
 package earth.terrarium.botarium.fluid.util;
 
-import earth.terrarium.botarium.fluid.base.FluidUnit;
+import earth.terrarium.botarium.resource.fluid.FluidResource;
 import net.neoforged.neoforge.fluids.FluidStack;
 
 public class ConversionUtils {
-    public static FluidStack convert(FluidUnit unit, long amount) {
+    public static FluidStack convert(FluidResource unit, long amount) {
         FluidStack stack = new FluidStack(unit.getType(), (int) amount);
         stack.applyComponents(unit.components());
         return stack;
     }
 
-    public static FluidUnit convert(FluidStack stack) {
-        return new FluidUnit(stack.getFluid(), stack.getComponentsPatch());
+    public static FluidResource convert(FluidStack stack) {
+        return new FluidResource(stack.getFluid(), stack.getComponentsPatch());
     }
 }

@@ -1,6 +1,6 @@
 package earth.terrarium.botarium.fluid.lookup;
 
-import earth.terrarium.botarium.fluid.base.FluidUnit;
+import earth.terrarium.botarium.resource.fluid.FluidResource;
 import earth.terrarium.botarium.fluid.wrappers.CommonFluidContainer;
 import earth.terrarium.botarium.fluid.wrappers.NeoFluidContainer;
 import earth.terrarium.botarium.lookup.RegistryEventListener;
@@ -17,19 +17,19 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
-public final class FluidEntityLookup implements EntityLookup<CommonStorage<FluidUnit>, Direction>, RegistryEventListener {
+public final class FluidEntityLookup implements EntityLookup<CommonStorage<FluidResource>, Direction>, RegistryEventListener {
     public static final FluidEntityLookup INSTANCE = new FluidEntityLookup();
-    private final List<Consumer<EntityRegistrar<CommonStorage<FluidUnit>, Direction>>> registrars = new ArrayList<>();
+    private final List<Consumer<EntityRegistrar<CommonStorage<FluidResource>, Direction>>> registrars = new ArrayList<>();
 
     private FluidEntityLookup() {
         registerSelf();
     }
 
     @Override
-    public @Nullable CommonStorage<FluidUnit> find(Entity entity, Direction context) {
+    public @Nullable CommonStorage<FluidResource> find(Entity entity, Direction context) {
         IFluidHandler handler = entity.getCapability(Capabilities.FluidHandler.ENTITY, context);
 
-        if (handler instanceof NeoFluidContainer(CommonStorage<FluidUnit> container)) {
+        if (handler instanceof NeoFluidContainer(CommonStorage<FluidResource> container)) {
             return container;
         }
 
@@ -37,7 +37,7 @@ public final class FluidEntityLookup implements EntityLookup<CommonStorage<Fluid
     }
 
     @Override
-    public void onRegister(Consumer<EntityRegistrar<CommonStorage<FluidUnit>, Direction>> registrar) {
+    public void onRegister(Consumer<EntityRegistrar<CommonStorage<FluidResource>, Direction>> registrar) {
         registrars.add(registrar);
     }
 
@@ -46,7 +46,7 @@ public final class FluidEntityLookup implements EntityLookup<CommonStorage<Fluid
         registrars.forEach(registrar -> registrar.accept((getter, containers) -> {
             for (var container : containers) {
                 event.registerEntity(Capabilities.FluidHandler.ENTITY, container, (entity, direction) -> {
-                    CommonStorage<FluidUnit> storage = getter.getContainer(entity, direction);
+                    CommonStorage<FluidResource> storage = getter.getContainer(entity, direction);
                     return storage == null ? null : new NeoFluidContainer(storage);
                 });
             }

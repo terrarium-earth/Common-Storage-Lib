@@ -1,7 +1,7 @@
 package earth.terrarium.botarium.fluid;
 
 import earth.terrarium.botarium.context.ItemContext;
-import earth.terrarium.botarium.fluid.base.FluidUnit;
+import earth.terrarium.botarium.resource.fluid.FluidResource;
 import earth.terrarium.botarium.fluid.lookup.FluidBlockLookup;
 import earth.terrarium.botarium.fluid.lookup.FluidEntityLookup;
 import earth.terrarium.botarium.fluid.lookup.FluidItemLookup;
@@ -16,9 +16,9 @@ import org.jetbrains.annotations.Nullable;
 @Actual
 public class FluidApiActual {
     @Actual
-    public static final BlockLookup<CommonStorage<FluidUnit>, @Nullable Direction> BLOCK = FluidBlockLookup.INSTANCE;
+    public static final BlockLookup<CommonStorage<FluidResource>, @Nullable Direction> BLOCK = FluidBlockLookup.INSTANCE;
     @Actual
-    public static final ItemLookup<CommonStorage<FluidUnit>, ItemContext> ITEM = FluidItemLookup.INSTANCE;
+    public static final ItemLookup<CommonStorage<FluidResource>, ItemContext> ITEM = FluidItemLookup.INSTANCE;
     @Actual
-    public static final EntityLookup<CommonStorage<FluidUnit>, Direction> ENTITY = FluidEntityLookup.INSTANCE;
+    public static final EntityLookup<CommonStorage<FluidResource>, Direction> ENTITY = FluidEntityLookup.INSTANCE;
 }

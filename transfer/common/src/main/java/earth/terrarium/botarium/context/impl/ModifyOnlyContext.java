@@ -1,7 +1,7 @@
 package earth.terrarium.botarium.context.impl;
 
 import earth.terrarium.botarium.context.ItemContext;
-import earth.terrarium.botarium.item.base.ItemUnit;
+import earth.terrarium.botarium.resource.item.ItemResource;
 import earth.terrarium.botarium.item.impl.noops.NoOpsItemContainer;
 import earth.terrarium.botarium.storage.base.CommonStorage;
 import earth.terrarium.botarium.storage.base.StorageSlot;
@@ -11,7 +11,7 @@ import net.minecraft.world.item.ItemStack;
 
 public record ModifyOnlyContext(ItemStack stack) implements ItemContext {
     @Override
-    public long exchange(ItemUnit newUnit, long amount, boolean simulate) {
+    public long exchange(ItemResource newUnit, long amount, boolean simulate) {
         if (!newUnit.isOf(stack.getItem()) || amount != stack.getCount()) return 0;
         if (!simulate) {
             if (stack.getComponents() instanceof PatchedDataComponentMap map) {
@@ -29,29 +29,29 @@ public record ModifyOnlyContext(ItemStack stack) implements ItemContext {
     }
 
     @Override
-    public CommonStorage<ItemUnit> outerContainer() {
+    public CommonStorage<ItemResource> outerContainer() {
         return NoOpsItemContainer.NO_OPS;
     }
 
     @Override
-    public StorageSlot<ItemUnit> mainSlot() {
+    public StorageSlot<ItemResource> mainSlot() {
         return new ModifyOnlyContainer(stack);
     }
 
-    public record ModifyOnlyContainer(ItemStack stack) implements StorageSlot<ItemUnit> {
+    public record ModifyOnlyContainer(ItemStack stack) implements StorageSlot<ItemResource> {
         @Override
         public long getLimit() {
             return stack.getMaxStackSize();
         }
 
         @Override
-        public boolean isValueValid(ItemUnit unit) {
+        public boolean isValueValid(ItemResource unit) {
             return unit.matches(stack);
         }
 
         @Override
-        public ItemUnit getUnit() {
-            return ItemUnit.of(stack);
+        public ItemResource getUnit() {
+            return ItemResource.of(stack);
         }
 
         @Override
@@ -65,7 +65,7 @@ public record ModifyOnlyContext(ItemStack stack) implements ItemContext {
         }
 
         @Override
-        public long insert(ItemUnit unit, long amount, boolean simulate) {
+        public long insert(ItemResource unit, long amount, boolean simulate) {
             if (unit.matches(stack)) {
                 long inserted = Math.min(amount, getLimit() - stack.getCount());
                 if (!simulate) {
@@ -77,7 +77,7 @@ public record ModifyOnlyContext(ItemStack stack) implements ItemContext {
         }
 
         @Override
-        public long extract(ItemUnit unit, long amount, boolean simulate) {
+        public long extract(ItemResource unit, long amount, boolean simulate) {
             if (unit.matches(stack)) {
                 long extracted = Math.min(amount, stack.getCount());
                 if (!simulate) {

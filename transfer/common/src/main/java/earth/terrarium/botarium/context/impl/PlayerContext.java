@@ -1,13 +1,13 @@
 package earth.terrarium.botarium.context.impl;
 
 import earth.terrarium.botarium.context.ItemContext;
-import earth.terrarium.botarium.item.base.ItemUnit;
+import earth.terrarium.botarium.resource.item.ItemResource;
 import earth.terrarium.botarium.item.impl.vanilla.PlayerContainer;
 import earth.terrarium.botarium.storage.base.StorageSlot;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 
-public record PlayerContext(PlayerContainer outerContainer, StorageSlot<ItemUnit> mainSlot) implements ItemContext {
+public record PlayerContext(PlayerContainer outerContainer, StorageSlot<ItemResource> mainSlot) implements ItemContext {
     public static PlayerContext ofHand(Player player, InteractionHand hand) {
         PlayerContainer playerContainer = new PlayerContainer.AutoDrop(player.getInventory());
         return new PlayerContext(playerContainer, playerContainer.getHandSlot(hand));

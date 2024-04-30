@@ -1,6 +1,6 @@
 package earth.terrarium.botarium.storage.fabric;
 
-import earth.terrarium.botarium.storage.unit.TransferUnit;
+import earth.terrarium.botarium.resource.TransferResource;
 import earth.terrarium.botarium.storage.base.StorageSlot;
 import net.fabricmc.fabric.api.transfer.v1.storage.TransferVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.base.SingleSlotStorage;
@@ -9,10 +9,10 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Function;
 
-public record FabricWrappedSlot<T, U extends TransferUnit<T, U>, V extends TransferVariant<T>>(StorageSlot<U> container,
-                                                                                            @Nullable OptionalSnapshotParticipant<?> updateManager,
-                                                                                            Function<V, U> toUnit,
-                                                                                            Function<U, V> toVariant) implements SingleSlotStorage<V> {
+public record FabricWrappedSlot<T, U extends TransferResource<T, U>, V extends TransferVariant<T>>(StorageSlot<U> container,
+                                                                                                   @Nullable OptionalSnapshotParticipant<?> updateManager,
+                                                                                                   Function<V, U> toUnit,
+                                                                                                   Function<U, V> toVariant) implements SingleSlotStorage<V> {
 
     public FabricWrappedSlot(StorageSlot<U> container, Function<U, V> toVariant, Function<V, U> toUnit) {
         this(container, OptionalSnapshotParticipant.of(container), toUnit, toVariant);

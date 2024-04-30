@@ -1,10 +1,10 @@
 package earth.terrarium.botarium.storage.util;
 
-import earth.terrarium.botarium.fluid.base.FluidUnit;
-import earth.terrarium.botarium.item.base.ItemUnit;
+import earth.terrarium.botarium.resource.TransferResource;
+import earth.terrarium.botarium.resource.ResourceStack;
+import earth.terrarium.botarium.resource.fluid.FluidResource;
+import earth.terrarium.botarium.resource.item.ItemResource;
 import earth.terrarium.botarium.storage.base.*;
-import earth.terrarium.botarium.storage.unit.TransferUnit;
-import earth.terrarium.botarium.storage.unit.UnitStack;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.Tuple;
 import net.minecraft.world.item.Item;
@@ -30,11 +30,11 @@ public class TransferUtil {
         return findUnit(container, unit -> true);
     }
 
-    public static Predicate<ItemUnit> byItemTag(TagKey<Item> tag) {
+    public static Predicate<ItemResource> byItemTag(TagKey<Item> tag) {
         return unit -> unit.getType().builtInRegistryHolder().is(tag);
     }
 
-    public static Predicate<FluidUnit> byFluidTag(TagKey<Fluid> tag) {
+    public static Predicate<FluidResource> byFluidTag(TagKey<Fluid> tag) {
         return unit -> unit.getType().builtInRegistryHolder().is(tag);
     }
 
@@ -169,7 +169,7 @@ public class TransferUtil {
         }
     }
 
-    public static <T extends TransferUnit<?, T>> long insertStack(CommonStorage<T> container, UnitStack<T> stack, boolean simulate) {
+    public static <T extends TransferResource<?, T>> long insertStack(CommonStorage<T> container, ResourceStack<T> stack, boolean simulate) {
         return insertSlots(container, stack.unit(), stack.amount(), simulate);
     }
 }
