@@ -1,6 +1,6 @@
 package earth.terrarium.botarium.fluid.lookup;
 
-import earth.terrarium.botarium.resource.fluid.FluidResource;
+import earth.terrarium.botarium.resources.fluid.FluidResource;
 import earth.terrarium.botarium.fluid.wrappers.CommonFluidContainer;
 import earth.terrarium.botarium.fluid.wrappers.NeoFluidContainer;
 import earth.terrarium.botarium.lookup.RegistryEventListener;

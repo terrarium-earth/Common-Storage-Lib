@@ -1,7 +1,7 @@
 package earth.terrarium.botarium.fluid;
 
 import earth.terrarium.botarium.context.ItemContext;
-import earth.terrarium.botarium.resource.fluid.FluidResource;
+import earth.terrarium.botarium.resources.fluid.FluidResource;
 import earth.terrarium.botarium.lookup.BlockLookup;
 import earth.terrarium.botarium.lookup.EntityLookup;
 import earth.terrarium.botarium.lookup.ItemLookup;

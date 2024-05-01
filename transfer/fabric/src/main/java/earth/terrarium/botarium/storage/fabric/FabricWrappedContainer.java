@@ -1,9 +1,9 @@
 package earth.terrarium.botarium.storage.fabric;
 
-import earth.terrarium.botarium.resource.fluid.FluidResource;
-import earth.terrarium.botarium.resource.item.ItemResource;
+import earth.terrarium.botarium.resources.fluid.FluidResource;
+import earth.terrarium.botarium.resources.item.ItemResource;
 import earth.terrarium.botarium.storage.ConversionUtils;
-import earth.terrarium.botarium.resource.TransferResource;
+import earth.terrarium.botarium.resources.TransferResource;
 import earth.terrarium.botarium.storage.base.CommonStorage;
 import earth.terrarium.botarium.storage.base.StorageSlot;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;

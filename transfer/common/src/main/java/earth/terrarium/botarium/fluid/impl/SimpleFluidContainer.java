@@ -3,7 +3,7 @@ package earth.terrarium.botarium.fluid.impl;
 import earth.terrarium.botarium.BotariumTransfer;
 import earth.terrarium.botarium.context.ItemContext;
 import earth.terrarium.botarium.fluid.util.FluidStorageData;
-import earth.terrarium.botarium.resource.fluid.FluidResource;
+import earth.terrarium.botarium.resources.fluid.FluidResource;
 import earth.terrarium.botarium.storage.base.CommonStorage;
 import earth.terrarium.botarium.storage.base.UpdateManager;
 import earth.terrarium.botarium.storage.util.TransferUtil;

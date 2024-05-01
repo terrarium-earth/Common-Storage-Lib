@@ -1,24 +1,25 @@
 {
   "schemaVersion": 1,
-  "id": "botarium_data",
+  "id": "botarium_transfer",
   "version": "${version}",
-  "name": "Botarium",
-  "description": "Capabilities, Transfer, Data and more!",
+  "name": "Botarium Transfer",
+  "description": "Abstraction of the mod loader's resource storage system, allowing for easy access to items, fluids and energy",
   "authors": [
     "CodexAdrian"
   ],
   "contact": {
-    "repo": "https://github.com/terrarium-earth/Spirit",
-    "issues": "https://github.com/terrarium-earth/Spirit/issues"
+    "repo": "https://github.com/terrarium-earth/Botarium",
+    "issues": "https://github.com/terrarium-earth/Botarium/issues"
   },
-  "license": "All-Rights-Reserved",
-  "icon": "icon.png",
+  "license": "MIT",
   "environment": "*",
   "entrypoints": {
-    "main": "net.earth.terrarium.botarium.data.BotariumData::init"
+    "main": [
+      "earth.terrarium.botarium.BotariumTransfer::init"
+    ]
   },
   "depends": {
     "fabric": "*",
-    "minecraft": ">=1.20.5"
+    "minecraft": ">=1.20.6"
   }
 }

@@ -1,6 +1,6 @@
 package earth.terrarium.botarium.item.impl.noops;
 
-import earth.terrarium.botarium.resource.item.ItemResource;
+import earth.terrarium.botarium.resources.item.ItemResource;
 import earth.terrarium.botarium.storage.base.CommonStorage;
 import earth.terrarium.botarium.storage.base.StorageSlot;
 import org.jetbrains.annotations.NotNull;

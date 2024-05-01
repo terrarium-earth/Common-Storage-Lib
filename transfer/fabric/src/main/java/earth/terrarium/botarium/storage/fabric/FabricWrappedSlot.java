@@ -1,6 +1,6 @@
 package earth.terrarium.botarium.storage.fabric;
 
-import earth.terrarium.botarium.resource.TransferResource;
+import earth.terrarium.botarium.resources.TransferResource;
 import earth.terrarium.botarium.storage.base.StorageSlot;
 import net.fabricmc.fabric.api.transfer.v1.storage.TransferVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.base.SingleSlotStorage;

@@ -1,9 +1,9 @@
 package earth.terrarium.botarium.fluid.util;
 
 import com.mojang.serialization.Codec;
-import earth.terrarium.botarium.resource.fluid.FluidResource;
+import earth.terrarium.botarium.resources.fluid.FluidResource;
 import earth.terrarium.botarium.storage.base.CommonStorage;
-import earth.terrarium.botarium.resource.ResourceStack;
+import earth.terrarium.botarium.resources.ResourceStack;
 import earth.terrarium.botarium.storage.base.StorageSlot;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.RegistryFriendlyByteBuf;

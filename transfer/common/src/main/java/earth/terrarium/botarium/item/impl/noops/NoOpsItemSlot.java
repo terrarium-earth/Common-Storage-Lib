@@ -1,6 +1,6 @@
 package earth.terrarium.botarium.item.impl.noops;
 
-import earth.terrarium.botarium.resource.item.ItemResource;
+import earth.terrarium.botarium.resources.item.ItemResource;
 import earth.terrarium.botarium.storage.base.StorageSlot;
 
 public class NoOpsItemSlot implements StorageSlot<ItemResource> {

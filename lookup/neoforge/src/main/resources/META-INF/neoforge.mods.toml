@@ -1,0 +1,26 @@
+modLoader = "javafml"
+loaderVersion = "[1,)"
+license = "MIT"
+issueTrackerURL = "https://github.com/terrarium-earth/Botarium/issues"
+
+[[mods]]
+modId = "botarium_lookup"
+version = "${version}"
+displayName = "Botarium Lookup"
+displayURL = "https://modrinth.com/mod/botarium"
+authors = "CodexAdrian"
+description = "Abstraction for mod loader's item/entity/block API provider system (Capabilities/ApiLookup)"
+
+[[dependencies.botarium]]
+modId = "neoforge"
+type = "required"
+versionRange = "[20,)"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.botarium]]
+modId = "minecraft"
+type = "required"
+versionRange = "[1.20.6,)"
+ordering = "NONE"
+side = "BOTH"

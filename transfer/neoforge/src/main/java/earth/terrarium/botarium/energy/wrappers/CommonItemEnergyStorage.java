@@ -1,7 +1,7 @@
 package earth.terrarium.botarium.energy.wrappers;
 
 import earth.terrarium.botarium.context.ItemContext;
-import earth.terrarium.botarium.resource.item.ItemResource;
+import earth.terrarium.botarium.resources.item.ItemResource;
 import earth.terrarium.botarium.storage.util.TransferUtil;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.energy.IEnergyStorage;

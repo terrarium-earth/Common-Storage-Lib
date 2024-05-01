@@ -1,7 +1,7 @@
 package earth.terrarium.botarium.item;
 
 import earth.terrarium.botarium.context.ItemContext;
-import earth.terrarium.botarium.resource.item.ItemResource;
+import earth.terrarium.botarium.resources.item.ItemResource;
 import earth.terrarium.botarium.item.lookup.ItemBlockLookup;
 import earth.terrarium.botarium.item.lookup.ItemEntityLookup;
 import earth.terrarium.botarium.item.lookup.ItemItemLookup;

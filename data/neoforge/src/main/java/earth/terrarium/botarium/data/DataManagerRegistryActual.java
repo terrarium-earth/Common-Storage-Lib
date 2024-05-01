@@ -1,6 +1,6 @@
 package earth.terrarium.botarium.data;
 
-import earth.terrarium.botarium.common.data.impl.DataManagerRegistryImpl;
+import earth.terrarium.botarium.data.impl.DataManagerRegistryImpl;
 import net.msrandom.multiplatform.annotations.Actual;
 
 public interface DataManagerRegistryActual {

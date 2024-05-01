@@ -1,6 +1,6 @@
 package earth.terrarium.botarium.item.wrappers;
 
-import earth.terrarium.botarium.resource.item.ItemResource;
+import earth.terrarium.botarium.resources.item.ItemResource;
 import earth.terrarium.botarium.storage.base.CommonStorage;
 import earth.terrarium.botarium.storage.base.StorageSlot;
 import earth.terrarium.botarium.storage.base.UpdateManager;

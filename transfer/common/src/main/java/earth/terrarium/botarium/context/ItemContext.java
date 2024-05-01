@@ -1,7 +1,7 @@
 package earth.terrarium.botarium.context;
 
 import earth.terrarium.botarium.lookup.ItemLookup;
-import earth.terrarium.botarium.resource.item.ItemResource;
+import earth.terrarium.botarium.resources.item.ItemResource;
 import earth.terrarium.botarium.storage.base.CommonStorage;
 import earth.terrarium.botarium.storage.base.StorageIO;
 import earth.terrarium.botarium.storage.base.StorageSlot;

@@ -1,6 +1,6 @@
 package earth.terrarium.botarium.fluid.util;
 
-import earth.terrarium.botarium.resource.fluid.FluidResource;
+import earth.terrarium.botarium.resources.fluid.FluidResource;
 import net.neoforged.neoforge.fluids.FluidStack;
 
 public class ConversionUtils {

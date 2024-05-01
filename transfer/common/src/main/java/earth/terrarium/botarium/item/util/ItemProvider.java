@@ -1,7 +1,7 @@
 package earth.terrarium.botarium.item.util;
 
 import earth.terrarium.botarium.context.ItemContext;
-import earth.terrarium.botarium.resource.item.ItemResource;
+import earth.terrarium.botarium.resources.item.ItemResource;
 import earth.terrarium.botarium.storage.base.CommonStorage;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;

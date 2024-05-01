@@ -1,9 +1,9 @@
 package earth.terrarium.botarium.item.util;
 
 import com.mojang.serialization.Codec;
-import earth.terrarium.botarium.resource.item.ItemResource;
+import earth.terrarium.botarium.resources.item.ItemResource;
 import earth.terrarium.botarium.storage.base.CommonStorage;
-import earth.terrarium.botarium.resource.ResourceStack;
+import earth.terrarium.botarium.resources.ResourceStack;
 import earth.terrarium.botarium.storage.base.StorageSlot;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.RegistryFriendlyByteBuf;

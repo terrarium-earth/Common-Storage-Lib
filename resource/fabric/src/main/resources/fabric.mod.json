@@ -1,24 +1,25 @@
 {
   "schemaVersion": 1,
-  "id": "botarium_data",
+  "id": "botarium_resources",
   "version": "${version}",
-  "name": "Botarium",
-  "description": "Capabilities, Transfer, Data and more!",
+  "name": "Botarium Resources",
+  "description": "Abstraction for Transfer resources, including Item, Fluids and Entity resources, as well as Ingredient, Tag, and Codec utilities for them",
   "authors": [
     "CodexAdrian"
   ],
   "contact": {
-    "repo": "https://github.com/terrarium-earth/Spirit",
-    "issues": "https://github.com/terrarium-earth/Spirit/issues"
+    "repo": "https://github.com/terrarium-earth/Botarium",
+    "issues": "https://github.com/terrarium-earth/Botarium/issues"
   },
-  "license": "All-Rights-Reserved",
-  "icon": "icon.png",
+  "license": "MIT",
   "environment": "*",
   "entrypoints": {
-    "main": "net.earth.terrarium.botarium.data.BotariumData::init"
+    "main": [
+      "earth.terrarium.botarium.resources.BotariumResources::init"
+    ]
   },
   "depends": {
     "fabric": "*",
-    "minecraft": ">=1.20.5"
+    "minecraft": ">=1.20.6"
   }
 }

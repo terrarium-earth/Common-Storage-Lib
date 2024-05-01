@@ -2,11 +2,11 @@ package earth.terrarium.botarium.item.impl;
 
 import earth.terrarium.botarium.BotariumTransfer;
 import earth.terrarium.botarium.context.ItemContext;
-import earth.terrarium.botarium.resource.item.ItemResource;
+import earth.terrarium.botarium.resources.item.ItemResource;
 import earth.terrarium.botarium.item.util.ItemStorageData;
 import earth.terrarium.botarium.storage.base.CommonStorage;
 import earth.terrarium.botarium.storage.base.UpdateManager;
-import earth.terrarium.botarium.resource.ResourceStack;
+import earth.terrarium.botarium.resources.ResourceStack;
 import earth.terrarium.botarium.storage.util.TransferUtil;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.component.DataComponentPatch;

@@ -13,9 +13,9 @@ import earth.terrarium.botarium.fluid.util.FluidStorageData;
 import earth.terrarium.botarium.item.util.ItemStorageData;
 import earth.terrarium.botarium.item.ItemApi;
 import earth.terrarium.botarium.item.util.ItemProvider;
-import earth.terrarium.botarium.resource.fluid.FluidResource;
-import earth.terrarium.botarium.resource.item.ItemResource;
-import earth.terrarium.botarium.resource.ResourceStack;
+import earth.terrarium.botarium.resources.fluid.FluidResource;
+import earth.terrarium.botarium.resources.item.ItemResource;
+import earth.terrarium.botarium.resources.ResourceStack;
 import net.minecraft.network.codec.ByteBufCodecs;
 
 public class BotariumTransfer {

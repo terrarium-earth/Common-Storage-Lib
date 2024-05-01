@@ -10,7 +10,7 @@ public interface DataManagerBuilder<T> {
     DataManagerBuilder<T> networkSerializer(StreamCodec<? super RegistryFriendlyByteBuf, T> codec);
 
     DataManagerBuilder<T> withDataComponent();
-    DataManagerBuilder<T> autoSync();
+    // DataManagerBuilder<T> autoSync(); Feature coming soon
 
     DataManager<T> buildAndRegister(String name);
 }

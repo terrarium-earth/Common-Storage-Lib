@@ -1,7 +1,7 @@
 package earth.terrarium.botarium.fluid.wrappers;
 
 import earth.terrarium.botarium.fluid.util.ConversionUtils;
-import earth.terrarium.botarium.resource.fluid.FluidResource;
+import earth.terrarium.botarium.resources.fluid.FluidResource;
 import earth.terrarium.botarium.storage.base.StorageSlot;
 
 public record DelegatingFluidHandlerSlot(AbstractCommonFluidContainer provider, int slot) implements StorageSlot<FluidResource> {

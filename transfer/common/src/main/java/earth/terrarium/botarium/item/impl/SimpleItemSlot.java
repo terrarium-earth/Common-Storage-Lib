@@ -1,7 +1,7 @@
 package earth.terrarium.botarium.item.impl;
 
-import earth.terrarium.botarium.resource.ResourceStack;
-import earth.terrarium.botarium.resource.item.ItemResource;
+import earth.terrarium.botarium.resources.ResourceStack;
+import earth.terrarium.botarium.resources.item.ItemResource;
 import earth.terrarium.botarium.storage.base.StorageSlot;
 import earth.terrarium.botarium.storage.base.UpdateManager;
 import net.minecraft.world.item.Item;

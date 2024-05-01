@@ -1,6 +1,6 @@
 package earth.terrarium.botarium.item.lookup;
 
-import earth.terrarium.botarium.resource.item.ItemResource;
+import earth.terrarium.botarium.resources.item.ItemResource;
 import earth.terrarium.botarium.item.wrappers.CommonItemContainer;
 import earth.terrarium.botarium.item.wrappers.NeoItemHandler;
 import earth.terrarium.botarium.lookup.BlockLookup;

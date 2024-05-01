@@ -1,8 +1,8 @@
 package earth.terrarium.botarium.fluid.wrappers;
 
 import earth.terrarium.botarium.context.ItemContext;
-import earth.terrarium.botarium.resource.fluid.FluidResource;
-import earth.terrarium.botarium.resource.item.ItemResource;
+import earth.terrarium.botarium.resources.fluid.FluidResource;
+import earth.terrarium.botarium.resources.item.ItemResource;
 import earth.terrarium.botarium.storage.base.CommonStorage;
 import earth.terrarium.botarium.storage.base.StorageSlot;
 import net.minecraft.world.item.ItemStack;

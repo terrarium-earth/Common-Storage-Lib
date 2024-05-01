@@ -3,7 +3,7 @@ package earth.terrarium.botarium.item.lookup;
 import earth.terrarium.botarium.BotariumTransfer;
 import earth.terrarium.botarium.context.ItemContext;
 import earth.terrarium.botarium.context.impl.ModifyOnlyContext;
-import earth.terrarium.botarium.resource.item.ItemResource;
+import earth.terrarium.botarium.resources.item.ItemResource;
 import earth.terrarium.botarium.item.wrappers.CommonItemContainerItem;
 import earth.terrarium.botarium.item.wrappers.NeoItemHandler;
 import earth.terrarium.botarium.lookup.RegistryEventListener;

@@ -2,8 +2,8 @@ package earth.terrarium.botarium.fluid.wrappers;
 
 import earth.terrarium.botarium.context.ItemContext;
 import earth.terrarium.botarium.fluid.util.ConversionUtils;
-import earth.terrarium.botarium.resource.fluid.FluidResource;
-import earth.terrarium.botarium.resource.item.ItemResource;
+import earth.terrarium.botarium.resources.fluid.FluidResource;
+import earth.terrarium.botarium.resources.item.ItemResource;
 import earth.terrarium.botarium.storage.util.TransferUtil;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;

@@ -1,0 +1,26 @@
+modLoader = "javafml"
+loaderVersion = "[1,)"
+license = "MIT"
+issueTrackerURL = "https://github.com/terrarium-earth/Botarium/issues"
+
+[[mods]]
+modId = "botarium_data"
+version = "${version}"
+displayName = "Botarium Data"
+displayURL = "https://modrinth.com/mod/Botarium"
+authors = "CodexAdrian"
+description = "Abstraction for Data Attachments, as well as providing a wrapper around Components to make working with all data easier."
+
+[[dependencies.botarium]]
+modId = "neoforge"
+type = "required"
+versionRange = "[20,)"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.botarium]]
+modId = "minecraft"
+type = "required"
+versionRange = "[1.20.6,)"
+ordering = "NONE"
+side = "BOTH"

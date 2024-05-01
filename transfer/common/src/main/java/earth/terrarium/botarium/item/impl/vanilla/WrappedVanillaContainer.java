@@ -2,7 +2,7 @@ package earth.terrarium.botarium.item.impl.vanilla;
 
 import earth.terrarium.botarium.item.util.ItemStorageData;
 import earth.terrarium.botarium.storage.base.UpdateManager;
-import earth.terrarium.botarium.resource.ResourceStack;
+import earth.terrarium.botarium.resources.ResourceStack;
 import net.minecraft.world.Container;
 
 public class WrappedVanillaContainer extends AbstractVanillaContainer implements UpdateManager<ItemStorageData> {

@@ -1,9 +1,9 @@
 package earth.terrarium.botarium.storage.util;
 
-import earth.terrarium.botarium.resource.TransferResource;
-import earth.terrarium.botarium.resource.ResourceStack;
-import earth.terrarium.botarium.resource.fluid.FluidResource;
-import earth.terrarium.botarium.resource.item.ItemResource;
+import earth.terrarium.botarium.resources.TransferResource;
+import earth.terrarium.botarium.resources.ResourceStack;
+import earth.terrarium.botarium.resources.fluid.FluidResource;
+import earth.terrarium.botarium.resources.item.ItemResource;
 import earth.terrarium.botarium.storage.base.*;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.Tuple;

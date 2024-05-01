@@ -3,7 +3,7 @@ package earth.terrarium.botarium.fluid.lookup;
 import earth.terrarium.botarium.BotariumTransfer;
 import earth.terrarium.botarium.context.ItemContext;
 import earth.terrarium.botarium.context.impl.IsolatedSlotContext;
-import earth.terrarium.botarium.resource.fluid.FluidResource;
+import earth.terrarium.botarium.resources.fluid.FluidResource;
 import earth.terrarium.botarium.fluid.wrappers.CommonFluidItemContainer;
 import earth.terrarium.botarium.fluid.wrappers.NeoFluidItemContainer;
 import earth.terrarium.botarium.lookup.RegistryEventListener;
