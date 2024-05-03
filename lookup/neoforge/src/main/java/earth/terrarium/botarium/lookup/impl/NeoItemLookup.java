@@ -1,7 +1,7 @@
 package earth.terrarium.botarium.lookup.impl;
 
-import earth.terrarium.botarium.common.lookup.CapabilityRegisterer;
-import earth.terrarium.botarium.common.lookup.ItemLookup;
+import earth.terrarium.botarium.lookup.ItemLookup;
+import earth.terrarium.botarium.lookup.RegistryEventListener;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.capabilities.ItemCapability;
@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
-public class NeoItemLookup<T, C> implements ItemLookup<T, C>, CapabilityRegisterer {
+public class NeoItemLookup<T, C> implements ItemLookup<T, C>, RegistryEventListener {
     private final List<Consumer<ItemRegistrar<T, C>>> registrars = new ArrayList<>();
     private final ItemCapability<T, C> capability;
 

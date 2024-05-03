@@ -7,7 +7,7 @@ plugins {
     java
     id("maven-publish")
     id("com.teamresourceful.resourcefulgradle") version "0.0.+"
-    id("dev.architectury.loom") version "1.6-SNAPSHOT" apply false
+    id("dev.architectury.loom") version "1.6.9999-PR.207+kneelawk" apply false
     id("architectury-plugin") version "3.4-SNAPSHOT"
 }
 
@@ -60,6 +60,7 @@ subprojects {
         maven(url = "https://maven.minecraftforge.net/")
         maven(url = "https://maven.resourcefulbees.com/repository/maven-public/")
         maven(url = "https://maven.neoforged.net/releases/")
+        maven(url = "https://kneelawk.com/maven")
         maven(url = "https://maven.msrandom.net/repository/root/")
         maven(url = "https://prmaven.neoforged.net/NeoForge/pr794") {
             content {
@@ -86,7 +87,7 @@ subprojects {
         if (isCommon) {
             "modCompileOnly"(group = "tech.thatgravyboat", name = "commonats", version = "2.0")
         } else {
-            compileOnly(project(commonPath, configuration = "namedElements"))
+            implementation(project(commonPath, configuration = "namedElements"))
         }
 
         if (isFabric) {
@@ -94,17 +95,13 @@ subprojects {
             "modApi"(group = "net.fabricmc.fabric-api", name = "fabric-api", version = fabricApiVersion)
 
             "modApi"(group = "com.terraformersmc", name = "modmenu", version = modMenuVersion)
-
-            "include"("modApi"(group = "teamreborn", name = "energy", version = "4.0.0")) {
-                exclude(group = "net.fabricmc", module = "fabric-api")
-            }
         }
 
         if (isNeoForge) {
             "neoForge"(group = "net.neoforged", name = "neoforge", version = neoforgeVersion)
         }
 
-        annotationProcessor(group = "net.msrandom", name = "multiplatform-processor", version = "1.0.5")
+        annotationProcessor(group = "net.msrandom", name = "multiplatform-processor", version = "1.0.7")
         compileOnly(group = "net.msrandom", name = "multiplatform-annotations", version = "1.0.0")
     }
 

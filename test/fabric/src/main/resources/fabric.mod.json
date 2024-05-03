@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "id": "botarium_test_mod",
+  "version": "${version}",
+  "name": "Botarium Test Mod",
+  "description": "A test mod for Botarium",
+  "authors": [
+    "CodexAdrian"
+  ],
+  "contact": {
+    "repo": "https://github.com/terrarium-earth/Botarium",
+    "issues": "https://github.com/terrarium-earth/Botarium/issues"
+  },
+  "entrypoints": {
+    "main": [
+      "earth.terrarium.botarium.testmod.FabricTestMod::init"
+    ]
+  },
+  "license": "MIT",
+  "environment": "*",
+  "depends": {
+    "fabric": "*",
+    "minecraft": ">=1.20.5"
+  }
+}

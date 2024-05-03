@@ -1,6 +1,6 @@
 package earth.terrarium.botarium.fluid.lookup;
 
-import earth.terrarium.botarium.BotariumTransfer;
+import earth.terrarium.botarium.BotariumStorage;
 import earth.terrarium.botarium.context.ItemContext;
 import earth.terrarium.botarium.context.impl.IsolatedSlotContext;
 import earth.terrarium.botarium.resources.fluid.FluidResource;
@@ -22,7 +22,7 @@ import java.util.function.Consumer;
 
 public final class FluidItemLookup implements ItemLookup<CommonStorage<FluidResource>, ItemContext>, RegistryEventListener {
     public static final FluidItemLookup INSTANCE = new FluidItemLookup();
-    private static final ItemCapability<CommonStorage<FluidResource>, ItemContext> CAPABILITY = ItemCapability.create(new ResourceLocation(BotariumTransfer.MOD_ID, "fluid_item"), CommonStorage.asClass(), ItemContext.class);
+    private static final ItemCapability<CommonStorage<FluidResource>, ItemContext> CAPABILITY = ItemCapability.create(new ResourceLocation(BotariumStorage.MOD_ID, "fluid_item"), CommonStorage.asClass(), ItemContext.class);
 
     private List<Consumer<ItemRegistrar<CommonStorage<FluidResource>, ItemContext>>> registrars;
 

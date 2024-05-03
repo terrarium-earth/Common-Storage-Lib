@@ -1,14 +1,11 @@
 package earth.terrarium.botarium.lookup.impl;
 
-import earth.terrarium.botarium.common.lookup.CapabilityRegisterer;
-import earth.terrarium.botarium.common.lookup.EntityLookup;
-import earth.terrarium.botarium.common.lookup.ItemLookup;
+import earth.terrarium.botarium.lookup.EntityLookup;
+import earth.terrarium.botarium.lookup.RegistryEventListener;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.capabilities.EntityCapability;
-import net.neoforged.neoforge.capabilities.ItemCapability;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 import org.jetbrains.annotations.Nullable;
 
@@ -16,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
-public class NeoEntityLookup<T, C> implements EntityLookup<T, C>, CapabilityRegisterer {
+public class NeoEntityLookup<T, C> implements EntityLookup<T, C>, RegistryEventListener {
     private final List<Consumer<EntityRegistrar<T, C>>> registrars = new ArrayList<>();
     private final EntityCapability<T, C> capability;
 

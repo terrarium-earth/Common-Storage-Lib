@@ -1,6 +1,6 @@
 package earth.terrarium.botarium.energy.impl;
 
-import earth.terrarium.botarium.BotariumTransfer;
+import earth.terrarium.botarium.BotariumStorage;
 import earth.terrarium.botarium.context.ItemContext;
 import earth.terrarium.botarium.storage.base.ValueStorage;
 import earth.terrarium.botarium.storage.base.UpdateManager;
@@ -21,19 +21,19 @@ public class SimpleValueStorage implements ValueStorage, UpdateManager<Long> {
     public SimpleValueStorage(long capacity, ItemStack stack, ItemContext context) {
         this.capacity = capacity;
         this.onUpdate = () -> {
-            DataComponentPatch data = DataComponentPatch.builder().set(BotariumTransfer.VALUE_CONTENT.componentType(), this.amount).build();
+            DataComponentPatch data = DataComponentPatch.builder().set(BotariumStorage.VALUE_CONTENT.componentType(), this.amount).build();
             context.modify(data);
             context.updateAll();
         };
-        if (stack.has(BotariumTransfer.VALUE_CONTENT.componentType())) {
-            this.amount = stack.get(BotariumTransfer.VALUE_CONTENT.componentType());
+        if (stack.has(BotariumStorage.VALUE_CONTENT.componentType())) {
+            this.amount = stack.get(BotariumStorage.VALUE_CONTENT.componentType());
         }
     }
 
-    public SimpleValueStorage(long capacity, long amount, Object entityOrBlockEntity) {
+    public SimpleValueStorage(long capacity, Object entityOrBlockEntity) {
         this.capacity = capacity;
-        this.onUpdate = () -> BotariumTransfer.VALUE_CONTENT.set(entityOrBlockEntity, this.amount);
-        this.amount = BotariumTransfer.VALUE_CONTENT.get(entityOrBlockEntity);
+        this.onUpdate = () -> BotariumStorage.VALUE_CONTENT.set(entityOrBlockEntity, this.amount);
+        this.amount = BotariumStorage.VALUE_CONTENT.get(entityOrBlockEntity);
     }
 
     @Override

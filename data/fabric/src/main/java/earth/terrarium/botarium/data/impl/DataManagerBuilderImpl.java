@@ -53,12 +53,6 @@ public class DataManagerBuilderImpl<T> implements DataManagerBuilder<T> {
     }
 
     @Override
-    public DataManagerBuilder<T> autoSync() {
-        this.syncToClient = true;
-        return this;
-    }
-
-    @Override
     public DataManagerBuilder<T> withDataComponent() {
         this.registerComponentType = true;
         return this;

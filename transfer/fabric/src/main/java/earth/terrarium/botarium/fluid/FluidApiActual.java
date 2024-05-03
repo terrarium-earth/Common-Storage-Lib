@@ -1,6 +1,6 @@
 package earth.terrarium.botarium.fluid;
 
-import earth.terrarium.botarium.BotariumTransfer;
+import earth.terrarium.botarium.BotariumStorage;
 import earth.terrarium.botarium.context.ItemContext;
 import earth.terrarium.botarium.resources.fluid.FluidResource;
 import earth.terrarium.botarium.lookup.BlockLookup;
@@ -21,5 +21,5 @@ public class FluidApiActual {
     @Actual
     public static final ItemLookup<CommonStorage<FluidResource>, ItemContext> ITEM = new WrappedItemLookup.OfFluid();
     @Actual
-    public static final EntityLookup<CommonStorage<FluidResource>, Direction> ENTITY = EntityLookup.createAutomation(new ResourceLocation(BotariumTransfer.MOD_ID, "entity_fluid"), CommonStorage.asClass());
+    public static final EntityLookup<CommonStorage<FluidResource>, Direction> ENTITY = EntityLookup.createAutomation(new ResourceLocation(BotariumStorage.MOD_ID, "entity_fluid"), CommonStorage.asClass());
 }

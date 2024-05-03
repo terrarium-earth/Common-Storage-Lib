@@ -1,7 +1,6 @@
 package earth.terrarium.botarium.lookup;
 
-import earth.terrarium.botarium.common.lookup.impl.NeoItemLookup;
-import earth.terrarium.botarium.forge.BotariumForge;
+import earth.terrarium.botarium.lookup.impl.NeoItemLookup;
 import net.minecraft.resources.ResourceLocation;
 import net.msrandom.multiplatform.annotations.Actual;
 
@@ -9,7 +8,7 @@ public interface ItemLookupActual {
     @Actual
     static <T, C> ItemLookup<T, C> create(ResourceLocation name, Class<T> typeClass, Class<C> contextClass) {
         NeoItemLookup<T, C> lookup = new NeoItemLookup<>(name, typeClass, contextClass);
-        BotariumForge.CAPS.add(lookup);
+        RegistryEventListener.REGISTRARS.add(lookup);
         return lookup;
     }
 }

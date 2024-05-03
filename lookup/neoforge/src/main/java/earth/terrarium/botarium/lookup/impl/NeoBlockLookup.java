@@ -1,7 +1,7 @@
 package earth.terrarium.botarium.lookup.impl;
 
-import earth.terrarium.botarium.common.lookup.BlockLookup;
-import earth.terrarium.botarium.common.lookup.CapabilityRegisterer;
+import earth.terrarium.botarium.lookup.BlockLookup;
+import earth.terrarium.botarium.lookup.RegistryEventListener;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
@@ -17,8 +17,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
-public class NeoBlockLookup<T, C> implements BlockLookup<T, C>, CapabilityRegisterer {
-    private final List<Consumer<BlockRegistrar<T, C>>> registrars = new ArrayList<>();
+public class NeoBlockLookup<T, C> implements BlockLookup<T, C>, RegistryEventListener {
+    private final List<Consumer<BlockLookup.BlockRegistrar<T, C>>> registrars = new ArrayList<>();
     private final BlockCapability<T, C> capability;
 
     public NeoBlockLookup(BlockCapability<T, C> capability) {

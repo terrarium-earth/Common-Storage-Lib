@@ -5,6 +5,7 @@ rootProject.name = "botarium"
 pluginManagement {
     repositories {
         maven(url = "https://maven.architectury.dev/")
+        maven(url = "https://kneelawk.com/maven")
         maven(url = "https://maven.neoforged.net/releases/")
         maven(url = "https://maven.minecraftforge.net/")
         maven(url = "https://maven.resourcefulbees.com/repository/maven-public/")
@@ -16,7 +17,8 @@ pluginManagement {
 includeSubmodule("data")
 includeSubmodule("lookup")
 includeSubmodule("transfer")
-includeSubmodule("resource")
+includeSubmodule("resources")
+includeSubmodule("test")
 
 fun includeSubmodule(name: String) {
     includePlatformModule(name, "common")
