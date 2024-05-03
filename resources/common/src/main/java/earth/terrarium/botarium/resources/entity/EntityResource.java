@@ -19,7 +19,9 @@ import net.minecraft.world.entity.EntityType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class EntityResource implements TransferResource<EntityType<?>, EntityResource> {
+import java.util.function.Predicate;
+
+public final class EntityResource extends TransferResource<EntityType<?>, EntityResource> implements Predicate<EntityResource> {
     public static EntityResource BLANK = EntityResource.of((EntityType<?>) null);
 
     public static final Codec<EntityResource> CODEC = RecordCodecBuilder.create(instance -> instance.group(
@@ -41,10 +43,6 @@ public class EntityResource implements TransferResource<EntityType<?>, EntityRes
             EntityResource::getDataPatch,
             EntityResource::of);
 
-    @Nullable
-    private final EntityType<?> type;
-    private final PatchedDataComponentMap components;
-
     public static EntityResource of(EntityType<?> type) {
         return of(type, DataComponentPatch.EMPTY);
     }
@@ -62,8 +60,7 @@ public class EntityResource implements TransferResource<EntityType<?>, EntityRes
     }
 
     private EntityResource(@Nullable EntityType<?> type, PatchedDataComponentMap components) {
-        this.type = type;
-        this.components = components;
+        super(type, components);
     }
 
     @Override

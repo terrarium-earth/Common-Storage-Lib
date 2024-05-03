@@ -33,7 +33,7 @@ public interface AbstractNeoFluidHandler extends IFluidHandler {
 
     @Override
     default boolean isFluidValid(int i, FluidStack fluidStack) {
-        return container().getSlot(i).isValueValid(new FluidResource(fluidStack.getFluid(), fluidStack.getComponentsPatch()));
+        return container().getSlot(i).isValueValid(FluidResource.of(fluidStack.getFluid(), fluidStack.getComponentsPatch()));
     }
 
     @Override

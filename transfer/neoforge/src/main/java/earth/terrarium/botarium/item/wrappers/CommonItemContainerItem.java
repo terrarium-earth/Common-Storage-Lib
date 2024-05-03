@@ -21,12 +21,22 @@ public record CommonItemContainerItem(IItemHandler handler, ItemStack stack, Ite
     }
 
     public void updateContext() {
-        if (!context.getUnit().matches(stack)) {
+        if (!context.getUnit().test(stack)) {
             context.exchange(ItemResource.of(stack), context.getAmount(), false);
         }
         if (context.getAmount() != stack.getCount()) {
             TransferUtil.equalize(context.mainSlot(), stack.getCount());
         }
+    }
+
+    @Override
+    public long insert(ItemResource unit, long amount, boolean simulate) {
+        return TransferUtil.insertSlots(this, unit, amount, simulate);
+    }
+
+    @Override
+    public long extract(ItemResource unit, long amount, boolean simulate) {
+        return TransferUtil.extractSlots(this, unit, amount, simulate);
     }
 
     public record DelegatingItemSlot(IItemHandler handler, int slot, Runnable runnable) implements StorageSlot<ItemResource> {
@@ -65,7 +75,7 @@ public record CommonItemContainerItem(IItemHandler handler, ItemStack stack, Ite
 
         @Override
         public long extract(ItemResource unit, long amount, boolean simulate) {
-            if (!unit.matches(handler.getStackInSlot(slot))) {
+            if (!unit.test(handler.getStackInSlot(slot))) {
                 return 0;
             }
             ItemStack extracted = handler.extractItem(slot, (int) amount, simulate);

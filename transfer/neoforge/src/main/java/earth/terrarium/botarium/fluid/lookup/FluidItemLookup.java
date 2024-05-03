@@ -17,6 +17,7 @@ import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 import net.neoforged.neoforge.fluids.capability.IFluidHandlerItem;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -24,7 +25,7 @@ public final class FluidItemLookup implements ItemLookup<CommonStorage<FluidReso
     public static final FluidItemLookup INSTANCE = new FluidItemLookup();
     private static final ItemCapability<CommonStorage<FluidResource>, ItemContext> CAPABILITY = ItemCapability.create(new ResourceLocation(BotariumStorage.MOD_ID, "fluid_item"), CommonStorage.asClass(), ItemContext.class);
 
-    private List<Consumer<ItemRegistrar<CommonStorage<FluidResource>, ItemContext>>> registrars;
+    private final List<Consumer<ItemRegistrar<CommonStorage<FluidResource>, ItemContext>>> registrars = new ArrayList<>();
 
     private FluidItemLookup() {
         registerSelf();

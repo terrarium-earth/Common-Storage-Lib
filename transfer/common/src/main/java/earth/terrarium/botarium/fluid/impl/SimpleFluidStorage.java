@@ -69,7 +69,7 @@ public class SimpleFluidStorage implements CommonStorage<FluidResource>, UpdateM
 
     @Override
     public void readSnapshot(FluidStorageData snapshot) {
-        for (int i = 0; i < slots.size(); i++) {
+        for (int i = 0; i < slots.size() && i < snapshot.stacks().size(); i++) {
             slots.get(i).readSnapshot(snapshot.stacks().get(i));
         }
     }

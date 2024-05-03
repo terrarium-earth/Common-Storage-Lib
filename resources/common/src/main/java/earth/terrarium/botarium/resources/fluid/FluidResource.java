@@ -17,9 +17,8 @@ import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
-import org.jetbrains.annotations.NotNull;
 
-public class FluidResource implements TransferResource<Fluid, FluidResource> {
+public final class FluidResource extends TransferResource<Fluid, FluidResource> {
     public static final FluidResource BLANK = FluidResource.of(Fluids.EMPTY, DataComponentPatch.EMPTY);
 
     public static final MapCodec<FluidResource> MAP_CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
@@ -55,27 +54,13 @@ public class FluidResource implements TransferResource<Fluid, FluidResource> {
         return of(holder.value(), components);
     }
 
-    private final Fluid type;
-    private final PatchedDataComponentMap components;
-
-    private FluidResource(Fluid type, PatchedDataComponentMap components) {
-        this.type = type;
-        this.components = components;
+    public FluidResource(Fluid type, PatchedDataComponentMap components) {
+        super(type, components);
     }
 
     @Override
     public boolean isBlank() {
-        return type == Fluids.EMPTY;
-    }
-
-    @Override
-    public Fluid getType() {
-        return type;
-    }
-
-    @Override
-    public DataComponentPatch getDataPatch() {
-        return components.asPatch();
+        return getType() == Fluids.EMPTY;
     }
 
     @Override
@@ -95,11 +80,6 @@ public class FluidResource implements TransferResource<Fluid, FluidResource> {
     @Override
     public ResourceStack<FluidResource> toStack(long amount) {
         return new ResourceStack<>(this, amount);
-    }
-
-    @Override
-    public @NotNull DataComponentMap getComponents() {
-        return components;
     }
 
     public Holder<Fluid> asHolder() {

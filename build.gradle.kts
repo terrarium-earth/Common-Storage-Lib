@@ -68,6 +68,14 @@ subprojects {
                 includeModule("net.neoforged", "testframework")
             }
         }
+        exclusiveContent {
+            forRepository {
+                maven (url = "https://cursemaven.com")
+            }
+            filter {
+                includeGroup("curse.maven")
+            }
+        }
         mavenLocal()
     }
 
@@ -87,7 +95,7 @@ subprojects {
         if (isCommon) {
             "modCompileOnly"(group = "tech.thatgravyboat", name = "commonats", version = "2.0")
         } else {
-            implementation(project(commonPath, configuration = "namedElements"))
+            compileOnly(project(commonPath, configuration = "namedElements"))
         }
 
         if (isFabric) {
@@ -118,8 +126,8 @@ subprojects {
     }
 
     tasks.processResources {
-        duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-        filesMatching(listOf("META-INF/mods.toml", "fabric.mod.json")) {
+        //duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+        filesMatching(listOf("META-INF/neoforge.mods.toml", "fabric.mod.json")) {
             expand("version" to project.version)
         }
     }
@@ -131,13 +139,7 @@ subprojects {
 
         sourceSets {
             val commonSourceSets = project(commonPath).sourceSets
-            val commonTest = commonSourceSets.getByName("test")
             val commonMain = commonSourceSets.getByName("main")
-
-            getByName("test") {
-                java.srcDirs(commonTest.java.srcDirs)
-                resources.srcDirs(commonTest.resources.srcDirs)
-            }
 
             getByName("main") {
                 java.srcDirs(commonMain.java.srcDirs)

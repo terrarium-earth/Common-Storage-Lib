@@ -4,11 +4,13 @@ import net.msrandom.multiplatform.annotations.Expect;
 
 import java.util.function.Supplier;
 
-public interface DataManagerRegistry {
-    @Expect
-    static DataManagerRegistry create(String modid);
+@Expect
+public final class DataManagerRegistry {
+    public static DataManagerRegistry create(String modid);
 
-    <T> DataManagerBuilder<T> builder(Supplier<T> factory);
+    private DataManagerRegistry(String modid);
 
-    void initialize();
+    public <T> DataManagerBuilder<T> builder(Supplier<T> factory);
+
+    public void initialize();
 }

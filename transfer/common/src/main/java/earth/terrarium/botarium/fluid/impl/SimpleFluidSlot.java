@@ -55,7 +55,7 @@ public class SimpleFluidSlot implements StorageSlot<FluidResource>, UpdateManage
                 this.amount = inserted;
             }
             return inserted;
-        } else if (this.unit.matches(unit)) {
+        } else if (this.unit.test(unit)) {
             long inserted = Math.min(amount, limit - this.amount);
             if (!simulate) {
                 this.amount += inserted;
@@ -67,7 +67,7 @@ public class SimpleFluidSlot implements StorageSlot<FluidResource>, UpdateManage
 
     @Override
     public long extract(FluidResource unit, long amount, boolean simulate) {
-        if (this.unit.matches(unit)) {
+        if (this.unit.test(unit)) {
             long extracted = Math.min(amount, this.amount);
             if (!simulate) {
                 this.amount -= extracted;

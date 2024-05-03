@@ -24,7 +24,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Objects;
 import java.util.function.Predicate;
 
-public final class ItemResource implements TransferResource<Item, ItemResource>, Predicate<ItemResource>, ItemLike {
+public final class ItemResource extends TransferResource<Item, ItemResource> implements Predicate<ItemResource>, ItemLike {
     public static final ItemResource BLANK = ItemResource.of(Items.AIR, DataComponentPatch.EMPTY);
 
     public static final Codec<ItemResource> CODEC = RecordCodecBuilder.create(instance -> instance.group(
@@ -44,16 +44,6 @@ public final class ItemResource implements TransferResource<Item, ItemResource>,
             ItemResource::getDataPatch,
             ItemResource::of
     );
-
-    private final Item type;
-    private final PatchedDataComponentMap components;
-
-    private ItemStack cache;
-
-    public ItemResource(Item type, PatchedDataComponentMap components) {
-        this.type = type;
-        this.components = components;
-    }
 
     public static ItemResource of(ItemLike item) {
         return new ItemResource(item.asItem(), PatchedDataComponentMap.fromPatch(DataComponentMap.EMPTY, DataComponentPatch.EMPTY));
@@ -75,13 +65,19 @@ public final class ItemResource implements TransferResource<Item, ItemResource>,
         return of(stack.getItem(), stack.getComponentsPatch());
     }
 
+    ItemStack cachedStack;
+
+    public ItemResource(Item type, PatchedDataComponentMap components) {
+        super(type, components);
+    }
+
     @Override
     public boolean isBlank() {
         return type == Items.AIR;
     }
 
-    public boolean matches(ItemStack stack) {
-        return isOf(stack.getItem()) && componentsMatch(stack.getComponents());
+    public boolean test(ItemStack stack) {
+        return isOf(stack.getItem()) && componentsMatch(stack.getComponentsPatch());
     }
 
     public ItemStack toItemStack(int count) {
@@ -95,28 +91,11 @@ public final class ItemResource implements TransferResource<Item, ItemResource>,
     }
 
     public ItemStack getCachedStack() {
-        ItemStack ret = cache;
-
-        if (ret == null) {
-            cache = ret = toItemStack();
+        ItemStack stack = cachedStack;
+        if (stack == null) {
+            cachedStack = stack = toItemStack();
         }
-
-        return ret;
-    }
-
-    @Override
-    public boolean test(ItemResource unit) {
-        return isOf(unit.type) && componentsMatch(unit.components);
-    }
-
-    @Override
-    public Item getType() {
-        return type;
-    }
-
-    @Override
-    public DataComponentPatch getDataPatch() {
-        return components.asPatch();
+        return stack;
     }
 
     @Override
@@ -157,11 +136,6 @@ public final class ItemResource implements TransferResource<Item, ItemResource>,
         return "ItemUnit[" +
                 "type=" + type + ", " +
                 "components=" + components + ']';
-    }
-
-    @Override
-    public @NotNull DataComponentMap getComponents() {
-        return components;
     }
 
     @Override

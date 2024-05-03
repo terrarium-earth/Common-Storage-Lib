@@ -1,42 +1,64 @@
 package earth.terrarium.botarium.resources;
 
-import net.minecraft.core.component.DataComponentHolder;
-import net.minecraft.core.component.DataComponentMap;
-import net.minecraft.core.component.DataComponentPatch;
-import net.minecraft.core.component.DataComponentType;
+import net.minecraft.core.component.*;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
+import java.util.function.Predicate;
 
-public interface TransferResource<T, R extends TransferResource<T, R>> extends DataComponentHolder {
-    boolean isBlank();
+public abstract class TransferResource<T, R extends TransferResource<T, R>> implements DataComponentHolder, Predicate<R> {
+    protected final T type;
+    protected final PatchedDataComponentMap components;
+    private DataComponentPatch dataPatch;
 
-    T getType();
-
-    DataComponentPatch getDataPatch();
-
-    default boolean hasComponents() {
-        return !getComponents().isEmpty();
+    protected TransferResource(T type, PatchedDataComponentMap components) {
+        this.type = type;
+        this.components = components;
     }
 
-    default boolean componentsMatch(DataComponentMap other) {
-        return Objects.equals(getComponents(), other);
+    public abstract boolean isBlank();
+
+    public T getType() {
+        return type;
     }
 
-    default boolean isOf(T unit) {
+    public DataComponentPatch getDataPatch() {
+        DataComponentPatch patch = dataPatch;
+        if (patch == null) {
+            dataPatch = patch = components.isEmpty() ? DataComponentPatch.EMPTY : components.asPatch();
+        }
+        return patch;
+    }
+
+    public boolean isEmpty() {
+        return components.isEmpty();
+    }
+
+    @Override
+    public @NotNull DataComponentMap getComponents() {
+        return components.isEmpty() ? DataComponentMap.EMPTY : components;
+    }
+
+    public boolean componentsMatch(DataComponentPatch other) {
+        return Objects.equals(getDataPatch(), other);
+    }
+
+    public boolean isOf(T unit) {
         return this.getType() == unit;
     }
 
-    default boolean matches(R other) {
-        return isOf(other.getType()) && componentsMatch(other.getComponents());
+    @Override
+    public boolean test(R other) {
+        return isOf(other.getType()) && componentsMatch(other.getDataPatch());
     }
 
-    <D> R set(DataComponentType<D> type, D value);
+    public abstract <D> R set(DataComponentType<D> type, D value);
 
-    R modify(DataComponentPatch patch);
+    public abstract R modify(DataComponentPatch patch);
 
-    ResourceStack<R> toStack(long amount);
+    public abstract ResourceStack<R> toStack(long amount);
 
-    default ResourceStack<R> toStack() {
+    public ResourceStack<R> toStack() {
         return toStack(1);
     }
 }

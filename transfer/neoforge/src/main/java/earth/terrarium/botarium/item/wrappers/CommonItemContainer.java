@@ -64,7 +64,7 @@ public record CommonItemContainer(IItemHandler handler) implements CommonStorage
 
         @Override
         public long extract(ItemResource unit, long amount, boolean simulate) {
-            if (!unit.matches(handler.getStackInSlot(slot))) {
+            if (!unit.test(handler.getStackInSlot(slot))) {
                 return 0;
             }
             ItemStack extracted = handler.extractItem(slot, (int) amount, simulate);

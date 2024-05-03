@@ -22,7 +22,7 @@ public record CommonItemEnergyStorage(IEnergyStorage storage, ItemStack stack, I
     }
 
     public void updateContext() {
-        if (!context.getUnit().matches(stack)) {
+        if (!context.getUnit().test(stack)) {
             context.exchange(ItemResource.of(stack), context.getAmount(), false);
         }
         if (context.getAmount() != stack.getCount()) {

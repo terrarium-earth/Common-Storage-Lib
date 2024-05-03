@@ -65,10 +65,8 @@ public class SimpleItemStorage implements CommonStorage<ItemResource>, UpdateMan
 
     @Override
     public void readSnapshot(ItemStorageData snapshot) {
-        for (int i = 0; i < slots.size(); i++) {
-            SimpleItemSlot slot = slots.get(i);
-            ResourceStack<ItemResource> data = snapshot.stacks().get(i);
-            slot.readSnapshot(data);
+        for (int i = 0; i < slots.size() && i < snapshot.stacks().size(); i++) {
+            slots.get(i).readSnapshot(snapshot.stacks().get(i));
         }
     }
 

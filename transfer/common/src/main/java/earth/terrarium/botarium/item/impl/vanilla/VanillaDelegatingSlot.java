@@ -45,7 +45,7 @@ public class VanillaDelegatingSlot implements StorageSlot<ItemResource>, UpdateM
     @Override
     public long insert(ItemResource unit, long amount, boolean simulate) {
         ItemStack stack = container.getItem(slot);
-        if (unit.matches(stack) || stack.isEmpty()) {
+        if (unit.test(stack) || stack.isEmpty()) {
             if (stack.isEmpty()) {
                 ItemStack inserted = unit.toItemStack(Math.min((int) amount, (int) getLimit()));
                 if (!simulate) {
@@ -66,7 +66,7 @@ public class VanillaDelegatingSlot implements StorageSlot<ItemResource>, UpdateM
     @Override
     public long extract(ItemResource unit, long amount, boolean simulate) {
         ItemStack stack = container.getItem(slot).copy();
-        if (unit.matches(stack)) {
+        if (unit.test(stack)) {
             ItemStack extracted = stack.split((int) amount);
             if (!simulate) {
                 if (stack.isEmpty()) {

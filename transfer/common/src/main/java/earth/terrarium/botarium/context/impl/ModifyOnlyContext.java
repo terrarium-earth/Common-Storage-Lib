@@ -46,7 +46,7 @@ public record ModifyOnlyContext(ItemStack stack) implements ItemContext {
 
         @Override
         public boolean isValueValid(ItemResource unit) {
-            return unit.matches(stack);
+            return unit.test(stack);
         }
 
         @Override
@@ -66,7 +66,7 @@ public record ModifyOnlyContext(ItemStack stack) implements ItemContext {
 
         @Override
         public long insert(ItemResource unit, long amount, boolean simulate) {
-            if (unit.matches(stack)) {
+            if (unit.test(stack)) {
                 long inserted = Math.min(amount, getLimit() - stack.getCount());
                 if (!simulate) {
                     stack.grow((int) inserted);
@@ -78,7 +78,7 @@ public record ModifyOnlyContext(ItemStack stack) implements ItemContext {
 
         @Override
         public long extract(ItemResource unit, long amount, boolean simulate) {
-            if (unit.matches(stack)) {
+            if (unit.test(stack)) {
                 long extracted = Math.min(amount, stack.getCount());
                 if (!simulate) {
                     stack.shrink((int) extracted);
