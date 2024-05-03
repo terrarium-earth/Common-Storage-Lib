@@ -8,6 +8,7 @@ import java.util.function.Supplier;
 @Actual
 public final class DataManagerRegistryActual {
     private final String modid;
+
     @Actual
     private DataManagerRegistryActual(String modid) {
         this.modid = modid;

@@ -71,6 +71,9 @@ public class SimpleFluidSlot implements StorageSlot<FluidResource>, UpdateManage
             long extracted = Math.min(amount, this.amount);
             if (!simulate) {
                 this.amount -= extracted;
+                if (this.amount == 0) {
+                    this.unit = FluidResource.BLANK;
+                }
             }
             return extracted;
         }

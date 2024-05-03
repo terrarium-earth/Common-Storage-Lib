@@ -92,6 +92,9 @@ public class SimpleItemSlot implements StorageSlot<ItemResource>, UpdateManager<
             long extracted = Math.min(amount, this.amount);
             if (!simulate) {
                 this.amount -= extracted;
+                if (this.amount == 0) {
+                    this.unit = ItemResource.BLANK;
+                }
             }
             return extracted;
         }

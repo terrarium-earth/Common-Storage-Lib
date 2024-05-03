@@ -1,10 +1,10 @@
 dependencies {
-    implementation(projects.botariumDataCommon)
-    implementation(projects.botariumLookupCommon)
-    implementation(projects.botariumResourcesCommon)
-    implementation(projects.botariumTransferCommon)
-    implementation(projects.botariumDataFabric)
-    implementation(projects.botariumLookupFabric)
-    implementation(projects.botariumResourcesFabric)
-    implementation(projects.botariumTransferFabric)
+    // implementation(projects.botariumDataCommon)
+    // implementation(projects.botariumLookupCommon)
+    // implementation(projects.botariumResourcesCommon)
+    // implementation(projects.botariumTransferCommon)
+    implementation(projects.botariumDataFabric)?.let { include(it) }
+    implementation(projects.botariumLookupFabric)?.let { include(it) }
+    implementation(projects.botariumResourcesFabric)?.let { include(it) }
+    implementation(projects.botariumTransferFabric)?.let { include(it) }
 }
