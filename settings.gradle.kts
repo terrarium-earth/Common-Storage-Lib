@@ -17,8 +17,11 @@ pluginManagement {
 includeSubmodule("data")
 includeSubmodule("lookup")
 includeSubmodule("resources")
-includeSubmodule("core")
 includeSubmodule("test")
+
+includeCorePlatform("common")
+includeCorePlatform("fabric")
+includeCorePlatform("neoforge")
 
 fun includeSubmodule(name: String) {
     includePlatformModule(name, "common")
@@ -29,4 +32,9 @@ fun includeSubmodule(name: String) {
 fun includePlatformModule(name: String, platform: String) {
     include("$name/$platform")
     project(":$name/$platform").name = "${rootProject.name}-$name-$platform"
+}
+
+fun includeCorePlatform(platform: String) {
+    include("core/$platform")
+    project(":core/$platform").name = "${rootProject.name}-$platform"
 }

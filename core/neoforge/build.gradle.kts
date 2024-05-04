@@ -2,9 +2,9 @@ dependencies {
     //compileOnly(projects.botariumDataCommon)
     //compileOnly(projects.botariumLookupCommon)
     //compileOnly(projects.botariumResourcesCommon)
-    implementation(projects.botariumDataNeoforge)
-    implementation(projects.botariumLookupNeoforge)
-    implementation(projects.botariumResourcesNeoforge)
+    include(implementation(projects.botariumDataNeoforge)!!)
+    include(implementation(projects.botariumLookupNeoforge)!!)
+    include(implementation(projects.botariumResourcesNeoforge)!!)
 
-    modImplementation("curse.maven:energized-power-782147:5301706")
+    modRuntimeOnly("curse.maven:energized-power-782147:5301706")
 }

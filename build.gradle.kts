@@ -24,10 +24,14 @@ subprojects {
     val minecraftVersion: String by project
     val modId = rootProject.name
 
-    val moduleType = project.layout.projectDirectory.asFile.parentFile.name
+    val moduleType = project.layout.projectDirectory.asFile.parentFile.name.takeUnless { it == "core" }
     val modLoader = project.layout.projectDirectory.asFile.name
     val isCommon = modLoader == "common"
-    val commonPath = if (isCommon) project.name else ":${rootProject.name}-$moduleType-common"
+    val commonPath = when {
+        isCommon -> project.name
+        moduleType == null -> ":${rootProject.name}-common"
+        else -> ":${rootProject.name}-$moduleType-common"
+    }
 
     val isFabric = modLoader == "fabric"
     val fabricLoaderVersion: String by project
@@ -154,6 +158,7 @@ subprojects {
 
     publishing {
         publications {
+            if (moduleType == "test") return@publications
             create<MavenPublication>("maven") {
                 artifactId = "${project.name}-$minecraftVersion"
                 from(components["java"])

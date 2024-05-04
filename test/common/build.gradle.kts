@@ -13,5 +13,5 @@ dependencies {
     implementation(projects.botariumDataCommon)
     implementation(projects.botariumLookupCommon)
     implementation(projects.botariumResourcesCommon)
-    implementation(projects.botariumCoreCommon)
+    implementation(projects.botariumCommon)
 }
