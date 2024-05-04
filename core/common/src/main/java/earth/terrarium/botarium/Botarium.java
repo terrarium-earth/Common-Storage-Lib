@@ -18,8 +18,8 @@ import earth.terrarium.botarium.resources.item.ItemResource;
 import earth.terrarium.botarium.resources.ResourceStack;
 import net.minecraft.network.codec.ByteBufCodecs;
 
-public class BotariumStorage {
-    public static final String MOD_ID = "botarium_transfer";
+public class Botarium {
+    public static final String MOD_ID = "botarium";
     public static final DataManagerRegistry REGISTRY = DataManagerRegistry.create(MOD_ID);
 
     public static final DataManager<FluidStorageData> FLUID_CONTENTS = REGISTRY.builder(FluidStorageData.DEFAULT).serialize(FluidStorageData.CODEC).networkSerializer(FluidStorageData.NETWORK_CODEC).withDataComponent().copyOnDeath().buildAndRegister("fluid_storage_data");

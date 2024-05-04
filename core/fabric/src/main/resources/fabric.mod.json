@@ -15,7 +15,7 @@
   "environment": "*",
   "entrypoints": {
     "main": [
-      "earth.terrarium.botarium.BotariumStorage::init"
+      "earth.terrarium.botarium.Botarium::init"
     ]
   },
   "depends": {

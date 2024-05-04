@@ -1,12 +1,11 @@
 package earth.terrarium.botarium.item.impl;
 
-import earth.terrarium.botarium.BotariumStorage;
+import earth.terrarium.botarium.Botarium;
 import earth.terrarium.botarium.context.ItemContext;
 import earth.terrarium.botarium.resources.item.ItemResource;
 import earth.terrarium.botarium.item.util.ItemStorageData;
 import earth.terrarium.botarium.storage.base.CommonStorage;
 import earth.terrarium.botarium.storage.base.UpdateManager;
-import earth.terrarium.botarium.resources.ResourceStack;
 import earth.terrarium.botarium.storage.util.TransferUtil;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.component.DataComponentPatch;
@@ -28,19 +27,19 @@ public class SimpleItemStorage implements CommonStorage<ItemResource>, UpdateMan
         this.slots = NonNullList.withSize(size, new SimpleItemSlot(this::update));
         this.onUpdate = () -> {
             ItemStorageData data = ItemStorageData.of(this);
-            DataComponentPatch patch = DataComponentPatch.builder().set(BotariumStorage.ITEM_CONTENTS.componentType(), data).build();
+            DataComponentPatch patch = DataComponentPatch.builder().set(Botarium.ITEM_CONTENTS.componentType(), data).build();
             context.modify(patch);
         };
-        this.readSnapshot(BotariumStorage.ITEM_CONTENTS.get(stack));
+        this.readSnapshot(Botarium.ITEM_CONTENTS.get(stack));
     }
 
     public SimpleItemStorage(int size, Object entityOrBlockEntity) {
         this.slots = NonNullList.withSize(size, new SimpleItemSlot(this::update));
         this.onUpdate = () -> {
             ItemStorageData data = ItemStorageData.of(this);
-            BotariumStorage.ITEM_CONTENTS.set(entityOrBlockEntity, data);
+            Botarium.ITEM_CONTENTS.set(entityOrBlockEntity, data);
         };
-        this.readSnapshot(BotariumStorage.ITEM_CONTENTS.get(entityOrBlockEntity));
+        this.readSnapshot(Botarium.ITEM_CONTENTS.get(entityOrBlockEntity));
     }
 
     public SimpleItemStorage filter(int slot, Predicate<ItemResource> predicate) {

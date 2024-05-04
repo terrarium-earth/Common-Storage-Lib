@@ -1,6 +1,6 @@
 package earth.terrarium.botarium.item.lookup;
 
-import earth.terrarium.botarium.BotariumStorage;
+import earth.terrarium.botarium.Botarium;
 import earth.terrarium.botarium.context.ItemContext;
 import earth.terrarium.botarium.context.impl.ModifyOnlyContext;
 import earth.terrarium.botarium.resources.item.ItemResource;
@@ -23,7 +23,7 @@ import java.util.function.Consumer;
 
 public final class ItemItemLookup implements ItemLookup<CommonStorage<ItemResource>, ItemContext>, RegistryEventListener {
     public static final ItemItemLookup INSTANCE = new ItemItemLookup();
-    private static final ItemCapability<CommonStorage<ItemResource>, ItemContext> CAPABILITY = ItemCapability.create(new ResourceLocation(BotariumStorage.MOD_ID, "item_item"), CommonStorage.asClass(), ItemContext.class);
+    private static final ItemCapability<CommonStorage<ItemResource>, ItemContext> CAPABILITY = ItemCapability.create(new ResourceLocation(Botarium.MOD_ID, "item_item"), CommonStorage.asClass(), ItemContext.class);
 
     private final List<Consumer<ItemRegistrar<CommonStorage<ItemResource>, ItemContext>>> registrars = new ArrayList<>();
 

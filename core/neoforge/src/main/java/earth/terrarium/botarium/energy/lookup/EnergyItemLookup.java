@@ -1,6 +1,6 @@
 package earth.terrarium.botarium.energy.lookup;
 
-import earth.terrarium.botarium.BotariumStorage;
+import earth.terrarium.botarium.Botarium;
 import earth.terrarium.botarium.context.ItemContext;
 import earth.terrarium.botarium.context.impl.ModifyOnlyContext;
 import earth.terrarium.botarium.energy.wrappers.CommonItemEnergyStorage;
@@ -22,7 +22,7 @@ import java.util.function.Consumer;
 
 public final class EnergyItemLookup implements ItemLookup<ValueStorage, ItemContext>, RegistryEventListener {
     public static final EnergyItemLookup INSTANCE = new EnergyItemLookup();
-    private static final ItemCapability<ValueStorage, ItemContext> CAPABILITY = ItemCapability.create(new ResourceLocation(BotariumStorage.MOD_ID, "energy_item"), ValueStorage.class, ItemContext.class);
+    private static final ItemCapability<ValueStorage, ItemContext> CAPABILITY = ItemCapability.create(new ResourceLocation(Botarium.MOD_ID, "energy_item"), ValueStorage.class, ItemContext.class);
 
     private final List<Consumer<ItemRegistrar<ValueStorage, ItemContext>>> registrars = new ArrayList<>();
 

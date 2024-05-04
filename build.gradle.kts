@@ -98,7 +98,7 @@ subprojects {
 
         if (isCommon) {
             "modCompileOnly"(group = "tech.thatgravyboat", name = "commonats", version = "2.0")
-        } else {
+        } else if (System.getProperty("idea.sync.active", false.toString()).toBoolean()) {
             compileOnly(project(commonPath, configuration = "namedElements"))
         }
 

@@ -21,12 +21,12 @@ import java.util.List;
 public class SizedEntityIngredient {
     public static final MapCodec<SizedEntityIngredient> FLAT_CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
                     EntityIngredient.MAP_CODEC.forGetter(SizedEntityIngredient::ingredient),
-                    CodecUtils.optionalFieldAlwaysWrite(Codec.LONG, "amount", FluidAmounts.BUCKET).forGetter(SizedEntityIngredient::getAmount))
+                    CodecUtils.optionalFieldAlwaysWrite(Codec.LONG, "amount", 1L).forGetter(SizedEntityIngredient::getAmount))
             .apply(instance, SizedEntityIngredient::new));
 
     public static final MapCodec<SizedEntityIngredient> NESTED_CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
                     EntityIngredient.CODEC.fieldOf("ingredient").forGetter(SizedEntityIngredient::ingredient),
-                    CodecUtils.optionalFieldAlwaysWrite(Codec.LONG, "amount", FluidAmounts.BUCKET).forGetter(SizedEntityIngredient::getAmount))
+                    CodecUtils.optionalFieldAlwaysWrite(Codec.LONG, "amount", 1L).forGetter(SizedEntityIngredient::getAmount))
             .apply(instance, SizedEntityIngredient::new));
 
     public static final StreamCodec<RegistryFriendlyByteBuf, SizedEntityIngredient> STREAM_CODEC = StreamCodec.composite(

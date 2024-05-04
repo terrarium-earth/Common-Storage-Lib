@@ -1,6 +1,6 @@
 package earth.terrarium.botarium.fluid.impl;
 
-import earth.terrarium.botarium.BotariumStorage;
+import earth.terrarium.botarium.Botarium;
 import earth.terrarium.botarium.context.ItemContext;
 import earth.terrarium.botarium.fluid.util.FluidStorageData;
 import earth.terrarium.botarium.resources.fluid.FluidResource;
@@ -30,11 +30,11 @@ public class SimpleFluidStorage implements CommonStorage<FluidResource>, UpdateM
         this.limit = limit;
         this.update = () -> {
             FluidStorageData data = FluidStorageData.from(this);
-            DataComponentPatch patch = DataComponentPatch.builder().set(BotariumStorage.FLUID_CONTENTS.componentType(), data).build();
+            DataComponentPatch patch = DataComponentPatch.builder().set(Botarium.FLUID_CONTENTS.componentType(), data).build();
             context.modify(patch);
             context.updateAll();
         };
-        readSnapshot(BotariumStorage.FLUID_CONTENTS.get(stack));
+        readSnapshot(Botarium.FLUID_CONTENTS.get(stack));
     }
 
     public SimpleFluidStorage(int size, long limit, Object entityOrBlockEntity) {
@@ -42,9 +42,9 @@ public class SimpleFluidStorage implements CommonStorage<FluidResource>, UpdateM
         this.limit = limit;
         this.update = () -> {
             FluidStorageData data = FluidStorageData.from(this);
-            BotariumStorage.FLUID_CONTENTS.set(entityOrBlockEntity, data);
+            Botarium.FLUID_CONTENTS.set(entityOrBlockEntity, data);
         };
-        readSnapshot(BotariumStorage.FLUID_CONTENTS.get(entityOrBlockEntity));
+        readSnapshot(Botarium.FLUID_CONTENTS.get(entityOrBlockEntity));
     }
 
     public SimpleFluidStorage filter(int slot, Predicate<FluidResource> predicate) {
