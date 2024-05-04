@@ -1,9 +1,9 @@
 {
   "schemaVersion": 1,
-  "id": "botarium_transfer",
+  "id": "botarium",
   "version": "${version}",
-  "name": "Botarium Transfer",
-  "description": "Abstraction of the mod loader's resource storage system, allowing for easy access to items, fluids and energy",
+  "name": "Botarium",
+  "description": "Abstraction of the mod loader's resource storage system, allowing for easy access to items, fluids and energy. This library also includes abstractions for Data Attachments, Api Lookups, and Transfer Variants and ingredients",
   "authors": [
     "CodexAdrian"
   ],

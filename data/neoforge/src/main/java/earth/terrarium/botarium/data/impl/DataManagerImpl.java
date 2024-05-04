@@ -1,13 +1,11 @@
 package earth.terrarium.botarium.data.impl;
 
 import earth.terrarium.botarium.data.DataManager;
-import earth.terrarium.botarium.data.utils.ComponentExtras;
 import net.minecraft.core.component.DataComponentHolder;
 import net.minecraft.core.component.DataComponentType;
-import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.attachment.AttachmentHolder;
 import net.neoforged.neoforge.attachment.AttachmentType;
-import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.common.MutableDataComponentHolder;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
@@ -52,9 +50,7 @@ public record DataManagerImpl<T>(Supplier<AttachmentType<T>> attachmentType,
     public T set(Object dataHolder, T data) {
         return switch (dataHolder) {
             case AttachmentHolder holder -> holder.setData(attachmentType, data);
-            case ItemStack holder -> holder.set(Objects.requireNonNull(componentType()), data);
-            case FluidStack holder -> holder.set(Objects.requireNonNull(componentType()), data);
-            case ComponentExtras holder -> holder.setComponent(Objects.requireNonNull(componentType()), data);
+            case MutableDataComponentHolder holder -> holder.set(Objects.requireNonNull(componentType(),"Component type is null"), data);
             default -> throw new IllegalArgumentException(dataHolder + " is not an attachment holder");
         };
     }
@@ -63,9 +59,7 @@ public record DataManagerImpl<T>(Supplier<AttachmentType<T>> attachmentType,
     public T remove(Object dataHolder) {
         return switch (dataHolder) {
             case AttachmentHolder holder -> holder.removeData(attachmentType);
-            case ItemStack holder -> holder.remove(Objects.requireNonNull(componentType()));
-            case FluidStack holder -> holder.remove(Objects.requireNonNull(componentType()));
-            case ComponentExtras holder -> holder.removeComponent(Objects.requireNonNull(componentType()));
+            case MutableDataComponentHolder holder -> holder.remove(Objects.requireNonNull(componentType(), "Component type is null"));
             default -> throw new IllegalArgumentException(dataHolder + " is not an attachment holder");
         };
     }

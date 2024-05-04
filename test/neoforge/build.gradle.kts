@@ -6,5 +6,5 @@ dependencies {
     implementation(projects.botariumDataNeoforge)
     implementation(projects.botariumLookupNeoforge)
     implementation(projects.botariumResourcesNeoforge)
-    implementation(projects.botariumTransferNeoforge)
+    implementation(projects.botariumCoreNeoforge)
 }

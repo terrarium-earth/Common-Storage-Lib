@@ -6,5 +6,5 @@ dependencies {
     implementation(projects.botariumDataFabric)?.let { include(it) }
     implementation(projects.botariumLookupFabric)?.let { include(it) }
     implementation(projects.botariumResourcesFabric)?.let { include(it) }
-    implementation(projects.botariumTransferFabric)?.let { include(it) }
+    implementation(projects.botariumCoreFabric)?.let { include(it) }
 }
