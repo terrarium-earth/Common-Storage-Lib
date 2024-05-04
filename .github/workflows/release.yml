@@ -51,7 +51,7 @@ jobs:
           files: ./core/neoforge/build/libs/!(*-@(dev|sources|dev-shadow|javadoc)).jar
           name: "[NeoForge] Botarium ${{ steps.properties.outputs.version }}"
           version: ${{ steps.properties.outputs.version }}
-          version-type: release
+          version-type: alpha
           changelog-file: changelog.md
           loaders: neoforge
           game-versions: ${{ steps.properties.outputs.minecraftVersion }}
@@ -71,7 +71,7 @@ jobs:
           files: ./core/fabric/build/libs/!(*-@(dev|sources|dev-shadow|javadoc)).jar
           name: "[Fabric] Botarium ${{ steps.properties.outputs.version }}"
           version: ${{ steps.properties.outputs.version }}
-          version-type: release
+          version-type: alpha
           changelog-file: changelog.md
           loaders: fabric
           game-versions: ${{ steps.properties.outputs.minecraftVersion }}
