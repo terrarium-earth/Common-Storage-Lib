@@ -4,6 +4,7 @@ import net.msrandom.multiplatform.annotations.Expect;
 
 import java.util.function.Supplier;
 
+@SuppressWarnings("ALL")
 @Expect
 public final class DataManagerRegistry {
     public static DataManagerRegistry create(String modid);

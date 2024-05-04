@@ -25,6 +25,10 @@ public interface ItemLookup<T, C> {
     @Nullable
     T find(ItemStack stack, C context);
 
+    default boolean isPresent(ItemStack stack, C context) {
+        return find(stack, context) != null;
+    }
+
     default void registerSelf(ItemGetter<T, C> getter, Item ... items) {
         onRegister(registrar -> registrar.register(getter, items));
     }

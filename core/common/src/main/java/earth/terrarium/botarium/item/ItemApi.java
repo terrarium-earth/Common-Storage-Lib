@@ -10,6 +10,7 @@ import net.minecraft.core.Direction;
 import net.msrandom.multiplatform.annotations.Expect;
 import org.jetbrains.annotations.Nullable;
 
+@SuppressWarnings("NoMatchingActual")
 @Expect
 public class ItemApi {
     public static final BlockLookup<CommonStorage<ItemResource>, @Nullable Direction> BLOCK;

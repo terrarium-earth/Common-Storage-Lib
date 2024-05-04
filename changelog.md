@@ -1,1 +1,1 @@
-Port to 1.20.6 (anything more detailed would give me an anuerism, i rewrote the mod)
+Added `isPresent` method to lookups

@@ -41,6 +41,14 @@ public interface BlockLookup<T, C> {
         return find(level, pos, null, null, direction);
     }
 
+    default boolean isPresent(Level level, BlockPos pos, @Nullable BlockState state, @Nullable BlockEntity entity, @Nullable C direction) {
+        return find(level, pos, state, entity, direction) != null;
+    }
+
+    default boolean isPresent(BlockEntity block, @Nullable C direction) {
+        return find(block, direction) != null;
+    }
+
     default void registerSelf(BlockGetter<T, C> getter, Block ... blocks) {
         onRegister(registrar -> registrar.registerBlocks(getter, blocks));
     }

@@ -30,6 +30,10 @@ public interface EntityLookup<T, C> {
     @Nullable
     T find(Entity entity, C context);
 
+    default boolean isPresent(Entity entity, C context) {
+        return find(entity, context) != null;
+    }
+
     default void registerFallback(EntityGetter<T, C> getter) {
         onRegister(registrar -> {
             for (EntityType<?> entityType : BuiltInRegistries.ENTITY_TYPE) {
