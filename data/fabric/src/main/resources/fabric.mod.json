@@ -11,6 +11,9 @@
     "repo": "https://github.com/terrarium-earth/Botarium",
     "issues": "https://github.com/terrarium-earth/Botarium/issues"
   },
+  "mixins": [
+    "botarium_data.mixins.json"
+  ],
   "license": "MIT",
   "environment": "*",
   "depends": {

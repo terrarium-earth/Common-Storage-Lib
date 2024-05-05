@@ -3,8 +3,10 @@ package earth.terrarium.botarium.data.impl;
 import com.mojang.serialization.Codec;
 import earth.terrarium.botarium.data.DataManager;
 import earth.terrarium.botarium.data.DataManagerBuilder;
+import earth.terrarium.botarium.data.sync.DataSyncSerializer;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.neoforged.neoforge.attachment.AttachmentType;
 import net.neoforged.neoforge.registries.DeferredRegister;
@@ -14,16 +16,19 @@ import java.util.function.Supplier;
 public class DataManagerBuilderImpl<T> implements DataManagerBuilder<T> {
     private final DeferredRegister<AttachmentType<?>> registry;
     private final DeferredRegister<DataComponentType<?>> componentRegistry;
+    private final DeferredRegister<DataSyncSerializer<?>> serializerRegistry;
     private final AttachmentType.Builder<T> builder;
     private final Supplier<T> factory;
 
     private Codec<T> codec;
     private StreamCodec<? super RegistryFriendlyByteBuf, T> clientCodec;
     private boolean registerComponentType;
+    private boolean syncToClient;
 
-    public DataManagerBuilderImpl(DeferredRegister<AttachmentType<?>> registry, DeferredRegister<DataComponentType<?>> componentRegistry, Supplier<T> factory) {
+    public DataManagerBuilderImpl(DeferredRegister<AttachmentType<?>> registry, DeferredRegister<DataComponentType<?>> componentRegistry, DeferredRegister<DataSyncSerializer<?>> serializerRegistry, Supplier<T> factory) {
         this.registry = registry;
         this.componentRegistry = componentRegistry;
+        this.serializerRegistry = serializerRegistry;
         this.builder = AttachmentType.builder(factory);
         this.factory = factory;
     }
@@ -44,6 +49,13 @@ public class DataManagerBuilderImpl<T> implements DataManagerBuilder<T> {
     @Override
     public DataManagerBuilder<T> networkSerializer(StreamCodec<? super RegistryFriendlyByteBuf, T> codec) {
         this.clientCodec = codec;
+        this.syncToClient = true;
+        return this;
+    }
+
+    @Override
+    public DataManagerBuilder<T> networkSerializer() {
+        this.syncToClient = true;
         return this;
     }
 
@@ -56,11 +68,22 @@ public class DataManagerBuilderImpl<T> implements DataManagerBuilder<T> {
     @Override
     public DataManager<T> buildAndRegister(String name) {
         var type = registry.register(name, builder::build);
+        Supplier<DataSyncSerializer<T>> serializer = null;
+        if (syncToClient) {
+            if (clientCodec == null) {
+                if (codec == null) {
+                    throw new IllegalStateException("No codec or network codec provided for network synchronization");
+                } else {
+                    clientCodec = ByteBufCodecs.fromCodecWithRegistries(codec);
+                }
+            }
+            serializer = serializerRegistry.register(name, () -> DataSyncSerializer.create(type.get(), clientCodec));
+        }
         Supplier<DataComponentType<T>> component = null;
         if (registerComponentType) {
             DataComponentType.Builder<T> componentBuilder = DataComponentType.<T>builder().persistent(codec).networkSynchronized(clientCodec);
             component = componentRegistry.register(name, componentBuilder::build);
         }
-        return new DataManagerImpl<>(type, component, factory);
+        return new DataManagerImpl<>(type, component, serializer, factory);
     }
 }

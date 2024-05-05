@@ -1,11 +1,8 @@
 package earth.terrarium.botarium.data.sync;
 
-import com.mojang.serialization.Codec;
-import net.fabricmc.fabric.api.attachment.v1.AttachmentTarget;
-import net.fabricmc.fabric.api.attachment.v1.AttachmentType;
 import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
+import net.neoforged.neoforge.attachment.AttachmentType;
 
 @SuppressWarnings("UnstableApiUsage")
 public interface DataSyncSerializer<T> {

@@ -1,1 +1,1 @@
-Added `isPresent` method to lookups
+Added automatic attachment network serialization for entities and block entities

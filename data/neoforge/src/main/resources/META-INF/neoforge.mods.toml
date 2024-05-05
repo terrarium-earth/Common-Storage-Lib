@@ -11,6 +11,9 @@ displayURL = "https://modrinth.com/mod/Botarium"
 authors = "CodexAdrian"
 description = "Abstraction for Data Attachments, as well as providing a wrapper around Components to make working with all data easier."
 
+[[mixins]]
+config = "botarium_data.mixins.json"
+
 [[dependencies.botarium]]
 modId = "neoforge"
 type = "required"

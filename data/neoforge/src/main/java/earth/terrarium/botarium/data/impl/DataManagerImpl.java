@@ -1,11 +1,19 @@
 package earth.terrarium.botarium.data.impl;
 
 import earth.terrarium.botarium.data.DataManager;
+import earth.terrarium.botarium.data.network.BlockEntitySyncPacket;
+import earth.terrarium.botarium.data.network.EntitySyncPacket;
+import earth.terrarium.botarium.data.sync.DataSyncSerializer;
 import net.minecraft.core.component.DataComponentHolder;
 import net.minecraft.core.component.DataComponentType;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.neoforged.neoforge.attachment.AttachmentHolder;
 import net.neoforged.neoforge.attachment.AttachmentType;
 import net.neoforged.neoforge.common.MutableDataComponentHolder;
+import net.neoforged.neoforge.network.PacketDistributor;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
@@ -14,6 +22,7 @@ import java.util.function.Supplier;
 
 public record DataManagerImpl<T>(Supplier<AttachmentType<T>> attachmentType,
                                  @Nullable Supplier<DataComponentType<T>> component,
+                                 @Nullable Supplier<DataSyncSerializer<T>> syncer,
                                  Supplier<T> defaultValue) implements DataManager<T> {
 
     @Override
@@ -78,5 +87,16 @@ public record DataManagerImpl<T>(Supplier<AttachmentType<T>> attachmentType,
     @Override
     public DataComponentType<T> componentType() {
         return component == null ? null : component.get();
+    }
+
+    public void updateTarget(AttachmentHolder target, T data) {
+        if (syncer == null) return;
+        if (target instanceof Entity entity && !entity.level().isClientSide()) {
+            PacketDistributor.sendToPlayersTrackingEntity(entity, EntitySyncPacket.of(entity, syncer.get(), data));
+        }
+
+        if (target instanceof BlockEntity blockEntity && blockEntity.getLevel() instanceof ServerLevel level) {
+            PacketDistributor.sendToPlayersTrackingChunk(level, new ChunkPos(blockEntity.getBlockPos()), BlockEntitySyncPacket.of(blockEntity, syncer.get(), data));
+        }
     }
 }

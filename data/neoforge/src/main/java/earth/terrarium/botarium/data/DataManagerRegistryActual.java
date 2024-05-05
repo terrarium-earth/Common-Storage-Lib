@@ -1,6 +1,7 @@
 package earth.terrarium.botarium.data;
 
 import earth.terrarium.botarium.data.impl.DataManagerBuilderImpl;
+import earth.terrarium.botarium.data.sync.DataSyncSerializer;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.msrandom.multiplatform.annotations.Actual;
@@ -16,11 +17,13 @@ import java.util.function.Supplier;
 public final class DataManagerRegistryActual {
     private final DeferredRegister<AttachmentType<?>> register;
     private final DeferredRegister<DataComponentType<?>> componentRegister;
+    private final DeferredRegister<DataSyncSerializer<?>> serializerRegister;
 
     @Actual
     private DataManagerRegistryActual(String modid) {
         register = DeferredRegister.create(NeoForgeRegistries.ATTACHMENT_TYPES, modid);
         componentRegister = DeferredRegister.create(BuiltInRegistries.DATA_COMPONENT_TYPE, modid);
+        serializerRegister = DeferredRegister.create(BotariumData.SYNC_SERIALIZERS, modid);
     }
 
     @Actual
@@ -30,7 +33,7 @@ public final class DataManagerRegistryActual {
 
     @Actual
     public <T> DataManagerBuilder<T> builder(Supplier<T> factory) {
-        return new DataManagerBuilderImpl<>(register, componentRegister, factory);
+        return new DataManagerBuilderImpl<>(register, componentRegister, serializerRegister, factory);
     }
 
     @Actual

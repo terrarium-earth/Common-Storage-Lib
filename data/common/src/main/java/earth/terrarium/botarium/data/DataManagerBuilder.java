@@ -8,9 +8,9 @@ public interface DataManagerBuilder<T> {
     DataManagerBuilder<T> copyOnDeath();
     DataManagerBuilder<T> serialize(Codec<T> codec);
     DataManagerBuilder<T> networkSerializer(StreamCodec<? super RegistryFriendlyByteBuf, T> codec);
+    DataManagerBuilder<T> networkSerializer();
 
     DataManagerBuilder<T> withDataComponent();
-    // DataManagerBuilder<T> autoSync(); Feature coming soon
 
     DataManager<T> buildAndRegister(String name);
 }
