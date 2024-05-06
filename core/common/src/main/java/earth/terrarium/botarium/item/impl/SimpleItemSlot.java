@@ -33,7 +33,7 @@ public class SimpleItemSlot implements StorageSlot<ItemResource>, ModifiableItem
     }
 
     @Override
-    public boolean isValueValid(ItemResource unit) {
+    public boolean isValueValid(ItemResource resource) {
         return true;
     }
 
@@ -52,8 +52,8 @@ public class SimpleItemSlot implements StorageSlot<ItemResource>, ModifiableItem
         return resource.isBlank();
     }
 
-    public void set(ItemResource unit, long amount) {
-        this.resource = unit;
+    public void set(ItemResource resource, long amount) {
+        this.resource = resource;
         this.amount = amount;
     }
 
@@ -63,16 +63,16 @@ public class SimpleItemSlot implements StorageSlot<ItemResource>, ModifiableItem
     }
 
     @Override
-    public long insert(ItemResource unit, long amount, boolean simulate) {
-        if (!isValueValid(unit)) return 0;
+    public long insert(ItemResource resource, long amount, boolean simulate) {
+        if (!isValueValid(resource)) return 0;
         if (this.resource.isBlank()) {
-            long inserted = Math.min(amount, unit.getCachedStack().getMaxStackSize());
+            long inserted = Math.min(amount, resource.getCachedStack().getMaxStackSize());
             if (!simulate) {
-                this.resource = unit;
+                this.resource = resource;
                 this.amount = inserted;
             }
             return inserted;
-        } else if (this.resource.test(unit)) {
+        } else if (this.resource.test(resource)) {
             long inserted = Math.min(amount, getLimit() - this.amount);
             if (!simulate) {
                 this.amount += inserted;
@@ -83,8 +83,8 @@ public class SimpleItemSlot implements StorageSlot<ItemResource>, ModifiableItem
     }
 
     @Override
-    public long extract(ItemResource unit, long amount, boolean simulate) {
-        if (this.resource.test(unit)) {
+    public long extract(ItemResource resource, long amount, boolean simulate) {
+        if (this.resource.test(resource)) {
             long extracted = Math.min(amount, this.amount);
             if (!simulate) {
                 this.amount -= extracted;
@@ -147,8 +147,8 @@ public class SimpleItemSlot implements StorageSlot<ItemResource>, ModifiableItem
         }
 
         @Override
-        public boolean isValueValid(ItemResource unit) {
-            return filter.test(unit);
+        public boolean isValueValid(ItemResource resource) {
+            return filter.test(resource);
         }
     }
 }

@@ -43,8 +43,8 @@ public abstract class TransferResource<T, R extends TransferResource<T, R>> impl
         return Objects.equals(getDataPatch(), other);
     }
 
-    public boolean isOf(T unit) {
-        return this.getType() == unit;
+    public boolean isOf(T resource) {
+        return this.getType() == resource;
     }
 
     @Override

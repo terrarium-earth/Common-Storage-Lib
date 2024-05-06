@@ -19,12 +19,12 @@ public final class NoOpsItemContainer implements CommonStorage<ItemResource> {
     }
 
     @Override
-    public long insert(ItemResource unit, long amount, boolean simulate) {
+    public long insert(ItemResource resource, long amount, boolean simulate) {
         return 0;
     }
 
     @Override
-    public long extract(ItemResource unit, long amount, boolean simulate) {
+    public long extract(ItemResource resource, long amount, boolean simulate) {
         return 0;
     }
 
