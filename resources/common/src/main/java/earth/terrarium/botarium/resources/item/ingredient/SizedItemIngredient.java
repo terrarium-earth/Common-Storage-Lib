@@ -45,7 +45,7 @@ public final class SizedItemIngredient {
     }
 
     public static SizedItemIngredient of(ResourceStack<ItemResource> stack) {
-        return new SizedItemIngredient(Ingredient.of(stack.unit()), (int) stack.amount());
+        return new SizedItemIngredient(Ingredient.of(stack.resource()), (int) stack.amount());
     }
 
     private final Ingredient ingredient;
@@ -74,7 +74,7 @@ public final class SizedItemIngredient {
     }
 
     public boolean test(ResourceStack<ItemResource> stack) {
-        return ingredient.test(stack.unit().getCachedStack()) && stack.amount() >= count;
+        return ingredient.test(stack.resource().getCachedStack()) && stack.amount() >= count;
     }
 
     public ItemStack[] getItems() {

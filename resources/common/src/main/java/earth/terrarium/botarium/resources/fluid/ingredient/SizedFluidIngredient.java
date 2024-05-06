@@ -53,7 +53,7 @@ public class SizedFluidIngredient {
     }
 
     public static SizedFluidIngredient of(ResourceStack<FluidResource> stack) {
-        return new SizedFluidIngredient(FluidIngredient.of(stack.unit()), (int) stack.amount());
+        return new SizedFluidIngredient(FluidIngredient.of(stack.resource()), (int) stack.amount());
     }
 
     private final FluidIngredient ingredient;
@@ -82,7 +82,7 @@ public class SizedFluidIngredient {
     }
 
     public boolean test(ResourceStack<FluidResource> stack) {
-        return ingredient.test(stack.unit()) && stack.amount() >= amount;
+        return ingredient.test(stack.resource()) && stack.amount() >= amount;
     }
 
     public List<ResourceStack<FluidResource>> getFluids() {

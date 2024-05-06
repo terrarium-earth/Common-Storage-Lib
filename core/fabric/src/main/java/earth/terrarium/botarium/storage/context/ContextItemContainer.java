@@ -89,7 +89,7 @@ public record ContextItemContainer(List<SingleSlotStorage<ItemVariant>> storage,
         }
 
         @Override
-        public ItemResource getUnit() {
+        public ItemResource getResource() {
             return ConversionUtils.toUnit(storage.getResource());
         }
 

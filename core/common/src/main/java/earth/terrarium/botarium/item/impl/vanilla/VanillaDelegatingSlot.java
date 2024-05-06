@@ -28,7 +28,7 @@ public class VanillaDelegatingSlot implements StorageSlot<ItemResource>, UpdateM
     }
 
     @Override
-    public ItemResource getUnit() {
+    public ItemResource getResource() {
         return ItemResource.of(container.getItem(slot));
     }
 

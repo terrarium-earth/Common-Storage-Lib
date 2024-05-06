@@ -42,7 +42,7 @@ public record CommonItemContainer(IItemHandler handler) implements CommonStorage
         }
 
         @Override
-        public ItemResource getUnit() {
+        public ItemResource getResource() {
             return ItemResource.of(handler.getStackInSlot(slot));
         }
 

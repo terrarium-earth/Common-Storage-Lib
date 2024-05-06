@@ -83,4 +83,70 @@ public class SimpleItemStorage implements CommonStorage<ItemResource>, UpdateMan
     public long extract(ItemResource unit, long amount, boolean simulate) {
         return TransferUtil.extractSlots(this, unit, amount, simulate);
     }
+
+    public static class ExtractOnly extends SimpleItemStorage {
+        public ExtractOnly(int size) {
+            super(size);
+        }
+
+        public ExtractOnly(int size, ItemStack stack, ItemContext context) {
+            super(size, stack, context);
+        }
+
+        public ExtractOnly(int size, Object entityOrBlockEntity) {
+            super(size, entityOrBlockEntity);
+        }
+
+        @Override
+        public long insert(ItemResource unit, long amount, boolean simulate) {
+            return 0;
+        }
+
+        public long internalInsert(ItemResource unit, long amount, boolean simulate) {
+            return super.insert(unit, amount, simulate);
+        }
+
+        @Override
+        public ExtractOnly filter(int slot, Predicate<ItemResource> predicate) {
+            return (ExtractOnly) super.filter(slot, predicate);
+        }
+
+        @Override
+        public boolean allowsInsertion() {
+            return false;
+        }
+    }
+
+    public static class InsertOnly extends SimpleItemStorage {
+        public InsertOnly(int size) {
+            super(size);
+        }
+
+        public InsertOnly(int size, ItemStack stack, ItemContext context) {
+            super(size, stack, context);
+        }
+
+        public InsertOnly(int size, Object entityOrBlockEntity) {
+            super(size, entityOrBlockEntity);
+        }
+
+        @Override
+        public long extract(ItemResource unit, long amount, boolean simulate) {
+            return 0;
+        }
+
+        public long internalExtract(ItemResource unit, long amount, boolean simulate) {
+            return super.extract(unit, amount, simulate);
+        }
+
+        @Override
+        public InsertOnly filter(int slot, Predicate<ItemResource> predicate) {
+            return (InsertOnly) super.filter(slot, predicate);
+        }
+
+        @Override
+        public boolean allowsExtraction() {
+            return false;
+        }
+    }
 }

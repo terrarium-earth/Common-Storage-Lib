@@ -16,7 +16,7 @@ public record NeoItemHandler(CommonStorage<ItemResource> container) implements I
     @Override
     public ItemStack getStackInSlot(int i) {
         StorageSlot<ItemResource> slot = container.getSlot(i);
-        return slot.getUnit().toItemStack((int) slot.getAmount());
+        return slot.getResource().toItemStack((int) slot.getAmount());
     }
 
     @Override

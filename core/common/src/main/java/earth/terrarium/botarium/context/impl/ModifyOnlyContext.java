@@ -50,7 +50,7 @@ public record ModifyOnlyContext(ItemStack stack) implements ItemContext {
         }
 
         @Override
-        public ItemResource getUnit() {
+        public ItemResource getResource() {
             return ItemResource.of(stack);
         }
 

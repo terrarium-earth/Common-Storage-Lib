@@ -27,7 +27,7 @@ public record ItemStorageData(List<ResourceStack<ItemResource>> stacks) {
         List<ResourceStack<ItemResource>> stacks = NonNullList.withSize(container.getSlotCount(), ResourceStack.EMPTY_ITEM);
         for (int i = 0; i < container.getSlotCount(); i++) {
             StorageSlot<ItemResource> slot = container.getSlot(i);
-            stacks.set(i, new ResourceStack<>(slot.getUnit(), slot.getAmount()));
+            stacks.set(i, new ResourceStack<>(slot.getResource(), slot.getAmount()));
         }
         return new ItemStorageData(stacks);
     }

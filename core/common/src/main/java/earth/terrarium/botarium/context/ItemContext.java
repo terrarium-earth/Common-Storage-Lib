@@ -15,7 +15,7 @@ public interface ItemContext extends StorageIO<ItemResource> {
     }
 
     default ItemResource getUnit() {
-        return mainSlot().getUnit();
+        return mainSlot().getResource();
     }
 
     default long getAmount() {

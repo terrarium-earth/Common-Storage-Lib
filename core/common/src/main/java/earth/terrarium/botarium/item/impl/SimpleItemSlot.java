@@ -2,6 +2,7 @@ package earth.terrarium.botarium.item.impl;
 
 import earth.terrarium.botarium.resources.ResourceStack;
 import earth.terrarium.botarium.resources.item.ItemResource;
+import earth.terrarium.botarium.storage.util.ModifiableItemSlot;
 import earth.terrarium.botarium.storage.base.StorageSlot;
 import earth.terrarium.botarium.storage.base.UpdateManager;
 import net.minecraft.world.item.Item;
@@ -9,26 +10,26 @@ import net.minecraft.world.item.ItemStack;
 
 import java.util.function.Predicate;
 
-public class SimpleItemSlot implements StorageSlot<ItemResource>, UpdateManager<ResourceStack<ItemResource>> {
+public class SimpleItemSlot implements StorageSlot<ItemResource>, ModifiableItemSlot, UpdateManager<ResourceStack<ItemResource>> {
     private final Runnable update;
-    private ItemResource unit;
+    private ItemResource resource;
     private long amount;
 
     public SimpleItemSlot(Runnable update) {
-        this.unit = ItemResource.BLANK;
+        this.resource = ItemResource.BLANK;
         this.amount = getAmount();
         this.update = update;
     }
 
     public SimpleItemSlot(ItemStack stack) {
-        this.unit = ItemResource.of(stack);
+        this.resource = ItemResource.of(stack);
         this.amount = stack.getCount();
         this.update = () -> {};
     }
 
     @Override
     public long getLimit() {
-        return unit.isBlank() ? Item.ABSOLUTE_MAX_STACK_SIZE : unit.getCachedStack().getMaxStackSize();
+        return resource.isBlank() ? Item.ABSOLUTE_MAX_STACK_SIZE : resource.getCachedStack().getMaxStackSize();
     }
 
     @Override
@@ -37,8 +38,8 @@ public class SimpleItemSlot implements StorageSlot<ItemResource>, UpdateManager<
     }
 
     @Override
-    public ItemResource getUnit() {
-        return unit;
+    public ItemResource getResource() {
+        return resource;
     }
 
     @Override
@@ -48,35 +49,30 @@ public class SimpleItemSlot implements StorageSlot<ItemResource>, UpdateManager<
 
     @Override
     public boolean isBlank() {
-        return unit.isBlank();
+        return resource.isBlank();
     }
 
     public void set(ItemResource unit, long amount) {
-        this.unit = unit;
+        this.resource = unit;
         this.amount = amount;
     }
 
-    public void set(ItemStack stack) {
-        this.unit = ItemResource.of(stack);
-        this.amount = stack.getCount();
-    }
-
     public void set(ResourceStack<ItemResource> data) {
-        this.unit = data.unit();
+        this.resource = data.resource();
         this.amount = data.amount();
     }
 
     @Override
     public long insert(ItemResource unit, long amount, boolean simulate) {
         if (!isValueValid(unit)) return 0;
-        if (this.unit.isBlank()) {
+        if (this.resource.isBlank()) {
             long inserted = Math.min(amount, unit.getCachedStack().getMaxStackSize());
             if (!simulate) {
-                this.unit = unit;
+                this.resource = unit;
                 this.amount = inserted;
             }
             return inserted;
-        } else if (this.unit.test(unit)) {
+        } else if (this.resource.test(unit)) {
             long inserted = Math.min(amount, getLimit() - this.amount);
             if (!simulate) {
                 this.amount += inserted;
@@ -88,12 +84,12 @@ public class SimpleItemSlot implements StorageSlot<ItemResource>, UpdateManager<
 
     @Override
     public long extract(ItemResource unit, long amount, boolean simulate) {
-        if (this.unit.test(unit)) {
+        if (this.resource.test(unit)) {
             long extracted = Math.min(amount, this.amount);
             if (!simulate) {
                 this.amount -= extracted;
                 if (this.amount == 0) {
-                    this.unit = ItemResource.BLANK;
+                    this.resource = ItemResource.BLANK;
                 }
             }
             return extracted;
@@ -103,18 +99,43 @@ public class SimpleItemSlot implements StorageSlot<ItemResource>, UpdateManager<
 
     @Override
     public ResourceStack<ItemResource> createSnapshot() {
-        return new ResourceStack<>(unit, amount);
+        return new ResourceStack<>(resource, amount);
     }
 
     @Override
     public void readSnapshot(ResourceStack<ItemResource> snapshot) {
-        this.unit = snapshot.unit();
+        this.resource = snapshot.resource();
         this.amount = snapshot.amount();
     }
 
     @Override
     public void update() {
         update.run();
+    }
+
+    @Override
+    public void setAmount(long amount) {
+        this.amount = amount;
+    }
+
+    @Override
+    public void setResource(ItemResource resource) {
+        this.resource = resource;
+    }
+
+    @Override
+    public ItemStack toItemStack() {
+        return resource.toItemStack((int) amount);
+    }
+
+    @Override
+    public int getMaxAllowed(ItemResource resource) {
+        return resource.getCachedStack().getMaxStackSize();
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return resource.isBlank() || amount == 0;
     }
 
     public static class Filtered extends SimpleItemSlot {

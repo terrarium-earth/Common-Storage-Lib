@@ -23,7 +23,7 @@ public interface AbstractNeoFluidHandler extends IFluidHandler {
     @Override
     default @NotNull FluidStack getFluidInTank(int i) {
         StorageSlot<FluidResource> slot = container().getSlot(i);
-        return ConversionUtils.convert(slot.getUnit(), slot.getAmount());
+        return ConversionUtils.convert(slot.getResource(), slot.getAmount());
     }
 
     @Override

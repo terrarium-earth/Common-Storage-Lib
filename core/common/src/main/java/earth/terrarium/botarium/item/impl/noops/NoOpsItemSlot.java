@@ -17,7 +17,7 @@ public class NoOpsItemSlot implements StorageSlot<ItemResource> {
     }
 
     @Override
-    public ItemResource getUnit() {
+    public ItemResource getResource() {
         return ItemResource.BLANK;
     }
 

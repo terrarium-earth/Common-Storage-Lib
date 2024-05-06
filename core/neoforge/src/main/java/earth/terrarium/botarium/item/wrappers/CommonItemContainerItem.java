@@ -52,7 +52,7 @@ public record CommonItemContainerItem(IItemHandler handler, ItemStack stack, Ite
         }
 
         @Override
-        public ItemResource getUnit() {
+        public ItemResource getResource() {
             return ItemResource.of(handler.getStackInSlot(slot));
         }
 

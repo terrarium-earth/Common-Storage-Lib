@@ -5,15 +5,12 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import earth.terrarium.botarium.resources.ResourceStack;
 import earth.terrarium.botarium.resources.entity.EntityResource;
-import earth.terrarium.botarium.resources.fluid.FluidResource;
-import earth.terrarium.botarium.resources.fluid.util.FluidAmounts;
 import earth.terrarium.botarium.resources.util.CodecUtils;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.level.material.Fluid;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -45,7 +42,7 @@ public class SizedEntityIngredient {
     }
 
     public static SizedEntityIngredient of(ResourceStack<EntityResource> stack) {
-        return new SizedEntityIngredient(EntityIngredient.of(stack.unit()), (int) stack.amount());
+        return new SizedEntityIngredient(EntityIngredient.of(stack.resource()), (int) stack.amount());
     }
 
     private final EntityIngredient ingredient;
@@ -70,7 +67,7 @@ public class SizedEntityIngredient {
     }
 
     public boolean test(ResourceStack<EntityResource> stack) {
-        return ingredient.test(stack.unit()) && stack.amount() >= amount;
+        return ingredient.test(stack.resource()) && stack.amount() >= amount;
     }
 
     public List<ResourceStack<EntityResource>> getFluids() {

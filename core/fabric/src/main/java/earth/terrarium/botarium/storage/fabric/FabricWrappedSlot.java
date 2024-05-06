@@ -34,12 +34,12 @@ public record FabricWrappedSlot<T, U extends TransferResource<T, U>, V extends T
 
     @Override
     public boolean isResourceBlank() {
-        return container.getUnit().isBlank();
+        return container.getResource().isBlank();
     }
 
     @Override
     public V getResource() {
-        return toVariant.apply(container.getUnit());
+        return toVariant.apply(container.getResource());
     }
 
     @Override

@@ -27,7 +27,7 @@ public record FluidStorageData(List<ResourceStack<FluidResource>> stacks) {
         List<ResourceStack<FluidResource>> stacks = NonNullList.withSize(container.getSlotCount(), ResourceStack.EMPTY_FLUID);
         for (int i = 0; i < container.getSlotCount(); i++) {
             StorageSlot<FluidResource> slot = container.getSlot(i);
-            stacks.set(i, new ResourceStack<>(slot.getUnit(), slot.getAmount()));
+            stacks.set(i, new ResourceStack<>(slot.getResource(), slot.getAmount()));
         }
         return new FluidStorageData(stacks);
     }

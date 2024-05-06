@@ -18,7 +18,7 @@ public class TransferUtil {
         for (int i = 0; i < container.getSlotCount(); i++) {
             StorageSlot<T> slot = container.getSlot(i);
             if (slot.isBlank()) continue;
-            T unit = slot.getUnit();
+            T unit = slot.getResource();
             if (predicate.test(unit)) {
                 return Optional.of(unit);
             }
@@ -70,7 +70,7 @@ public class TransferUtil {
         for (int i = 0; i < from.getSlotCount(); i++) {
             StorageSlot<T> slot = from.getSlot(i);
             if (slot.isBlank()) continue;
-            T unit = slot.getUnit();
+            T unit = slot.getResource();
             long moved = move(from, to, unit, amount, simulate);
             if (moved > 0) {
                 return new Tuple<>(unit, moved);
@@ -83,7 +83,7 @@ public class TransferUtil {
         for (int i = 0; i < from.getSlotCount(); i++) {
             StorageSlot<T> slot = from.getSlot(i);
             if (slot.isBlank()) continue;
-            T unit = slot.getUnit();
+            T unit = slot.getResource();
             move(from, to, unit, Long.MAX_VALUE, simulate);
         }
     }
@@ -160,7 +160,7 @@ public class TransferUtil {
     }
 
     public static <T> void equalize(StorageSlot<T> slot, long amount) {
-        T unit = slot.getUnit();
+        T unit = slot.getResource();
         long current = slot.getAmount();
         if (current < amount) {
             slot.insert(unit, amount - current, false);
@@ -170,6 +170,6 @@ public class TransferUtil {
     }
 
     public static <T extends TransferResource<?, T>> long insertStack(CommonStorage<T> container, ResourceStack<T> stack, boolean simulate) {
-        return insertSlots(container, stack.unit(), stack.amount(), simulate);
+        return insertSlots(container, stack.resource(), stack.amount(), simulate);
     }
 }

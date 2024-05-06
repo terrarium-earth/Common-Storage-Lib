@@ -13,6 +13,6 @@ public record NeoFluidItemContainer(CommonStorage<FluidResource> container, Item
     @Override
     public @NotNull ItemStack getContainer() {
         StorageSlot<ItemResource> slot = context.mainSlot();
-        return slot.getUnit().toItemStack((int) slot.getAmount());
+        return slot.getResource().toItemStack((int) slot.getAmount());
     }
 }

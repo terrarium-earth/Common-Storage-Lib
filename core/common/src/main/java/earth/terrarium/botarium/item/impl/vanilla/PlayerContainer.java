@@ -39,7 +39,7 @@ public class PlayerContainer extends AbstractVanillaContainer implements UpdateM
         for (InteractionHand hand : InteractionHand.values()) {
             StorageSlot<ItemResource> handSlot = getHandSlot(hand);
 
-            if (handSlot.getUnit().equals(unit)) {
+            if (handSlot.getResource().equals(unit)) {
                 amount -= handSlot.insert(unit, amount, simulate);
 
                 if (amount == 0) return initialAmount;

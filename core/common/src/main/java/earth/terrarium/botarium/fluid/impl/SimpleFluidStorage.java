@@ -88,4 +88,70 @@ public class SimpleFluidStorage implements CommonStorage<FluidResource>, UpdateM
     public long extract(FluidResource unit, long amount, boolean simulate) {
         return TransferUtil.extractSlots(this, unit, amount, simulate);
     }
+
+    public static class ExtractOnly extends SimpleFluidStorage {
+        public ExtractOnly(int size, long limit) {
+            super(size, limit);
+        }
+
+        public ExtractOnly(int size, long limit, ItemStack stack, ItemContext context) {
+            super(size, limit, stack, context);
+        }
+
+        public ExtractOnly(int size, long limit, Object entityOrBlockEntity) {
+            super(size, limit, entityOrBlockEntity);
+        }
+
+        @Override
+        public long insert(FluidResource unit, long amount, boolean simulate) {
+            return 0;
+        }
+
+        public long internalInsert(FluidResource unit, long amount, boolean simulate) {
+            return super.insert(unit, amount, simulate);
+        }
+
+        @Override
+        public ExtractOnly filter(int slot, Predicate<FluidResource> predicate) {
+            return (ExtractOnly) super.filter(slot, predicate);
+        }
+
+        @Override
+        public boolean allowsInsertion() {
+            return false;
+        }
+    }
+
+    public static class InsertOnly extends SimpleFluidStorage {
+        public InsertOnly(int size, long limit) {
+            super(size, limit);
+        }
+
+        public InsertOnly(int size, long limit, ItemStack stack, ItemContext context) {
+            super(size, limit, stack, context);
+        }
+
+        public InsertOnly(int size, long limit, Object entityOrBlockEntity) {
+            super(size, limit, entityOrBlockEntity);
+        }
+
+        @Override
+        public long extract(FluidResource unit, long amount, boolean simulate) {
+            return 0;
+        }
+
+        public long internalExtract(FluidResource unit, long amount, boolean simulate) {
+            return super.extract(unit, amount, simulate);
+        }
+
+        @Override
+        public InsertOnly filter(int slot, Predicate<FluidResource> predicate) {
+            return (InsertOnly) super.filter(slot, predicate);
+        }
+
+        @Override
+        public boolean allowsExtraction() {
+            return false;
+        }
+    }
 }

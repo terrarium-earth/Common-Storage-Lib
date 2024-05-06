@@ -49,7 +49,7 @@ public record CommonWrappedSlotSlot<T, U extends TransferResource<T, U>, V exten
     }
 
     @Override
-    public U getUnit() {
+    public U getResource() {
         return toUnit.apply(view.getResource());
     }
 

@@ -16,7 +16,7 @@ public record DelegatingFluidHandlerSlot(AbstractCommonFluidContainer provider, 
     }
 
     @Override
-    public FluidResource getUnit() {
+    public FluidResource getResource() {
         return ConversionUtils.convert(provider.handler().getFluidInTank(slot));
     }
 
@@ -37,7 +37,7 @@ public record DelegatingFluidHandlerSlot(AbstractCommonFluidContainer provider, 
 
     @Override
     public long extract(FluidResource unit, long amount, boolean simulate) {
-        if (!unit.test(getUnit())) return 0;
+        if (!unit.test(getResource())) return 0;
         return provider.extract(unit, amount, simulate);
     }
 }

@@ -31,7 +31,7 @@ public class SimpleFluidSlot implements StorageSlot<FluidResource>, UpdateManage
     }
 
     @Override
-    public FluidResource getUnit() {
+    public FluidResource getResource() {
         return unit;
     }
 
@@ -87,7 +87,7 @@ public class SimpleFluidSlot implements StorageSlot<FluidResource>, UpdateManage
 
     @Override
     public void readSnapshot(ResourceStack<FluidResource> snapshot) {
-        this.unit = snapshot.unit();
+        this.unit = snapshot.resource();
         this.amount = snapshot.amount();
     }
 
