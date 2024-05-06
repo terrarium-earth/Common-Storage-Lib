@@ -21,7 +21,7 @@ public record CommonItemContainerItem(IItemHandler handler, ItemStack stack, Ite
     }
 
     public void updateContext() {
-        if (!context.getUnit().test(stack)) {
+        if (!context.getResource().test(stack)) {
             context.exchange(ItemResource.of(stack), context.getAmount(), false);
         }
         if (context.getAmount() != stack.getCount()) {
@@ -30,13 +30,13 @@ public record CommonItemContainerItem(IItemHandler handler, ItemStack stack, Ite
     }
 
     @Override
-    public long insert(ItemResource unit, long amount, boolean simulate) {
-        return TransferUtil.insertSlots(this, unit, amount, simulate);
+    public long insert(ItemResource resource, long amount, boolean simulate) {
+        return TransferUtil.insertSlots(this, resource, amount, simulate);
     }
 
     @Override
-    public long extract(ItemResource unit, long amount, boolean simulate) {
-        return TransferUtil.extractSlots(this, unit, amount, simulate);
+    public long extract(ItemResource resource, long amount, boolean simulate) {
+        return TransferUtil.extractSlots(this, resource, amount, simulate);
     }
 
     public record DelegatingItemSlot(IItemHandler handler, int slot, Runnable runnable) implements StorageSlot<ItemResource> {
@@ -47,8 +47,8 @@ public record CommonItemContainerItem(IItemHandler handler, ItemStack stack, Ite
         }
 
         @Override
-        public boolean isValueValid(ItemResource unit) {
-            return handler.isItemValid(slot, unit.toItemStack());
+        public boolean isValueValid(ItemResource resource) {
+            return handler.isItemValid(slot, resource.toItemStack());
         }
 
         @Override
@@ -67,15 +67,15 @@ public record CommonItemContainerItem(IItemHandler handler, ItemStack stack, Ite
         }
 
         @Override
-        public long insert(ItemResource unit, long amount, boolean simulate) {
-            ItemStack leftover = handler.insertItem(slot, unit.toItemStack((int) amount), simulate);
+        public long insert(ItemResource resource, long amount, boolean simulate) {
+            ItemStack leftover = handler.insertItem(slot, resource.toItemStack((int) amount), simulate);
             runnable.run();
             return amount - leftover.getCount();
         }
 
         @Override
-        public long extract(ItemResource unit, long amount, boolean simulate) {
-            if (!unit.test(handler.getStackInSlot(slot))) {
+        public long extract(ItemResource resource, long amount, boolean simulate) {
+            if (!resource.test(handler.getStackInSlot(slot))) {
                 return 0;
             }
             ItemStack extracted = handler.extractItem(slot, (int) amount, simulate);

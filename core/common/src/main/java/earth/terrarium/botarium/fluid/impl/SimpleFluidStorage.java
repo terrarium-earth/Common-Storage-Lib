@@ -80,13 +80,13 @@ public class SimpleFluidStorage implements CommonStorage<FluidResource>, UpdateM
     }
 
     @Override
-    public long insert(FluidResource unit, long amount, boolean simulate) {
-        return TransferUtil.insertSlots(this, unit, amount, simulate);
+    public long insert(FluidResource resource, long amount, boolean simulate) {
+        return TransferUtil.insertSlots(this, resource, amount, simulate);
     }
 
     @Override
-    public long extract(FluidResource unit, long amount, boolean simulate) {
-        return TransferUtil.extractSlots(this, unit, amount, simulate);
+    public long extract(FluidResource resource, long amount, boolean simulate) {
+        return TransferUtil.extractSlots(this, resource, amount, simulate);
     }
 
     public static class ExtractOnly extends SimpleFluidStorage {
@@ -103,12 +103,12 @@ public class SimpleFluidStorage implements CommonStorage<FluidResource>, UpdateM
         }
 
         @Override
-        public long insert(FluidResource unit, long amount, boolean simulate) {
+        public long insert(FluidResource resource, long amount, boolean simulate) {
             return 0;
         }
 
-        public long internalInsert(FluidResource unit, long amount, boolean simulate) {
-            return super.insert(unit, amount, simulate);
+        public long internalInsert(FluidResource resource, long amount, boolean simulate) {
+            return super.insert(resource, amount, simulate);
         }
 
         @Override
@@ -136,12 +136,12 @@ public class SimpleFluidStorage implements CommonStorage<FluidResource>, UpdateM
         }
 
         @Override
-        public long extract(FluidResource unit, long amount, boolean simulate) {
+        public long extract(FluidResource resource, long amount, boolean simulate) {
             return 0;
         }
 
-        public long internalExtract(FluidResource unit, long amount, boolean simulate) {
-            return super.extract(unit, amount, simulate);
+        public long internalExtract(FluidResource resource, long amount, boolean simulate) {
+            return super.extract(resource, amount, simulate);
         }
 
         @Override

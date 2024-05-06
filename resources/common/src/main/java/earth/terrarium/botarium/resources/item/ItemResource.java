@@ -133,7 +133,7 @@ public final class ItemResource extends TransferResource<Item, ItemResource> imp
 
     @Override
     public String toString() {
-        return "ItemUnit[" +
+        return "ItemResource[" +
                 "type=" + type + ", " +
                 "components=" + components + ']';
     }

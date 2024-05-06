@@ -26,8 +26,8 @@ public final class CommonFluidItemContainer implements AbstractCommonFluidContai
     }
 
     @Override
-    public long insert(FluidResource unit, long amount, boolean simulate) {
-        int fill = handler.fill(ConversionUtils.convert(unit, amount), simulate ? IFluidHandler.FluidAction.SIMULATE : IFluidHandler.FluidAction.EXECUTE);
+    public long insert(FluidResource resource, long amount, boolean simulate) {
+        int fill = handler.fill(ConversionUtils.convert(resource, amount), simulate ? IFluidHandler.FluidAction.SIMULATE : IFluidHandler.FluidAction.EXECUTE);
         if (!simulate) {
             updateContext();
         }
@@ -35,8 +35,8 @@ public final class CommonFluidItemContainer implements AbstractCommonFluidContai
     }
 
     @Override
-    public long extract(FluidResource unit, long amount, boolean simulate) {
-        int drain = handler.drain(ConversionUtils.convert(unit, amount), simulate ? IFluidHandler.FluidAction.SIMULATE : IFluidHandler.FluidAction.EXECUTE).getAmount();
+    public long extract(FluidResource resource, long amount, boolean simulate) {
+        int drain = handler.drain(ConversionUtils.convert(resource, amount), simulate ? IFluidHandler.FluidAction.SIMULATE : IFluidHandler.FluidAction.EXECUTE).getAmount();
         if (!simulate) {
             updateContext();
         }
@@ -48,7 +48,7 @@ public final class CommonFluidItemContainer implements AbstractCommonFluidContai
             return;
         }
         lastContainer = handler.getContainer().copy();
-        if (context.getUnit().test(lastContainer)) {
+        if (context.getResource().test(lastContainer)) {
             TransferUtil.equalize(context.mainSlot(), lastContainer.getCount());
         } else {
             if (context.exchange(ItemResource.of(lastContainer), lastContainer.getCount(), false) != lastContainer.getCount()) {

@@ -22,16 +22,16 @@ public class PlayerContainer extends AbstractVanillaContainer implements UpdateM
     }
 
     @Override
-    public long insert(ItemResource unit, long amount, boolean simulate) {
-        return offer(unit, amount, simulate);
+    public long insert(ItemResource resource, long amount, boolean simulate) {
+        return offer(resource, amount, simulate);
     }
 
     @Override
-    public long extract(ItemResource unit, long amount, boolean simulate) {
+    public long extract(ItemResource resource, long amount, boolean simulate) {
         return 0;
     }
 
-    public long offer(ItemResource unit, long amount, boolean simulate) {
+    public long offer(ItemResource resource, long amount, boolean simulate) {
         // try inserting into main hands first, then a subset of the slots between 0 and Inventory.INVENTORY_SIZE, then just the rest of the slots
         long initialAmount = amount;
 
@@ -39,36 +39,36 @@ public class PlayerContainer extends AbstractVanillaContainer implements UpdateM
         for (InteractionHand hand : InteractionHand.values()) {
             StorageSlot<ItemResource> handSlot = getHandSlot(hand);
 
-            if (handSlot.getResource().equals(unit)) {
-                amount -= handSlot.insert(unit, amount, simulate);
+            if (handSlot.getResource().equals(resource)) {
+                amount -= handSlot.insert(resource, amount, simulate);
 
                 if (amount == 0) return initialAmount;
             }
         }
 
         // Otherwise insert into the main slots, stacking first.
-        amount -= TransferUtil.insertSubset(this, 0, Inventory.INVENTORY_SIZE, unit, amount, simulate);
+        amount -= TransferUtil.insertSubset(this, 0, Inventory.INVENTORY_SIZE, resource, amount, simulate);
 
         return initialAmount - amount;
     }
 
-    public long offerOrDrop(ItemResource unit, long amount, boolean simulate) {
-        long inserted = offer(unit, amount, simulate);
+    public long offerOrDrop(ItemResource resource, long amount, boolean simulate) {
+        long inserted = offer(resource, amount, simulate);
         if (inserted < amount) {
-            drop(unit, amount - inserted, simulate);
+            drop(resource, amount - inserted, simulate);
         }
         return amount;
     }
 
-    public void drop(ItemResource unit, long amount, boolean simulate) {
+    public void drop(ItemResource resource, long amount, boolean simulate) {
         long leftover = amount;
         if (!simulate) {
-            ItemStack fakeStack = unit.toItemStack();
+            ItemStack fakeStack = resource.toItemStack();
             // add as many fluid stacks as needed to toDrop that are each less than or equal to the max stack size, but totalling the leftover amount
             while (leftover > 0) {
                 int stackSize = (int) Math.min(leftover, fakeStack.getMaxStackSize());
                 leftover -= stackSize;
-                toDrop.add(unit.toItemStack(stackSize));
+                toDrop.add(resource.toItemStack(stackSize));
             }
         }
     }
@@ -126,8 +126,8 @@ public class PlayerContainer extends AbstractVanillaContainer implements UpdateM
         }
 
         @Override
-        public long insert(ItemResource unit, long amount, boolean simulate) {
-            return offerOrDrop(unit, amount, simulate);
+        public long insert(ItemResource resource, long amount, boolean simulate) {
+            return offerOrDrop(resource, amount, simulate);
         }
     }
 }

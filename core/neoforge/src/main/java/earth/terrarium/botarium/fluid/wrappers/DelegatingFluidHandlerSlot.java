@@ -11,8 +11,8 @@ public record DelegatingFluidHandlerSlot(AbstractCommonFluidContainer provider, 
     }
 
     @Override
-    public boolean isValueValid(FluidResource unit) {
-        return provider.handler().isFluidValid(slot, ConversionUtils.convert(unit, 1));
+    public boolean isValueValid(FluidResource resource) {
+        return provider.handler().isFluidValid(slot, ConversionUtils.convert(resource, 1));
     }
 
     @Override
@@ -31,13 +31,13 @@ public record DelegatingFluidHandlerSlot(AbstractCommonFluidContainer provider, 
     }
 
     @Override
-    public long insert(FluidResource unit, long amount, boolean simulate) {
-        return provider.insert(unit, amount, simulate);
+    public long insert(FluidResource resource, long amount, boolean simulate) {
+        return provider.insert(resource, amount, simulate);
     }
 
     @Override
-    public long extract(FluidResource unit, long amount, boolean simulate) {
-        if (!unit.test(getResource())) return 0;
-        return provider.extract(unit, amount, simulate);
+    public long extract(FluidResource resource, long amount, boolean simulate) {
+        if (!resource.test(getResource())) return 0;
+        return provider.extract(resource, amount, simulate);
     }
 }

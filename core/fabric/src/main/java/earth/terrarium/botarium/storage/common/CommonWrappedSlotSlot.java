@@ -10,7 +10,7 @@ import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import java.util.function.Function;
 
 public record CommonWrappedSlotSlot<T, U extends TransferResource<T, U>, V extends TransferVariant<T>>(
-        StorageView<V> view, Function<U, V> toVariant, Function<V, U> toUnit) implements StorageSlot<U> {
+        StorageView<V> view, Function<U, V> toVariant, Function<V, U> toresource) implements StorageSlot<U> {
 
     @Override
     public long getLimit() {
@@ -38,9 +38,9 @@ public record CommonWrappedSlotSlot<T, U extends TransferResource<T, U>, V exten
     }
 
     @Override
-    public long extract(U unit, long amount, boolean simulate) {
+    public long extract(U resource, long amount, boolean simulate) {
         try (var transaction = Transaction.openOuter()) {
-            long extracted = view.extract(toVariant.apply(unit), amount, transaction);
+            long extracted = view.extract(toVariant.apply(resource), amount, transaction);
             if (!simulate) {
                 transaction.commit();
             }
@@ -50,7 +50,7 @@ public record CommonWrappedSlotSlot<T, U extends TransferResource<T, U>, V exten
 
     @Override
     public U getResource() {
-        return toUnit.apply(view.getResource());
+        return toresource.apply(view.getResource());
     }
 
     @Override

@@ -78,7 +78,7 @@ public abstract class WrappedBlockLookup<T, U extends TransferResource<T, U>, V 
                 if (storage instanceof FabricWrappedContainer.OfFluid wrappedContainer) {
                     return wrappedContainer.container();
                 }
-                return new CommonWrappedContainer<>(storage, ConversionUtils::toVariant, ConversionUtils::toUnit);
+                return new CommonWrappedContainer<>(storage, ConversionUtils::toVariant, ConversionUtils::toResource);
             }
             return null;
         }
@@ -101,7 +101,7 @@ public abstract class WrappedBlockLookup<T, U extends TransferResource<T, U>, V 
                 if (storage instanceof FabricWrappedContainer.OfItem wrappedContainer) {
                     return wrappedContainer.container();
                 }
-                return new CommonWrappedContainer<>(storage, ConversionUtils::toVariant, ConversionUtils::toUnit);
+                return new CommonWrappedContainer<>(storage, ConversionUtils::toVariant, ConversionUtils::toResource);
             }
             return null;
         }

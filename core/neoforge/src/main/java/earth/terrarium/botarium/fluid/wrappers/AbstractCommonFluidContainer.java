@@ -16,13 +16,13 @@ public interface AbstractCommonFluidContainer extends CommonStorage<FluidResourc
     }
 
     @Override
-    default long insert(FluidResource unit, long amount, boolean simulate) {
-        return handler().fill(ConversionUtils.convert(unit, amount), simulate ? IFluidHandler.FluidAction.SIMULATE : IFluidHandler.FluidAction.EXECUTE);
+    default long insert(FluidResource resource, long amount, boolean simulate) {
+        return handler().fill(ConversionUtils.convert(resource, amount), simulate ? IFluidHandler.FluidAction.SIMULATE : IFluidHandler.FluidAction.EXECUTE);
     }
 
     @Override
-    default long extract(FluidResource unit, long amount, boolean simulate) {
-        return handler().drain(ConversionUtils.convert(unit, amount), simulate ? IFluidHandler.FluidAction.SIMULATE : IFluidHandler.FluidAction.EXECUTE).getAmount();
+    default long extract(FluidResource resource, long amount, boolean simulate) {
+        return handler().drain(ConversionUtils.convert(resource, amount), simulate ? IFluidHandler.FluidAction.SIMULATE : IFluidHandler.FluidAction.EXECUTE).getAmount();
     }
 
     @Override

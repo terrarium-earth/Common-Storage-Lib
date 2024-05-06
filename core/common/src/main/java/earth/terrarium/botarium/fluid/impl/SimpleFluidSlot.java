@@ -10,11 +10,11 @@ import java.util.function.Predicate;
 public class SimpleFluidSlot implements StorageSlot<FluidResource>, UpdateManager<ResourceStack<FluidResource>> {
     private final long limit;
     private final Runnable update;
-    private FluidResource unit;
+    private FluidResource resource;
     private long amount;
 
     public SimpleFluidSlot(long limit, Runnable update) {
-        this.unit = FluidResource.BLANK;
+        this.resource = FluidResource.BLANK;
         this.amount = getAmount();
         this.limit = limit;
         this.update = update;
@@ -26,13 +26,13 @@ public class SimpleFluidSlot implements StorageSlot<FluidResource>, UpdateManage
     }
 
     @Override
-    public boolean isValueValid(FluidResource unit) {
+    public boolean isValueValid(FluidResource resource) {
         return true;
     }
 
     @Override
     public FluidResource getResource() {
-        return unit;
+        return resource;
     }
 
     @Override
@@ -42,20 +42,20 @@ public class SimpleFluidSlot implements StorageSlot<FluidResource>, UpdateManage
 
     @Override
     public boolean isBlank() {
-        return unit.isBlank();
+        return resource.isBlank();
     }
 
     @Override
-    public long insert(FluidResource unit, long amount, boolean simulate) {
-        if (!isValueValid(unit)) return 0;
-        if (this.unit.isBlank()) {
+    public long insert(FluidResource resource, long amount, boolean simulate) {
+        if (!isValueValid(resource)) return 0;
+        if (this.resource.isBlank()) {
             long inserted = Math.min(amount, limit);
             if (!simulate) {
-                this.unit = unit;
+                this.resource = resource;
                 this.amount = inserted;
             }
             return inserted;
-        } else if (this.unit.test(unit)) {
+        } else if (this.resource.test(resource)) {
             long inserted = Math.min(amount, limit - this.amount);
             if (!simulate) {
                 this.amount += inserted;
@@ -66,13 +66,13 @@ public class SimpleFluidSlot implements StorageSlot<FluidResource>, UpdateManage
     }
 
     @Override
-    public long extract(FluidResource unit, long amount, boolean simulate) {
-        if (this.unit.test(unit)) {
+    public long extract(FluidResource resource, long amount, boolean simulate) {
+        if (this.resource.test(resource)) {
             long extracted = Math.min(amount, this.amount);
             if (!simulate) {
                 this.amount -= extracted;
                 if (this.amount == 0) {
-                    this.unit = FluidResource.BLANK;
+                    this.resource = FluidResource.BLANK;
                 }
             }
             return extracted;
@@ -82,12 +82,12 @@ public class SimpleFluidSlot implements StorageSlot<FluidResource>, UpdateManage
 
     @Override
     public ResourceStack<FluidResource> createSnapshot() {
-        return new ResourceStack<>(unit, amount);
+        return new ResourceStack<>(resource, amount);
     }
 
     @Override
     public void readSnapshot(ResourceStack<FluidResource> snapshot) {
-        this.unit = snapshot.resource();
+        this.resource = snapshot.resource();
         this.amount = snapshot.amount();
     }
 
@@ -105,8 +105,8 @@ public class SimpleFluidSlot implements StorageSlot<FluidResource>, UpdateManage
         }
 
         @Override
-        public boolean isValueValid(FluidResource unit) {
-            return filter.test(unit);
+        public boolean isValueValid(FluidResource resource) {
+            return filter.test(resource);
         }
     }
 }

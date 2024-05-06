@@ -68,7 +68,7 @@ public abstract class WrappedItemLookup<T, U extends TransferResource<T, U>, V e
                 if (storage instanceof FabricWrappedContainer.OfFluid container) {
                     return container.container();
                 }
-                return new CommonWrappedContainer<>(storage, ConversionUtils::toVariant, ConversionUtils::toUnit);
+                return new CommonWrappedContainer<>(storage, ConversionUtils::toVariant, ConversionUtils::toResource);
             }
             return null;
         }

@@ -2,7 +2,6 @@ package earth.terrarium.botarium.data.network;
 
 import earth.terrarium.botarium.data.BotariumData;
 import earth.terrarium.botarium.data.sync.AttachmentData;
-import earth.terrarium.botarium.data.sync.AutoSyncRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.RegistryFriendlyByteBuf;

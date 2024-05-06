@@ -63,9 +63,9 @@ public class MenuStorageSlot extends Slot {
 
     @Override
     public @NotNull ItemStack remove(int amount) {
-        ItemResource unit = storageSlot.getResource();
-        long extract = this.storageSlot.extract(unit, amount, false);
-        return extract > 0 ? unit.toItemStack((int) extract) : ItemStack.EMPTY;
+        ItemResource resource = storageSlot.getResource();
+        long extract = this.storageSlot.extract(resource, amount, false);
+        return extract > 0 ? resource.toItemStack((int) extract) : ItemStack.EMPTY;
     }
 
     @Override

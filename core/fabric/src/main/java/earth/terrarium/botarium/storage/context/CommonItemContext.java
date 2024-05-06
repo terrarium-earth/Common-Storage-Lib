@@ -13,10 +13,10 @@ import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 
 public record CommonItemContext(ContainerItemContext context) implements ItemContext {
     @Override
-    public long insert(ItemResource unit, long amount, boolean simulate) {
+    public long insert(ItemResource resource, long amount, boolean simulate) {
         Object2LongLinkedOpenHashMap<ItemVariant> map = new Object2LongLinkedOpenHashMap<>();
         try (var transaction = Transaction.openOuter()) {
-            long inserted = context.insert(ConversionUtils.toVariant(unit), amount, transaction);
+            long inserted = context.insert(ConversionUtils.toVariant(resource), amount, transaction);
             if (!simulate) {
                 transaction.commit();
             }
@@ -25,9 +25,9 @@ public record CommonItemContext(ContainerItemContext context) implements ItemCon
     }
 
     @Override
-    public long extract(ItemResource unit, long amount, boolean simulate) {
+    public long extract(ItemResource resource, long amount, boolean simulate) {
         try (var transaction = Transaction.openOuter()) {
-            long extracted = context.extract(ConversionUtils.toVariant(unit), amount, transaction);
+            long extracted = context.extract(ConversionUtils.toVariant(resource), amount, transaction);
             if (!simulate) {
                 transaction.commit();
             }
@@ -36,9 +36,9 @@ public record CommonItemContext(ContainerItemContext context) implements ItemCon
     }
 
     @Override
-    public long exchange(ItemResource newUnit, long amount, boolean simulate) {
+    public long exchange(ItemResource newResource, long amount, boolean simulate) {
         try (var transaction = Transaction.openOuter()) {
-            long exchanged = context.exchange(ConversionUtils.toVariant(newUnit), amount, transaction);
+            long exchanged = context.exchange(ConversionUtils.toVariant(newResource), amount, transaction);
             if (!simulate) {
                 transaction.commit();
             }
@@ -53,6 +53,6 @@ public record CommonItemContext(ContainerItemContext context) implements ItemCon
 
     @Override
     public StorageSlot<ItemResource> mainSlot() {
-        return new CommonWrappedSlotSlot<>(context.getMainSlot(), ConversionUtils::toVariant, ConversionUtils::toUnit);
+        return new CommonWrappedSlotSlot<>(context.getMainSlot(), ConversionUtils::toVariant, ConversionUtils::toResource);
     }
 }

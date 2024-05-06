@@ -11,23 +11,23 @@ import java.util.function.Function;
 
 public record FabricWrappedSlot<T, U extends TransferResource<T, U>, V extends TransferVariant<T>>(StorageSlot<U> container,
                                                                                                    @Nullable OptionalSnapshotParticipant<?> updateManager,
-                                                                                                   Function<V, U> toUnit,
+                                                                                                   Function<V, U> toResource,
                                                                                                    Function<U, V> toVariant) implements SingleSlotStorage<V> {
 
-    public FabricWrappedSlot(StorageSlot<U> container, Function<U, V> toVariant, Function<V, U> toUnit) {
-        this(container, OptionalSnapshotParticipant.of(container), toUnit, toVariant);
+    public FabricWrappedSlot(StorageSlot<U> container, Function<U, V> toVariant, Function<V, U> toresource) {
+        this(container, OptionalSnapshotParticipant.of(container), toresource, toVariant);
     }
 
     @Override
     public long insert(V resource, long maxAmount, TransactionContext transaction) {
-        U holder = toUnit.apply(resource);
+        U holder = toResource.apply(resource);
         updateSnapshots(transaction);
         return container.insert(holder, maxAmount, false);
     }
 
     @Override
     public long extract(V resource, long maxAmount, TransactionContext transaction) {
-        U holder = toUnit.apply(resource);
+        U holder = toResource.apply(resource);
         updateSnapshots(transaction);
         return container.extract(holder, maxAmount, false);
     }

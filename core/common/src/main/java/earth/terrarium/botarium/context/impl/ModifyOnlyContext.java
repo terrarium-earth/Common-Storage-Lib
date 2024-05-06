@@ -11,13 +11,13 @@ import net.minecraft.world.item.ItemStack;
 
 public record ModifyOnlyContext(ItemStack stack) implements ItemContext {
     @Override
-    public long exchange(ItemResource newUnit, long amount, boolean simulate) {
-        if (!newUnit.isOf(stack.getItem()) || amount != stack.getCount()) return 0;
+    public long exchange(ItemResource newResource, long amount, boolean simulate) {
+        if (!newResource.isOf(stack.getItem()) || amount != stack.getCount()) return 0;
         if (!simulate) {
             if (stack.getComponents() instanceof PatchedDataComponentMap map) {
-                map.restorePatch(newUnit.getDataPatch());
+                map.restorePatch(newResource.getDataPatch());
             } else {
-                stack.applyComponents(newUnit.getDataPatch());
+                stack.applyComponents(newResource.getDataPatch());
             }
         }
         return amount;
@@ -45,8 +45,8 @@ public record ModifyOnlyContext(ItemStack stack) implements ItemContext {
         }
 
         @Override
-        public boolean isValueValid(ItemResource unit) {
-            return unit.test(stack);
+        public boolean isValueValid(ItemResource resource) {
+            return resource.test(stack);
         }
 
         @Override
@@ -65,8 +65,8 @@ public record ModifyOnlyContext(ItemStack stack) implements ItemContext {
         }
 
         @Override
-        public long insert(ItemResource unit, long amount, boolean simulate) {
-            if (unit.test(stack)) {
+        public long insert(ItemResource resource, long amount, boolean simulate) {
+            if (resource.test(stack)) {
                 long inserted = Math.min(amount, getLimit() - stack.getCount());
                 if (!simulate) {
                     stack.grow((int) inserted);
@@ -77,8 +77,8 @@ public record ModifyOnlyContext(ItemStack stack) implements ItemContext {
         }
 
         @Override
-        public long extract(ItemResource unit, long amount, boolean simulate) {
-            if (unit.test(stack)) {
+        public long extract(ItemResource resource, long amount, boolean simulate) {
+            if (resource.test(stack)) {
                 long extracted = Math.min(amount, stack.getCount());
                 if (!simulate) {
                     stack.shrink((int) extracted);

@@ -14,41 +14,41 @@ import java.util.Optional;
 import java.util.function.Predicate;
 
 public class TransferUtil {
-    public static <T> Optional<T> findUnit(CommonStorage<T> container, Predicate<T> predicate) {
+    public static <T> Optional<T> findResource(CommonStorage<T> container, Predicate<T> predicate) {
         for (int i = 0; i < container.getSlotCount(); i++) {
             StorageSlot<T> slot = container.getSlot(i);
             if (slot.isBlank()) continue;
-            T unit = slot.getResource();
-            if (predicate.test(unit)) {
-                return Optional.of(unit);
+            T resource = slot.getResource();
+            if (predicate.test(resource)) {
+                return Optional.of(resource);
             }
         }
         return Optional.empty();
     }
 
-    public static <T> Optional<T> findFirstUnit(CommonStorage<T> container) {
-        return findUnit(container, unit -> true);
+    public static <T> Optional<T> findFirstResource(CommonStorage<T> container) {
+        return findResource(container, resource -> true);
     }
 
     public static Predicate<ItemResource> byItemTag(TagKey<Item> tag) {
-        return unit -> unit.getType().builtInRegistryHolder().is(tag);
+        return resource -> resource.getType().builtInRegistryHolder().is(tag);
     }
 
     public static Predicate<FluidResource> byFluidTag(TagKey<Fluid> tag) {
-        return unit -> unit.getType().builtInRegistryHolder().is(tag);
+        return resource -> resource.getType().builtInRegistryHolder().is(tag);
     }
 
-    public static <T> long move(StorageIO<T> from, StorageIO<T> to, T unit, long amount, boolean simulate) {
-        long extracted = from.extract(unit, amount, true);
-        long inserted = to.insert(unit, extracted, true);
+    public static <T> long move(StorageIO<T> from, StorageIO<T> to, T resource, long amount, boolean simulate) {
+        long extracted = from.extract(resource, amount, true);
+        long inserted = to.insert(resource, extracted, true);
         if (extracted > 0 && inserted > 0) {
             if (inserted != extracted) {
-                extracted = from.extract(unit, Math.min(extracted, inserted), true);
-                inserted = to.insert(unit, Math.min(extracted, inserted), true);
+                extracted = from.extract(resource, Math.min(extracted, inserted), true);
+                inserted = to.insert(resource, Math.min(extracted, inserted), true);
             }
             if (extracted == inserted) {
-                from.extract(unit, extracted, simulate);
-                to.insert(unit, extracted, simulate);
+                from.extract(resource, extracted, simulate);
+                to.insert(resource, extracted, simulate);
                 UpdateManager.batch(from, to);
                 return extracted;
             }
@@ -57,11 +57,11 @@ public class TransferUtil {
     }
 
     public static <T> Tuple<T, Long> moveFiltered(CommonStorage<T> from, StorageIO<T> to, Predicate<T> filter, long amount, boolean simulate) {
-        Optional<T> optional = findUnit(from, filter);
+        Optional<T> optional = findResource(from, filter);
         if (optional.isPresent()) {
-            T unit = optional.get();
-            long moved = move(from, to, unit, amount, simulate);
-            return new Tuple<>(unit, moved);
+            T resource = optional.get();
+            long moved = move(from, to, resource, amount, simulate);
+            return new Tuple<>(resource, moved);
         }
         return new Tuple<>(null, 0L);
     }
@@ -70,10 +70,10 @@ public class TransferUtil {
         for (int i = 0; i < from.getSlotCount(); i++) {
             StorageSlot<T> slot = from.getSlot(i);
             if (slot.isBlank()) continue;
-            T unit = slot.getResource();
-            long moved = move(from, to, unit, amount, simulate);
+            T resource = slot.getResource();
+            long moved = move(from, to, resource, amount, simulate);
             if (moved > 0) {
-                return new Tuple<>(unit, moved);
+                return new Tuple<>(resource, moved);
             }
         }
         return new Tuple<>(null, 0L);
@@ -83,8 +83,8 @@ public class TransferUtil {
         for (int i = 0; i < from.getSlotCount(); i++) {
             StorageSlot<T> slot = from.getSlot(i);
             if (slot.isBlank()) continue;
-            T unit = slot.getResource();
-            move(from, to, unit, Long.MAX_VALUE, simulate);
+            T resource = slot.getResource();
+            move(from, to, resource, Long.MAX_VALUE, simulate);
         }
     }
 
@@ -106,37 +106,37 @@ public class TransferUtil {
         return 0;
     }
 
-    public static <T> long exchange(StorageIO<T> io, T oldUnit, T newUnit, long amount, boolean simulate) {
-        long extracted = io.extract(oldUnit, amount, false);
+    public static <T> long exchange(StorageIO<T> io, T oldresource, T newresource, long amount, boolean simulate) {
+        long extracted = io.extract(oldresource, amount, false);
         if (extracted > 0) {
-            long inserted = io.insert(newUnit, extracted, true);
+            long inserted = io.insert(newresource, extracted, true);
             if (extracted == inserted && !simulate) {
-                io.insert(newUnit, extracted, false);
+                io.insert(newresource, extracted, false);
             } else {
-                io.insert(oldUnit, extracted, false);
+                io.insert(oldresource, extracted, false);
             }
             return extracted == inserted ? extracted : 0;
         }
         return 0;
     }
 
-    public static <T> long insertSlots(CommonStorage<T> container, T unit, long amount, boolean simulate) {
-        return insertSubset(container, 0, container.getSlotCount(), unit, amount, simulate);
+    public static <T> long insertSlots(CommonStorage<T> container, T resource, long amount, boolean simulate) {
+        return insertSubset(container, 0, container.getSlotCount(), resource, amount, simulate);
     }
 
-    public static <T> long insertSubset(CommonStorage<T> container, int start, int end, T unit, long amount, boolean simulate) {
+    public static <T> long insertSubset(CommonStorage<T> container, int start, int end, T resource, long amount, boolean simulate) {
         long inserted = 0;
         for (int i = start; i < end; i++) {
             StorageSlot<T> slot = container.getSlot(i);
             if (!slot.isBlank()) {
-                inserted += slot.insert(unit, amount - inserted, simulate);
+                inserted += slot.insert(resource, amount - inserted, simulate);
                 if (inserted >= amount) {
                     return inserted;
                 }
             }
         }
         for (int i = start; i < end; i++) {
-            inserted += container.getSlot(i).insert(unit, amount - inserted, simulate);
+            inserted += container.getSlot(i).insert(resource, amount - inserted, simulate);
             if (inserted >= amount) {
                 return inserted;
             }
@@ -144,14 +144,14 @@ public class TransferUtil {
         return inserted;
     }
 
-    public static <T> long extractSlots(CommonStorage<T> container, T unit, long amount, boolean simulate) {
-        return extractSubset(container, 0, container.getSlotCount(), unit, amount, simulate);
+    public static <T> long extractSlots(CommonStorage<T> container, T resource, long amount, boolean simulate) {
+        return extractSubset(container, 0, container.getSlotCount(), resource, amount, simulate);
     }
 
-    public static <T> long extractSubset(CommonStorage<T> container, int start, int end, T unit, long amount, boolean simulate) {
+    public static <T> long extractSubset(CommonStorage<T> container, int start, int end, T resource, long amount, boolean simulate) {
         long extracted = 0;
         for (int i = start; i < end; i++) {
-            extracted += container.getSlot(i).extract(unit, amount - extracted, simulate);
+            extracted += container.getSlot(i).extract(resource, amount - extracted, simulate);
             if (extracted >= amount) {
                 return extracted;
             }
@@ -160,12 +160,12 @@ public class TransferUtil {
     }
 
     public static <T> void equalize(StorageSlot<T> slot, long amount) {
-        T unit = slot.getResource();
+        T resource = slot.getResource();
         long current = slot.getAmount();
         if (current < amount) {
-            slot.insert(unit, amount - current, false);
+            slot.insert(resource, amount - current, false);
         } else if (current > amount) {
-            slot.extract(unit, current - amount, false);
+            slot.extract(resource, current - amount, false);
         }
     }
 

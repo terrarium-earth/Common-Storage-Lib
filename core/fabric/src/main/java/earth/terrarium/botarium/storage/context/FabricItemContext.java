@@ -11,7 +11,6 @@ import net.fabricmc.fabric.api.transfer.v1.storage.base.SingleSlotStorage;
 import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
 import org.jetbrains.annotations.UnmodifiableView;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public final class FabricItemContext implements ContainerItemContext {
@@ -19,8 +18,8 @@ public final class FabricItemContext implements ContainerItemContext {
     private final SlottedStorage<ItemVariant> container;
 
     public FabricItemContext(ItemContext context) {
-        this.mainSlot = new FabricWrappedSlot<>(context.mainSlot(), ConversionUtils::toVariant, ConversionUtils::toUnit);
-        this.container = new FabricWrappedContainer<>(context.outerContainer(), ConversionUtils::toVariant, ConversionUtils::toUnit);
+        this.mainSlot = new FabricWrappedSlot<>(context.mainSlot(), ConversionUtils::toVariant, ConversionUtils::toResource);
+        this.container = new FabricWrappedContainer<>(context.outerContainer(), ConversionUtils::toVariant, ConversionUtils::toResource);
     }
 
     @Override

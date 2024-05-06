@@ -24,7 +24,7 @@ public record ResourceStack<T extends TransferResource<?, T>>(T resource, long a
     public static Codec<ResourceStack<FluidResource>> FLUID_MB_CODEC = RecordCodecBuilder.create(instance -> instance.group(
             FluidResource.MAP_CODEC.forGetter(ResourceStack::resource),
             Codec.LONG.fieldOf("millibuckets").forGetter(stack -> FluidAmounts.toMillibuckets(stack.amount))
-    ).apply(instance, (unit, amount) -> new ResourceStack<>(unit, FluidAmounts.toPlatformAmount(amount))));
+    ).apply(instance, (resource, amount) -> new ResourceStack<>(resource, FluidAmounts.toPlatformAmount(amount))));
 
     public static Codec<ResourceStack<ItemResource>> ITEM_CODEC = RecordCodecBuilder.create(instance -> instance.group(
             ItemResource.MAP_CODEC.forGetter(ResourceStack::resource),

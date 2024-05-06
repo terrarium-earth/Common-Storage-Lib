@@ -38,10 +38,10 @@ public class AggregateContainer<T> implements CommonStorage<T>, UpdateManager<Ob
     }
 
     @Override
-    public long insert(T unit, long amount, boolean simulate) {
+    public long insert(T resource, long amount, boolean simulate) {
         long inserted = 0;
         for (CommonStorage<T> container : containers) {
-            inserted += container.insert(unit, amount - inserted, simulate);
+            inserted += container.insert(resource, amount - inserted, simulate);
             if (inserted >= amount) {
                 break;
             }
@@ -50,10 +50,10 @@ public class AggregateContainer<T> implements CommonStorage<T>, UpdateManager<Ob
     }
 
     @Override
-    public long extract(T unit, long amount, boolean simulate) {
+    public long extract(T resource, long amount, boolean simulate) {
         long extracted = 0;
         for (CommonStorage<T> container : containers) {
-            extracted += container.extract(unit, amount - extracted, simulate);
+            extracted += container.extract(resource, amount - extracted, simulate);
             if (extracted >= amount) {
                 break;
             }

@@ -11,10 +11,10 @@ import net.minecraft.core.component.DataComponentPatch;
 
 public interface ItemContext extends StorageIO<ItemResource> {
     default <T> T find(ItemLookup<T, ItemContext> lookup) {
-        return lookup.find(getUnit().toItemStack((int) getAmount()), this);
+        return lookup.find(getResource().toItemStack((int) getAmount()), this);
     }
 
-    default ItemResource getUnit() {
+    default ItemResource getResource() {
         return mainSlot().getResource();
     }
 
@@ -22,27 +22,27 @@ public interface ItemContext extends StorageIO<ItemResource> {
         return mainSlot().getAmount();
     }
 
-    default long insert(ItemResource unit, long amount, boolean simulate) {
-        long inserted = mainSlot().insert(unit, amount, simulate);
-        long overflow = inserted < amount ? outerContainer().insert(unit, amount - inserted, simulate) : 0;
+    default long insert(ItemResource resource, long amount, boolean simulate) {
+        long inserted = mainSlot().insert(resource, amount, simulate);
+        long overflow = inserted < amount ? outerContainer().insert(resource, amount - inserted, simulate) : 0;
         if (!simulate) updateAll();
         return inserted + overflow;
     }
 
-    default long extract(ItemResource unit, long amount, boolean simulate) {
-        long extract = mainSlot().extract(unit, amount, simulate);
+    default long extract(ItemResource resource, long amount, boolean simulate) {
+        long extract = mainSlot().extract(resource, amount, simulate);
         if (!simulate) updateAll();
         return extract;
     }
 
-    default long exchange(ItemResource newUnit, long amount, boolean simulate) {
-        long exchange = TransferUtil.exchange(this, getUnit(), newUnit, amount, simulate);
+    default long exchange(ItemResource newResource, long amount, boolean simulate) {
+        long exchange = TransferUtil.exchange(this, getResource(), newResource, amount, simulate);
         if (!simulate) updateAll();
         return exchange;
     }
 
     default void modify(DataComponentPatch patch) {
-        exchange(getUnit().modify(patch), getAmount(), false);
+        exchange(getResource().modify(patch), getAmount(), false);
     }
 
     CommonStorage<ItemResource> outerContainer();

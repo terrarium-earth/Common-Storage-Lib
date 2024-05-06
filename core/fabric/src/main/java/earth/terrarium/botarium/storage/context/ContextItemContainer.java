@@ -25,9 +25,9 @@ public record ContextItemContainer(List<SingleSlotStorage<ItemVariant>> storage,
     }
 
     @Override
-    public long insert(ItemResource unit, long amount, boolean simulate) {
+    public long insert(ItemResource resource, long amount, boolean simulate) {
         try (var transaction = Transaction.openOuter()) {
-            long inserted = insert.apply(ConversionUtils.toVariant(unit), amount, transaction);
+            long inserted = insert.apply(ConversionUtils.toVariant(resource), amount, transaction);
             if (!simulate) {
                 transaction.commit();
             }
@@ -67,9 +67,9 @@ public record ContextItemContainer(List<SingleSlotStorage<ItemVariant>> storage,
         }
 
         @Override
-        public long insert(ItemResource unit, long amount, boolean simulate) {
+        public long insert(ItemResource resource, long amount, boolean simulate) {
             try (var transaction = Transaction.openOuter()) {
-                long inserted = storage.insert(ConversionUtils.toVariant(unit), amount, transaction);
+                long inserted = storage.insert(ConversionUtils.toVariant(resource), amount, transaction);
                 if (!simulate) {
                     transaction.commit();
                 }
@@ -78,9 +78,9 @@ public record ContextItemContainer(List<SingleSlotStorage<ItemVariant>> storage,
         }
 
         @Override
-        public long extract(ItemResource unit, long amount, boolean simulate) {
+        public long extract(ItemResource resource, long amount, boolean simulate) {
             try (var transaction = Transaction.openOuter()) {
-                long extracted = storage.extract(ConversionUtils.toVariant(unit), amount, transaction);
+                long extracted = storage.extract(ConversionUtils.toVariant(resource), amount, transaction);
                 if (!simulate) {
                     transaction.commit();
                 }
@@ -90,7 +90,7 @@ public record ContextItemContainer(List<SingleSlotStorage<ItemVariant>> storage,
 
         @Override
         public ItemResource getResource() {
-            return ConversionUtils.toUnit(storage.getResource());
+            return ConversionUtils.toResource(storage.getResource());
         }
 
         @Override

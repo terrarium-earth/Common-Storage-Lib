@@ -23,8 +23,8 @@ public class VanillaDelegatingSlot implements StorageSlot<ItemResource>, UpdateM
     }
 
     @Override
-    public boolean isValueValid(ItemResource unit) {
-        return container.canPlaceItem(slot, unit.toItemStack());
+    public boolean isValueValid(ItemResource resource) {
+        return container.canPlaceItem(slot, resource.toItemStack());
     }
 
     @Override
@@ -43,17 +43,17 @@ public class VanillaDelegatingSlot implements StorageSlot<ItemResource>, UpdateM
     }
 
     @Override
-    public long insert(ItemResource unit, long amount, boolean simulate) {
+    public long insert(ItemResource resource, long amount, boolean simulate) {
         ItemStack stack = container.getItem(slot);
-        if (unit.test(stack) || stack.isEmpty()) {
+        if (resource.test(stack) || stack.isEmpty()) {
             if (stack.isEmpty()) {
-                ItemStack inserted = unit.toItemStack(Math.min((int) amount, (int) getLimit()));
+                ItemStack inserted = resource.toItemStack(Math.min((int) amount, (int) getLimit()));
                 if (!simulate) {
                     container.setItem(slot, inserted);
                 }
                 return inserted.getCount();
             } else {
-                ItemStack inserted = unit.toItemStack(Math.min((int) amount + stack.getCount(), (int) getLimit()));
+                ItemStack inserted = resource.toItemStack(Math.min((int) amount + stack.getCount(), (int) getLimit()));
                 if (!simulate) {
                     container.setItem(slot, inserted);
                 }
@@ -64,9 +64,9 @@ public class VanillaDelegatingSlot implements StorageSlot<ItemResource>, UpdateM
     }
 
     @Override
-    public long extract(ItemResource unit, long amount, boolean simulate) {
+    public long extract(ItemResource resource, long amount, boolean simulate) {
         ItemStack stack = container.getItem(slot).copy();
-        if (unit.test(stack)) {
+        if (resource.test(stack)) {
             ItemStack extracted = stack.split((int) amount);
             if (!simulate) {
                 if (stack.isEmpty()) {

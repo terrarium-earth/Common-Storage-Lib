@@ -24,39 +24,39 @@ public class FabricWrappedContainer<T, U extends TransferResource<T, U>, V exten
     private final CommonStorage<U> container;
     private final OptionalSnapshotParticipant<?> updateManager;
     private final Function<U, V> toVariant;
-    private final Function<V, U> toUnit;
+    private final Function<V, U> toResource;
 
     public FabricWrappedContainer(
             CommonStorage<U> container, OptionalSnapshotParticipant<?> updateManager, Function<U, V> toVariant,
-            Function<V, U> toUnit) {
+            Function<V, U> toResource) {
         this.container = container;
         this.updateManager = updateManager;
         this.toVariant = toVariant;
-        this.toUnit = toUnit;
+        this.toResource = toResource;
     }
 
-    public FabricWrappedContainer(CommonStorage<U> container, Function<U, V> toVariant, Function<V, U> toUnit) {
-        this(container, OptionalSnapshotParticipant.of(container), toVariant, toUnit);
+    public FabricWrappedContainer(CommonStorage<U> container, Function<U, V> toVariant, Function<V, U> toResource) {
+        this(container, OptionalSnapshotParticipant.of(container), toVariant, toResource);
     }
 
-    public U toUnit(V variant) {
-        return toUnit.apply(variant);
+    public U toResource(V variant) {
+        return toResource.apply(variant);
     }
 
-    public V toVariant(U unit) {
-        return toVariant.apply(unit);
+    public V toVariant(U resource) {
+        return toVariant.apply(resource);
     }
 
     @Override
     public long insert(V resource, long maxAmount, TransactionContext transaction) {
-        U holder = toUnit(resource);
+        U holder = toResource(resource);
         updateSnapshots(transaction);
         return container.insert(holder, maxAmount, false);
     }
 
     @Override
     public long extract(V resource, long maxAmount, TransactionContext transaction) {
-        U holder = toUnit(resource);
+        U holder = toResource(resource);
         updateSnapshots(transaction);
         return container.extract(holder, maxAmount, false);
     }
@@ -85,8 +85,8 @@ public class FabricWrappedContainer<T, U extends TransferResource<T, U>, V exten
 
     @Override
     public SingleSlotStorage<V> getSlot(int slot) {
-        StorageSlot<U> unitSlot = container.getSlot(slot);
-        return new FabricWrappedSlot<>(unitSlot, this::toVariant, this::toUnit);
+        StorageSlot<U> storageSlot = container.getSlot(slot);
+        return new FabricWrappedSlot<>(storageSlot, this::toVariant, this::toResource);
     }
 
     private void updateSnapshots(TransactionContext transaction) {
@@ -105,13 +105,13 @@ public class FabricWrappedContainer<T, U extends TransferResource<T, U>, V exten
 
     public static class OfFluid extends FabricWrappedContainer<Fluid, FluidResource, FluidVariant> {
         public OfFluid(CommonStorage<FluidResource> container) {
-            super(container, ConversionUtils::toVariant, ConversionUtils::toUnit);
+            super(container, ConversionUtils::toVariant, ConversionUtils::toResource);
         }
     }
 
     public static class OfItem extends FabricWrappedContainer<Item, ItemResource, ItemVariant> {
         public OfItem(CommonStorage<ItemResource> container) {
-            super(container, ConversionUtils::toVariant, ConversionUtils::toUnit);
+            super(container, ConversionUtils::toVariant, ConversionUtils::toResource);
         }
     }
 }

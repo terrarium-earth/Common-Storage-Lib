@@ -33,9 +33,9 @@ public final class FluidItemLookup implements ItemLookup<CommonStorage<FluidReso
 
     @Override
     public @Nullable CommonStorage<FluidResource> find(ItemStack stack, ItemContext context) {
-        CommonStorage<FluidResource> unitContainer = stack.getCapability(CAPABILITY, context);
-        if (unitContainer != null) {
-            return unitContainer;
+        CommonStorage<FluidResource> storage = stack.getCapability(CAPABILITY, context);
+        if (storage != null) {
+            return storage;
         }
         IFluidHandlerItem handler = stack.getCapability(Capabilities.FluidHandler.ITEM);
         return handler != null ? new CommonFluidItemContainer(handler, context) : null;

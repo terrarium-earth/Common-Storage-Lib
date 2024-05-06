@@ -38,27 +38,27 @@ public interface AbstractNeoFluidHandler extends IFluidHandler {
 
     @Override
     default int fill(FluidStack fluidStack, FluidAction fluidAction) {
-        FluidResource unit = ConversionUtils.convert(fluidStack);
-        long amount = container().insert(unit, fluidStack.getAmount(), fluidAction.simulate());
+        FluidResource resource = ConversionUtils.convert(fluidStack);
+        long amount = container().insert(resource, fluidStack.getAmount(), fluidAction.simulate());
         UpdateManager.batch(container());
         return (int) amount;
     }
 
     @Override
     default FluidStack drain(FluidStack fluidStack, FluidAction fluidAction) {
-        FluidResource unit = ConversionUtils.convert(fluidStack);
-        long amount = container().extract(unit, fluidStack.getAmount(), fluidAction.simulate());
+        FluidResource resource = ConversionUtils.convert(fluidStack);
+        long amount = container().extract(resource, fluidStack.getAmount(), fluidAction.simulate());
         UpdateManager.batch(container());
-        return amount > 0 ? ConversionUtils.convert(unit, amount) : FluidStack.EMPTY;
+        return amount > 0 ? ConversionUtils.convert(resource, amount) : FluidStack.EMPTY;
     }
 
     @Override
     default FluidStack drain(int i, FluidAction fluidAction) {
-        Optional<FluidResource> unit = TransferUtil.findUnit(container(), (fluidUnit) -> !fluidUnit.isBlank());
-        if (unit.isPresent()) {
-            long amount = container().extract(unit.get(), i, fluidAction.simulate());
+        Optional<FluidResource> resource = TransferUtil.findResource(container(), (fluidresource) -> !fluidresource.isBlank());
+        if (resource.isPresent()) {
+            long amount = container().extract(resource.get(), i, fluidAction.simulate());
             UpdateManager.batch(container());
-            return amount > 0 ? ConversionUtils.convert(unit.get(), amount) : FluidStack.EMPTY;
+            return amount > 0 ? ConversionUtils.convert(resource.get(), amount) : FluidStack.EMPTY;
         } else {
             return FluidStack.EMPTY;
         }
