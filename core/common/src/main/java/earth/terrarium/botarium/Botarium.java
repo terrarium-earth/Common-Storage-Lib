@@ -10,6 +10,7 @@ import earth.terrarium.botarium.fluid.util.FluidProvider;
 import earth.terrarium.botarium.heat.HeatApi;
 import earth.terrarium.botarium.heat.HeatProvider;
 import earth.terrarium.botarium.fluid.util.FluidStorageData;
+import earth.terrarium.botarium.item.input.ItemConsumerRegistry;
 import earth.terrarium.botarium.item.util.ItemStorageData;
 import earth.terrarium.botarium.item.ItemApi;
 import earth.terrarium.botarium.item.util.ItemProvider;
@@ -31,7 +32,8 @@ public class Botarium {
     public static final DataManager<Long> VALUE_CONTENT = REGISTRY.builder(() -> 0L).serialize(Codec.LONG).networkSerializer(ByteBufCodecs.VAR_LONG).withDataComponent().copyOnDeath().buildAndRegister("value_storage_data");
 
     public static void init() {
-        REGISTRY.initialize();
+        REGISTRY.init();
+        ItemConsumerRegistry.init();
 
         //Energy
 

@@ -25,6 +25,6 @@ public final class DataManagerRegistryActual {
     }
 
     @Actual
-    public void initialize() {
+    public void init() {
     }
 }

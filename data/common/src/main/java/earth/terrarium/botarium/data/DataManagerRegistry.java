@@ -13,5 +13,5 @@ public final class DataManagerRegistry {
 
     public <T> DataManagerBuilder<T> builder(Supplier<T> factory);
 
-    public void initialize();
+    public void init();
 }

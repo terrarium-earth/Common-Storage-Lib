@@ -20,15 +20,19 @@ public class ItemConsumerRegistry {
     public static final Codec<ConsumerType<?>> TYPE_CODEC = ResourceLocation.CODEC.comapFlatMap(ItemConsumerRegistry::decode, ConsumerType::id);
     public static final StreamCodec<ByteBuf, ConsumerType<?>> STREAM_CODEC = ResourceLocation.STREAM_CODEC.map(CONSUMER_TYPES::get, ConsumerType::id);
 
-    public static void register(ConsumerType<?> type) {
-        CONSUMER_TYPES.put(type.id(), type);
-    }
-
     static {
         register(SizedConsumer.TYPE);
         register(CompoundConsumer.TYPE);
         register(EnergyConsumer.TYPE);
         register(FluidConsumer.TYPE);
+    }
+
+    public static void register(ConsumerType<?> type) {
+        CONSUMER_TYPES.put(type.id(), type);
+    }
+
+    public static void init() {
+        // Called from Botarium#init
     }
 
     private static DataResult<? extends ConsumerType<?>> decode(ResourceLocation id) {
