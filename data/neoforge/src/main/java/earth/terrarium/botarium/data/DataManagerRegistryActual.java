@@ -37,7 +37,7 @@ public final class DataManagerRegistryActual {
     }
 
     @Actual
-    public void initialize() {
+    public void init() {
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
         this.register.register(modEventBus);
         this.componentRegister.register(modEventBus);
