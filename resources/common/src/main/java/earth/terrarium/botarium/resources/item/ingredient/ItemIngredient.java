@@ -25,10 +25,6 @@ public class ItemIngredient {
     @Expect
     public static Ingredient components(ItemStack stack);
 
-    public static SizedItemIngredient sized(Ingredient ingredient, int size) {
-        return new SizedItemIngredient(ingredient, size);
-    }
-
     @Expect
     private static MapCodec<Ingredient> getNonEmptyMapCodec();
 }

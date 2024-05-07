@@ -15,10 +15,12 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.ItemLike;
+import net.msrandom.multiplatform.annotations.Expect;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
@@ -46,7 +48,7 @@ public final class ItemResource extends TransferResource<Item, ItemResource> imp
     );
 
     public static ItemResource of(ItemLike item) {
-        return new ItemResource(item.asItem(), PatchedDataComponentMap.fromPatch(DataComponentMap.EMPTY, DataComponentPatch.EMPTY));
+        return new ItemResource(item.asItem(), new PatchedDataComponentMap(item.asItem().components()));
     }
 
     public static ItemResource of(Holder<Item> holder) {
@@ -54,11 +56,11 @@ public final class ItemResource extends TransferResource<Item, ItemResource> imp
     }
 
     public static ItemResource of(ItemLike item, DataComponentPatch components) {
-        return new ItemResource(item.asItem(), PatchedDataComponentMap.fromPatch(DataComponentMap.EMPTY, components));
+        return new ItemResource(item.asItem(), PatchedDataComponentMap.fromPatch(item.asItem().components(), components));
     }
 
     public static ItemResource of(Holder<Item> holder, DataComponentPatch components) {
-        return new ItemResource(holder.value(), PatchedDataComponentMap.fromPatch(DataComponentMap.EMPTY, components));
+        return new ItemResource(holder.value(), PatchedDataComponentMap.fromPatch(holder.value().components(), components));
     }
 
     public static ItemResource of(ItemStack stack) {
@@ -96,6 +98,10 @@ public final class ItemResource extends TransferResource<Item, ItemResource> imp
             cachedStack = stack = toItemStack();
         }
         return stack;
+    }
+
+    public boolean is(TagKey<Item> tag) {
+        return type.builtInRegistryHolder().is(tag);
     }
 
     @Override
@@ -146,4 +152,18 @@ public final class ItemResource extends TransferResource<Item, ItemResource> imp
     public Holder<Item> asHolder() {
         return type.builtInRegistryHolder();
     }
+
+    public ItemResource getCraftingRemainder() {
+        return ItemResource.getCraftingRemainder(this);
+    }
+
+    public boolean hasCraftingRemainingItem() {
+        return ItemResource.hasCraftingRemainingItem(this);
+    }
+
+    @Expect
+    private static ItemResource getCraftingRemainder(ItemResource resource);
+
+    @Expect
+    private static boolean hasCraftingRemainingItem(ItemResource resource);
 }

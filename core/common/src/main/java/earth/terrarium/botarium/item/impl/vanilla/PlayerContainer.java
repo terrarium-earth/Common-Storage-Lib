@@ -64,7 +64,7 @@ public class PlayerContainer extends AbstractVanillaContainer implements UpdateM
         long leftover = amount;
         if (!simulate) {
             ItemStack fakeStack = resource.toItemStack();
-            // add as many fluid stacks as needed to toDrop that are each less than or equal to the max stack size, but totalling the leftover amount
+            // add as many fluid stacks as needed to toDrop that are each less than or equal to the max stack amount, but totalling the leftover amount
             while (leftover > 0) {
                 int stackSize = (int) Math.min(leftover, fakeStack.getMaxStackSize());
                 leftover -= stackSize;

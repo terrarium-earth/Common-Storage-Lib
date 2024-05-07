@@ -3,14 +3,21 @@ package earth.terrarium.botarium.storage.util;
 import earth.terrarium.botarium.resources.TransferResource;
 import earth.terrarium.botarium.resources.ResourceStack;
 import earth.terrarium.botarium.resources.fluid.FluidResource;
+import earth.terrarium.botarium.resources.fluid.ingredient.SizedFluidIngredient;
 import earth.terrarium.botarium.resources.item.ItemResource;
 import earth.terrarium.botarium.storage.base.*;
+import net.minecraft.Optionull;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.Tuple;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.material.Fluid;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
+import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
 import java.util.function.Predicate;
 
 public class TransferUtil {
@@ -31,11 +38,15 @@ public class TransferUtil {
     }
 
     public static Predicate<ItemResource> byItemTag(TagKey<Item> tag) {
-        return resource -> resource.getType().builtInRegistryHolder().is(tag);
+        return resource -> resource.is(tag);
+    }
+
+    public static Predicate<ItemResource> byIngredient(Ingredient ingredient) {
+        return resource -> ingredient.test(resource.getCachedStack());
     }
 
     public static Predicate<FluidResource> byFluidTag(TagKey<Fluid> tag) {
-        return resource -> resource.getType().builtInRegistryHolder().is(tag);
+        return resource -> resource.is(tag);
     }
 
     public static <T> long move(StorageIO<T> from, StorageIO<T> to, T resource, long amount, boolean simulate) {
@@ -171,5 +182,44 @@ public class TransferUtil {
 
     public static <T extends TransferResource<?, T>> long insertStack(CommonStorage<T> container, ResourceStack<T> stack, boolean simulate) {
         return insertSlots(container, stack.resource(), stack.amount(), simulate);
+    }
+
+    public static <T extends TransferResource<?, T>> long extractStack(CommonStorage<T> container, ResourceStack<T> stack, boolean simulate) {
+        return extractSlots(container, stack.resource(), stack.amount(), simulate);
+    }
+
+    @Nullable
+    public static <T extends TransferResource<?, T>> ResourceStack<T> extractPredicate(CommonStorage<T> container, Predicate<T> predicate, long amount, boolean simulate) {
+        Set<T> resources = new HashSet<>();
+        ResourceStack<T> stack = null;
+        for (int i = 0; i < container.getSlotCount(); i++) {
+            StorageSlot<T> slot = container.getSlot(i);
+            if (slot.isBlank()) continue;
+            T resource = slot.getResource();
+            if (predicate.test(resource)) {
+                if (resources.contains(resource)) continue;
+                resources.add(resource);
+                ResourceStack<T> newStack = new ResourceStack<>(resource, slot.extract(resource, amount, simulate));
+                if (stack == null || newStack.amount() > stack.amount()) {
+                    stack = newStack;
+                    if (stack.amount() >= amount) {
+                        break;
+                    }
+                }
+            }
+        }
+        return stack;
+    }
+
+    public static ResourceStack<ItemResource> extractItem(CommonStorage<ItemResource> container, Predicate<ItemResource> predicate, long amount, boolean simulate) {
+        return Optional.ofNullable(extractPredicate(container, predicate, amount, simulate)).orElse(ResourceStack.EMPTY_ITEM);
+    }
+
+    public static ResourceStack<FluidResource> extractFluid(CommonStorage<FluidResource> container, Predicate<FluidResource> predicate, long amount, boolean simulate) {
+        return Optional.ofNullable(extractPredicate(container, predicate, amount, simulate)).orElse(ResourceStack.EMPTY_FLUID);
+    }
+
+    public static ResourceStack<FluidResource> extractFluid(CommonStorage<FluidResource> container, SizedFluidIngredient ingredient, boolean simulate) {
+        return extractFluid(container, ingredient.ingredient(), ingredient.getAmount(), simulate);
     }
 }

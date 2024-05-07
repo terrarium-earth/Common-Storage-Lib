@@ -15,6 +15,7 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
 
@@ -84,5 +85,9 @@ public final class FluidResource extends TransferResource<Fluid, FluidResource> 
 
     public Holder<Fluid> asHolder() {
         return type.builtInRegistryHolder();
+    }
+
+    public boolean is(TagKey<Fluid> tag) {
+        return type.is(tag);
     }
 }

@@ -14,6 +14,10 @@ public interface ItemContext extends StorageIO<ItemResource> {
         return lookup.find(getResource().toItemStack((int) getAmount()), this);
     }
 
+    default boolean isPresent(ItemLookup<?, ItemContext> lookup) {
+        return lookup.isPresent(getResource().getCachedStack(), this);
+    }
+
     default ItemResource getResource() {
         return mainSlot().getResource();
     }
