@@ -13,7 +13,7 @@ import net.minecraft.world.item.ItemStack;
 public record SizedConsumer(long amount) implements ItemConsumer {
     public static final SizedConsumer DEFAULT = new SizedConsumer(1);
     public static final Codec<SizedConsumer> CODEC = Codec.LONG.xmap(SizedConsumer::new, SizedConsumer::amount);
-    public static final MapCodec<SizedConsumer> MAP_CODEC = CODEC.optionalFieldOf("amount", DEFAULT);
+    public static final MapCodec<SizedConsumer> MAP_CODEC = CODEC.optionalFieldOf("count", DEFAULT);
     public static final ConsumerType<SizedConsumer> TYPE = new ConsumerType<>(new ResourceLocation(Botarium.MOD_ID, "sized"), MAP_CODEC);
 
     @Override
