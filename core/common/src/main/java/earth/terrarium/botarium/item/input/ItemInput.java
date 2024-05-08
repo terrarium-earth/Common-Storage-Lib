@@ -15,7 +15,7 @@ import java.util.stream.Stream;
 public record ItemInput(Ingredient ingredient, ItemConsumer consumer, Stream<ItemStack> stacks) {
     public static final MapCodec<ItemInput> BASE_CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             Ingredient.CODEC.fieldOf("ingredient").forGetter(ItemInput::ingredient),
-            ItemConsumer.CODEC.fieldOf("consumer").forGetter(ItemInput::consumer)
+            ItemConsumer.CODEC.fieldOf("consume").forGetter(ItemInput::consumer)
     ).apply(instance, ItemInput::new));
 
     public static final Codec<ItemInput> CODEC = Codec.either(BASE_CODEC.codec(), Ingredient.CODEC).xmap(
