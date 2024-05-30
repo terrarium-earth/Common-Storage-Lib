@@ -11,7 +11,7 @@ public interface AbstractCommonFluidContainer extends CommonStorage<FluidResourc
     IFluidHandler handler();
 
     @Override
-    default int getSlotCount() {
+    default int size() {
         return handler().getTanks();
     }
 

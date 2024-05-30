@@ -21,7 +21,7 @@ public final class CommonFluidItemContainer implements AbstractCommonFluidContai
     }
 
     @Override
-    public int getSlotCount() {
+    public int size() {
         return handler.getTanks();
     }
 

@@ -24,8 +24,8 @@ public record ItemStorageData(List<ResourceStack<ItemResource>> stacks) {
     public static final StreamCodec<RegistryFriendlyByteBuf, ItemStorageData> NETWORK_CODEC = ByteBufCodecs.collection(size -> (List<ResourceStack<ItemResource>>) new ArrayList<ResourceStack<ItemResource>>(), ResourceStack.ITEM_STREAM_CODEC).map(ItemStorageData::new, ItemStorageData::stacks);
 
     public static ItemStorageData of(CommonStorage<ItemResource> container) {
-        List<ResourceStack<ItemResource>> stacks = NonNullList.withSize(container.getSlotCount(), ResourceStack.EMPTY_ITEM);
-        for (int i = 0; i < container.getSlotCount(); i++) {
+        List<ResourceStack<ItemResource>> stacks = NonNullList.withSize(container.size(), ResourceStack.EMPTY_ITEM);
+        for (int i = 0; i < container.size(); i++) {
             StorageSlot<ItemResource> slot = container.getSlot(i);
             stacks.set(i, new ResourceStack<>(slot.getResource(), slot.getAmount()));
         }

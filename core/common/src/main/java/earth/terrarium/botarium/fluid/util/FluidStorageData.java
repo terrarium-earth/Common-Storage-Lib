@@ -24,8 +24,8 @@ public record FluidStorageData(List<ResourceStack<FluidResource>> stacks) {
     public static final StreamCodec<RegistryFriendlyByteBuf, FluidStorageData> NETWORK_CODEC = ByteBufCodecs.collection(size -> (List<ResourceStack<FluidResource>>) new ArrayList<ResourceStack<FluidResource>>(), ResourceStack.FLUID_STREAM_CODEC).map(FluidStorageData::new, FluidStorageData::stacks);
 
     public static FluidStorageData from(CommonStorage<FluidResource> container) {
-        List<ResourceStack<FluidResource>> stacks = NonNullList.withSize(container.getSlotCount(), ResourceStack.EMPTY_FLUID);
-        for (int i = 0; i < container.getSlotCount(); i++) {
+        List<ResourceStack<FluidResource>> stacks = NonNullList.withSize(container.size(), ResourceStack.EMPTY_FLUID);
+        for (int i = 0; i < container.size(); i++) {
             StorageSlot<FluidResource> slot = container.getSlot(i);
             stacks.set(i, new ResourceStack<>(slot.getResource(), slot.getAmount()));
         }

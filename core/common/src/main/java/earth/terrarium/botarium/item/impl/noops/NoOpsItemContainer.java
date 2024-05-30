@@ -9,7 +9,7 @@ public final class NoOpsItemContainer implements CommonStorage<ItemResource> {
     public static final NoOpsItemContainer NO_OPS = new NoOpsItemContainer();
 
     @Override
-    public int getSlotCount() {
+    public int size() {
         return 0;
     }
 

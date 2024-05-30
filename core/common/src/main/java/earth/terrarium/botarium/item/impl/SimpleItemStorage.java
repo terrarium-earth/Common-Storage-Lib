@@ -48,7 +48,7 @@ public class SimpleItemStorage implements CommonStorage<ItemResource>, UpdateMan
     }
 
     @Override
-    public int getSlotCount() {
+    public int size() {
         return slots.size();
     }
 

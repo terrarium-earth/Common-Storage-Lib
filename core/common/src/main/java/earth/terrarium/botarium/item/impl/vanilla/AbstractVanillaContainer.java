@@ -33,7 +33,7 @@ public abstract class AbstractVanillaContainer implements CommonStorage<ItemReso
     }
 
     @Override
-    public int getSlotCount() {
+    public int size() {
         return container.getContainerSize();
     }
 
