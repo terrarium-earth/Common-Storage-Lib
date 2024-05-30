@@ -38,7 +38,7 @@ public abstract class AbstractVanillaContainer implements CommonStorage<ItemReso
     }
 
     @Override
-    public @NotNull StorageSlot<ItemResource> getSlot(int slot) {
-        return slots.get(slot);
+    public @NotNull StorageSlot<ItemResource> get(int index) {
+        return slots.get(index);
     }
 }

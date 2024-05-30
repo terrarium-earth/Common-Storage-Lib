@@ -7,6 +7,6 @@ import earth.terrarium.botarium.storage.base.StorageSlot;
 
 public record SimpleItemContext(CommonStorage<ItemResource> outerContainer, StorageSlot<ItemResource> mainSlot) implements ItemContext {
     public static SimpleItemContext of(CommonStorage<ItemResource> container, int slot) {
-        return new SimpleItemContext(container, container.getSlot(slot));
+        return new SimpleItemContext(container, container.get(slot));
     }
 }

@@ -33,13 +33,13 @@ public record CommonWrappedContainer<U extends Resource, V extends TransferVaria
     }
 
     @Override
-    public @NotNull StorageSlot<U> getSlot(int slot) {
+    public @NotNull StorageSlot<U> get(int index) {
         if (storage instanceof SlottedStorage<V> slotted) {
-            return new CommonWrappedSlotSlot<>(slotted.getSlot(slot), this::toVariant, this::toResource);
+            return new CommonWrappedSlotSlot<>(slotted.getSlot(index), this::toVariant, this::toResource);
         }
         int i = 0;
         for (var view : storage) {
-            if (i == slot) {
+            if (i == index) {
                 return new CommonWrappedSlotSlot<>(view, this::toVariant, this::toResource);
             }
             i++;

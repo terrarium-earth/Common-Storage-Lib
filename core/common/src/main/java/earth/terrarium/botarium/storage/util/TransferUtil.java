@@ -21,7 +21,7 @@ import java.util.function.Predicate;
 public class TransferUtil {
     public static <T extends Resource> Optional<T> findResource(CommonStorage<T> container, Predicate<T> predicate) {
         for (int i = 0; i < container.size(); i++) {
-            StorageSlot<T> slot = container.getSlot(i);
+            StorageSlot<T> slot = container.get(i);
             if (slot.getResource().isBlank()) continue;
             T resource = slot.getResource();
             if (predicate.test(resource)) {
@@ -77,7 +77,7 @@ public class TransferUtil {
 
     public static <T extends Resource> Tuple<T, Long> moveAny(CommonStorage<T> from, StorageIO<T> to, long amount, boolean simulate) {
         for (int i = 0; i < from.size(); i++) {
-            StorageSlot<T> slot = from.getSlot(i);
+            StorageSlot<T> slot = from.get(i);
             if (slot.getResource().isBlank()) continue;
             T resource = slot.getResource();
             long moved = move(from, to, resource, amount, simulate);
@@ -90,7 +90,7 @@ public class TransferUtil {
 
     public static <T extends Resource> void moveAll(CommonStorage<T> from, StorageIO<T> to, boolean simulate) {
         for (int i = 0; i < from.size(); i++) {
-            StorageSlot<T> slot = from.getSlot(i);
+            StorageSlot<T> slot = from.get(i);
             if (slot.getResource().isBlank()) continue;
             T resource = slot.getResource();
             move(from, to, resource, Long.MAX_VALUE, simulate);
@@ -136,7 +136,7 @@ public class TransferUtil {
     public static <T extends Resource> long insertSubset(CommonStorage<T> container, int start, int end, T resource, long amount, boolean simulate) {
         long inserted = 0;
         for (int i = start; i < end; i++) {
-            StorageSlot<T> slot = container.getSlot(i);
+            StorageSlot<T> slot = container.get(i);
             if (!slot.getResource().isBlank()) {
                 inserted += slot.insert(resource, amount - inserted, simulate);
                 if (inserted >= amount) {
@@ -145,7 +145,7 @@ public class TransferUtil {
             }
         }
         for (int i = start; i < end; i++) {
-            inserted += container.getSlot(i).insert(resource, amount - inserted, simulate);
+            inserted += container.get(i).insert(resource, amount - inserted, simulate);
             if (inserted >= amount) {
                 return inserted;
             }
@@ -160,7 +160,7 @@ public class TransferUtil {
     public static <T extends Resource> long extractSubset(CommonStorage<T> container, int start, int end, T resource, long amount, boolean simulate) {
         long extracted = 0;
         for (int i = start; i < end; i++) {
-            extracted += container.getSlot(i).extract(resource, amount - extracted, simulate);
+            extracted += container.get(i).extract(resource, amount - extracted, simulate);
             if (extracted >= amount) {
                 return extracted;
             }
@@ -191,7 +191,7 @@ public class TransferUtil {
         Set<T> resources = new HashSet<>();
         ResourceStack<T> stack = null;
         for (int i = 0; i < container.size(); i++) {
-            StorageSlot<T> slot = container.getSlot(i);
+            StorageSlot<T> slot = container.get(i);
             if (slot.getResource().isBlank()) continue;
             T resource = slot.getResource();
             if (predicate.test(resource)) {

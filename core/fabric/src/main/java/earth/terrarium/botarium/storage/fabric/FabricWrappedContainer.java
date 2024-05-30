@@ -83,7 +83,7 @@ public class FabricWrappedContainer<U extends Resource, V extends TransferVarian
 
     @Override
     public SingleSlotStorage<V> getSlot(int slot) {
-        StorageSlot<U> storageSlot = container.getSlot(slot);
+        StorageSlot<U> storageSlot = container.get(slot);
         return new FabricWrappedSlot<>(storageSlot, this::toVariant, this::toResource);
     }
 

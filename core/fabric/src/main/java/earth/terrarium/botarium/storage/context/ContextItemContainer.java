@@ -20,8 +20,8 @@ public record ContextItemContainer(List<SingleSlotStorage<ItemVariant>> storage,
     }
 
     @Override
-    public @NotNull StorageSlot<ItemResource> getSlot(int slot) {
-        return new StorageSlotImpl(storage.get(slot));
+    public @NotNull StorageSlot<ItemResource> get(int index) {
+        return new StorageSlotImpl(storage.get(index));
     }
 
     @Override

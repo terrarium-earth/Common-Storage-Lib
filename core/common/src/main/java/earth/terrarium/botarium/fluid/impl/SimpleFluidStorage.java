@@ -58,8 +58,8 @@ public class SimpleFluidStorage implements CommonStorage<FluidResource>, UpdateM
     }
 
     @Override
-    public @NotNull SimpleFluidSlot getSlot(int slot) {
-        return slots.get(slot);
+    public @NotNull SimpleFluidSlot get(int index) {
+        return slots.get(index);
     }
 
     @Override

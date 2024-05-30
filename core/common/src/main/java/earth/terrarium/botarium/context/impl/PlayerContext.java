@@ -17,6 +17,6 @@ public record PlayerContext(PlayerContainer outerContainer, StorageSlot<ItemReso
     public static PlayerContext ofSlot(Player player, int slot) {
         ItemStack stack = player.getInventory().getItem(slot);
         PlayerContainer playerContainer = new PlayerContainer.AutoDrop(player.getInventory());
-        return new PlayerContext(playerContainer, playerContainer.getSlot(slot));
+        return new PlayerContext(playerContainer, playerContainer.get(slot));
     }
 }

@@ -53,8 +53,8 @@ public class SimpleItemStorage implements CommonStorage<ItemResource>, UpdateMan
     }
 
     @Override
-    public @NotNull SimpleItemSlot getSlot(int slot) {
-        return slots.get(slot);
+    public @NotNull SimpleItemSlot get(int index) {
+        return slots.get(index);
     }
 
     @Override

@@ -16,8 +16,8 @@ public record CommonItemContainerItem(IItemHandler handler, ItemStack stack, Ite
     }
 
     @Override
-    public @NotNull StorageSlot<ItemResource> getSlot(int slot) {
-        return new DelegatingItemSlot(handler, slot, this::updateContext);
+    public @NotNull StorageSlot<ItemResource> get(int index) {
+        return new DelegatingItemSlot(handler, index, this::updateContext);
     }
 
     public void updateContext() {

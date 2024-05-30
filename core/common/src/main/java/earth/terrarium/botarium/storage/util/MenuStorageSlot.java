@@ -18,7 +18,7 @@ public class MenuStorageSlot extends Slot {
 
     public MenuStorageSlot(CommonStorage<ItemResource> storage, int slotIndex, int x, int y) {
         super(EMPTY, slotIndex, x, y);
-        this.storageSlot = storage.getSlot(slotIndex);
+        this.storageSlot = storage.get(slotIndex);
         if (!(storageSlot instanceof ModifiableItemSlot slot)) {
             throw new UnsupportedOperationException("Cannot create MenuStorageSlot from non-modifiable slot");
         } else {

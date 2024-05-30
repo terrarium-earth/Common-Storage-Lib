@@ -26,7 +26,7 @@ public interface AbstractCommonFluidContainer extends CommonStorage<FluidResourc
     }
 
     @Override
-    default @NotNull StorageSlot<FluidResource> getSlot(int slot) {
-        return new DelegatingFluidHandlerSlot(this, slot);
+    default @NotNull StorageSlot<FluidResource> get(int index) {
+        return new DelegatingFluidHandlerSlot(this, index);
     }
 }

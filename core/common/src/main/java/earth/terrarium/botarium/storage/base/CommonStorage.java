@@ -1,13 +1,14 @@
 package earth.terrarium.botarium.storage.base;
 
 import earth.terrarium.botarium.resources.Resource;
+import earth.terrarium.botarium.resources.ResourceStack;
 import org.jetbrains.annotations.NotNull;
 
 public interface CommonStorage<T extends Resource> extends StorageIO<T> {
     int size();
 
     @NotNull
-    StorageSlot<T> getSlot(int slot);
+    StorageSlot<T> get(int index);
 
     default boolean allowsInsertion() {
         return true;
@@ -18,27 +19,31 @@ public interface CommonStorage<T extends Resource> extends StorageIO<T> {
     }
 
     default long getLimit(int index, T resource) {
-        return getSlot(index).getLimit(resource);
-    }
-
-    default boolean isResourceValid(int index, T resource) {
-        return getSlot(index).isResourceValid(resource);
+        return get(index).getLimit(resource);
     }
 
     default T getResource(int index) {
-        return getSlot(index).getResource();
+        return get(index).getResource();
+    }
+
+    default ResourceStack<T> getContents(int index) {
+        return get(index).getContents();
+    }
+
+    default boolean isResourceValid(int index, T resource) {
+        return get(index).isResourceValid(resource);
     }
 
     default long getAmount(int index) {
-        return getSlot(index).getAmount();
+        return get(index).getAmount();
     }
 
     default long insert(int index, T resource, long amount, boolean simulate) {
-        return getSlot(index).insert(resource, amount, simulate);
+        return get(index).insert(resource, amount, simulate);
     }
 
     default long extract(int index, T resource, long amount, boolean simulate) {
-        return getSlot(index).extract(resource, amount, simulate);
+        return get(index).extract(resource, amount, simulate);
     }
 
     @SuppressWarnings("unchecked")

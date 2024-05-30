@@ -15,8 +15,8 @@ public record CommonItemContainer(IItemHandler handler) implements CommonStorage
     }
 
     @Override
-    public @NotNull StorageSlot<ItemResource> getSlot(int slot) {
-        return new DelegatingItemSlot(handler, slot);
+    public @NotNull StorageSlot<ItemResource> get(int index) {
+        return new DelegatingItemSlot(handler, index);
     }
 
     @Override

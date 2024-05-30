@@ -14,7 +14,7 @@ public final class NoOpsItemContainer implements CommonStorage<ItemResource> {
     }
 
     @Override
-    public @NotNull StorageSlot<ItemResource> getSlot(int slot) {
+    public @NotNull StorageSlot<ItemResource> get(int index) {
         return NoOpsItemSlot.NO_OPS;
     }
 

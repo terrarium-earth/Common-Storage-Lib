@@ -29,10 +29,10 @@ public class AggregateContainer<T extends Resource> implements CommonStorage<T>,
     }
 
     @Override
-    public @NotNull StorageSlot<T> getSlot(int slot) {
+    public @NotNull StorageSlot<T> get(int index) {
         for (int i = 0; i < containers.length; i++) {
-            if (slot < indexOffsets[i]) {
-                return containers[i].getSlot(slot - indexOffsets[i]);
+            if (index < indexOffsets[i]) {
+                return containers[i].get(index - indexOffsets[i]);
             }
         }
         throw new IndexOutOfBoundsException();

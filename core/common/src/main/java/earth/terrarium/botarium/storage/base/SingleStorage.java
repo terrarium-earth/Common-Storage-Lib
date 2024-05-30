@@ -38,7 +38,7 @@ public interface SingleStorage<T extends Resource> extends CommonStorage<T>, Sto
         return insert(resource, amount, simulate);
     }
 
-    default @NotNull StorageSlot<T> getSlot(int slot) {
+    default @NotNull StorageSlot<T> get(int index) {
         return this;
     }
 }
