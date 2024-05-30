@@ -4,9 +4,9 @@ license = "MIT"
 issueTrackerURL = "https://github.com/terrarium-earth/Botarium/issues"
 
 [[mods]]
-modId = "botarium"
+modId = "botarium_core"
 version = "${version}"
-displayName = "Botarium"
+displayName = "Botarium Core"
 displayURL = "https://modrinth.com/mod/botarium"
 authors = "CodexAdrian"
 description = "Abstraction of the mod loader's resource storage system, allowing for easy access to items, fluids and energy"
