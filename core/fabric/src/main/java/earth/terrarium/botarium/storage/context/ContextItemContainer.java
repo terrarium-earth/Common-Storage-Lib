@@ -15,7 +15,7 @@ import java.util.List;
 
 public record ContextItemContainer(List<SingleSlotStorage<ItemVariant>> storage, TriFunction<ItemVariant, Long, TransactionContext, Long> insert) implements CommonStorage<ItemResource> {
     @Override
-    public int getSlotCount() {
+    public int size() {
         return storage.size();
     }
 
@@ -57,12 +57,12 @@ public record ContextItemContainer(List<SingleSlotStorage<ItemVariant>> storage,
     public record StorageSlotImpl(SingleSlotStorage<ItemVariant> storage) implements StorageSlot<ItemResource> {
 
         @Override
-        public long getLimit() {
+        public long getLimit(ItemResource resource) {
             return storage.getCapacity();
         }
 
         @Override
-        public boolean isValueValid(ItemResource value) {
+        public boolean isResourceValid(ItemResource value) {
             return true;
         }
 
@@ -96,11 +96,6 @@ public record ContextItemContainer(List<SingleSlotStorage<ItemVariant>> storage,
         @Override
         public long getAmount() {
             return storage.getAmount();
-        }
-
-        @Override
-        public boolean isBlank() {
-            return storage.isResourceBlank();
         }
     }
 }

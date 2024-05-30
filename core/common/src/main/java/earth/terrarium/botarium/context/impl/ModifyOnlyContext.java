@@ -40,12 +40,12 @@ public record ModifyOnlyContext(ItemStack stack) implements ItemContext {
 
     public record ModifyOnlyContainer(ItemStack stack) implements StorageSlot<ItemResource> {
         @Override
-        public long getLimit() {
-            return stack.getMaxStackSize();
+        public long getLimit(ItemResource resource) {
+            return resource.getCachedStack().getMaxStackSize();
         }
 
         @Override
-        public boolean isValueValid(ItemResource resource) {
+        public boolean isResourceValid(ItemResource resource) {
             return resource.test(stack);
         }
 
@@ -60,14 +60,9 @@ public record ModifyOnlyContext(ItemStack stack) implements ItemContext {
         }
 
         @Override
-        public boolean isBlank() {
-            return stack.isEmpty();
-        }
-
-        @Override
         public long insert(ItemResource resource, long amount, boolean simulate) {
             if (resource.test(stack)) {
-                long inserted = Math.min(amount, getLimit() - stack.getCount());
+                long inserted = Math.min(amount, getLimit(resource) - stack.getCount());
                 if (!simulate) {
                     stack.grow((int) inserted);
                 }

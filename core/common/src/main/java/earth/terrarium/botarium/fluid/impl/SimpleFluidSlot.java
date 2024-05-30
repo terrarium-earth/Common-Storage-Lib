@@ -21,12 +21,12 @@ public class SimpleFluidSlot implements StorageSlot<FluidResource>, UpdateManage
     }
 
     @Override
-    public long getLimit() {
+    public long getLimit(FluidResource resource) {
         return limit;
     }
 
     @Override
-    public boolean isValueValid(FluidResource resource) {
+    public boolean isResourceValid(FluidResource resource) {
         return true;
     }
 
@@ -41,13 +41,8 @@ public class SimpleFluidSlot implements StorageSlot<FluidResource>, UpdateManage
     }
 
     @Override
-    public boolean isBlank() {
-        return resource.isBlank();
-    }
-
-    @Override
     public long insert(FluidResource resource, long amount, boolean simulate) {
-        if (!isValueValid(resource)) return 0;
+        if (!isResourceValid(resource)) return 0;
         if (this.resource.isBlank()) {
             long inserted = Math.min(amount, limit);
             if (!simulate) {
@@ -55,7 +50,7 @@ public class SimpleFluidSlot implements StorageSlot<FluidResource>, UpdateManage
                 this.amount = inserted;
             }
             return inserted;
-        } else if (this.resource.test(resource)) {
+        } else if (this.resource.equals(resource)) {
             long inserted = Math.min(amount, limit - this.amount);
             if (!simulate) {
                 this.amount += inserted;
@@ -67,7 +62,7 @@ public class SimpleFluidSlot implements StorageSlot<FluidResource>, UpdateManage
 
     @Override
     public long extract(FluidResource resource, long amount, boolean simulate) {
-        if (this.resource.test(resource)) {
+        if (this.resource.equals(resource)) {
             long extracted = Math.min(amount, this.amount);
             if (!simulate) {
                 this.amount -= extracted;
@@ -105,7 +100,7 @@ public class SimpleFluidSlot implements StorageSlot<FluidResource>, UpdateManage
         }
 
         @Override
-        public boolean isValueValid(FluidResource resource) {
+        public boolean isResourceValid(FluidResource resource) {
             return filter.test(resource);
         }
     }

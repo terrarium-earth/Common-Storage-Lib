@@ -3,7 +3,7 @@ package earth.terrarium.botarium.storage.fabric;
 import earth.terrarium.botarium.resources.fluid.FluidResource;
 import earth.terrarium.botarium.resources.item.ItemResource;
 import earth.terrarium.botarium.storage.ConversionUtils;
-import earth.terrarium.botarium.resources.TransferResource;
+import earth.terrarium.botarium.resources.Resource;
 import earth.terrarium.botarium.storage.base.CommonStorage;
 import earth.terrarium.botarium.storage.base.StorageSlot;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
@@ -13,14 +13,12 @@ import net.fabricmc.fabric.api.transfer.v1.storage.StorageView;
 import net.fabricmc.fabric.api.transfer.v1.storage.TransferVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.base.SingleSlotStorage;
 import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.level.material.Fluid;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Iterator;
 import java.util.function.Function;
 
-public class FabricWrappedContainer<T, U extends TransferResource<T, U>, V extends TransferVariant<T>> implements SlottedStorage<V> {
+public class FabricWrappedContainer<U extends Resource, V extends TransferVariant<?>> implements SlottedStorage<V> {
     private final CommonStorage<U> container;
     private final OptionalSnapshotParticipant<?> updateManager;
     private final Function<U, V> toVariant;
@@ -68,7 +66,7 @@ public class FabricWrappedContainer<T, U extends TransferResource<T, U>, V exten
 
             @Override
             public boolean hasNext() {
-                return slot < container.getSlotCount();
+                return slot < container.size();
             }
 
             @Override
@@ -80,7 +78,7 @@ public class FabricWrappedContainer<T, U extends TransferResource<T, U>, V exten
 
     @Override
     public int getSlotCount() {
-        return container.getSlotCount();
+        return container.size();
     }
 
     @Override
@@ -103,13 +101,13 @@ public class FabricWrappedContainer<T, U extends TransferResource<T, U>, V exten
         return updateManager;
     }
 
-    public static class OfFluid extends FabricWrappedContainer<Fluid, FluidResource, FluidVariant> {
+    public static class OfFluid extends FabricWrappedContainer<FluidResource, FluidVariant> {
         public OfFluid(CommonStorage<FluidResource> container) {
             super(container, ConversionUtils::toVariant, ConversionUtils::toResource);
         }
     }
 
-    public static class OfItem extends FabricWrappedContainer<Item, ItemResource, ItemVariant> {
+    public static class OfItem extends FabricWrappedContainer<ItemResource, ItemVariant> {
         public OfItem(CommonStorage<ItemResource> container) {
             super(container, ConversionUtils::toVariant, ConversionUtils::toResource);
         }

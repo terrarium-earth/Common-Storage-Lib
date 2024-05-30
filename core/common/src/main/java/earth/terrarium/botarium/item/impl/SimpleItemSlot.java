@@ -28,12 +28,12 @@ public class SimpleItemSlot implements StorageSlot<ItemResource>, ModifiableItem
     }
 
     @Override
-    public long getLimit() {
+    public long getLimit(ItemResource resource) {
         return resource.isBlank() ? Item.ABSOLUTE_MAX_STACK_SIZE : resource.getCachedStack().getMaxStackSize();
     }
 
     @Override
-    public boolean isValueValid(ItemResource resource) {
+    public boolean isResourceValid(ItemResource resource) {
         return true;
     }
 
@@ -45,11 +45,6 @@ public class SimpleItemSlot implements StorageSlot<ItemResource>, ModifiableItem
     @Override
     public long getAmount() {
         return amount;
-    }
-
-    @Override
-    public boolean isBlank() {
-        return resource.isBlank();
     }
 
     public void set(ItemResource resource, long amount) {
@@ -64,7 +59,7 @@ public class SimpleItemSlot implements StorageSlot<ItemResource>, ModifiableItem
 
     @Override
     public long insert(ItemResource resource, long amount, boolean simulate) {
-        if (!isValueValid(resource)) return 0;
+        if (!isResourceValid(resource)) return 0;
         if (this.resource.isBlank()) {
             long inserted = Math.min(amount, resource.getCachedStack().getMaxStackSize());
             if (!simulate) {
@@ -73,7 +68,7 @@ public class SimpleItemSlot implements StorageSlot<ItemResource>, ModifiableItem
             }
             return inserted;
         } else if (this.resource.test(resource)) {
-            long inserted = Math.min(amount, getLimit() - this.amount);
+            long inserted = Math.min(amount, getLimit(resource) - this.amount);
             if (!simulate) {
                 this.amount += inserted;
             }
@@ -125,7 +120,7 @@ public class SimpleItemSlot implements StorageSlot<ItemResource>, ModifiableItem
 
     @Override
     public ItemStack toItemStack() {
-        return resource.toItemStack((int) amount);
+        return resource.toStack((int) amount);
     }
 
     @Override
@@ -147,7 +142,7 @@ public class SimpleItemSlot implements StorageSlot<ItemResource>, ModifiableItem
         }
 
         @Override
-        public boolean isValueValid(ItemResource resource) {
+        public boolean isResourceValid(ItemResource resource) {
             return filter.test(resource);
         }
     }

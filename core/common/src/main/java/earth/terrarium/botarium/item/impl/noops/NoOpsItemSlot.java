@@ -7,12 +7,12 @@ public class NoOpsItemSlot implements StorageSlot<ItemResource> {
     public static final NoOpsItemSlot NO_OPS = new NoOpsItemSlot();
 
     @Override
-    public long getLimit() {
+    public long getLimit(ItemResource resource) {
         return 0;
     }
 
     @Override
-    public boolean isValueValid(ItemResource resource) {
+    public boolean isResourceValid(ItemResource resource) {
         return false;
     }
 
@@ -24,11 +24,6 @@ public class NoOpsItemSlot implements StorageSlot<ItemResource> {
     @Override
     public long getAmount() {
         return 0;
-    }
-
-    @Override
-    public boolean isBlank() {
-        return true;
     }
 
     @Override

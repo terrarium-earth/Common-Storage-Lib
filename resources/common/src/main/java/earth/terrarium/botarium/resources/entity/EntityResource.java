@@ -3,8 +3,9 @@ package earth.terrarium.botarium.resources.entity;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import earth.terrarium.botarium.resources.ResourceComponent;
 import earth.terrarium.botarium.resources.ResourceStack;
-import earth.terrarium.botarium.resources.TransferResource;
+import earth.terrarium.botarium.resources.Resource;
 import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.core.component.DataComponentPatch;
@@ -21,7 +22,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Predicate;
 
-public final class EntityResource extends TransferResource<EntityType<?>, EntityResource> implements Predicate<EntityResource> {
+public final class EntityResource extends ResourceComponent {
     public static EntityResource BLANK = EntityResource.of((EntityType<?>) null);
 
     public static final Codec<EntityResource> CODEC = RecordCodecBuilder.create(instance -> instance.group(
@@ -59,8 +60,15 @@ public final class EntityResource extends TransferResource<EntityType<?>, Entity
         return of(type.value(), patch);
     }
 
+    private final EntityType<?> type;
+
     private EntityResource(@Nullable EntityType<?> type, PatchedDataComponentMap components) {
-        super(type, components);
+        super(components);
+        this.type = type;
+    }
+
+    public boolean isOf(EntityType<?> type) {
+        return this.type == type;
     }
 
     @Override
@@ -69,39 +77,24 @@ public final class EntityResource extends TransferResource<EntityType<?>, Entity
     }
 
     @Nullable
-    @Override
     public EntityType<?> getType() {
         return type;
     }
 
-    @Override
-    public DataComponentPatch getDataPatch() {
-        return components.asPatch();
-    }
-
-    @Override
     public <D> EntityResource set(DataComponentType<D> type, D value) {
-        PatchedDataComponentMap newComponents = components.copy();
+        PatchedDataComponentMap newComponents = new PatchedDataComponentMap(components);
         newComponents.set(type, value);
         return new EntityResource(this.type, newComponents);
     }
 
-    @Override
     public EntityResource modify(DataComponentPatch patch) {
-        PatchedDataComponentMap newComponents = components.copy();
+        PatchedDataComponentMap newComponents = new PatchedDataComponentMap(components);
         newComponents.applyPatch(patch);
         return new EntityResource(type, newComponents);
     }
 
-    @Override
     public ResourceStack<EntityResource> toStack(long amount) {
         return new ResourceStack<>(this, amount);
-    }
-
-    @NotNull
-    @Override
-    public DataComponentMap getComponents() {
-        return components;
     }
 
     public Holder<EntityType<?>> toHolder() {

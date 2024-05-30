@@ -11,7 +11,7 @@ public class ConversionUtils {
     }
 
     public static ItemVariant toVariant(ItemResource resource) {
-        return ItemVariant.of(resource.getType(), resource.getDataPatch());
+        return ItemVariant.of(resource.getItem(), resource.getDataPatch());
     }
 
     public static FluidResource toResource(FluidVariant variant) {

@@ -1,6 +1,6 @@
 package earth.terrarium.botarium.storage.fabric;
 
-import earth.terrarium.botarium.resources.TransferResource;
+import earth.terrarium.botarium.resources.Resource;
 import earth.terrarium.botarium.storage.base.StorageSlot;
 import net.fabricmc.fabric.api.transfer.v1.storage.TransferVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.base.SingleSlotStorage;
@@ -9,10 +9,10 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Function;
 
-public record FabricWrappedSlot<T, U extends TransferResource<T, U>, V extends TransferVariant<T>>(StorageSlot<U> container,
-                                                                                                   @Nullable OptionalSnapshotParticipant<?> updateManager,
-                                                                                                   Function<V, U> toResource,
-                                                                                                   Function<U, V> toVariant) implements SingleSlotStorage<V> {
+public record FabricWrappedSlot<U extends Resource, V extends TransferVariant<?>>(StorageSlot<U> container,
+                                                                                           @Nullable OptionalSnapshotParticipant<?> updateManager,
+                                                                                           Function<V, U> toResource,
+                                                                                           Function<U, V> toVariant) implements SingleSlotStorage<V> {
 
     public FabricWrappedSlot(StorageSlot<U> container, Function<U, V> toVariant, Function<V, U> toresource) {
         this(container, OptionalSnapshotParticipant.of(container), toresource, toVariant);
@@ -49,7 +49,7 @@ public record FabricWrappedSlot<T, U extends TransferResource<T, U>, V extends T
 
     @Override
     public long getCapacity() {
-        return container.getLimit();
+        return container.getLimit(container.getResource());
     }
 
     private void updateSnapshots(TransactionContext transaction) {

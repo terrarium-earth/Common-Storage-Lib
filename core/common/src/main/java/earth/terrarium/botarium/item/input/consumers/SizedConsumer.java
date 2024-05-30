@@ -19,7 +19,7 @@ public record SizedConsumer(long amount) implements ItemConsumer {
     @Override
     public boolean test(ItemStack stack, ItemContext context) {
         if (stack.getCount() < amount) return false;
-        if (context.getResource().hasCraftingRemainingItem()) {
+        if (context.getResource().hasCraftingRemainder()) {
             ItemResource remaining = context.getResource().getCraftingRemainder();
             long exchanged = context.exchange(remaining, amount, true);
             return exchanged == amount;
@@ -30,7 +30,7 @@ public record SizedConsumer(long amount) implements ItemConsumer {
 
     @Override
     public void consume(ItemStack stack, ItemContext context) {
-        if (context.getResource().hasCraftingRemainingItem()) {
+        if (context.getResource().hasCraftingRemainder()) {
             ItemResource remaining = context.getResource().getCraftingRemainder();
             context.exchange(remaining, stack.getCount(), false);
         } else {

@@ -3,10 +3,8 @@ package earth.terrarium.botarium.resources.item;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import earth.terrarium.botarium.resources.TransferResource;
-import earth.terrarium.botarium.resources.ResourceStack;
+import earth.terrarium.botarium.resources.ResourceComponent;
 import net.minecraft.core.Holder;
-import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.core.component.DataComponentPatch;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.component.PatchedDataComponentMap;
@@ -26,16 +24,16 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Objects;
 import java.util.function.Predicate;
 
-public final class ItemResource extends TransferResource<Item, ItemResource> implements Predicate<ItemResource>, ItemLike {
+public final class ItemResource extends ResourceComponent implements Predicate<ItemResource>, ItemLike {
     public static final ItemResource BLANK = ItemResource.of(Items.AIR, DataComponentPatch.EMPTY);
 
     public static final Codec<ItemResource> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-            BuiltInRegistries.ITEM.byNameCodec().fieldOf("id").forGetter(ItemResource::getType),
+            BuiltInRegistries.ITEM.byNameCodec().fieldOf("id").forGetter(ItemResource::getItem),
             DataComponentPatch.CODEC.optionalFieldOf("components", DataComponentPatch.EMPTY).forGetter(ItemResource::getDataPatch)
     ).apply(instance, ItemResource::of));
 
     public static final MapCodec<ItemResource> MAP_CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-            BuiltInRegistries.ITEM.byNameCodec().fieldOf("id").forGetter(ItemResource::getType),
+            BuiltInRegistries.ITEM.byNameCodec().fieldOf("id").forGetter(ItemResource::getItem),
             DataComponentPatch.CODEC.optionalFieldOf("components", DataComponentPatch.EMPTY).forGetter(ItemResource::getDataPatch)
     ).apply(instance, ItemResource::of));
 
@@ -67,10 +65,16 @@ public final class ItemResource extends TransferResource<Item, ItemResource> imp
         return of(stack.getItem(), stack.getComponentsPatch());
     }
 
-    ItemStack cachedStack;
+    private final Item type;
+    private ItemStack cachedStack;
 
     public ItemResource(Item type, PatchedDataComponentMap components) {
-        super(type, components);
+        super(components);
+        this.type = type;
+    }
+
+    public Item getItem() {
+        return type;
     }
 
     @Override
@@ -82,20 +86,24 @@ public final class ItemResource extends TransferResource<Item, ItemResource> imp
         return isOf(stack.getItem()) && componentsMatch(stack.getComponentsPatch());
     }
 
-    public ItemStack toItemStack(int count) {
+    public boolean isOf(Item item) {
+        return type == item;
+    }
+
+    public ItemStack toStack(int count) {
         ItemStack stack = new ItemStack(type, count);
         stack.applyComponents(components);
         return stack;
     }
 
-    public ItemStack toItemStack() {
-        return toItemStack(1);
+    public ItemStack toStack() {
+        return toStack(1);
     }
 
     public ItemStack getCachedStack() {
         ItemStack stack = cachedStack;
         if (stack == null) {
-            cachedStack = stack = toItemStack();
+            cachedStack = stack = toStack();
         }
         return stack;
     }
@@ -104,23 +112,16 @@ public final class ItemResource extends TransferResource<Item, ItemResource> imp
         return type.builtInRegistryHolder().is(tag);
     }
 
-    @Override
     public <D> ItemResource set(DataComponentType<D> type, D value) {
-        PatchedDataComponentMap copy = components.copy();
+        PatchedDataComponentMap copy = new PatchedDataComponentMap(components);
         copy.set(type, value);
         return new ItemResource(this.type, copy);
     }
 
-    @Override
     public ItemResource modify(DataComponentPatch patch) {
-        PatchedDataComponentMap copy = components.copy();
+        PatchedDataComponentMap copy = new PatchedDataComponentMap(components);
         copy.applyPatch(patch);
         return new ItemResource(this.type, copy);
-    }
-
-    @Override
-    public ResourceStack<ItemResource> toStack(long amount) {
-        return new ResourceStack<>(this, amount);
     }
 
     @Override
@@ -157,13 +158,18 @@ public final class ItemResource extends TransferResource<Item, ItemResource> imp
         return ItemResource.getCraftingRemainder(this);
     }
 
-    public boolean hasCraftingRemainingItem() {
-        return ItemResource.hasCraftingRemainingItem(this);
+    public boolean hasCraftingRemainder() {
+        return ItemResource.hasCraftingRemainder(this);
     }
 
     @Expect
     private static ItemResource getCraftingRemainder(ItemResource resource);
 
     @Expect
-    private static boolean hasCraftingRemainingItem(ItemResource resource);
+    private static boolean hasCraftingRemainder(ItemResource resource);
+
+    @Override
+    public boolean test(ItemResource resource) {
+        return false;
+    }
 }

@@ -18,13 +18,13 @@ public class VanillaDelegatingSlot implements StorageSlot<ItemResource>, UpdateM
     }
 
     @Override
-    public long getLimit() {
-        return container.getMaxStackSize(container.getItem(slot));
+    public long getLimit(ItemResource resource) {
+        return container.getMaxStackSize(resource.getCachedStack());
     }
 
     @Override
-    public boolean isValueValid(ItemResource resource) {
-        return container.canPlaceItem(slot, resource.toItemStack());
+    public boolean isResourceValid(ItemResource resource) {
+        return container.canPlaceItem(slot, resource.toStack());
     }
 
     @Override
@@ -38,22 +38,17 @@ public class VanillaDelegatingSlot implements StorageSlot<ItemResource>, UpdateM
     }
 
     @Override
-    public boolean isBlank() {
-        return container.getItem(slot).isEmpty();
-    }
-
-    @Override
     public long insert(ItemResource resource, long amount, boolean simulate) {
         ItemStack stack = container.getItem(slot);
         if (resource.test(stack) || stack.isEmpty()) {
             if (stack.isEmpty()) {
-                ItemStack inserted = resource.toItemStack(Math.min((int) amount, (int) getLimit()));
+                ItemStack inserted = resource.toStack(Math.min((int) amount, (int) getLimit(resource)));
                 if (!simulate) {
                     container.setItem(slot, inserted);
                 }
                 return inserted.getCount();
             } else {
-                ItemStack inserted = resource.toItemStack(Math.min((int) amount + stack.getCount(), (int) getLimit()));
+                ItemStack inserted = resource.toStack(Math.min((int) amount + stack.getCount(), (int) getLimit(resource)));
                 if (!simulate) {
                     container.setItem(slot, inserted);
                 }

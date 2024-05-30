@@ -30,7 +30,7 @@ public class MenuStorageSlot extends Slot {
     public boolean mayPlace(ItemStack stack) {
         if (stack.isEmpty())
             return false;
-        return storageSlot.isValueValid(ItemResource.of(stack));
+        return storageSlot.isResourceValid(ItemResource.of(stack));
     }
 
     @Override
@@ -48,7 +48,7 @@ public class MenuStorageSlot extends Slot {
 
     @Override
     public int getMaxStackSize() {
-        return (int) this.storageSlot.getLimit();
+        return (int) this.storageSlot.getLimit(storageSlot.getResource());
     }
 
     @Override
@@ -65,7 +65,7 @@ public class MenuStorageSlot extends Slot {
     public @NotNull ItemStack remove(int amount) {
         ItemResource resource = storageSlot.getResource();
         long extract = this.storageSlot.extract(resource, amount, false);
-        return extract > 0 ? resource.toItemStack((int) extract) : ItemStack.EMPTY;
+        return extract > 0 ? resource.toStack((int) extract) : ItemStack.EMPTY;
     }
 
     @Override

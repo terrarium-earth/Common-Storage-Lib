@@ -1,13 +1,13 @@
 package earth.terrarium.botarium.storage.base;
 
-public interface StorageSlot<T> extends StorageIO<T> {
-    long getLimit();
+import earth.terrarium.botarium.resources.Resource;
 
-    boolean isValueValid(T resource);
+public interface StorageSlot<T extends Resource> extends StorageIO<T> {
+    long getLimit(T resource);
+
+    boolean isResourceValid(T resource);
 
     T getResource();
 
     long getAmount();
-
-    boolean isBlank();
 }

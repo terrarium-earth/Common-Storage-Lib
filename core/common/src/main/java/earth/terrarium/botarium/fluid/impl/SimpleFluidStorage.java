@@ -53,7 +53,7 @@ public class SimpleFluidStorage implements CommonStorage<FluidResource>, UpdateM
     }
 
     @Override
-    public int getSlotCount() {
+    public int size() {
         return slots.size();
     }
 

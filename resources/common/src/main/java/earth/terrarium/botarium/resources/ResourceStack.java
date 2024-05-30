@@ -6,16 +6,14 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import earth.terrarium.botarium.resources.fluid.FluidResource;
 import earth.terrarium.botarium.resources.fluid.util.FluidAmounts;
 import earth.terrarium.botarium.resources.item.ItemResource;
-import net.minecraft.core.component.DataComponentHolder;
-import net.minecraft.core.component.DataComponentMap;
-import net.minecraft.core.component.DataComponentType;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.ItemStack;
-import org.jetbrains.annotations.NotNull;
 
-public record ResourceStack<T extends TransferResource<?, T>>(T resource, long amount) implements DataComponentHolder {
+import java.util.function.UnaryOperator;
+
+public record ResourceStack<T extends Resource>(T resource, long amount) {
     public static Codec<ResourceStack<FluidResource>> FLUID_CODEC = RecordCodecBuilder.create(instance -> instance.group(
             FluidResource.MAP_CODEC.forGetter(ResourceStack::resource),
             Codec.LONG.fieldOf("amount").forGetter(ResourceStack::amount)
@@ -38,7 +36,7 @@ public record ResourceStack<T extends TransferResource<?, T>>(T resource, long a
     public static final ResourceStack<ItemResource> EMPTY_ITEM = new ResourceStack<>(ItemResource.BLANK, 0);
 
     public static ItemStack toItemStack(ResourceStack<ItemResource> stack) {
-        return stack.resource().toItemStack((int) stack.amount());
+        return stack.resource().toStack((int) stack.amount());
     }
 
     public ResourceStack<T> grow(long amount) {
@@ -53,17 +51,12 @@ public record ResourceStack<T extends TransferResource<?, T>>(T resource, long a
         return new ResourceStack<>(resource, amount);
     }
 
-    public <D> ResourceStack<T> set(DataComponentType<D> type, D data) {
-        return new ResourceStack<>(resource.set(type, data), amount);
+    public ResourceStack<T> with(UnaryOperator<T> operator) {
+        return new ResourceStack<>(operator.apply(resource), amount);
     }
 
     public boolean isEmpty() {
         return amount <= 0 || resource.isBlank();
-    }
-
-    @Override
-    public @NotNull DataComponentMap getComponents() {
-        return resource.getComponents();
     }
 
     @Override

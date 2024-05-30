@@ -1,11 +1,12 @@
 package earth.terrarium.botarium.storage.impl;
 
+import earth.terrarium.botarium.resources.Resource;
 import earth.terrarium.botarium.storage.base.CommonStorage;
 import earth.terrarium.botarium.storage.base.StorageSlot;
 import earth.terrarium.botarium.storage.base.UpdateManager;
 import org.jetbrains.annotations.NotNull;
 
-public class AggregateContainer<T> implements CommonStorage<T>, UpdateManager<Object[]> {
+public class AggregateContainer<T extends Resource> implements CommonStorage<T>, UpdateManager<Object[]> {
     private final CommonStorage<T>[] containers;
     private final int[] indexOffsets;
     private final int slotCount;
@@ -16,14 +17,14 @@ public class AggregateContainer<T> implements CommonStorage<T>, UpdateManager<Ob
         this.indexOffsets = new int[containers.length];
         int index = 0;
         for (int i = 0; i < indexOffsets.length; i++) {
-            index += containers[i].getSlotCount();
+            index += containers[i].size();
             indexOffsets[i] = index;
         }
         this.slotCount = index;
     }
 
     @Override
-    public int getSlotCount() {
+    public int size() {
         return slotCount;
     }
 

@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "id": "botarium_byte_codecs",
+  "version": "${version}",
+  "name": "Botarium Byte Codecs",
+  "description": "Byte Codecs for Botarium",
+  "authors": [
+    "CodexAdrian"
+  ],
+  "contact": {
+    "repo": "https://github.com/terrarium-earth/Botarium",
+    "issues": "https://github.com/terrarium-earth/Botarium/issues"
+  },
+  "license": "MIT",
+  "environment": "*",
+  "depends": {
+    "fabric": "*",
+    "minecraft": ">=1.20.5"
+  }
+}

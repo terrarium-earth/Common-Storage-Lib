@@ -10,13 +10,13 @@ import net.neoforged.neoforge.items.IItemHandler;
 public record NeoItemHandler(CommonStorage<ItemResource> container) implements IItemHandler {
     @Override
     public int getSlots() {
-        return container.getSlotCount();
+        return container.size();
     }
 
     @Override
     public ItemStack getStackInSlot(int i) {
         StorageSlot<ItemResource> slot = container.getSlot(i);
-        return slot.getResource().toItemStack((int) slot.getAmount());
+        return slot.getResource().toStack((int) slot.getAmount());
     }
 
     @Override
@@ -39,11 +39,12 @@ public record NeoItemHandler(CommonStorage<ItemResource> container) implements I
 
     @Override
     public int getSlotLimit(int i) {
-        return (int) container.getSlot(i).getLimit();
+        StorageSlot<ItemResource> slot = container.getSlot(i);
+        return (int) slot.getLimit(slot.getResource());
     }
 
     @Override
     public boolean isItemValid(int i, ItemStack arg) {
-        return container.getSlot(i).isValueValid(ItemResource.of(arg));
+        return container.getSlot(i).isResourceValid(ItemResource.of(arg));
     }
 }

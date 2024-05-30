@@ -3,7 +3,7 @@ package earth.terrarium.botarium.wrapped;
 import earth.terrarium.botarium.resources.fluid.FluidResource;
 import earth.terrarium.botarium.resources.item.ItemResource;
 import earth.terrarium.botarium.storage.ConversionUtils;
-import earth.terrarium.botarium.resources.TransferResource;
+import earth.terrarium.botarium.resources.Resource;
 import earth.terrarium.botarium.lookup.BlockLookup;
 import earth.terrarium.botarium.storage.base.CommonStorage;
 import earth.terrarium.botarium.storage.common.CommonWrappedContainer;
@@ -28,7 +28,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Consumer;
 
-public abstract class WrappedBlockLookup<T, U extends TransferResource<T, U>, V extends TransferVariant<T>> implements BlockLookup<CommonStorage<U>, @Nullable Direction> {
+public abstract class WrappedBlockLookup<U extends Resource, V extends TransferVariant<?>> implements BlockLookup<CommonStorage<U>, @Nullable Direction> {
     private final BlockApiLookup<Storage<V>, Direction> fabricLookup;
 
     public WrappedBlockLookup(BlockApiLookup<Storage<V>, Direction> fabricLookup) {
@@ -64,9 +64,9 @@ public abstract class WrappedBlockLookup<T, U extends TransferResource<T, U>, V 
         }
     }
 
-    public abstract FabricWrappedContainer<T, U, V> wrap(CommonStorage<U> container);
+    public abstract FabricWrappedContainer<U, V> wrap(CommonStorage<U> container);
 
-    public static class ofFluid extends WrappedBlockLookup<Fluid, FluidResource, FluidVariant> {
+    public static class ofFluid extends WrappedBlockLookup<FluidResource, FluidVariant> {
         public ofFluid() {
             super(FluidStorage.SIDED);
         }
@@ -84,12 +84,12 @@ public abstract class WrappedBlockLookup<T, U extends TransferResource<T, U>, V 
         }
 
         @Override
-        public FabricWrappedContainer<Fluid, FluidResource, FluidVariant> wrap(CommonStorage<FluidResource> container) {
+        public FabricWrappedContainer<FluidResource, FluidVariant> wrap(CommonStorage<FluidResource> container) {
             return new FabricWrappedContainer.OfFluid(container);
         }
     }
 
-    public static class ofItem extends WrappedBlockLookup<Item, ItemResource, ItemVariant> {
+    public static class ofItem extends WrappedBlockLookup<ItemResource, ItemVariant> {
         public ofItem() {
             super(ItemStorage.SIDED);
         }
@@ -107,7 +107,7 @@ public abstract class WrappedBlockLookup<T, U extends TransferResource<T, U>, V 
         }
 
         @Override
-        public FabricWrappedContainer<Item, ItemResource, ItemVariant> wrap(CommonStorage<ItemResource> container) {
+        public FabricWrappedContainer<ItemResource, ItemVariant> wrap(CommonStorage<ItemResource> container) {
             return new FabricWrappedContainer.OfItem(container);
         }
     }

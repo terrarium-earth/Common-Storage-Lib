@@ -83,20 +83,20 @@ public class BaseEntityIngredient implements EntityIngredient {
         return TYPE;
     }
 
-    public record ItemValue(EntityResource Entity) implements Value {
+    public record ItemValue(EntityResource entity) implements Value {
         static final MapCodec<ItemValue> MAP_CODEC = RecordCodecBuilder.mapCodec(
-                instance -> instance.group(EntityResource.SIMPLE_CODEC.fieldOf("Entity").forGetter(arg -> arg.Entity)).apply(instance, ItemValue::new)
+                instance -> instance.group(EntityResource.SIMPLE_CODEC.fieldOf("entity").forGetter(arg -> arg.entity)).apply(instance, ItemValue::new)
         );
 
         static final Codec<ItemValue> CODEC = MAP_CODEC.codec();
 
         public boolean equals(Object object) {
-            return object instanceof ItemValue ingredient$itemvalue && ingredient$itemvalue.Entity.isOf(this.Entity.getType());
+            return object instanceof ItemValue ingredient$itemvalue && ingredient$itemvalue.entity.isOf(this.entity.getType());
         }
 
         @Override
         public Collection<EntityResource> getItems() {
-            return Collections.singleton(this.Entity);
+            return Collections.singleton(this.entity);
         }
     }
 

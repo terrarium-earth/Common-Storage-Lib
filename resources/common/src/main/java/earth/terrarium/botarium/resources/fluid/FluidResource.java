@@ -3,7 +3,8 @@ package earth.terrarium.botarium.resources.fluid;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import earth.terrarium.botarium.resources.TransferResource;
+import earth.terrarium.botarium.resources.Resource;
+import earth.terrarium.botarium.resources.ResourceComponent;
 import earth.terrarium.botarium.resources.ResourceStack;
 import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponentMap;
@@ -19,7 +20,7 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
 
-public final class FluidResource extends TransferResource<Fluid, FluidResource> {
+public final class FluidResource extends ResourceComponent {
     public static final FluidResource BLANK = FluidResource.of(Fluids.EMPTY, DataComponentPatch.EMPTY);
 
     public static final MapCodec<FluidResource> MAP_CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
@@ -55,8 +56,19 @@ public final class FluidResource extends TransferResource<Fluid, FluidResource> 
         return of(holder.value(), components);
     }
 
+    private final Fluid type;
+
     public FluidResource(Fluid type, PatchedDataComponentMap components) {
-        super(type, components);
+        super(components);
+        this.type = type;
+    }
+
+    public Fluid getType() {
+        return type;
+    }
+
+    public boolean isOf(Fluid type) {
+        return getType() == type;
     }
 
     @Override
@@ -64,21 +76,18 @@ public final class FluidResource extends TransferResource<Fluid, FluidResource> 
         return getType() == Fluids.EMPTY;
     }
 
-    @Override
     public <D> FluidResource set(DataComponentType<D> type, D value) {
-        PatchedDataComponentMap copy = components.copy();
+        PatchedDataComponentMap copy = new PatchedDataComponentMap(components);
         copy.set(type, value);
         return new FluidResource(this.type, copy);
     }
 
-    @Override
     public FluidResource modify(DataComponentPatch patch) {
-        PatchedDataComponentMap copy = components.copy();
+        PatchedDataComponentMap copy = new PatchedDataComponentMap(components);
         copy.applyPatch(patch);
         return new FluidResource(this.type, copy);
     }
 
-    @Override
     public ResourceStack<FluidResource> toStack(long amount) {
         return new ResourceStack<>(this, amount);
     }

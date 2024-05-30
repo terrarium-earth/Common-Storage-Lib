@@ -1,18 +1,16 @@
 package earth.terrarium.botarium.storage.util;
 
-import earth.terrarium.botarium.resources.TransferResource;
+import earth.terrarium.botarium.resources.Resource;
 import earth.terrarium.botarium.resources.ResourceStack;
 import earth.terrarium.botarium.resources.fluid.FluidResource;
 import earth.terrarium.botarium.resources.fluid.ingredient.SizedFluidIngredient;
 import earth.terrarium.botarium.resources.item.ItemResource;
 import earth.terrarium.botarium.storage.base.*;
-import net.minecraft.Optionull;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.Tuple;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.material.Fluid;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashSet;
@@ -21,10 +19,10 @@ import java.util.Set;
 import java.util.function.Predicate;
 
 public class TransferUtil {
-    public static <T> Optional<T> findResource(CommonStorage<T> container, Predicate<T> predicate) {
-        for (int i = 0; i < container.getSlotCount(); i++) {
+    public static <T extends Resource> Optional<T> findResource(CommonStorage<T> container, Predicate<T> predicate) {
+        for (int i = 0; i < container.size(); i++) {
             StorageSlot<T> slot = container.getSlot(i);
-            if (slot.isBlank()) continue;
+            if (slot.getResource().isBlank()) continue;
             T resource = slot.getResource();
             if (predicate.test(resource)) {
                 return Optional.of(resource);
@@ -33,7 +31,7 @@ public class TransferUtil {
         return Optional.empty();
     }
 
-    public static <T> Optional<T> findFirstResource(CommonStorage<T> container) {
+    public static <T extends Resource> Optional<T> findFirstResource(CommonStorage<T> container) {
         return findResource(container, resource -> true);
     }
 
@@ -67,7 +65,7 @@ public class TransferUtil {
         return 0;
     }
 
-    public static <T> Tuple<T, Long> moveFiltered(CommonStorage<T> from, StorageIO<T> to, Predicate<T> filter, long amount, boolean simulate) {
+    public static <T extends Resource> Tuple<T, Long> moveFiltered(CommonStorage<T> from, StorageIO<T> to, Predicate<T> filter, long amount, boolean simulate) {
         Optional<T> optional = findResource(from, filter);
         if (optional.isPresent()) {
             T resource = optional.get();
@@ -77,10 +75,10 @@ public class TransferUtil {
         return new Tuple<>(null, 0L);
     }
 
-    public static <T> Tuple<T, Long> moveAny(CommonStorage<T> from, StorageIO<T> to, long amount, boolean simulate) {
-        for (int i = 0; i < from.getSlotCount(); i++) {
+    public static <T extends Resource> Tuple<T, Long> moveAny(CommonStorage<T> from, StorageIO<T> to, long amount, boolean simulate) {
+        for (int i = 0; i < from.size(); i++) {
             StorageSlot<T> slot = from.getSlot(i);
-            if (slot.isBlank()) continue;
+            if (slot.getResource().isBlank()) continue;
             T resource = slot.getResource();
             long moved = move(from, to, resource, amount, simulate);
             if (moved > 0) {
@@ -90,10 +88,10 @@ public class TransferUtil {
         return new Tuple<>(null, 0L);
     }
 
-    public static <T> void moveAll(CommonStorage<T> from, StorageIO<T> to, boolean simulate) {
-        for (int i = 0; i < from.getSlotCount(); i++) {
+    public static <T extends Resource> void moveAll(CommonStorage<T> from, StorageIO<T> to, boolean simulate) {
+        for (int i = 0; i < from.size(); i++) {
             StorageSlot<T> slot = from.getSlot(i);
-            if (slot.isBlank()) continue;
+            if (slot.getResource().isBlank()) continue;
             T resource = slot.getResource();
             move(from, to, resource, Long.MAX_VALUE, simulate);
         }
@@ -117,7 +115,7 @@ public class TransferUtil {
         return 0;
     }
 
-    public static <T> long exchange(StorageIO<T> io, T oldresource, T newresource, long amount, boolean simulate) {
+    public static <T extends Resource> long exchange(StorageIO<T> io, T oldresource, T newresource, long amount, boolean simulate) {
         long extracted = io.extract(oldresource, amount, false);
         if (extracted > 0) {
             long inserted = io.insert(newresource, extracted, true);
@@ -131,15 +129,15 @@ public class TransferUtil {
         return 0;
     }
 
-    public static <T> long insertSlots(CommonStorage<T> container, T resource, long amount, boolean simulate) {
-        return insertSubset(container, 0, container.getSlotCount(), resource, amount, simulate);
+    public static <T extends Resource> long insertSlots(CommonStorage<T> container, T resource, long amount, boolean simulate) {
+        return insertSubset(container, 0, container.size(), resource, amount, simulate);
     }
 
-    public static <T> long insertSubset(CommonStorage<T> container, int start, int end, T resource, long amount, boolean simulate) {
+    public static <T extends Resource> long insertSubset(CommonStorage<T> container, int start, int end, T resource, long amount, boolean simulate) {
         long inserted = 0;
         for (int i = start; i < end; i++) {
             StorageSlot<T> slot = container.getSlot(i);
-            if (!slot.isBlank()) {
+            if (!slot.getResource().isBlank()) {
                 inserted += slot.insert(resource, amount - inserted, simulate);
                 if (inserted >= amount) {
                     return inserted;
@@ -155,11 +153,11 @@ public class TransferUtil {
         return inserted;
     }
 
-    public static <T> long extractSlots(CommonStorage<T> container, T resource, long amount, boolean simulate) {
-        return extractSubset(container, 0, container.getSlotCount(), resource, amount, simulate);
+    public static <T extends Resource> long extractSlots(CommonStorage<T> container, T resource, long amount, boolean simulate) {
+        return extractSubset(container, 0, container.size(), resource, amount, simulate);
     }
 
-    public static <T> long extractSubset(CommonStorage<T> container, int start, int end, T resource, long amount, boolean simulate) {
+    public static <T extends Resource> long extractSubset(CommonStorage<T> container, int start, int end, T resource, long amount, boolean simulate) {
         long extracted = 0;
         for (int i = start; i < end; i++) {
             extracted += container.getSlot(i).extract(resource, amount - extracted, simulate);
@@ -170,7 +168,7 @@ public class TransferUtil {
         return extracted;
     }
 
-    public static <T> void equalize(StorageSlot<T> slot, long amount) {
+    public static <T extends Resource> void equalize(StorageSlot<T> slot, long amount) {
         T resource = slot.getResource();
         long current = slot.getAmount();
         if (current < amount) {
@@ -180,21 +178,21 @@ public class TransferUtil {
         }
     }
 
-    public static <T extends TransferResource<?, T>> long insertStack(CommonStorage<T> container, ResourceStack<T> stack, boolean simulate) {
+    public static <T extends Resource> long insertStack(CommonStorage<T> container, ResourceStack<T> stack, boolean simulate) {
         return insertSlots(container, stack.resource(), stack.amount(), simulate);
     }
 
-    public static <T extends TransferResource<?, T>> long extractStack(CommonStorage<T> container, ResourceStack<T> stack, boolean simulate) {
+    public static <T extends Resource> long extractStack(CommonStorage<T> container, ResourceStack<T> stack, boolean simulate) {
         return extractSlots(container, stack.resource(), stack.amount(), simulate);
     }
 
     @Nullable
-    public static <T extends TransferResource<?, T>> ResourceStack<T> extractPredicate(CommonStorage<T> container, Predicate<T> predicate, long amount, boolean simulate) {
+    public static <T extends Resource> ResourceStack<T> extractPredicate(CommonStorage<T> container, Predicate<T> predicate, long amount, boolean simulate) {
         Set<T> resources = new HashSet<>();
         ResourceStack<T> stack = null;
-        for (int i = 0; i < container.getSlotCount(); i++) {
+        for (int i = 0; i < container.size(); i++) {
             StorageSlot<T> slot = container.getSlot(i);
-            if (slot.isBlank()) continue;
+            if (slot.getResource().isBlank()) continue;
             T resource = slot.getResource();
             if (predicate.test(resource)) {
                 if (resources.contains(resource)) continue;

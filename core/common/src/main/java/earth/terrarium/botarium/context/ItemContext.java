@@ -11,7 +11,7 @@ import net.minecraft.core.component.DataComponentPatch;
 
 public interface ItemContext extends StorageIO<ItemResource> {
     default <T> T find(ItemLookup<T, ItemContext> lookup) {
-        return lookup.find(getResource().toItemStack((int) getAmount()), this);
+        return lookup.find(getResource().toStack((int) getAmount()), this);
     }
 
     default boolean isPresent(ItemLookup<?, ItemContext> lookup) {

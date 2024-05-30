@@ -9,7 +9,7 @@ public class ItemResourceActual {
     }
 
     @Actual
-    private static boolean hasCraftingRemainingItem(ItemResource resource) {
+    private static boolean hasCraftingRemainder(ItemResource resource) {
         return resource.getCachedStack().hasCraftingRemainingItem();
     }
 }

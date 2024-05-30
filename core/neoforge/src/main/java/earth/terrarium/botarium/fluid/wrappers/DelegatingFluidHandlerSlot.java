@@ -6,12 +6,12 @@ import earth.terrarium.botarium.storage.base.StorageSlot;
 
 public record DelegatingFluidHandlerSlot(AbstractCommonFluidContainer provider, int slot) implements StorageSlot<FluidResource> {
     @Override
-    public long getLimit() {
+    public long getLimit(FluidResource resource) {
         return provider.handler().getTankCapacity(slot);
     }
 
     @Override
-    public boolean isValueValid(FluidResource resource) {
+    public boolean isResourceValid(FluidResource resource) {
         return provider.handler().isFluidValid(slot, ConversionUtils.convert(resource, 1));
     }
 
@@ -26,18 +26,13 @@ public record DelegatingFluidHandlerSlot(AbstractCommonFluidContainer provider, 
     }
 
     @Override
-    public boolean isBlank() {
-        return provider.handler().getFluidInTank(slot).isEmpty();
-    }
-
-    @Override
     public long insert(FluidResource resource, long amount, boolean simulate) {
         return provider.insert(resource, amount, simulate);
     }
 
     @Override
     public long extract(FluidResource resource, long amount, boolean simulate) {
-        if (!resource.test(getResource())) return 0;
+        if (!resource.equals(getResource())) return 0;
         return provider.extract(resource, amount, simulate);
     }
 }

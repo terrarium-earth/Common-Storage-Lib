@@ -17,7 +17,7 @@ public interface AbstractNeoFluidHandler extends IFluidHandler {
 
     @Override
     default int getTanks() {
-        return container().getSlotCount();
+        return container().size();
     }
 
     @Override
@@ -28,12 +28,12 @@ public interface AbstractNeoFluidHandler extends IFluidHandler {
 
     @Override
     default int getTankCapacity(int i) {
-        return (int) container().getSlot(i).getLimit();
+        return (int) container().getSlot(i).getLimit(FluidResource.BLANK);
     }
 
     @Override
     default boolean isFluidValid(int i, FluidStack fluidStack) {
-        return container().getSlot(i).isValueValid(FluidResource.of(fluidStack.getFluid(), fluidStack.getComponentsPatch()));
+        return container().getSlot(i).isResourceValid(FluidResource.of(fluidStack.getFluid(), fluidStack.getComponentsPatch()));
     }
 
     @Override

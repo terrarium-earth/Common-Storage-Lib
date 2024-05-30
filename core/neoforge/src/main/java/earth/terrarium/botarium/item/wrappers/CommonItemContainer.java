@@ -10,7 +10,7 @@ import org.jetbrains.annotations.NotNull;
 
 public record CommonItemContainer(IItemHandler handler) implements CommonStorage<ItemResource> {
     @Override
-    public int getSlotCount() {
+    public int size() {
         return handler.getSlots();
     }
 
@@ -32,13 +32,13 @@ public record CommonItemContainer(IItemHandler handler) implements CommonStorage
     public record DelegatingItemSlot(IItemHandler handler, int slot) implements StorageSlot<ItemResource> {
 
         @Override
-        public long getLimit() {
+        public long getLimit(ItemResource resource) {
             return handler.getSlotLimit(slot);
         }
 
         @Override
-        public boolean isValueValid(ItemResource resource) {
-            return handler.isItemValid(slot, resource.toItemStack());
+        public boolean isResourceValid(ItemResource resource) {
+            return handler.isItemValid(slot, resource.toStack());
         }
 
         @Override
@@ -52,13 +52,8 @@ public record CommonItemContainer(IItemHandler handler) implements CommonStorage
         }
 
         @Override
-        public boolean isBlank() {
-            return handler.getStackInSlot(slot).isEmpty();
-        }
-
-        @Override
         public long insert(ItemResource resource, long amount, boolean simulate) {
-            ItemStack leftover = handler.insertItem(slot, resource.toItemStack((int) amount), simulate);
+            ItemStack leftover = handler.insertItem(slot, resource.toStack((int) amount), simulate);
             return amount - leftover.getCount();
         }
 

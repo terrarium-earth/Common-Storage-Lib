@@ -18,6 +18,7 @@ includeSubmodule("data")
 includeSubmodule("lookup")
 includeSubmodule("resources")
 includeSubmodule("test")
+includeSubmodule("bytecodecs")
 
 includeCorePlatform("common")
 includeCorePlatform("fabric")

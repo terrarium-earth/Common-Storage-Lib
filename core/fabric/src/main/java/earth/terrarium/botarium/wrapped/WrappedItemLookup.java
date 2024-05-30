@@ -2,7 +2,7 @@ package earth.terrarium.botarium.wrapped;
 
 import earth.terrarium.botarium.resources.fluid.FluidResource;
 import earth.terrarium.botarium.storage.ConversionUtils;
-import earth.terrarium.botarium.resources.TransferResource;
+import earth.terrarium.botarium.resources.Resource;
 import earth.terrarium.botarium.context.ItemContext;
 import earth.terrarium.botarium.lookup.ItemLookup;
 import earth.terrarium.botarium.storage.base.CommonStorage;
@@ -23,7 +23,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Consumer;
 
-public abstract class WrappedItemLookup<T, U extends TransferResource<T, U>, V extends TransferVariant<T>> implements ItemLookup<CommonStorage<U>, ItemContext> {
+public abstract class WrappedItemLookup<U extends Resource, V extends TransferVariant<?>> implements ItemLookup<CommonStorage<U>, ItemContext> {
     private final ItemApiLookup<Storage<V>, ContainerItemContext> fabricLookup;
 
     public WrappedItemLookup(ItemApiLookup<Storage<V>, ContainerItemContext> fabricLookup) {
@@ -45,19 +45,19 @@ public abstract class WrappedItemLookup<T, U extends TransferResource<T, U>, V e
         }, items);
     }
 
-    public abstract FabricWrappedContainer<T, U, V> wrap(CommonStorage<U> container);
+    public abstract FabricWrappedContainer<U, V> wrap(CommonStorage<U> container);
 
     public ItemApiLookup<Storage<V>, ContainerItemContext> getFabricLookup() {
         return fabricLookup;
     }
 
-    public static class OfFluid extends WrappedItemLookup<Fluid, FluidResource, FluidVariant> {
+    public static class OfFluid extends WrappedItemLookup<FluidResource, FluidVariant> {
         public OfFluid() {
             super(FluidStorage.ITEM);
         }
 
         @Override
-        public FabricWrappedContainer<Fluid, FluidResource, FluidVariant> wrap(CommonStorage<FluidResource> container) {
+        public FabricWrappedContainer<FluidResource, FluidVariant> wrap(CommonStorage<FluidResource> container) {
             return new FabricWrappedContainer.OfFluid(container);
         }
 
