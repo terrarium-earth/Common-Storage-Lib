@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "id": "botarium_resources",
+  "id": "common_storage_lib_resources",
   "version": "${version}",
-  "name": "Botarium Resources",
+  "name": "Common Storage Lib: Resources",
   "description": "Abstraction for Transfer resources, including Item, Fluids and Entity resources, as well as Ingredient, Tag, and Codec utilities for them",
   "authors": [
     "CodexAdrian"
@@ -15,7 +15,7 @@
   "environment": "*",
   "entrypoints": {
     "main": [
-      "earth.terrarium.botarium.resources.BotariumResources::init"
+      "earth.terrarium.common_storage_lib.resources.ResourceLib::init"
     ]
   },
   "depends": {

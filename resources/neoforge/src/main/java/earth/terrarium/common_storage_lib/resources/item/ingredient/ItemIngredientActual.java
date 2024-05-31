@@ -1,0 +1,47 @@
+package earth.terrarium.common_storage_lib.resources.item.ingredient;
+
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraftforge.common.crafting.CompoundIngredient;
+import net.minecraftforge.common.crafting.DifferenceIngredient;
+import net.minecraftforge.common.crafting.IntersectionIngredient;
+import net.msrandom.multiplatform.annotations.Actual;
+
+public class ItemIngredientActual {
+    @Actual
+    public static Ingredient all(Ingredient... ingredients) {
+        return IntersectionIngredient.of(ingredients);
+    }
+
+    @Actual
+    public static Ingredient any(Ingredient... ingredients) {
+        return CompoundIngredient.of(ingredients);
+    }
+
+    @Actual
+    public static Ingredient difference(Ingredient base, Ingredient subtracted) {
+        return DifferenceIngredient.of(base, subtracted);
+    }
+
+    /*
+    @Actual
+    public static Ingredient components(Ingredient base, DataComponentPredicate components) {
+        ItemStack[] items = base.getItems();
+        Holder<Item>[] holders = new Holder[items.length];
+        for (int i = 0; i < items.length; i++) {
+            holders[i] = items[i].getItem().builtInRegistryHolder();
+        }
+        HolderSet<Item> set = HolderSet.direct(holders);
+        return new DataComponentIngredient(set, components, true).toVanilla();
+    }
+
+    @Actual
+    public static Ingredient components(ItemStack stack) {
+        return DataComponentIngredient.of(true, stack);
+    }
+
+    @Actual
+    private static MapCodec<Ingredient> getNonEmptyMapCodec() {
+        return Ingredient.MAP_CODEC_NONEMPTY;
+    }
+    */
+}

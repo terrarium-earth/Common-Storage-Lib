@@ -1,8 +1,8 @@
 dependencies {
     if (System.getProperty("idea.sync.active", false.toString()).toBoolean()) {
-        compileOnly(projects.botariumCoreCommon)
+        compileOnly(projects.commonStorageLibCoreCommon)
     }
-    implementation(projects.botariumLookupNeoforge)
-    implementation(projects.botariumResourcesNeoforge)
-    implementation(projects.botariumCoreNeoforge)
+    implementation(projects.commonStorageLibLookupNeoforge)
+    implementation(projects.commonStorageLibResourcesNeoforge)
+    implementation(projects.commonStorageLibCoreNeoforge)
 }

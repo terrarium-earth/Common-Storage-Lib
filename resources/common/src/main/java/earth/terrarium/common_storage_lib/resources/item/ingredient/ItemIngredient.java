@@ -1,0 +1,28 @@
+package earth.terrarium.common_storage_lib.resources.item.ingredient;
+
+import net.minecraft.world.item.crafting.Ingredient;
+import net.msrandom.multiplatform.annotations.Expect;
+
+public class ItemIngredient {
+    // public static final MapCodec<Ingredient> NON_EMPTY_MAP_CODEC = ItemIngredient.getNonEmptyMapCodec();
+
+    @Expect
+    public static Ingredient all(Ingredient... ingredients);
+
+    @Expect
+    public static Ingredient any(Ingredient... ingredients);
+
+    @Expect
+    public static Ingredient difference(Ingredient base, Ingredient subtracted);
+
+    /*
+    @Expect
+    public static Ingredient components(Ingredient base, DataComponentPredicate components);
+
+    @Expect
+    public static Ingredient components(ItemStack stack);
+
+    @Expect
+    private static MapCodec<Ingredient> getNonEmptyMapCodec();
+     */
+}

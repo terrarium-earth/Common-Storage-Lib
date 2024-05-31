@@ -5,6 +5,6 @@ tasks.jar {
 }
 
 dependencies {
-    implementation(projects.botariumLookupCommon)
-    implementation(projects.botariumResourcesCommon)
+    implementation(projects.commonStorageLibLookupCommon)
+    implementation(projects.commonStorageLibResourcesCommon)
 }

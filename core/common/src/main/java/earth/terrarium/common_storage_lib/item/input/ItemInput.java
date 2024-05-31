@@ -1,0 +1,38 @@
+package earth.terrarium.common_storage_lib.item.input;
+
+import com.mojang.datafixers.util.Either;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
+import earth.terrarium.common_storage_lib.context.ItemContext;
+import earth.terrarium.common_storage_lib.item.input.consumers.SizedConsumer;
+import earth.terrarium.common_storage_lib.resources.util.CodecUtils;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
+
+import java.util.function.Function;
+import java.util.stream.Stream;
+
+public record ItemInput(Ingredient ingredient, ItemConsumer consumer, Stream<ItemStack> stacks) {
+    public static final MapCodec<ItemInput> BASE_CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
+            CodecUtils.INGREDIENT_CODEC.fieldOf("ingredient").forGetter(ItemInput::ingredient),
+            ItemConsumer.CODEC.fieldOf("consume").forGetter(ItemInput::consumer)
+    ).apply(instance, ItemInput::new));
+
+    public static final Codec<ItemInput> CODEC = Codec.either(BASE_CODEC.codec(), CodecUtils.INGREDIENT_CODEC).xmap(
+            a -> a.map(Function.identity(), ingredient -> new ItemInput(ingredient, SizedConsumer.DEFAULT)),
+            Either::left
+    );
+
+    public ItemInput(Ingredient ingredient, ItemConsumer consumer) {
+        this(ingredient, consumer, Stream.of(ingredient.getItems()).map(consumer::modifyDisplay));
+    }
+
+    public boolean test(ItemStack stack, ItemContext context) {
+        return ingredient.test(stack) && consumer.test(stack, context);
+    }
+
+    public void consume(ItemStack stack, ItemContext context) {
+        consumer.consume(stack, context);
+    }
+}

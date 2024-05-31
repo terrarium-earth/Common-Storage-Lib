@@ -1,6 +1,6 @@
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
-rootProject.name = "botarium"
+rootProject.name = "common_storage_lib"
 
 pluginManagement {
     repositories {

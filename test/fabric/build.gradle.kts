@@ -1,8 +1,8 @@
 dependencies {
     if (System.getProperty("idea.sync.active", false.toString()).toBoolean()) {
-        compileOnly(projects.botariumCoreCommon)
+        compileOnly(projects.commonStorageLibCoreCommon)
     }
-    include(implementation(projects.botariumLookupFabric)!!)
-    include(implementation(projects.botariumResourcesFabric)!!)
-    include(implementation(projects.botariumCoreFabric)!!)
+    include(implementation(projects.commonStorageLibLookupFabric)!!)
+    include(implementation(projects.commonStorageLibResourcesFabric)!!)
+    include(implementation(projects.commonStorageLibCoreFabric)!!)
 }
