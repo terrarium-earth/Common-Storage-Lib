@@ -32,7 +32,7 @@ public final class ItemItemLookup implements ItemLookup<CommonStorage<ItemResour
     private final List<Consumer<ItemRegistrar<CommonStorage<ItemResource>, ItemContext>>> registrars = new ArrayList<>();
 
     private ItemItemLookup() {
-        registerItem(this);
+        RegistryEventListener.registerItem(this);
     }
 
     @Override

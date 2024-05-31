@@ -4,7 +4,6 @@ import earth.terrarium.botarium.resources.fluid.FluidResource;
 import earth.terrarium.botarium.resources.item.ItemResource;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
-import net.fabricmc.fabric.impl.transfer.item.ItemVariantImpl;
 
 public class ConversionUtils {
     public static ItemResource toResource(ItemVariant variant) {

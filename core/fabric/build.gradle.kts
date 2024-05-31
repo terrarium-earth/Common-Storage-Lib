@@ -6,7 +6,7 @@ dependencies {
     include(implementation(projects.botariumLookupFabric)!!)
     include(implementation(projects.botariumResourcesFabric)!!)
 
-    include(modApi(group = "teamreborn", name = "energy", version = "4.0.0")) {
+    include(modApi(group = "teamreborn", name = "energy", version = "3.0.0")) {
         exclude(group = "net.fabricmc", module = "fabric-api")
     }
 }
