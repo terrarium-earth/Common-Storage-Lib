@@ -1,35 +1,22 @@
 package earth.terrarium.botarium.resources;
 
-import net.minecraft.core.component.DataComponentHolder;
-import net.minecraft.core.component.DataComponentMap;
-import net.minecraft.core.component.DataComponentPatch;
-import net.minecraft.core.component.PatchedDataComponentMap;
+import net.minecraft.nbt.CompoundTag;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 
-public abstract class ResourceComponent implements Resource, DataComponentHolder {
-    protected final DataComponentMap components;
-    private DataComponentPatch dataPatch;
+public abstract class ResourceComponent implements Resource {
+    protected final CompoundTag tag;
 
-    protected ResourceComponent(DataComponentMap components) {
-        this.components = components;
+    protected ResourceComponent(CompoundTag tag) {
+        this.tag = tag;
     }
 
-    public DataComponentPatch getDataPatch() {
-        DataComponentPatch patch = dataPatch;
-        if (patch == null) {
-            patch = dataPatch = components instanceof PatchedDataComponentMap ? ((PatchedDataComponentMap) components).asPatch() : DataComponentPatch.EMPTY;
-        }
-        return patch;
+    public @NotNull CompoundTag getTag() {
+        return tag;
     }
 
-    @Override
-    public @NotNull DataComponentMap getComponents() {
-        return components;
-    }
-
-    public boolean componentsMatch(DataComponentPatch other) {
-        return Objects.equals(getDataPatch(), other);
+    public boolean tagsMatch(CompoundTag other) {
+        return Objects.equals(tag, other);
     }
 }

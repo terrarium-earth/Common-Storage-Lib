@@ -1,7 +1,7 @@
 package earth.terrarium.botarium.energy.wrappers;
 
 import earth.terrarium.botarium.storage.base.ValueStorage;
-import net.neoforged.neoforge.energy.IEnergyStorage;
+import net.minecraftforge.energy.IEnergyStorage;
 
 public interface AbstractCommonEnergyStorage extends ValueStorage {
     IEnergyStorage storage();

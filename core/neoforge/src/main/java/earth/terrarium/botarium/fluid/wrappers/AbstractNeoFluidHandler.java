@@ -6,8 +6,8 @@ import earth.terrarium.botarium.storage.base.CommonStorage;
 import earth.terrarium.botarium.storage.base.StorageSlot;
 import earth.terrarium.botarium.storage.util.TransferUtil;
 import earth.terrarium.botarium.storage.base.UpdateManager;
-import net.neoforged.neoforge.fluids.FluidStack;
-import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.capability.IFluidHandler;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
@@ -33,7 +33,7 @@ public interface AbstractNeoFluidHandler extends IFluidHandler {
 
     @Override
     default boolean isFluidValid(int i, FluidStack fluidStack) {
-        return container().get(i).isResourceValid(FluidResource.of(fluidStack.getFluid(), fluidStack.getComponentsPatch()));
+        return container().get(i).isResourceValid(FluidResource.of(fluidStack.getFluid(), fluidStack.getTag()));
     }
 
     @Override

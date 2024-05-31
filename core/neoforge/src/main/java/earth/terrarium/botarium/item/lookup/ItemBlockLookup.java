@@ -1,41 +1,47 @@
 package earth.terrarium.botarium.item.lookup;
 
-import earth.terrarium.botarium.resources.item.ItemResource;
+import earth.terrarium.botarium.Botarium;
 import earth.terrarium.botarium.item.wrappers.CommonItemContainer;
 import earth.terrarium.botarium.item.wrappers.NeoItemHandler;
 import earth.terrarium.botarium.lookup.BlockLookup;
 import earth.terrarium.botarium.lookup.RegistryEventListener;
+import earth.terrarium.botarium.resources.item.ItemResource;
 import earth.terrarium.botarium.storage.base.CommonStorage;
-import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.world.level.Level;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.capabilities.Capabilities;
-import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
-import net.neoforged.neoforge.items.IItemHandler;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
+import net.minecraftforge.common.capabilities.ICapabilityProvider;
+import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.event.AttachCapabilitiesEvent;
+import net.minecraftforge.items.IItemHandler;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
-public final class ItemBlockLookup implements BlockLookup<CommonStorage<ItemResource>, Direction>, RegistryEventListener {
+public final class ItemBlockLookup implements BlockLookup<CommonStorage<ItemResource>, Direction>, RegistryEventListener<BlockEntity> {
     public static final ItemBlockLookup INSTANCE = new ItemBlockLookup();
+    public static final ResourceLocation NAME = new ResourceLocation(Botarium.MOD_ID, "item_block");
     private final List<Consumer<BlockRegistrar<CommonStorage<ItemResource>, Direction>>> registrars = new ArrayList<>();
 
     private ItemBlockLookup() {
-        registerSelf();
+        RegistryEventListener.registerBlock(this);
     }
 
     @Override
-    public @Nullable CommonStorage<ItemResource> find(Level level, BlockPos pos, @Nullable BlockState state, @Nullable BlockEntity entity, @Nullable Direction direction) {
-        IItemHandler handler = level.getCapability(Capabilities.ItemHandler.BLOCK, pos, state, entity, direction);
-        if (handler instanceof NeoItemHandler(CommonStorage<ItemResource> container)) {
-            return container;
+    public @Nullable CommonStorage<ItemResource> find(BlockEntity block, @Nullable Direction direction) {
+        LazyOptional<IItemHandler> storage = block.getCapability(ForgeCapabilities.ITEM_HANDLER, direction);
+        if (storage.isPresent()) {
+            IItemHandler itemStorage = storage.orElseThrow(IllegalStateException::new);
+            if (itemStorage instanceof NeoItemHandler(CommonStorage<ItemResource> container)) {
+                return container;
+            }
+            return new CommonItemContainer(itemStorage);
         }
-        return handler == null ? null : new CommonItemContainer(handler);
+        return null;
     }
 
     @Override
@@ -44,29 +50,31 @@ public final class ItemBlockLookup implements BlockLookup<CommonStorage<ItemReso
     }
 
     @Override
-    public void register(RegisterCapabilitiesEvent event) {
-        registrars.forEach(registrar -> registrar.accept(new EventRegistrar(event)));
+    public void register(AttachCapabilitiesEvent<BlockEntity> event) {
+        registrars.forEach(registrar -> registrar.accept((getter, blockEntityTypes) -> {
+            for (BlockEntityType<?> blockEntityType : blockEntityTypes) {
+                if (blockEntityType == event.getObject().getType()) {
+                    event.addCapability(NAME, new ItemCap(getter, event.getObject()));
+                    return;
+                }
+            }
+        }));
     }
 
-    public record EventRegistrar(RegisterCapabilitiesEvent event) implements BlockRegistrar<CommonStorage<ItemResource>, Direction> {
-        @Override
-        public void registerBlocks(BlockGetter<CommonStorage<ItemResource>, Direction> getter, net.minecraft.world.level.block.Block... containers) {
-            for (net.minecraft.world.level.block.Block block : containers) {
-                event.registerBlock(Capabilities.ItemHandler.BLOCK, (level, pos, state, entity, direction) -> {
-                    CommonStorage<ItemResource> container = getter.getContainer(level, pos, state, entity, direction);
-                    return container == null ? null : new NeoItemHandler(container);
-                }, block);
-            }
+    public static class ItemCap implements ICapabilityProvider {
+        private final BlockEntityGetter<CommonStorage<ItemResource>, Direction> getter;
+        private final BlockEntity blockEntity;
+
+        public ItemCap(BlockEntityGetter<CommonStorage<ItemResource>, Direction> getter, BlockEntity blockEntity) {
+            this.getter = getter;
+            this.blockEntity = blockEntity;
         }
 
         @Override
-        public void registerBlockEntities(BlockEntityGetter<CommonStorage<ItemResource>, Direction> getter, BlockEntityType<?>... containers) {
-            for (BlockEntityType<?> blockEntityType : containers) {
-                event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, blockEntityType, (entity, direction) -> {
-                    CommonStorage<ItemResource> container = getter.getContainer(entity, direction);
-                    return container == null ? null : new NeoItemHandler(container);
-                });
-            }
+        public <T> LazyOptional<T> getCapability(net.minecraftforge.common.capabilities.Capability<T> cap, @Nullable Direction side) {
+            CommonStorage<ItemResource> container = getter.getContainer(blockEntity, side);
+            LazyOptional<IItemHandler> optional = LazyOptional.of(() -> new NeoItemHandler(container));
+            return cap.orEmpty(ForgeCapabilities.ITEM_HANDLER, optional.cast()).cast();
         }
     }
 }

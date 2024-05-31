@@ -1,7 +1,7 @@
 package earth.terrarium.botarium.fluid.util;
 
 import earth.terrarium.botarium.resources.fluid.FluidResource;
-import net.neoforged.neoforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidStack;
 
 public class ConversionUtils {
     public static FluidStack convert(FluidResource resource, long amount) {

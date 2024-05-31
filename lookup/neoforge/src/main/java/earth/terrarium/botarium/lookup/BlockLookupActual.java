@@ -7,8 +7,8 @@ import net.msrandom.multiplatform.annotations.Actual;
 public interface BlockLookupActual {
     @Actual
     static <T, C> BlockLookup<T, C> create(ResourceLocation name, Class<T> typeClass, Class<C> contextClass) {
-        NeoBlockLookup<T, C> lookup = new NeoBlockLookup<>(name, typeClass, contextClass);
-        RegistryEventListener.REGISTRARS.add(lookup);
+        NeoBlockLookup<T, C> lookup = new NeoBlockLookup<>(name);
+        RegistryEventListener.registerBlock(lookup);
         return lookup;
     }
 }

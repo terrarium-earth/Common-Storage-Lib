@@ -6,7 +6,7 @@ import earth.terrarium.botarium.storage.base.CommonStorage;
 import earth.terrarium.botarium.storage.base.StorageSlot;
 import earth.terrarium.botarium.storage.util.TransferUtil;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.items.IItemHandler;
+import net.minecraftforge.items.IItemHandler;
 import org.jetbrains.annotations.NotNull;
 
 public record CommonItemContainerItem(IItemHandler handler, ItemStack stack, ItemContext context) implements CommonStorage<ItemResource> {

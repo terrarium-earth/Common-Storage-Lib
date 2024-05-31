@@ -4,7 +4,7 @@ import earth.terrarium.botarium.fluid.util.ConversionUtils;
 import earth.terrarium.botarium.resources.fluid.FluidResource;
 import earth.terrarium.botarium.storage.base.CommonStorage;
 import earth.terrarium.botarium.storage.base.StorageSlot;
-import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidHandler;
 import org.jetbrains.annotations.NotNull;
 
 public interface AbstractCommonFluidContainer extends CommonStorage<FluidResource> {

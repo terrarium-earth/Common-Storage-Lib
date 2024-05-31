@@ -24,12 +24,11 @@ subprojects {
     val minecraftVersion: String by project
     val modId = rootProject.name
 
-    val moduleType = project.layout.projectDirectory.asFile.parentFile.name.takeUnless { it == "core" }
+    val moduleType = project.layout.projectDirectory.asFile.parentFile.name
     val modLoader = project.layout.projectDirectory.asFile.name
     val isCommon = modLoader == "common"
     val commonPath = when {
         isCommon -> project.name
-        moduleType == null -> ":${rootProject.name}-common"
         else -> ":${rootProject.name}-$moduleType-common"
     }
 
@@ -110,7 +109,7 @@ subprojects {
         }
 
         if (isNeoForge) {
-            "neoForge"(group = "net.neoforged", name = "neoforge", version = neoforgeVersion)
+            "forge"(group = "net.neoforged", name = "forge", version = neoforgeVersion)
         }
 
         annotationProcessor(group = "net.msrandom", name = "multiplatform-processor", version = "1.0.7")

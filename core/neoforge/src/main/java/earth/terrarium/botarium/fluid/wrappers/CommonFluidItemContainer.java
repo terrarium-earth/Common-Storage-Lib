@@ -6,8 +6,8 @@ import earth.terrarium.botarium.resources.fluid.FluidResource;
 import earth.terrarium.botarium.resources.item.ItemResource;
 import earth.terrarium.botarium.storage.util.TransferUtil;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.fluids.capability.IFluidHandler;
-import net.neoforged.neoforge.fluids.capability.IFluidHandlerItem;
+import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 
 public final class CommonFluidItemContainer implements AbstractCommonFluidContainer {
     private final IFluidHandlerItem handler;

@@ -4,7 +4,7 @@ import earth.terrarium.botarium.context.ItemContext;
 import earth.terrarium.botarium.resources.item.ItemResource;
 import earth.terrarium.botarium.storage.util.TransferUtil;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.energy.IEnergyStorage;
+import net.minecraftforge.energy.IEnergyStorage;
 
 public record CommonItemEnergyStorage(IEnergyStorage storage, ItemStack stack, ItemContext context) implements AbstractCommonEnergyStorage {
     @Override

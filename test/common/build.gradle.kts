@@ -5,8 +5,7 @@ tasks.jar {
 }
 
 dependencies {
-    implementation(projects.botariumDataCommon)
     implementation(projects.botariumLookupCommon)
     implementation(projects.botariumResourcesCommon)
-    implementation(projects.botariumCommon)
+    implementation(projects.botariumCoreCommon)
 }

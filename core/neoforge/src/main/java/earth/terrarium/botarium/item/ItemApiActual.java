@@ -1,5 +1,6 @@
 package earth.terrarium.botarium.item;
 
+import earth.terrarium.botarium.Botarium;
 import earth.terrarium.botarium.context.ItemContext;
 import earth.terrarium.botarium.resources.item.ItemResource;
 import earth.terrarium.botarium.item.lookup.ItemBlockLookup;
@@ -10,6 +11,7 @@ import earth.terrarium.botarium.lookup.EntityLookup;
 import earth.terrarium.botarium.lookup.ItemLookup;
 import earth.terrarium.botarium.storage.base.CommonStorage;
 import net.minecraft.core.Direction;
+import net.minecraft.resources.ResourceLocation;
 import net.msrandom.multiplatform.annotations.Actual;
 import org.jetbrains.annotations.Nullable;
 
@@ -20,7 +22,7 @@ public class ItemApiActual {
     @Actual
     public static final ItemLookup<CommonStorage<ItemResource>, ItemContext> ITEM = ItemItemLookup.INSTANCE;
     @Actual
-    public static final EntityLookup<CommonStorage<ItemResource>, Void> ENTITY = ItemEntityLookup.INSTANCE;
+    public static final EntityLookup<CommonStorage<ItemResource>, Void> ENTITY = EntityLookup.create(new ResourceLocation(Botarium.MOD_ID, "fluid"), CommonStorage.asClass(), Void.class);
     @Actual
-    public static final EntityLookup<CommonStorage<ItemResource>, Direction> ENTITY_AUTOMATION = ItemEntityLookup.AUTOMATION;
+    public static final EntityLookup<CommonStorage<ItemResource>, Direction> ENTITY_AUTOMATION = ItemEntityLookup.INSTANCE;
 }

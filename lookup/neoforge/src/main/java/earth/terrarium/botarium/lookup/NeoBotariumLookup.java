@@ -1,13 +1,13 @@
 package earth.terrarium.botarium.lookup;
 
-import net.neoforged.bus.api.IEventBus;
-import net.neoforged.fml.common.Mod;
-import net.neoforged.fml.event.IModBusEvent;
-import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
+import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
 @Mod("botarium_lookup")
 public class NeoBotariumLookup {
-    public NeoBotariumLookup(IEventBus event) {
-        event.addListener(RegistryEventListener::registerAll);
+    public NeoBotariumLookup() {
+        IEventBus event = FMLJavaModLoadingContext.get().getModEventBus();
+        RegistryEventListener.registerAll(event);
     }
 }

@@ -1,60 +1,82 @@
 package earth.terrarium.botarium.item.lookup;
 
-import earth.terrarium.botarium.resources.item.ItemResource;
+import earth.terrarium.botarium.Botarium;
 import earth.terrarium.botarium.item.wrappers.CommonItemContainer;
 import earth.terrarium.botarium.item.wrappers.NeoItemHandler;
-import earth.terrarium.botarium.lookup.RegistryEventListener;
 import earth.terrarium.botarium.lookup.EntityLookup;
+import earth.terrarium.botarium.lookup.RegistryEventListener;
+import earth.terrarium.botarium.resources.item.ItemResource;
 import earth.terrarium.botarium.storage.base.CommonStorage;
 import net.minecraft.core.Direction;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
-import net.neoforged.neoforge.capabilities.Capabilities;
-import net.neoforged.neoforge.capabilities.EntityCapability;
-import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
-import net.neoforged.neoforge.items.IItemHandler;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
+import net.minecraftforge.common.capabilities.ICapabilityProvider;
+import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.event.AttachCapabilitiesEvent;
+import net.minecraftforge.items.IItemHandler;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
-public final class ItemEntityLookup<C> implements EntityLookup<CommonStorage<ItemResource>, C>, RegistryEventListener {
-    public static final ItemEntityLookup<Void> INSTANCE = new ItemEntityLookup<>(Capabilities.ItemHandler.ENTITY);
-    public static final ItemEntityLookup<Direction> AUTOMATION = new ItemEntityLookup<>(Capabilities.ItemHandler.ENTITY_AUTOMATION);
+public final class ItemEntityLookup implements EntityLookup<CommonStorage<ItemResource>, Direction>, RegistryEventListener<Entity> {
+    public static final ItemEntityLookup INSTANCE = new ItemEntityLookup();
+    public static final ResourceLocation NAME = new ResourceLocation(Botarium.MOD_ID, "item_entity");
 
-    private final List<Consumer<EntityRegistrar<CommonStorage<ItemResource>, C>>> registrars = new ArrayList<>();
-    private final EntityCapability<IItemHandler, C> capability;
+    private final List<Consumer<EntityRegistrar<CommonStorage<ItemResource>, Direction>>> registrars = new ArrayList<>();
 
-    private ItemEntityLookup(EntityCapability<IItemHandler, C> capability) {
-        this.capability = capability;
-        registerSelf();
+    private ItemEntityLookup() {
+        RegistryEventListener.registerEntity(this);
     }
 
     @Override
-    public @Nullable CommonStorage<ItemResource> find(Entity entity, C context) {
-        IItemHandler handler = entity.getCapability(capability, context);
-        if (handler instanceof NeoItemHandler(CommonStorage<ItemResource> container)) {
-            return container;
+    public @Nullable CommonStorage<ItemResource> find(Entity entity, Direction context) {
+        LazyOptional<IItemHandler> storage = entity.getCapability(ForgeCapabilities.ITEM_HANDLER, context);
+        if (storage.isPresent()) {
+            IItemHandler itemStorage = storage.orElseThrow(IllegalStateException::new);
+            if (itemStorage instanceof NeoItemHandler(CommonStorage<ItemResource> container)) {
+                return container;
+            }
+            return new CommonItemContainer(itemStorage);
         }
-
-        return handler == null ? null : new CommonItemContainer(handler);
+        return null;
     }
 
     @Override
-    public void onRegister(Consumer<EntityRegistrar<CommonStorage<ItemResource>, C>> registrar) {
+    public void onRegister(Consumer<EntityRegistrar<CommonStorage<ItemResource>, Direction>> registrar) {
         registrars.add(registrar);
     }
 
+
     @Override
-    public void register(RegisterCapabilitiesEvent event) {
+    public void register(AttachCapabilitiesEvent<Entity> event) {
         registrars.forEach(registrar -> registrar.accept((getter, entityTypes) -> {
             for (EntityType<?> entityType : entityTypes) {
-                event.registerEntity(capability, entityType, (entity, direction) -> {
-                    CommonStorage<ItemResource> container = getter.getContainer(entity, direction);
-                    return container == null ? null : new NeoItemHandler(container);
-                });
+                if (entityType == event.getObject().getType()) {
+                    event.addCapability(NAME, new ItemCap(getter, event.getObject()));
+                    return;
+                }
             }
         }));
+    }
+
+    public static class ItemCap implements ICapabilityProvider {
+        private final EntityGetter<CommonStorage<ItemResource>, Direction> getter;
+        private final Entity entity;
+
+        public ItemCap(EntityGetter<CommonStorage<ItemResource>, Direction> getter, Entity entity) {
+            this.getter = getter;
+            this.entity = entity;
+        }
+
+        @Override
+        public <T> LazyOptional<T> getCapability(net.minecraftforge.common.capabilities.Capability<T> cap, @Nullable Direction side) {
+            CommonStorage<ItemResource> container = getter.getContainer(entity, side);
+            LazyOptional<IItemHandler> optional = LazyOptional.of(() -> new NeoItemHandler(container));
+            return cap.orEmpty(ForgeCapabilities.ITEM_HANDLER, optional.cast()).cast();
+        }
     }
 }

@@ -2,7 +2,7 @@ package earth.terrarium.botarium.energy.wrappers;
 
 import earth.terrarium.botarium.storage.base.ValueStorage;
 import earth.terrarium.botarium.storage.base.UpdateManager;
-import net.neoforged.neoforge.energy.IEnergyStorage;
+import net.minecraftforge.energy.IEnergyStorage;
 
 public record NeoEnergyContainer(ValueStorage container) implements IEnergyStorage {
     @Override

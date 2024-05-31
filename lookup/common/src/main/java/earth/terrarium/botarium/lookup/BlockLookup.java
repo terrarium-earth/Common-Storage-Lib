@@ -25,50 +25,11 @@ public interface BlockLookup<T, C> {
         return create(name, typeClass, Direction.class);
     }
 
-    /**
-     * @return The {@link T} for the block.
-     */
     @Nullable
-    T find(Level level, BlockPos pos, @Nullable BlockState state, @Nullable BlockEntity entity, @Nullable C direction);
-
-    @Nullable
-    default T find(BlockEntity block, @Nullable C direction) {
-        return find(block.getLevel(), block.getBlockPos(), block.getBlockState(), block, direction);
-    }
-
-    @Nullable
-    default T find(Level level, BlockPos pos, @Nullable C direction) {
-        return find(level, pos, null, null, direction);
-    }
-
-    default boolean isPresent(Level level, BlockPos pos, @Nullable BlockState state, @Nullable BlockEntity entity, @Nullable C direction) {
-        return find(level, pos, state, entity, direction) != null;
-    }
+    T find(BlockEntity block, @Nullable C direction);
 
     default boolean isPresent(BlockEntity block, @Nullable C direction) {
         return find(block, direction) != null;
-    }
-
-    default void registerSelf(BlockGetter<T, C> getter, Block ... blocks) {
-        onRegister(registrar -> registrar.registerBlocks(getter, blocks));
-    }
-
-    default void registerFallback(BlockGetter<T, C> getter, Predicate<Block> blockPredicate) {
-        onRegister(registrar -> {
-            for (Block block : BuiltInRegistries.BLOCK) {
-                if (blockPredicate.test(block)) {
-                    registrar.registerBlocks(getter, block);
-                }
-            }
-        });
-    }
-
-    default void registerFallback(BlockGetter<T, C> getter) {
-        onRegister(registrar -> {
-            for (Block block : BuiltInRegistries.BLOCK) {
-                registrar.registerBlocks(getter, block);
-            }
-        });
     }
 
     default void registerFallback(BlockEntityGetter<T, C> getter, Predicate<BlockEntityType<?>> entityTypePredicate) {
@@ -91,19 +52,12 @@ public interface BlockLookup<T, C> {
 
     void onRegister(Consumer<BlockRegistrar<T, C>> registrar);
 
-    interface BlockGetter<T, C> {
-        @Nullable
-        T getContainer(Level level, BlockPos pos, BlockState state, @Nullable BlockEntity entity, @Nullable C direction);
-    }
-
     interface BlockEntityGetter<T, C> {
         @Nullable
         T getContainer(BlockEntity entity, @Nullable C direction);
     }
 
     interface BlockRegistrar<T, C> {
-        void registerBlocks(BlockGetter<T, C> getter, Block... blocks);
-
         void registerBlockEntities(BlockEntityGetter<T, C> getter, BlockEntityType<?>... blockEntityTypes);
     }
 }

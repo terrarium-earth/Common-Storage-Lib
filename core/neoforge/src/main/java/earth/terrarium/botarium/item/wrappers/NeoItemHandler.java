@@ -5,7 +5,7 @@ import earth.terrarium.botarium.storage.base.CommonStorage;
 import earth.terrarium.botarium.storage.base.StorageSlot;
 import earth.terrarium.botarium.storage.base.UpdateManager;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.items.IItemHandler;
+import net.minecraftforge.items.IItemHandler;
 
 public record NeoItemHandler(CommonStorage<ItemResource> container) implements IItemHandler {
     @Override

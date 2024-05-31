@@ -1,38 +1,19 @@
 package earth.terrarium.botarium;
 
-import com.mojang.serialization.Codec;
-import earth.terrarium.botarium.data.DataManager;
-import earth.terrarium.botarium.data.DataManagerRegistry;
 import earth.terrarium.botarium.energy.EnergyApi;
 import earth.terrarium.botarium.energy.EnergyProvider;
 import earth.terrarium.botarium.fluid.FluidApi;
 import earth.terrarium.botarium.fluid.util.FluidProvider;
 import earth.terrarium.botarium.heat.HeatApi;
 import earth.terrarium.botarium.heat.HeatProvider;
-import earth.terrarium.botarium.fluid.util.FluidStorageData;
 import earth.terrarium.botarium.item.input.ItemConsumerRegistry;
-import earth.terrarium.botarium.item.util.ItemStorageData;
 import earth.terrarium.botarium.item.ItemApi;
 import earth.terrarium.botarium.item.util.ItemProvider;
-import earth.terrarium.botarium.resources.fluid.FluidResource;
-import earth.terrarium.botarium.resources.item.ItemResource;
-import earth.terrarium.botarium.resources.ResourceStack;
-import net.minecraft.network.codec.ByteBufCodecs;
 
 public class Botarium {
     public static final String MOD_ID = "botarium";
-    public static final DataManagerRegistry REGISTRY = DataManagerRegistry.create(MOD_ID);
-
-    public static final DataManager<FluidStorageData> FLUID_CONTENTS = REGISTRY.builder(FluidStorageData.DEFAULT).serialize(FluidStorageData.CODEC).networkSerializer(FluidStorageData.NETWORK_CODEC).withDataComponent().copyOnDeath().buildAndRegister("fluid_storage_data");
-    public static final DataManager<ItemStorageData> ITEM_CONTENTS = REGISTRY.builder(ItemStorageData.DEFAULT).serialize(ItemStorageData.CODEC).networkSerializer(ItemStorageData.NETWORK_CODEC).withDataComponent().copyOnDeath().buildAndRegister("item_storage_data");
-    public static final DataManager<ResourceStack<ItemResource>> SINGLE_ITEM_CONTENTS = REGISTRY.builder(() -> new ResourceStack<>(ItemResource.BLANK, 0)).serialize(ResourceStack.ITEM_CODEC).networkSerializer(ResourceStack.ITEM_STREAM_CODEC).withDataComponent().copyOnDeath().buildAndRegister("item_resource_stack");
-    public static final DataManager<ResourceStack<FluidResource>> SINGLE_FLUID_CONTENTS = REGISTRY.builder(() -> new ResourceStack<>(FluidResource.BLANK, 0)).serialize(ResourceStack.FLUID_CODEC).networkSerializer(ResourceStack.FLUID_STREAM_CODEC).withDataComponent().copyOnDeath().buildAndRegister("fluid_resource_stack");
-    public static final DataManager<FluidResource> FLUID_RESOURCE = REGISTRY.builder(() -> FluidResource.BLANK).serialize(FluidResource.CODEC).networkSerializer(FluidResource.STREAM_CODEC).withDataComponent().copyOnDeath().buildAndRegister("fluid_resource");
-    public static final DataManager<ItemResource> ITEM_RESOURCE = REGISTRY.builder(() -> ItemResource.BLANK).serialize(ItemResource.CODEC).networkSerializer(ItemResource.STREAM_CODEC).withDataComponent().copyOnDeath().buildAndRegister("item_resource");
-    public static final DataManager<Long> VALUE_CONTENT = REGISTRY.builder(() -> 0L).serialize(Codec.LONG).networkSerializer(ByteBufCodecs.VAR_LONG).withDataComponent().copyOnDeath().buildAndRegister("value_storage_data");
 
     public static void init() {
-        REGISTRY.init();
         ItemConsumerRegistry.init();
 
         //Energy
@@ -44,14 +25,6 @@ public class Botarium {
                 return null;
             }
         }, item -> item instanceof EnergyProvider.Item);
-
-        EnergyApi.BLOCK.registerFallback((level, pos, state, entity, direction) -> {
-            if (state.getBlock() instanceof EnergyProvider.Block provider) {
-                return provider.getEnergy(level, pos, state, entity, direction);
-            } else {
-                return null;
-            }
-        }, block -> block instanceof EnergyProvider.Block);
 
         EnergyApi.BLOCK.registerFallback((entity, direction) -> {
             if (entity instanceof EnergyProvider.BlockEntity provider) {
@@ -79,14 +52,6 @@ public class Botarium {
             }
         }, item -> item instanceof FluidProvider.Item);
 
-        FluidApi.BLOCK.registerFallback((level, pos, state, entity, direction) -> {
-            if (state.getBlock() instanceof FluidProvider.Block provider) {
-                return provider.getFluids(level, pos, state, entity, direction);
-            } else {
-                return null;
-            }
-        }, block -> block instanceof FluidProvider.Block);
-
         FluidApi.BLOCK.registerFallback((entity, direction) -> {
             if (entity instanceof FluidProvider.BlockEntity provider) {
                 return provider.getFluids(direction);
@@ -113,14 +78,6 @@ public class Botarium {
             }
         }, item -> item instanceof ItemProvider.Item);
 
-        ItemApi.BLOCK.registerFallback((level, pos, state, entity, direction) -> {
-            if (state.getBlock() instanceof ItemProvider.Block provider) {
-                return provider.getItems(level, pos, state, entity, direction);
-            } else {
-                return null;
-            }
-        }, block -> block instanceof ItemProvider.Block);
-
         ItemApi.BLOCK.registerFallback((entity, direction) -> {
             if (entity instanceof ItemProvider.BlockEntity provider) {
                 return provider.getItems(direction);
@@ -146,14 +103,6 @@ public class Botarium {
         });
 
         // Heat
-
-        HeatApi.BLOCK.registerFallback((level, pos, state, entity, direction) -> {
-            if (state.getBlock() instanceof HeatProvider.Block provider) {
-                return provider.getHeat(level, pos, state, entity, direction);
-            } else {
-                return null;
-            }
-        }, block -> block instanceof HeatProvider.Block);
 
         HeatApi.BLOCK.registerFallback((entity, direction) -> {
             if (entity instanceof HeatProvider.BlockEntity provider) {

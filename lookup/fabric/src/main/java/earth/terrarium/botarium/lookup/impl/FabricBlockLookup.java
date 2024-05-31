@@ -2,13 +2,8 @@ package earth.terrarium.botarium.lookup.impl;
 
 import earth.terrarium.botarium.lookup.BlockLookup;
 import net.fabricmc.fabric.api.lookup.v1.block.BlockApiLookup;
-import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Consumer;
@@ -25,29 +20,12 @@ public class FabricBlockLookup<T, C> implements BlockLookup<T, C> {
     }
 
     @Override
-    public @Nullable T find(Level level, BlockPos pos, @Nullable BlockState state, @Nullable BlockEntity entity, @Nullable C direction) {
-        return lookup.find(level, pos, state, entity, direction);
+    public @Nullable T find(BlockEntity block, @Nullable C direction) {
+        return lookup.find(block.getLevel(), block.getBlockPos(), block.getBlockState(), block, direction);
     }
 
     @Override
     public void onRegister(Consumer<BlockRegistrar<T, C>> registrar) {
-        registrar.accept(new LookupRegistrar());
-    }
-
-    @Override
-    public void registerSelf(BlockGetter<T, C> getter, Block... blocks) {
-        lookup.registerForBlocks(getter::getContainer, blocks);
-    }
-
-    public class LookupRegistrar implements BlockRegistrar<T, C> {
-        @Override
-        public void registerBlocks(BlockGetter<T, C> getter, Block... blocks) {
-            lookup.registerForBlocks(getter::getContainer, blocks);
-        }
-
-        @Override
-        public void registerBlockEntities(BlockEntityGetter<T, C> getter, BlockEntityType<?>... containers) {
-            lookup.registerForBlockEntities(getter::getContainer, containers);
-        }
+        registrar.accept((getter, blockEntityTypes) -> lookup.registerForBlockEntities(getter::getContainer, blockEntityTypes));
     }
 }
