@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "id": "botarium_data",
+  "id": "common_storage_lib_data",
   "version": "${version}",
-  "name": "Botarium Data",
+  "name": "Common Storage Lib: Data",
   "description": "Abstraction for Data Attachments, as well as providing a wrapper around Components to make working with all data easier.",
   "authors": [
     "CodexAdrian"
@@ -12,7 +12,7 @@
     "issues": "https://github.com/terrarium-earth/Botarium/issues"
   },
   "mixins": [
-    "botarium_data.mixins.json"
+    "common_storage_lib_data.mixins.json"
   ],
   "license": "MIT",
   "environment": "*",

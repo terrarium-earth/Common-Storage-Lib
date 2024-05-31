@@ -4,24 +4,24 @@ license = "MIT"
 issueTrackerURL = "https://github.com/terrarium-earth/Botarium/issues"
 
 [[mods]]
-modId = "botarium_data"
+modId = "common_storage_lib_data"
 version = "${version}"
-displayName = "Botarium Data"
+displayName = "Common Storage Lib: Data"
 displayURL = "https://modrinth.com/mod/Botarium"
 authors = "CodexAdrian"
 description = "Abstraction for Data Attachments, as well as providing a wrapper around Components to make working with all data easier."
 
 [[mixins]]
-config = "botarium_data.mixins.json"
+config = "common_storage_lib_data.mixins.json"
 
-[[dependencies.botarium]]
+[[dependencies.common_storage_lib_data]]
 modId = "neoforge"
 type = "required"
 versionRange = "[20,)"
 ordering = "NONE"
 side = "BOTH"
 
-[[dependencies.botarium]]
+[[dependencies.common_storage_lib_data]]
 modId = "minecraft"
 type = "required"
 versionRange = "[1.20.6,)"

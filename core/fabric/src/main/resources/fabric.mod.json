@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "id": "botarium_core",
+  "id": "common_storage_lib_core",
   "version": "${version}",
-  "name": "Botarium Core",
+  "name": "Common Storage Lib: Core",
   "description": "Abstraction of the mod loader's resource storage system, allowing for easy access to items, fluids and energy. This library also includes abstractions for Data Attachments, Api Lookups, and Transfer Variants and ingredients",
   "authors": [
     "CodexAdrian"
@@ -15,7 +15,7 @@
   "environment": "*",
   "entrypoints": {
     "main": [
-      "earth.terrarium.botarium.Botarium::init"
+      "earth.terrarium.common_storage_lib.CommonStorageLib::init"
     ]
   },
   "depends": {

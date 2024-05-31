@@ -4,21 +4,21 @@ license = "MIT"
 issueTrackerURL = "https://github.com/terrarium-earth/Botarium/issues"
 
 [[mods]]
-modId = "botarium_core"
+modId = "common_storage_lib_core"
 version = "${version}"
-displayName = "Botarium Core"
+displayName = "Common Storage Lib: Core"
 displayURL = "https://modrinth.com/mod/botarium"
 authors = "CodexAdrian"
 description = "Abstraction of the mod loader's resource storage system, allowing for easy access to items, fluids and energy"
 
-[[dependencies.botarium]]
+[[dependencies.common_storage_lib_core]]
 modId = "neoforge"
 type = "required"
 versionRange = "[20,)"
 ordering = "NONE"
 side = "BOTH"
 
-[[dependencies.botarium]]
+[[dependencies.common_storage_lib_core]]
 modId = "minecraft"
 type = "required"
 versionRange = "[1.20.6,)"

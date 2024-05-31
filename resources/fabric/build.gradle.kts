@@ -1,3 +1,3 @@
 loom {
-    accessWidenerPath = file("src/main/resources/botarium_resources.accesswidener")
+    accessWidenerPath = file("src/main/resources/common_storage_lib_resources.accesswidener")
 }

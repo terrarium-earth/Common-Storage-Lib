@@ -4,21 +4,21 @@ license = "MIT"
 issueTrackerURL = "https://github.com/terrarium-earth/Botarium/issues"
 
 [[mods]]
-modId = "botarium_resources"
+modId = "common_storage_lib_resources"
 version = "${version}"
-displayName = "Botarium Resources"
+displayName = "Common Storage Lib: Resources"
 displayURL = "https://modrinth.com/mod/botarium"
 authors = "CodexAdrian"
 description = "Abstraction for Transfer resources, including Item, Fluids and Entity resources, as well as Ingredient, Tag, and Codec utilities for them"
 
-[[dependencies.botarium]]
+[[dependencies.common_storage_lib_resources]]
 modId = "neoforge"
 type = "required"
 versionRange = "[20,)"
 ordering = "NONE"
 side = "BOTH"
 
-[[dependencies.botarium]]
+[[dependencies.common_storage_lib_resources]]
 modId = "minecraft"
 type = "required"
 versionRange = "[1.20.6,)"

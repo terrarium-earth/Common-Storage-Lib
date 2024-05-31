@@ -49,7 +49,7 @@ jobs:
           modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
 
           files: ./core/neoforge/build/libs/!(*-@(dev|sources|dev-shadow|javadoc)).jar
-          name: "[NeoForge] Botarium ${{ steps.properties.outputs.version }}"
+          name: "[NeoForge] Common Storage Lib ${{ steps.properties.outputs.version }}"
           version: ${{ steps.properties.outputs.version }}
           version-type: alpha
           changelog-file: changelog.md
@@ -69,7 +69,7 @@ jobs:
           modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
 
           files: ./core/fabric/build/libs/!(*-@(dev|sources|dev-shadow|javadoc)).jar
-          name: "[Fabric] Botarium ${{ steps.properties.outputs.version }}"
+          name: "[Fabric] Common Storage Lib ${{ steps.properties.outputs.version }}"
           version: ${{ steps.properties.outputs.version }}
           version-type: alpha
           changelog-file: changelog.md

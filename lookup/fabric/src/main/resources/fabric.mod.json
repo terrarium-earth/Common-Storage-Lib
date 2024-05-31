@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "id": "botarium_lookup",
+  "id": "common_storage_lib_lookup",
   "version": "${version}",
-  "name": "Botarium Lookup",
+  "name": "Common Storage Lib: Lookup",
   "description": "Abstraction for mod loader's item/entity/block API provider system (Capabilities/ApiLookup)",
   "authors": [
     "CodexAdrian"

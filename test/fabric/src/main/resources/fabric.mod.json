@@ -1,9 +1,9 @@
 {
   "schemaVersion": 1,
-  "id": "botarium_test_mod",
+  "id": "test_mod",
   "version": "${version}",
-  "name": "Botarium Test Mod",
-  "description": "A test mod for Botarium",
+  "name": "Test Mod",
+  "description": "A test mod for Common Storage Lib",
   "authors": [
     "CodexAdrian"
   ],
@@ -13,7 +13,7 @@
   },
   "entrypoints": {
     "main": [
-      "earth.terrarium.botarium.testmod.FabricTestMod::init"
+      "earth.terrarium.common_storage_lib.testmod.FabricTestMod::init"
     ]
   },
   "license": "MIT",
