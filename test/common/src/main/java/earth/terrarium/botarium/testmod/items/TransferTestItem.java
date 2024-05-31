@@ -78,16 +78,16 @@ public class TransferTestItem extends Item implements EnergyProvider.Item, Fluid
 
     @Override
     public ValueStorage getEnergy(ItemStack stack, ItemContext context) {
-        return new SimpleValueStorage(1000, stack, context);
+        return new SimpleValueStorage(1000, context);
     }
 
     @Override
     public CommonStorage<FluidResource> getFluids(ItemStack stack, ItemContext context) {
-        return new SimpleFluidStorage(1, FluidAmounts.BUCKET, stack, context);
+        return new SimpleFluidStorage(1, FluidAmounts.BUCKET, context);
     }
 
     @Override
     public CommonStorage<ItemResource> getItems(ItemStack stack, ItemContext context) {
-        return new SimpleItemStorage(1, stack, context);
+        return new SimpleItemStorage(1, context);
     }
 }

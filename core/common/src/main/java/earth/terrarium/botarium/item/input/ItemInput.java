@@ -6,6 +6,7 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import earth.terrarium.botarium.context.ItemContext;
 import earth.terrarium.botarium.item.input.consumers.SizedConsumer;
+import earth.terrarium.botarium.resources.util.CodecUtils;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 
@@ -14,11 +15,11 @@ import java.util.stream.Stream;
 
 public record ItemInput(Ingredient ingredient, ItemConsumer consumer, Stream<ItemStack> stacks) {
     public static final MapCodec<ItemInput> BASE_CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-            Ingredient.CODEC.fieldOf("ingredient").forGetter(ItemInput::ingredient),
+            CodecUtils.INGREDIENT_CODEC.fieldOf("ingredient").forGetter(ItemInput::ingredient),
             ItemConsumer.CODEC.fieldOf("consume").forGetter(ItemInput::consumer)
     ).apply(instance, ItemInput::new));
 
-    public static final Codec<ItemInput> CODEC = Codec.either(BASE_CODEC.codec(), Ingredient.CODEC).xmap(
+    public static final Codec<ItemInput> CODEC = Codec.either(BASE_CODEC.codec(), CodecUtils.INGREDIENT_CODEC).xmap(
             a -> a.map(Function.identity(), ingredient -> new ItemInput(ingredient, SizedConsumer.DEFAULT)),
             Either::left
     );

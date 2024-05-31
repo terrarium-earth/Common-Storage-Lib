@@ -37,31 +37,13 @@ public abstract class WrappedBlockLookup<U extends Resource, V extends TransferV
 
     @Override
     public void onRegister(Consumer<BlockLookup.BlockRegistrar<CommonStorage<U>, @Nullable Direction>> registrar) {
-        registrar.accept(new LookupRegistrar());
-    }
-
-    public class LookupRegistrar implements BlockRegistrar<CommonStorage<U>, @Nullable Direction> {
-        @Override
-        public void registerBlocks(BlockGetter<CommonStorage<U>, @Nullable Direction> getter, Block... blocks) {
-            fabricLookup.registerForBlocks((world, pos, state, blockEntity, context) -> {
-                CommonStorage<U> container = getter.getContainer(world, pos, state, blockEntity, context);
-                if (container != null) {
-                    return wrap(container);
-                }
-                return null;
-            }, blocks);
-        }
-
-        @Override
-        public void registerBlockEntities(BlockEntityGetter<CommonStorage<U>, @Nullable Direction> getter, BlockEntityType<?>... blockEntities) {
-            fabricLookup.registerForBlockEntities((entity, context) -> {
-                CommonStorage<U> container = getter.getContainer(entity, context);
-                if (container != null) {
-                    return wrap(container);
-                }
-                return null;
-            }, blockEntities);
-        }
+        registrar.accept((getter, blockEntityTypes) -> fabricLookup.registerForBlockEntities((entity, context) -> {
+            CommonStorage<U> container = getter.getContainer(entity, context);
+            if (container != null) {
+                return wrap(container);
+            }
+            return null;
+        }, blockEntityTypes));
     }
 
     public abstract FabricWrappedContainer<U, V> wrap(CommonStorage<U> container);
@@ -71,9 +53,15 @@ public abstract class WrappedBlockLookup<U extends Resource, V extends TransferV
             super(FluidStorage.SIDED);
         }
 
+
         @Override
-        public @Nullable CommonStorage<FluidResource> find(Level level, BlockPos pos, @Nullable BlockState state, @Nullable BlockEntity entity, @Nullable Direction direction) {
-            Storage<FluidVariant> storage = FluidStorage.SIDED.find(level, pos, state, entity, direction);
+        public FabricWrappedContainer<FluidResource, FluidVariant> wrap(CommonStorage<FluidResource> container) {
+            return new FabricWrappedContainer.OfFluid(container);
+        }
+
+        @Override
+        public @Nullable CommonStorage<FluidResource> find(BlockEntity block, @Nullable Direction context) {
+            Storage<FluidVariant> storage = FluidStorage.SIDED.find(block.getLevel(), block.getBlockPos(), context);
             if (storage != null) {
                 if (storage instanceof FabricWrappedContainer.OfFluid wrappedContainer) {
                     return wrappedContainer.container();
@@ -82,11 +70,6 @@ public abstract class WrappedBlockLookup<U extends Resource, V extends TransferV
             }
             return null;
         }
-
-        @Override
-        public FabricWrappedContainer<FluidResource, FluidVariant> wrap(CommonStorage<FluidResource> container) {
-            return new FabricWrappedContainer.OfFluid(container);
-        }
     }
 
     public static class ofItem extends WrappedBlockLookup<ItemResource, ItemVariant> {
@@ -94,9 +77,16 @@ public abstract class WrappedBlockLookup<U extends Resource, V extends TransferV
             super(ItemStorage.SIDED);
         }
 
+
+
         @Override
-        public @Nullable CommonStorage<ItemResource> find(Level level, BlockPos pos, @Nullable BlockState state, @Nullable BlockEntity entity, @Nullable Direction direction) {
-            Storage<ItemVariant> storage = ItemStorage.SIDED.find(level, pos, state, entity, direction);
+        public FabricWrappedContainer<ItemResource, ItemVariant> wrap(CommonStorage<ItemResource> container) {
+            return new FabricWrappedContainer.OfItem(container);
+        }
+
+        @Override
+        public @Nullable CommonStorage<ItemResource> find(BlockEntity block, @Nullable Direction context) {
+            Storage<ItemVariant> storage = ItemStorage.SIDED.find(block.getLevel(), block.getBlockPos(), context);
             if (storage != null) {
                 if (storage instanceof FabricWrappedContainer.OfItem wrappedContainer) {
                     return wrappedContainer.container();
@@ -104,11 +94,6 @@ public abstract class WrappedBlockLookup<U extends Resource, V extends TransferV
                 return new CommonWrappedContainer<>(storage, ConversionUtils::toVariant, ConversionUtils::toResource);
             }
             return null;
-        }
-
-        @Override
-        public FabricWrappedContainer<ItemResource, ItemVariant> wrap(CommonStorage<ItemResource> container) {
-            return new FabricWrappedContainer.OfItem(container);
         }
     }
 }

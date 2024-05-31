@@ -25,11 +25,16 @@ public interface BlockLookup<T, C> {
         return create(name, typeClass, Direction.class);
     }
 
-    @Nullable
-    T find(BlockEntity block, @Nullable C direction);
+    default T find(Level level, BlockPos pos, @Nullable C direction) {
+        BlockEntity blockEntity = level.getBlockEntity(pos);
+        return blockEntity != null ? find(blockEntity, direction) : null;
+    }
 
-    default boolean isPresent(BlockEntity block, @Nullable C direction) {
-        return find(block, direction) != null;
+    @Nullable
+    T find(BlockEntity block, C context);
+
+    default boolean isPresent(BlockEntity block, C context) {
+        return find(block, context) != null;
     }
 
     default void registerFallback(BlockEntityGetter<T, C> getter, Predicate<BlockEntityType<?>> entityTypePredicate) {

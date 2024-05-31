@@ -1,7 +1,7 @@
 package earth.terrarium.botarium.resources.fluid.util;
 
+import net.minecraftforge.fluids.FluidType;
 import net.msrandom.multiplatform.annotations.Actual;
-import net.neoforged.neoforge.fluids.FluidType;
 
 public class FluidAmountsActual {
     @Actual

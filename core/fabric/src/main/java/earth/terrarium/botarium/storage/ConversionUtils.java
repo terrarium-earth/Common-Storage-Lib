@@ -4,21 +4,22 @@ import earth.terrarium.botarium.resources.fluid.FluidResource;
 import earth.terrarium.botarium.resources.item.ItemResource;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
+import net.fabricmc.fabric.impl.transfer.item.ItemVariantImpl;
 
 public class ConversionUtils {
     public static ItemResource toResource(ItemVariant variant) {
-        return ItemResource.of(variant.getItem(), variant.getComponents());
+        return ItemResource.of(variant.getItem(), variant.getNbt());
     }
 
     public static ItemVariant toVariant(ItemResource resource) {
-        return ItemVariant.of(resource.getItem(), resource.getDataPatch());
+        return ItemVariant.of(resource.getItem(), resource.getTag());
     }
 
     public static FluidResource toResource(FluidVariant variant) {
-        return FluidResource.of(variant.getFluid(), variant.getComponents());
+        return FluidResource.of(variant.getFluid(), variant.getNbt());
     }
 
     public static FluidVariant toVariant(FluidResource resource) {
-        return FluidVariant.of(resource.getType(), resource.getDataPatch());
+        return FluidVariant.of(resource.getType(), resource.getTag());
     }
 }

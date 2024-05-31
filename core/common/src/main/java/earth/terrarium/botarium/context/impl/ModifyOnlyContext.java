@@ -1,12 +1,10 @@
 package earth.terrarium.botarium.context.impl;
 
 import earth.terrarium.botarium.context.ItemContext;
-import earth.terrarium.botarium.resources.item.ItemResource;
 import earth.terrarium.botarium.item.impl.noops.NoOpsItemContainer;
+import earth.terrarium.botarium.resources.item.ItemResource;
 import earth.terrarium.botarium.storage.base.CommonStorage;
 import earth.terrarium.botarium.storage.base.StorageSlot;
-import net.minecraft.core.component.DataComponentPatch;
-import net.minecraft.core.component.PatchedDataComponentMap;
 import net.minecraft.world.item.ItemStack;
 
 public record ModifyOnlyContext(ItemStack stack) implements ItemContext {
@@ -14,18 +12,9 @@ public record ModifyOnlyContext(ItemStack stack) implements ItemContext {
     public long exchange(ItemResource newResource, long amount, boolean simulate) {
         if (!newResource.isOf(stack.getItem()) || amount != stack.getCount()) return 0;
         if (!simulate) {
-            if (stack.getComponents() instanceof PatchedDataComponentMap map) {
-                map.restorePatch(newResource.getDataPatch());
-            } else {
-                stack.applyComponents(newResource.getDataPatch());
-            }
+            stack.setTag(newResource.getTag());
         }
         return amount;
-    }
-
-    @Override
-    public void modify(DataComponentPatch patch) {
-        stack.applyComponents(patch);
     }
 
     @Override

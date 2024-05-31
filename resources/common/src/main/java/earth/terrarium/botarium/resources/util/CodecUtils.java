@@ -1,23 +1,25 @@
 package earth.terrarium.botarium.resources.util;
 
-import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.mojang.datafixers.util.Either;
 import com.mojang.serialization.*;
-import com.teamresourceful.bytecodecs.base.ByteCodec;
 import io.netty.buffer.ByteBuf;
-import io.netty.handler.codec.DecoderException;
-import io.netty.handler.codec.EncoderException;
-import net.minecraft.Util;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.GsonHelper;
+import io.netty.buffer.Unpooled;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.crafting.Ingredient;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
 public class CodecUtils {
+    public static final Codec<Component> COMPONENT_CODEC = Codec.STRING.comapFlatMap(s -> DataResult.success(Component.Serializer.fromJson(s)), Component.Serializer::toJson);
+    public static final Codec<Ingredient> INGREDIENT_CODEC = Codec.PASSTHROUGH.comapFlatMap(CodecUtils::decodeIngredient, CodecUtils::encodeIngredient);
+    public static final Codec<Ingredient> INGREDIENT_NETWORK_CODEC = Codec.BYTE.listOf().flatXmap(CodecUtils::decodeIngredientFromNetwork, CodecUtils::encodeIngredientToNetwork);
+
     public static <T> MapCodec<T> aliasedFieldOf(final Codec<T> codec, final String... names) {
         if (names.length == 0)
             throw new IllegalArgumentException("Must have at least one name!");
@@ -88,6 +90,46 @@ public class CodecUtils {
         @Override
         public String toString() {
             return "XorMapCodec[" + first + ", " + second + "]";
+        }
+    }
+
+    private static DataResult<Ingredient> decodeIngredient(Dynamic<?> dynamic) {
+        Object object = dynamic.convert(JsonOps.INSTANCE).getValue();
+        if (object instanceof JsonElement jsonElement) {
+            return DataResult.success(Ingredient.fromJson(jsonElement));
+        }
+        return DataResult.error(() -> "Value was not an instance of JsonElement");
+    }
+
+    private static Dynamic<JsonElement> encodeIngredient(Ingredient ingredient) {
+        return new Dynamic<>(JsonOps.INSTANCE, ingredient.toJson()).convert(JsonOps.COMPRESSED);
+    }
+
+    private static DataResult<Ingredient> decodeIngredientFromNetwork(List<Byte> data) {
+        try {
+            byte[] array = new byte[data.size()];
+            for (int i = 0; i < data.size(); i++) {
+                array[i] = data.get(i);
+            }
+            ByteBuf buffer = Unpooled.wrappedBuffer(array);
+            return DataResult.success(Ingredient.fromNetwork(new FriendlyByteBuf(buffer)));
+        } catch (Exception e){
+            return DataResult.error(() -> "Failed to decode ingredient from network: " + e.getMessage());
+        }
+    }
+
+    private static DataResult<List<Byte>> encodeIngredientToNetwork(Ingredient ingredient) {
+        try {
+            ByteBuf buffer = Unpooled.buffer();
+            ingredient.toNetwork(new FriendlyByteBuf(buffer));
+            byte[] array = buffer.array();
+            List<Byte> bytes = new ArrayList<>(array.length);
+            for (byte b : array) {
+                bytes.add(b);
+            }
+            return DataResult.success(bytes);
+        } catch (Exception e){
+            return DataResult.error(() -> "Failed to encode ingredient to network: " + e.getMessage());
         }
     }
 }

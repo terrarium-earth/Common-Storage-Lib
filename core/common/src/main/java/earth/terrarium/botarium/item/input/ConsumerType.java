@@ -1,13 +1,12 @@
 package earth.terrarium.botarium.item.input;
 
 import com.mojang.serialization.MapCodec;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
+import com.teamresourceful.bytecodecs.base.ByteCodec;
+import earth.terrarium.botarium.resources.util.ByteCodecUtils;
 import net.minecraft.resources.ResourceLocation;
 
-public record ConsumerType<T extends ItemConsumer>(ResourceLocation id, MapCodec<T> codec, StreamCodec<? super RegistryFriendlyByteBuf, T> streamCodec) {
+public record ConsumerType<T extends ItemConsumer>(ResourceLocation id, MapCodec<T> codec, ByteCodec<T> byteCodec) {
     public ConsumerType(ResourceLocation location, MapCodec<T> codec) {
-        this(location, codec, ByteBufCodecs.fromCodecWithRegistries(codec.codec()));
+        this(location, codec, ByteCodecUtils.fromCodec(codec.codec()));
     }
 }

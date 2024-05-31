@@ -1,50 +1,38 @@
 package earth.terrarium.botarium.fluid.impl;
 
-import earth.terrarium.botarium.Botarium;
 import earth.terrarium.botarium.context.ItemContext;
 import earth.terrarium.botarium.fluid.util.FluidStorageData;
 import earth.terrarium.botarium.resources.fluid.FluidResource;
+import earth.terrarium.botarium.resources.item.ItemResource;
 import earth.terrarium.botarium.storage.base.CommonStorage;
 import earth.terrarium.botarium.storage.base.UpdateManager;
 import earth.terrarium.botarium.storage.util.TransferUtil;
 import net.minecraft.core.NonNullList;
-import net.minecraft.core.component.DataComponentPatch;
-import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Predicate;
 
 public class SimpleFluidStorage implements CommonStorage<FluidResource>, UpdateManager<FluidStorageData> {
+    public static final String KEY = "botarium:fluid_contents";
     protected final NonNullList<SimpleFluidSlot> slots;
     private final Runnable update;
     private final long limit;
 
-    public SimpleFluidStorage(int size, long limit) {
+    public SimpleFluidStorage(int size, long limit, Runnable runnable) {
         this.slots = NonNullList.withSize(size, new SimpleFluidSlot(limit, this::update));
         this.limit = limit;
-        this.update = () -> {};
+        this.update = runnable;
     }
 
-    public SimpleFluidStorage(int size, long limit, ItemStack stack, ItemContext context) {
+    public SimpleFluidStorage(int size, long limit, ItemContext context) {
         this.slots = NonNullList.withSize(size, new SimpleFluidSlot(limit, this::update));
         this.limit = limit;
         this.update = () -> {
             FluidStorageData data = FluidStorageData.from(this);
-            DataComponentPatch patch = DataComponentPatch.builder().set(Botarium.FLUID_CONTENTS.componentType(), data).build();
-            context.modify(patch);
-            context.updateAll();
+            ItemResource resource = context.getResource().set(FluidStorageData.CODEC, KEY, data);
+            context.exchange(resource, context.getAmount(), false);
         };
-        readSnapshot(Botarium.FLUID_CONTENTS.get(stack));
-    }
-
-    public SimpleFluidStorage(int size, long limit, Object entityOrBlockEntity) {
-        this.slots = NonNullList.withSize(size, new SimpleFluidSlot(limit, this::update));
-        this.limit = limit;
-        this.update = () -> {
-            FluidStorageData data = FluidStorageData.from(this);
-            Botarium.FLUID_CONTENTS.set(entityOrBlockEntity, data);
-        };
-        readSnapshot(Botarium.FLUID_CONTENTS.get(entityOrBlockEntity));
+        readSnapshot(context.getResource().getOrDefault(FluidStorageData.CODEC, KEY, FluidStorageData.EMPTY));
     }
 
     public SimpleFluidStorage filter(int slot, Predicate<FluidResource> predicate) {
@@ -84,31 +72,35 @@ public class SimpleFluidStorage implements CommonStorage<FluidResource>, UpdateM
         return TransferUtil.insertSlots(this, resource, amount, simulate);
     }
 
+    public long insertAndUpdate(FluidResource resource, long amount, boolean simulate) {
+        long inserted = TransferUtil.insertSlots(this, resource, amount, simulate);
+        if (!simulate) update();
+        return inserted;
+    }
+
     @Override
     public long extract(FluidResource resource, long amount, boolean simulate) {
         return TransferUtil.extractSlots(this, resource, amount, simulate);
     }
 
+    public long extractAndUpdate(FluidResource resource, long amount, boolean simulate) {
+        long extracted = TransferUtil.extractSlots(this, resource, amount, simulate);
+        if (!simulate) update();
+        return extracted;
+    }
+
     public static class ExtractOnly extends SimpleFluidStorage {
-        public ExtractOnly(int size, long limit) {
-            super(size, limit);
+        public ExtractOnly(int size, long limit, Runnable runnable) {
+            super(size, limit, runnable);
         }
 
-        public ExtractOnly(int size, long limit, ItemStack stack, ItemContext context) {
-            super(size, limit, stack, context);
-        }
-
-        public ExtractOnly(int size, long limit, Object entityOrBlockEntity) {
-            super(size, limit, entityOrBlockEntity);
+        public ExtractOnly(int size, long limit, ItemContext context) {
+            super(size, limit, context);
         }
 
         @Override
         public long insert(FluidResource resource, long amount, boolean simulate) {
             return 0;
-        }
-
-        public long internalInsert(FluidResource resource, long amount, boolean simulate) {
-            return super.insert(resource, amount, simulate);
         }
 
         @Override
@@ -123,25 +115,17 @@ public class SimpleFluidStorage implements CommonStorage<FluidResource>, UpdateM
     }
 
     public static class InsertOnly extends SimpleFluidStorage {
-        public InsertOnly(int size, long limit) {
-            super(size, limit);
+        public InsertOnly(int size, long limit, Runnable runnable) {
+            super(size, limit, runnable);
         }
 
-        public InsertOnly(int size, long limit, ItemStack stack, ItemContext context) {
-            super(size, limit, stack, context);
-        }
-
-        public InsertOnly(int size, long limit, Object entityOrBlockEntity) {
-            super(size, limit, entityOrBlockEntity);
+        public InsertOnly(int size, long limit, ItemContext context) {
+            super(size, limit, context);
         }
 
         @Override
         public long extract(FluidResource resource, long amount, boolean simulate) {
             return 0;
-        }
-
-        public long internalExtract(FluidResource resource, long amount, boolean simulate) {
-            return super.extract(resource, amount, simulate);
         }
 
         @Override

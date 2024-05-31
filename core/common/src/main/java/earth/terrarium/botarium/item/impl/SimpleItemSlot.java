@@ -29,7 +29,7 @@ public class SimpleItemSlot implements StorageSlot<ItemResource>, ModifiableItem
 
     @Override
     public long getLimit(ItemResource resource) {
-        return resource.isBlank() ? Item.ABSOLUTE_MAX_STACK_SIZE : resource.getCachedStack().getMaxStackSize();
+        return resource.isBlank() ? Item.MAX_STACK_SIZE : resource.getCachedStack().getMaxStackSize();
     }
 
     @Override

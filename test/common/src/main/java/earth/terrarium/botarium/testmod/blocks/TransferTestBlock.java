@@ -1,6 +1,5 @@
 package earth.terrarium.botarium.testmod.blocks;
 
-import com.mojang.serialization.MapCodec;
 import earth.terrarium.botarium.testmod.TestMod;
 import earth.terrarium.botarium.testmod.blockentities.TransferTestBlockEntity;
 import net.minecraft.core.BlockPos;
@@ -10,19 +9,11 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class TransferTestBlock extends BaseEntityBlock {
-    public static final MapCodec<TransferTestBlock> CODEC = simpleCodec(TransferTestBlock::new);
-
     public TransferTestBlock(Properties properties) {
         super(properties);
-    }
-
-    @Override
-    protected @NotNull MapCodec<? extends BaseEntityBlock> codec() {
-        return CODEC;
     }
 
     @Nullable

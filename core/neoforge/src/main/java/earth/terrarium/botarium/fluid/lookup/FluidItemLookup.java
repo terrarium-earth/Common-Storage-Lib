@@ -32,7 +32,7 @@ public final class FluidItemLookup implements ItemLookup<CommonStorage<FluidReso
     private final List<Consumer<ItemRegistrar<CommonStorage<FluidResource>, ItemContext>>> registrars = new ArrayList<>();
 
     private FluidItemLookup() {
-        registerItem(this);
+        RegistryEventListener.registerItem(this);
     }
 
     @Override

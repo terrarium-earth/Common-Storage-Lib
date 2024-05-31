@@ -3,15 +3,13 @@ package earth.terrarium.botarium.resources.item.ingredient;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderSet;
-import net.minecraft.core.component.DataComponentPredicate;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraftforge.common.crafting.CompoundIngredient;
+import net.minecraftforge.common.crafting.DifferenceIngredient;
+import net.minecraftforge.common.crafting.IntersectionIngredient;
 import net.msrandom.multiplatform.annotations.Actual;
-import net.neoforged.neoforge.common.crafting.CompoundIngredient;
-import net.neoforged.neoforge.common.crafting.DataComponentIngredient;
-import net.neoforged.neoforge.common.crafting.DifferenceIngredient;
-import net.neoforged.neoforge.common.crafting.IntersectionIngredient;
 
 public class ItemIngredientActual {
     @Actual
@@ -29,6 +27,7 @@ public class ItemIngredientActual {
         return DifferenceIngredient.of(base, subtracted);
     }
 
+    /*
     @Actual
     public static Ingredient components(Ingredient base, DataComponentPredicate components) {
         ItemStack[] items = base.getItems();
@@ -49,4 +48,5 @@ public class ItemIngredientActual {
     private static MapCodec<Ingredient> getNonEmptyMapCodec() {
         return Ingredient.MAP_CODEC_NONEMPTY;
     }
+    */
 }

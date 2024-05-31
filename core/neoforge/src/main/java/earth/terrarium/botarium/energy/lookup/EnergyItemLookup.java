@@ -34,7 +34,7 @@ public final class EnergyItemLookup implements ItemLookup<ValueStorage, ItemCont
     private final List<Consumer<ItemRegistrar<ValueStorage, ItemContext>>> registrars = new ArrayList<>();
 
     private EnergyItemLookup() {
-        registerItem(this);
+        RegistryEventListener.registerItem(this);
     }
 
     @Override

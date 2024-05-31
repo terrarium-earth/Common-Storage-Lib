@@ -92,7 +92,7 @@ subprojects {
 
             officialMojangMappings()
 
-            parchment(create(group = "org.parchmentmc.data", name = "parchment-1.20.6", version = parchmentVersion))
+            parchment(create(group = "org.parchmentmc.data", name = "parchment-1.20.1", version = parchmentVersion))
         })
 
         if (isCommon) {
@@ -110,6 +110,12 @@ subprojects {
 
         if (isNeoForge) {
             "forge"(group = "net.neoforged", name = "forge", version = neoforgeVersion)
+        }
+
+        if (moduleType == "resources") {
+            "api"("com.teamresourceful:bytecodecs:1.1.0") {
+                isTransitive = false
+            }
         }
 
         annotationProcessor(group = "net.msrandom", name = "multiplatform-processor", version = "1.0.7")

@@ -1,6 +1,6 @@
 package earth.terrarium.botarium.resources;
 
-import net.neoforged.fml.common.Mod;
+import net.minecraftforge.fml.common.Mod;
 
 @Mod(BotariumResources.MOD_ID)
 public class NeoBotariumResources {

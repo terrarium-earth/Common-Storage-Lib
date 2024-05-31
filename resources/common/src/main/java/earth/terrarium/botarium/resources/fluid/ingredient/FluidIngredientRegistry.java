@@ -20,7 +20,7 @@ public class FluidIngredientRegistry {
 
     static {
         register(BaseFluidIngredient.TYPE);
-        register(ComponentFluidIngredient.TYPE);
+        // register(ComponentFluidIngredient.TYPE);
         register(DifferenceFluidIngredient.TYPE);
         register(AllMatchFluidIngredient.TYPE);
         register(AnyMatchFluidIngredient.TYPE);

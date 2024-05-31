@@ -1,14 +1,7 @@
 package earth.terrarium.botarium.resources.item.ingredient;
 
-import com.mojang.datafixers.util.Either;
-import com.mojang.serialization.*;
-import com.mojang.serialization.codecs.RecordCodecBuilder;
-import earth.terrarium.botarium.resources.util.CodecUtils;
-import net.fabricmc.fabric.api.recipe.v1.ingredient.CustomIngredient;
-import net.fabricmc.fabric.api.recipe.v1.ingredient.CustomIngredientSerializer;
 import net.fabricmc.fabric.api.recipe.v1.ingredient.DefaultCustomIngredients;
 import net.fabricmc.fabric.impl.recipe.ingredient.CustomIngredientImpl;
-import net.minecraft.core.component.DataComponentPredicate;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.ItemStack;
@@ -35,6 +28,7 @@ public class ItemIngredientActual {
         return DefaultCustomIngredients.difference(base, subtracted);
     }
 
+    /*
     @Actual
     public static Ingredient components(Ingredient base, DataComponentPredicate components) {
         return DefaultCustomIngredients.components(base, components.asPatch());
@@ -118,4 +112,5 @@ public class ItemIngredientActual {
             return DataResult.success(ingredient);
         });
     }
+     */
 }

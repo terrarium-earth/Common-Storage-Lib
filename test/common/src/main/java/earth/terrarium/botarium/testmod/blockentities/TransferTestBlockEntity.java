@@ -23,9 +23,9 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
 public class TransferTestBlockEntity extends BlockEntity implements EnergyProvider.BlockEntity, FluidProvider.BlockEntity, ItemProvider.BlockEntity {
-    private final SimpleValueStorage energy = new SimpleValueStorage(1000, this);
-    private final SimpleFluidStorage fluids = new SimpleFluidStorage(1, FluidAmounts.BUCKET, this);
-    private final SimpleItemStorage items = new SimpleItemStorage(1, this);
+    private final SimpleValueStorage energy = new SimpleValueStorage(1000, this::setChanged);
+    private final SimpleFluidStorage fluids = new SimpleFluidStorage(1, FluidAmounts.BUCKET, this::setChanged);
+    private final SimpleItemStorage items = new SimpleItemStorage(1, this::setChanged);
 
     public TransferTestBlockEntity(BlockPos pos, BlockState blockState) {
         super(TestMod.TRANSFER_BLOCK_ENTITY.get(), pos, blockState);

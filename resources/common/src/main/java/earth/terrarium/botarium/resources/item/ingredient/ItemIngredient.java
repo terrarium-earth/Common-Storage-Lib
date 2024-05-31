@@ -1,14 +1,12 @@
 package earth.terrarium.botarium.resources.item.ingredient;
 
 import com.mojang.serialization.MapCodec;
-import net.minecraft.core.component.DataComponentPredicate;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
-import net.msrandom.multiplatform.annotations.Actual;
 import net.msrandom.multiplatform.annotations.Expect;
 
 public class ItemIngredient {
-    public static final MapCodec<Ingredient> NON_EMPTY_MAP_CODEC = ItemIngredient.getNonEmptyMapCodec();
+    // public static final MapCodec<Ingredient> NON_EMPTY_MAP_CODEC = ItemIngredient.getNonEmptyMapCodec();
 
     @Expect
     public static Ingredient all(Ingredient... ingredients);
@@ -19,6 +17,7 @@ public class ItemIngredient {
     @Expect
     public static Ingredient difference(Ingredient base, Ingredient subtracted);
 
+    /*
     @Expect
     public static Ingredient components(Ingredient base, DataComponentPredicate components);
 
@@ -27,4 +26,5 @@ public class ItemIngredient {
 
     @Expect
     private static MapCodec<Ingredient> getNonEmptyMapCodec();
+     */
 }

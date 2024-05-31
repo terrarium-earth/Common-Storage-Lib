@@ -1,45 +1,35 @@
 package earth.terrarium.botarium.item.impl;
 
-import earth.terrarium.botarium.Botarium;
 import earth.terrarium.botarium.context.ItemContext;
-import earth.terrarium.botarium.resources.item.ItemResource;
 import earth.terrarium.botarium.item.util.ItemStorageData;
+import earth.terrarium.botarium.resources.item.ItemResource;
 import earth.terrarium.botarium.storage.base.CommonStorage;
 import earth.terrarium.botarium.storage.base.UpdateManager;
 import earth.terrarium.botarium.storage.util.TransferUtil;
 import net.minecraft.core.NonNullList;
-import net.minecraft.core.component.DataComponentPatch;
-import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Predicate;
 
 public class SimpleItemStorage implements CommonStorage<ItemResource>, UpdateManager<ItemStorageData> {
+    public static final String KEY = "botarium:item_contents";
+
     protected final NonNullList<SimpleItemSlot> slots;
     private final Runnable onUpdate;
 
-    public SimpleItemStorage(int size) {
+    public SimpleItemStorage(int size, Runnable onUpdate) {
         this.slots = NonNullList.withSize(size, new SimpleItemSlot(this::update));
-        this.onUpdate = () -> {};
+        this.onUpdate = onUpdate;
     }
 
-    public SimpleItemStorage(int size, ItemStack stack, ItemContext context) {
+    public SimpleItemStorage(int size, ItemContext context) {
         this.slots = NonNullList.withSize(size, new SimpleItemSlot(this::update));
         this.onUpdate = () -> {
             ItemStorageData data = ItemStorageData.of(this);
-            DataComponentPatch patch = DataComponentPatch.builder().set(Botarium.ITEM_CONTENTS.componentType(), data).build();
-            context.modify(patch);
+            ItemResource resource = context.getResource().set(ItemStorageData.CODEC, KEY, data);
+            context.exchange(resource, context.getAmount(), false);
         };
-        this.readSnapshot(Botarium.ITEM_CONTENTS.get(stack));
-    }
-
-    public SimpleItemStorage(int size, Object entityOrBlockEntity) {
-        this.slots = NonNullList.withSize(size, new SimpleItemSlot(this::update));
-        this.onUpdate = () -> {
-            ItemStorageData data = ItemStorageData.of(this);
-            Botarium.ITEM_CONTENTS.set(entityOrBlockEntity, data);
-        };
-        this.readSnapshot(Botarium.ITEM_CONTENTS.get(entityOrBlockEntity));
+        readSnapshot(context.getResource().getOrDefault(ItemStorageData.CODEC, KEY, ItemStorageData.EMPTY));
     }
 
     public SimpleItemStorage filter(int slot, Predicate<ItemResource> predicate) {
@@ -79,31 +69,35 @@ public class SimpleItemStorage implements CommonStorage<ItemResource>, UpdateMan
         return TransferUtil.insertSlots(this, resource, amount, simulate);
     }
 
+    public long insertAndUpdate(ItemResource resource, long amount, boolean simulate) {
+        long inserted = TransferUtil.insertSlots(this, resource, amount, simulate);
+        if (!simulate) {
+            onUpdate.run();
+        }
+        return inserted;
+    }
+
     @Override
     public long extract(ItemResource resource, long amount, boolean simulate) {
         return TransferUtil.extractSlots(this, resource, amount, simulate);
     }
 
+    public long extractAndUpdate(ItemResource resource, long amount, boolean simulate) {
+        long extracted = TransferUtil.extractSlots(this, resource, amount, simulate);
+        if (!simulate) {
+            onUpdate.run();
+        }
+        return extracted;
+    }
+
     public static class ExtractOnly extends SimpleItemStorage {
-        public ExtractOnly(int size) {
-            super(size);
-        }
-
-        public ExtractOnly(int size, ItemStack stack, ItemContext context) {
-            super(size, stack, context);
-        }
-
-        public ExtractOnly(int size, Object entityOrBlockEntity) {
-            super(size, entityOrBlockEntity);
+        public ExtractOnly(int size, Runnable onUpdate) {
+            super(size, onUpdate);
         }
 
         @Override
         public long insert(ItemResource resource, long amount, boolean simulate) {
             return 0;
-        }
-
-        public long internalInsert(ItemResource resource, long amount, boolean simulate) {
-            return super.insert(resource, amount, simulate);
         }
 
         @Override
@@ -118,25 +112,13 @@ public class SimpleItemStorage implements CommonStorage<ItemResource>, UpdateMan
     }
 
     public static class InsertOnly extends SimpleItemStorage {
-        public InsertOnly(int size) {
-            super(size);
-        }
-
-        public InsertOnly(int size, ItemStack stack, ItemContext context) {
-            super(size, stack, context);
-        }
-
-        public InsertOnly(int size, Object entityOrBlockEntity) {
-            super(size, entityOrBlockEntity);
+        public InsertOnly(int size, Runnable onUpdate) {
+            super(size, onUpdate);
         }
 
         @Override
         public long extract(ItemResource resource, long amount, boolean simulate) {
             return 0;
-        }
-
-        public long internalExtract(ItemResource resource, long amount, boolean simulate) {
-            return super.extract(resource, amount, simulate);
         }
 
         @Override

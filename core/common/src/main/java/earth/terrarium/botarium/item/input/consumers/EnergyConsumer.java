@@ -9,11 +9,9 @@ import earth.terrarium.botarium.item.input.ConsumerType;
 import earth.terrarium.botarium.item.input.ItemConsumer;
 import earth.terrarium.botarium.storage.base.ValueStorage;
 import net.minecraft.ChatFormatting;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.component.ItemLore;
 
 public record EnergyConsumer(long energy) implements ItemConsumer {
     public static final MapCodec<EnergyConsumer> CODEC = Codec.LONG.fieldOf("energy").xmap(EnergyConsumer::new, EnergyConsumer::energy);
@@ -35,9 +33,11 @@ public record EnergyConsumer(long energy) implements ItemConsumer {
 
     @Override
     public ItemStack modifyDisplay(ItemStack stack) {
+        /* TODO: Implement this
         ItemLore lore = stack.getOrDefault(DataComponents.LORE, ItemLore.EMPTY);
         lore = lore.withLineAdded(Component.translatable("misc.botarium.consume", Component.translatable("misc.botarium.energy", Component.literal(String.valueOf(energy)).withStyle(ChatFormatting.DARK_RED)).withStyle(ChatFormatting.RED)).withStyle(ChatFormatting.GRAY));
         stack.set(DataComponents.LORE, lore);
+         */
         return stack;
     }
 

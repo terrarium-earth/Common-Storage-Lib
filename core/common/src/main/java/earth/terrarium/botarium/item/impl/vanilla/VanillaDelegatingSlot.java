@@ -19,7 +19,7 @@ public class VanillaDelegatingSlot implements StorageSlot<ItemResource>, UpdateM
 
     @Override
     public long getLimit(ItemResource resource) {
-        return container.getMaxStackSize(resource.getCachedStack());
+        return container.getMaxStackSize();
     }
 
     @Override

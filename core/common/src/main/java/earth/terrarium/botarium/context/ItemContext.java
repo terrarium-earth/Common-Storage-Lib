@@ -7,7 +7,6 @@ import earth.terrarium.botarium.storage.base.StorageIO;
 import earth.terrarium.botarium.storage.base.StorageSlot;
 import earth.terrarium.botarium.storage.util.TransferUtil;
 import earth.terrarium.botarium.storage.base.UpdateManager;
-import net.minecraft.core.component.DataComponentPatch;
 
 public interface ItemContext extends StorageIO<ItemResource> {
     default <T> T find(ItemLookup<T, ItemContext> lookup) {
@@ -43,10 +42,6 @@ public interface ItemContext extends StorageIO<ItemResource> {
         long exchange = TransferUtil.exchange(this, getResource(), newResource, amount, simulate);
         if (!simulate) updateAll();
         return exchange;
-    }
-
-    default void modify(DataComponentPatch patch) {
-        exchange(getResource().modify(patch), getAmount(), false);
     }
 
     CommonStorage<ItemResource> outerContainer();
