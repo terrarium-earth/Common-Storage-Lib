@@ -5,65 +5,57 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import earth.terrarium.botarium.resources.ResourceComponent;
 import earth.terrarium.botarium.resources.ResourceStack;
-import earth.terrarium.botarium.resources.Resource;
 import net.minecraft.core.Holder;
-import net.minecraft.core.component.DataComponentMap;
-import net.minecraft.core.component.DataComponentPatch;
-import net.minecraft.core.component.DataComponentType;
-import net.minecraft.core.component.PatchedDataComponentMap;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.core.registries.Registries;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtOps;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.function.Predicate;
 
 public final class EntityResource extends ResourceComponent {
     public static EntityResource BLANK = EntityResource.of((EntityType<?>) null);
 
     public static final Codec<EntityResource> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-            BuiltInRegistries.ENTITY_TYPE.byNameCodec().fieldOf("type").forGetter(EntityResource::getType),
-            DataComponentPatch.CODEC.optionalFieldOf("components", DataComponentPatch.EMPTY).forGetter(EntityResource::getDataPatch)
+            BuiltInRegistries.ENTITY_TYPE.byNameCodec().fieldOf("id").forGetter(EntityResource::getType),
+            CompoundTag.CODEC.optionalFieldOf("tag", new CompoundTag()).forGetter(EntityResource::getTag)
     ).apply(instance, EntityResource::of));
 
     public static final Codec<EntityResource> SIMPLE_CODEC = BuiltInRegistries.ENTITY_TYPE.byNameCodec().xmap(EntityResource::of, EntityResource::getType);
 
     public static final MapCodec<EntityResource> MAP_CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-            BuiltInRegistries.ENTITY_TYPE.byNameCodec().fieldOf("type").forGetter(EntityResource::getType),
-            DataComponentPatch.CODEC.optionalFieldOf("components", DataComponentPatch.EMPTY).forGetter(EntityResource::getDataPatch)
+            BuiltInRegistries.ENTITY_TYPE.byNameCodec().fieldOf("id").forGetter(EntityResource::getType),
+            CompoundTag.CODEC.optionalFieldOf("tag", new CompoundTag()).forGetter(EntityResource::getTag)
     ).apply(instance, EntityResource::of));
 
-    public static final StreamCodec<RegistryFriendlyByteBuf, EntityResource> STREAM_CODEC = StreamCodec.composite(
-            ByteBufCodecs.holderRegistry(Registries.ENTITY_TYPE),
-            EntityResource::toHolder,
-            DataComponentPatch.STREAM_CODEC,
-            EntityResource::getDataPatch,
-            EntityResource::of);
-
     public static EntityResource of(EntityType<?> type) {
-        return of(type, DataComponentPatch.EMPTY);
+        return of(type, null);
     }
 
     public static EntityResource of(Holder<EntityType<?>> type) {
-        return of(type.value(), DataComponentPatch.EMPTY);
+        return of(type.value());
     }
 
-    public static EntityResource of(EntityType<?> type, DataComponentPatch patch) {
-        return new EntityResource(type, PatchedDataComponentMap.fromPatch(DataComponentMap.EMPTY, patch));
+    public static EntityResource of(EntityType<?> type, CompoundTag tag) {
+        return new EntityResource(type, tag);
     }
 
-    public static EntityResource of(Holder<EntityType<?>> type, DataComponentPatch patch) {
-        return of(type.value(), patch);
+    public static EntityResource of(Holder<EntityType<?>> type, CompoundTag tag) {
+        return of(type.value(), tag);
+    }
+
+    public static EntityResource ofEntity(Entity entity) {
+        return of(entity.getType(), entity.saveWithoutId(new CompoundTag()));
+    }
+
+    public static EntityResource ofEntityWithoutData(Entity entity) {
+        return of(entity.getType(), null);
     }
 
     private final EntityType<?> type;
 
-    private EntityResource(@Nullable EntityType<?> type, PatchedDataComponentMap components) {
-        super(components);
+    private EntityResource(@Nullable EntityType<?> type, CompoundTag tag) {
+        super(tag);
         this.type = type;
     }
 
@@ -81,16 +73,23 @@ public final class EntityResource extends ResourceComponent {
         return type;
     }
 
-    public <D> EntityResource set(DataComponentType<D> type, D value) {
-        PatchedDataComponentMap newComponents = new PatchedDataComponentMap(components);
-        newComponents.set(type, value);
-        return new EntityResource(this.type, newComponents);
+    public <T> EntityResource set(Codec<T> codec, String key, T value) {
+        CompoundTag tag = getTag();
+        if (tag == null) {
+            tag = new CompoundTag();
+        } else {
+            tag = tag.copy();
+        }
+        tag.put(key, codec.encodeStart(NbtOps.INSTANCE, value).result().orElseThrow());
+        return new EntityResource(type, tag);
     }
 
-    public EntityResource modify(DataComponentPatch patch) {
-        PatchedDataComponentMap newComponents = new PatchedDataComponentMap(components);
-        newComponents.applyPatch(patch);
-        return new EntityResource(type, newComponents);
+    public EntityResource remove(String key) {
+        CompoundTag tag = getTag();
+        if (tag == null) return this;
+        tag = tag.copy();
+        tag.remove(key);
+        return new EntityResource(type, tag);
     }
 
     public ResourceStack<EntityResource> toStack(long amount) {

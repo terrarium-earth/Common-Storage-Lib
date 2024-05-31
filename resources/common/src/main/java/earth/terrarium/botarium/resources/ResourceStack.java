@@ -6,9 +6,6 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import earth.terrarium.botarium.resources.fluid.FluidResource;
 import earth.terrarium.botarium.resources.fluid.util.FluidAmounts;
 import earth.terrarium.botarium.resources.item.ItemResource;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.function.UnaryOperator;
@@ -28,9 +25,6 @@ public record ResourceStack<T extends Resource>(T resource, long amount) {
             ItemResource.MAP_CODEC.forGetter(ResourceStack::resource),
             Codec.LONG.fieldOf("amount").forGetter(ResourceStack::amount)
     ).apply(instance, ResourceStack::new));
-
-    public static final StreamCodec<RegistryFriendlyByteBuf, ResourceStack<FluidResource>> FLUID_STREAM_CODEC = StreamCodec.composite(FluidResource.STREAM_CODEC, ResourceStack::resource, ByteBufCodecs.VAR_LONG, ResourceStack::amount, ResourceStack::new);
-    public static final StreamCodec<RegistryFriendlyByteBuf, ResourceStack<ItemResource>> ITEM_STREAM_CODEC = StreamCodec.composite(ItemResource.STREAM_CODEC, ResourceStack::resource, ByteBufCodecs.VAR_LONG, ResourceStack::amount, ResourceStack::new);
 
     public static final ResourceStack<FluidResource> EMPTY_FLUID = new ResourceStack<>(FluidResource.BLANK, 0);
     public static final ResourceStack<ItemResource> EMPTY_ITEM = new ResourceStack<>(ItemResource.BLANK, 0);

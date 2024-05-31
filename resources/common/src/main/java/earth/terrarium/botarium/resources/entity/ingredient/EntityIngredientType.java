@@ -1,13 +1,12 @@
 package earth.terrarium.botarium.resources.entity.ingredient;
 
 import com.mojang.serialization.MapCodec;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
+import com.teamresourceful.bytecodecs.base.ByteCodec;
+import earth.terrarium.botarium.resources.util.ByteCodecUtils;
 import net.minecraft.resources.ResourceLocation;
 
-public record EntityIngredientType<T extends EntityIngredient>(ResourceLocation id, MapCodec<T> codec, StreamCodec<RegistryFriendlyByteBuf, T> streamCodec) {
+public record EntityIngredientType<T extends EntityIngredient>(ResourceLocation id, MapCodec<T> codec, ByteCodec<T> byteCodec) {
     public EntityIngredientType(ResourceLocation id, MapCodec<T> codec) {
-        this(id, codec, ByteBufCodecs.fromCodecWithRegistries(codec.codec()));
+        this(id, codec, ByteCodecUtils.fromCodec(codec.codec()));
     }
 }

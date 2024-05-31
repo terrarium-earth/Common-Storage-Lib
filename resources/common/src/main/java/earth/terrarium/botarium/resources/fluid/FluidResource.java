@@ -8,6 +8,7 @@ import earth.terrarium.botarium.resources.ResourceStack;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtOps;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
@@ -45,6 +46,27 @@ public final class FluidResource extends ResourceComponent {
     public FluidResource(Fluid type, CompoundTag tag) {
         super(tag);
         this.type = type;
+    }
+
+    public <T> FluidResource set(Codec<T> codec, String key, T value) {
+        CompoundTag tag = getTag();
+
+        if (tag == null) {
+            tag = new CompoundTag();
+        } else {
+            tag = tag.copy();
+        }
+
+        tag.put(key, codec.encodeStart(NbtOps.INSTANCE, value).result().orElseThrow());
+        return new FluidResource(type, tag);
+    }
+
+    public FluidResource remove(String key) {
+        CompoundTag tag = getTag();
+        if (tag == null) return this;
+        tag = tag.copy();
+        tag.remove(key);
+        return new FluidResource(type, tag);
     }
 
     public Fluid getType() {

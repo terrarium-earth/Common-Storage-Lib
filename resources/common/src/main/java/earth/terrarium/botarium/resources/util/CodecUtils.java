@@ -1,7 +1,16 @@
 package earth.terrarium.botarium.resources.util;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
 import com.mojang.datafixers.util.Either;
 import com.mojang.serialization.*;
+import com.teamresourceful.bytecodecs.base.ByteCodec;
+import io.netty.buffer.ByteBuf;
+import io.netty.handler.codec.DecoderException;
+import io.netty.handler.codec.EncoderException;
+import net.minecraft.Util;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.GsonHelper;
 
 import java.util.List;
 import java.util.Optional;

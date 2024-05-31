@@ -3,12 +3,11 @@ package earth.terrarium.botarium.resources.entity.ingredient;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import com.teamresourceful.bytecodecs.base.ByteCodec;
+import com.teamresourceful.bytecodecs.base.object.ObjectByteCodec;
 import earth.terrarium.botarium.resources.ResourceStack;
 import earth.terrarium.botarium.resources.entity.EntityResource;
 import earth.terrarium.botarium.resources.util.CodecUtils;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.EntityType;
 import org.jetbrains.annotations.Nullable;
@@ -26,12 +25,11 @@ public class SizedEntityIngredient {
                     CodecUtils.optionalFieldAlwaysWrite(Codec.LONG, "amount", 1L).forGetter(SizedEntityIngredient::getAmount))
             .apply(instance, SizedEntityIngredient::new));
 
-    public static final StreamCodec<RegistryFriendlyByteBuf, SizedEntityIngredient> STREAM_CODEC = StreamCodec.composite(
-            EntityIngredient.STREAM_CODEC,
-            SizedEntityIngredient::ingredient,
-            ByteBufCodecs.VAR_LONG,
-            SizedEntityIngredient::getAmount,
-            SizedEntityIngredient::new);
+    public static final ByteCodec<SizedEntityIngredient> BYTE_CODEC = ObjectByteCodec.create(
+            EntityIngredient.BYTE_CODEC.fieldOf(SizedEntityIngredient::ingredient),
+            ByteCodec.VAR_LONG.fieldOf(SizedEntityIngredient::getAmount),
+            SizedEntityIngredient::new
+    );
 
     public static SizedEntityIngredient of(EntityResource item, int count) {
         return new SizedEntityIngredient(EntityIngredient.of(item), count);
