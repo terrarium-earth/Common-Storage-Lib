@@ -21,19 +21,9 @@ import net.minecraft.network.codec.ByteBufCodecs;
 
 public class CommonStorageLib {
     public static final String MOD_ID = "common_storage_lib";
-    public static final DataManagerRegistry REGISTRY = new DataManagerRegistry(MOD_ID);
-
-    public static final DataManager<FluidStorageData> FLUID_CONTENTS = REGISTRY.builder(FluidStorageData.DEFAULT).serialize(FluidStorageData.CODEC).networkSerializer(FluidStorageData.NETWORK_CODEC).withDataComponent().copyOnDeath().buildAndRegister("fluid_storage_data");
-    public static final DataManager<ItemStorageData> ITEM_CONTENTS = REGISTRY.builder(ItemStorageData.DEFAULT).serialize(ItemStorageData.CODEC).networkSerializer(ItemStorageData.NETWORK_CODEC).withDataComponent().copyOnDeath().buildAndRegister("item_storage_data");
-    public static final DataManager<ResourceStack<ItemResource>> SINGLE_ITEM_CONTENTS = REGISTRY.builder(() -> new ResourceStack<>(ItemResource.BLANK, 0)).serialize(ResourceStack.ITEM_CODEC).networkSerializer(ResourceStack.ITEM_STREAM_CODEC).withDataComponent().copyOnDeath().buildAndRegister("item_resource_stack");
-    public static final DataManager<ResourceStack<FluidResource>> SINGLE_FLUID_CONTENTS = REGISTRY.builder(() -> new ResourceStack<>(FluidResource.BLANK, 0)).serialize(ResourceStack.FLUID_CODEC).networkSerializer(ResourceStack.FLUID_STREAM_CODEC).withDataComponent().copyOnDeath().buildAndRegister("fluid_resource_stack");
-    public static final DataManager<FluidResource> FLUID_RESOURCE = REGISTRY.builder(() -> FluidResource.BLANK).serialize(FluidResource.CODEC).networkSerializer(FluidResource.STREAM_CODEC).withDataComponent().copyOnDeath().buildAndRegister("fluid_resource");
-    public static final DataManager<ItemResource> ITEM_RESOURCE = REGISTRY.builder(() -> ItemResource.BLANK).serialize(ItemResource.CODEC).networkSerializer(ItemResource.STREAM_CODEC).withDataComponent().copyOnDeath().buildAndRegister("item_resource");
-    public static final DataManager<Long> VALUE_CONTENT = REGISTRY.builder(() -> 0L).serialize(Codec.LONG).networkSerializer(ByteBufCodecs.VAR_LONG).withDataComponent().copyOnDeath().buildAndRegister("value_storage_data");
 
     public static void init() {
         ItemConsumerRegistry.init();
-        REGISTRY.init();
         //Energy
 
         EnergyApi.ITEM.registerFallback((stack, context) -> {

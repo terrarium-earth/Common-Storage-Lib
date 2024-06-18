@@ -6,6 +6,7 @@ import earth.terrarium.common_storage_lib.item.impl.noops.NoOpsItemContainer;
 import earth.terrarium.common_storage_lib.storage.base.CommonStorage;
 import earth.terrarium.common_storage_lib.storage.base.StorageSlot;
 import net.minecraft.core.component.DataComponentPatch;
+import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.component.PatchedDataComponentMap;
 import net.minecraft.world.item.ItemStack;
 
@@ -24,8 +25,15 @@ public record ModifyOnlyContext(ItemStack stack) implements ItemContext {
     }
 
     @Override
-    public void modify(DataComponentPatch patch) {
+    public boolean modify(DataComponentPatch patch) {
         stack.applyComponents(patch);
+        return true;
+    }
+
+    @Override
+    public <T> boolean set(DataComponentType<T> type, T value) {
+        stack.set(type, value);
+        return true;
     }
 
     @Override

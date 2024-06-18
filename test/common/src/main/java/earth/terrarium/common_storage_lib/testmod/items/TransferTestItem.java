@@ -17,6 +17,7 @@ import earth.terrarium.common_storage_lib.resources.item.ItemResource;
 import earth.terrarium.common_storage_lib.storage.base.CommonStorage;
 import earth.terrarium.common_storage_lib.storage.base.ValueStorage;
 import earth.terrarium.common_storage_lib.storage.util.TransferUtil;
+import earth.terrarium.common_storage_lib.testmod.TestMod;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionHand;
@@ -78,16 +79,16 @@ public class TransferTestItem extends Item implements EnergyProvider.Item, Fluid
 
     @Override
     public ValueStorage getEnergy(ItemStack stack, ItemContext context) {
-        return new SimpleValueStorage(1000, stack, context);
+        return new SimpleValueStorage(context, TestMod.VALUE_CONTENT.componentType(), 1000);
     }
 
     @Override
     public CommonStorage<FluidResource> getFluids(ItemStack stack, ItemContext context) {
-        return new SimpleFluidStorage(1, FluidAmounts.BUCKET, stack, context);
+        return new SimpleFluidStorage(context, TestMod.FLUID_CONTENTS.componentType(), 1, FluidAmounts.BUCKET);
     }
 
     @Override
     public CommonStorage<ItemResource> getItems(ItemStack stack, ItemContext context) {
-        return new SimpleItemStorage(1, stack, context);
+        return new SimpleItemStorage(context, TestMod.ITEM_CONTENTS, 1);
     }
 }

@@ -7,9 +7,13 @@ import earth.terrarium.common_storage_lib.storage.base.StorageIO;
 import earth.terrarium.common_storage_lib.storage.base.StorageSlot;
 import earth.terrarium.common_storage_lib.storage.util.TransferUtil;
 import earth.terrarium.common_storage_lib.storage.base.UpdateManager;
+import net.minecraft.core.component.DataComponentHolder;
+import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.core.component.DataComponentPatch;
+import net.minecraft.core.component.DataComponentType;
+import org.jetbrains.annotations.NotNull;
 
-public interface ItemContext extends StorageIO<ItemResource> {
+public interface ItemContext extends StorageIO<ItemResource>, DataComponentHolder {
     default <T> T find(ItemLookup<T, ItemContext> lookup) {
         return lookup.find(getResource().toStack((int) getAmount()), this);
     }
@@ -45,8 +49,22 @@ public interface ItemContext extends StorageIO<ItemResource> {
         return exchange;
     }
 
-    default void modify(DataComponentPatch patch) {
-        exchange(getResource().modify(patch), getAmount(), false);
+    /**
+     * Applies a data component patch to the item in the main context.
+     * @param patch The patch to apply
+     * @return Whether the patch was successfully applied
+     */
+    default boolean modify(DataComponentPatch patch) {
+        return exchange(getResource().modify(patch), getAmount(), false) == getAmount();
+    }
+
+    default <T> boolean set(DataComponentType<T> type, T value) {
+        return modify(DataComponentPatch.builder().set(type, value).build());
+    }
+
+    @Override
+    default @NotNull DataComponentMap getComponents() {
+        return getResource().getComponents();
     }
 
     CommonStorage<ItemResource> outerContainer();
