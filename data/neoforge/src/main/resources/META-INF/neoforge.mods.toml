@@ -1,7 +1,7 @@
 modLoader = "javafml"
 loaderVersion = "[1,)"
 license = "MIT"
-issueTrackerURL = "https://github.com/terrarium-earth/Botarium/issues"
+issueTrackerURL = "https://github.com/terrarium-earth/Common-Storage-Lib/issues"
 
 [[mods]]
 modId = "common_storage_lib_data"

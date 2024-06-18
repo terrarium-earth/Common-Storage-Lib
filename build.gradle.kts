@@ -24,11 +24,12 @@ subprojects {
     val minecraftVersion: String by project
     val modId = rootProject.name
 
-    val moduleType = project.layout.projectDirectory.asFile.parentFile.name
+    val moduleType = project.layout.projectDirectory.asFile.parentFile.name.takeUnless { it == "core" }
     val modLoader = project.layout.projectDirectory.asFile.name
     val isCommon = modLoader == "common"
     val commonPath = when {
         isCommon -> project.name
+        moduleType == null -> ":${rootProject.name}-common"
         else -> ":${rootProject.name}-$moduleType-common"
     }
 

@@ -8,5 +8,5 @@ dependencies {
     implementation(projects.commonStorageLibDataCommon)
     implementation(projects.commonStorageLibLookupCommon)
     implementation(projects.commonStorageLibResourcesCommon)
-    implementation(projects.commonStorageLibCoreCommon)
+    implementation(projects.commonStorageLibCommon)
 }

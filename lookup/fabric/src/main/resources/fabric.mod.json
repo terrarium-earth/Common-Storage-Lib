@@ -8,8 +8,8 @@
     "CodexAdrian"
   ],
   "contact": {
-    "repo": "https://github.com/terrarium-earth/Botarium",
-    "issues": "https://github.com/terrarium-earth/Botarium/issues"
+    "repo": "https://github.com/terrarium-earth/Common-Storage-Lib",
+    "issues": "https://github.com/terrarium-earth/Common-Storage-Lib/issues"
   },
   "license": "MIT",
   "environment": "*",

@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "id": "common_storage_lib_core",
+  "id": "common_storage_lib",
   "version": "${version}",
   "name": "Common Storage Lib: Core",
   "description": "Abstraction of the mod loader's resource storage system, allowing for easy access to items, fluids and energy. This library also includes abstractions for Data Attachments, Api Lookups, and Transfer Variants and ingredients",
@@ -8,8 +8,8 @@
     "CodexAdrian"
   ],
   "contact": {
-    "repo": "https://github.com/terrarium-earth/Botarium",
-    "issues": "https://github.com/terrarium-earth/Botarium/issues"
+    "repo": "https://github.com/terrarium-earth/Common-Storage-Lib",
+    "issues": "https://github.com/terrarium-earth/Common-Storage-Lib/issues"
   },
   "license": "MIT",
   "environment": "*",

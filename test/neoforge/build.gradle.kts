@@ -1,9 +1,9 @@
 dependencies {
     if (System.getProperty("idea.sync.active", false.toString()).toBoolean()) {
-        compileOnly(projects.commonStorageLibCoreCommon)
+        compileOnly(projects.commonStorageLibCommon)
     }
     implementation(projects.commonStorageLibDataNeoforge)
     implementation(projects.commonStorageLibLookupNeoforge)
     implementation(projects.commonStorageLibResourcesNeoforge)
-    implementation(projects.commonStorageLibCoreNeoforge)
+    implementation(projects.commonStorageLibNeoforge)
 }
