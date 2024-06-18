@@ -24,7 +24,7 @@ public record FluidConsumer(SizedFluidIngredient ingredient, Component name) imp
             SizedFluidIngredient.FLAT_MB_CODEC.forGetter(FluidConsumer::ingredient),
             ComponentSerialization.CODEC.fieldOf("name").forGetter(FluidConsumer::name)
     ).apply(instance, FluidConsumer::new));
-    public static final ConsumerType<FluidConsumer> TYPE = new ConsumerType<>(new ResourceLocation(CommonStorageLib.MOD_ID, "fluid"), CODEC);
+    public static final ConsumerType<FluidConsumer> TYPE = new ConsumerType<>(ResourceLocation.fromNamespaceAndPath(CommonStorageLib.MOD_ID, "fluid"), CODEC);
 
     @Override
     public boolean test(ItemStack stack, ItemContext context) {

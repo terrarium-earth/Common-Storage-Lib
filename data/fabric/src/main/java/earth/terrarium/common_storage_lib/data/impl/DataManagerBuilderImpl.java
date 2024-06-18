@@ -67,7 +67,7 @@ public class DataManagerBuilderImpl<T> implements DataManagerBuilder<T> {
 
     @Override
     public DataManager<T> buildAndRegister(String name) {
-        ResourceLocation id = new ResourceLocation(modid, name);
+        ResourceLocation id = ResourceLocation.fromNamespaceAndPath(modid, name);
         AttachmentType<T> tAttachmentType = this.builder.buildAndRegister(id);
         DataSyncSerializer<T> serializer = null;
         if (syncToClient) {

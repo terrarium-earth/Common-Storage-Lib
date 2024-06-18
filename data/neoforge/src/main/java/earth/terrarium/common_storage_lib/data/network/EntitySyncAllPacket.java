@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public record EntitySyncAllPacket(int entityId, List<AttachmentData<?>> syncData) implements CustomPacketPayload {
-    public static final Type<EntitySyncAllPacket> TYPE = new Type<>(new ResourceLocation(NeoDataLib.MOD_ID, "entity_all"));
+    public static final Type<EntitySyncAllPacket> TYPE = new Type<>(ResourceLocation.fromNamespaceAndPath(NeoDataLib.MOD_ID, "entity_all"));
     public static final StreamCodec<RegistryFriendlyByteBuf, EntitySyncAllPacket> CODEC = StreamCodec.composite(
             ByteBufCodecs.VAR_INT,
             EntitySyncAllPacket::entityId,

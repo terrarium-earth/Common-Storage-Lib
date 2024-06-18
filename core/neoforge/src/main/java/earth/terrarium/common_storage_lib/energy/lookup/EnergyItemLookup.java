@@ -22,7 +22,7 @@ import java.util.function.Consumer;
 
 public final class EnergyItemLookup implements ItemLookup<ValueStorage, ItemContext>, RegistryEventListener {
     public static final EnergyItemLookup INSTANCE = new EnergyItemLookup();
-    private static final ItemCapability<ValueStorage, ItemContext> CAPABILITY = ItemCapability.create(new ResourceLocation(CommonStorageLib.MOD_ID, "energy_item"), ValueStorage.class, ItemContext.class);
+    private static final ItemCapability<ValueStorage, ItemContext> CAPABILITY = ItemCapability.create(ResourceLocation.fromNamespaceAndPath(CommonStorageLib.MOD_ID, "energy_item"), ValueStorage.class, ItemContext.class);
 
     private final List<Consumer<ItemRegistrar<ValueStorage, ItemContext>>> registrars = new ArrayList<>();
 

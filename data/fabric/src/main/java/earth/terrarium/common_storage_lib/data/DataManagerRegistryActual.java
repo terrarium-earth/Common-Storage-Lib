@@ -10,13 +10,8 @@ public final class DataManagerRegistryActual {
     private final String modid;
 
     @Actual
-    private DataManagerRegistryActual(String modid) {
+    public DataManagerRegistryActual(String modid) {
         this.modid = modid;
-    }
-
-    @Actual
-    public static DataManagerRegistry create(String modid) {
-        return new DataManagerRegistry(modid);
     }
 
     @Actual

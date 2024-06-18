@@ -24,7 +24,7 @@ import java.util.List;
 public class BaseEntityIngredient implements EntityIngredient {
     public static final Codec<BaseEntityIngredient> CODEC = CodecUtils.listAndObjectCodec(Value.CODEC).xmap(BaseEntityIngredient::new, BaseEntityIngredient::values);
     public static final MapCodec<BaseEntityIngredient> MAP_CODEC = CODEC.fieldOf("values");
-    public static final EntityIngredientType<BaseEntityIngredient> TYPE = new EntityIngredientType<>(new ResourceLocation(ResourceLib.MOD_ID, "base"), MAP_CODEC);
+    public static final EntityIngredientType<BaseEntityIngredient> TYPE = new EntityIngredientType<>(ResourceLocation.fromNamespaceAndPath(ResourceLib.MOD_ID, "base"), MAP_CODEC);
 
     private final List<Value> values;
     private List<EntityResource> matchingEntitys;

@@ -20,5 +20,5 @@ public class EnergyApiActual {
     @Actual
     public static final ItemLookup<ValueStorage, ItemContext> ITEM = new EnergyItemLookup();
     @Actual
-    public static final EntityLookup<ValueStorage, Direction> ENTITY = EntityLookup.create(new ResourceLocation(CommonStorageLib.MOD_ID, "entity_energy"), ValueStorage.class, Direction.class);
+    public static final EntityLookup<ValueStorage, Direction> ENTITY = EntityLookup.create(ResourceLocation.fromNamespaceAndPath(CommonStorageLib.MOD_ID, "entity_energy"), ValueStorage.class, Direction.class);
 }

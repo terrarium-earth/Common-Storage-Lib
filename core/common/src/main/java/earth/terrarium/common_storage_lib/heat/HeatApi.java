@@ -9,7 +9,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 
 public class HeatApi {
-    public static final BlockLookup<HeatContainer, Direction> BLOCK = BlockLookup.create(new ResourceLocation(CommonStorageLib.MOD_ID, "heat_block"), HeatContainer.class);
-    public static final ItemLookup<HeatContainer, ItemContext> ITEM = ItemLookup.create(new ResourceLocation(CommonStorageLib.MOD_ID, "heat_item"), HeatContainer.class, ItemContext.class);
-    public static final EntityLookup<HeatContainer, Void> ENTITY = EntityLookup.create(new ResourceLocation(CommonStorageLib.MOD_ID, "heat_entity"), HeatContainer.class);
+    public static final BlockLookup<HeatContainer, Direction> BLOCK = BlockLookup.create(ResourceLocation.fromNamespaceAndPath(CommonStorageLib.MOD_ID, "heat_block"), HeatContainer.class);
+    public static final ItemLookup<HeatContainer, ItemContext> ITEM = ItemLookup.create(ResourceLocation.fromNamespaceAndPath(CommonStorageLib.MOD_ID, "heat_item"), HeatContainer.class, ItemContext.class);
+    public static final EntityLookup<HeatContainer, Void> ENTITY = EntityLookup.create(ResourceLocation.fromNamespaceAndPath(CommonStorageLib.MOD_ID, "heat_entity"), HeatContainer.class);
 }

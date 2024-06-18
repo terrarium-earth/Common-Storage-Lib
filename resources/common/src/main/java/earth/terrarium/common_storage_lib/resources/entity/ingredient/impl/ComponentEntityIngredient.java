@@ -17,7 +17,7 @@ public record ComponentEntityIngredient(EntityIngredient ingredient, DataCompone
             DataComponentPredicate.CODEC.fieldOf("predicate").forGetter(ComponentEntityIngredient::predicate)
     ).apply(instance, ComponentEntityIngredient::new));
 
-    public static final EntityIngredientType<ComponentEntityIngredient> TYPE = new EntityIngredientType<>(new ResourceLocation(ResourceLib.MOD_ID, "component"), CODEC);
+    public static final EntityIngredientType<ComponentEntityIngredient> TYPE = new EntityIngredientType<>(ResourceLocation.fromNamespaceAndPath(ResourceLib.MOD_ID, "component"), CODEC);
 
     @Override
     public boolean test(EntityResource fluidResource) {

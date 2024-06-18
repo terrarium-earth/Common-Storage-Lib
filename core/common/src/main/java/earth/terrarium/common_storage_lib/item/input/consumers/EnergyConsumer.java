@@ -17,7 +17,7 @@ import net.minecraft.world.item.component.ItemLore;
 
 public record EnergyConsumer(long energy) implements ItemConsumer {
     public static final MapCodec<EnergyConsumer> CODEC = Codec.LONG.fieldOf("energy").xmap(EnergyConsumer::new, EnergyConsumer::energy);
-    public static final ConsumerType<EnergyConsumer> TYPE = new ConsumerType<>(new ResourceLocation(CommonStorageLib.MOD_ID, "energy"), CODEC);
+    public static final ConsumerType<EnergyConsumer> TYPE = new ConsumerType<>(ResourceLocation.fromNamespaceAndPath(CommonStorageLib.MOD_ID, "energy"), CODEC);
 
     @Override
     public boolean test(ItemStack stack, ItemContext context) {

@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public record BlockEntitySyncAllPacket(BlockPos pos, BlockEntityType<?> blockEntityType, List<AttachmentData<?>> syncData) implements CustomPacketPayload {
-    public static final Type<BlockEntitySyncAllPacket> TYPE = new Type<>(new ResourceLocation(NeoDataLib.MOD_ID, "block_entity_all"));
+    public static final Type<BlockEntitySyncAllPacket> TYPE = new Type<>(ResourceLocation.fromNamespaceAndPath(NeoDataLib.MOD_ID, "block_entity_all"));
     public static final StreamCodec<RegistryFriendlyByteBuf, BlockEntitySyncAllPacket> CODEC = StreamCodec.composite(
             BlockPos.STREAM_CODEC,
             BlockEntitySyncAllPacket::pos,

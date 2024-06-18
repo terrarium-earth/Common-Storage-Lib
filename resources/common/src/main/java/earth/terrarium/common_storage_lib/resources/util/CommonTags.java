@@ -196,7 +196,7 @@ public class CommonTags {
         public static final TagKey<Block> VILLAGER_JOB_SITES = tag("villager_job_sites");
 
         private static TagKey<Block> tag(String name) {
-            return TagKey.create(Registries.BLOCK, new ResourceLocation("c", name));
+            return TagKey.create(Registries.BLOCK, ResourceLocation.fromNamespaceAndPath("c", name));
         }
     }
 
@@ -220,7 +220,7 @@ public class CommonTags {
         public static final TagKey<EntityType<?>> TELEPORTING_NOT_SUPPORTED = tag("teleporting_not_supported");
 
         private static TagKey<EntityType<?>> tag(String name) {
-            return TagKey.create(Registries.ENTITY_TYPE, new ResourceLocation("c", name));
+            return TagKey.create(Registries.ENTITY_TYPE, ResourceLocation.fromNamespaceAndPath("c", name));
         }
     }
 
@@ -574,7 +574,7 @@ public class CommonTags {
         public static final TagKey<Item> ENCHANTABLES = tag("enchantables");
 
         private static TagKey<Item> tag(String name) {
-            return TagKey.create(Registries.ITEM, new ResourceLocation("c", name));
+            return TagKey.create(Registries.ITEM, ResourceLocation.fromNamespaceAndPath("c", name));
         }
 
         private static TagKey<Item> dyes(DyeColor color) {
@@ -645,7 +645,7 @@ public class CommonTags {
         public static final TagKey<Fluid> HIDDEN_FROM_RECIPE_VIEWERS = tag("hidden_from_recipe_viewers");
 
         private static TagKey<Fluid> tag(String name) {
-            return TagKey.create(Registries.FLUID, new ResourceLocation("c", name));
+            return TagKey.create(Registries.FLUID, ResourceLocation.fromNamespaceAndPath("c", name));
         }
     }
 
@@ -679,7 +679,7 @@ public class CommonTags {
         public static final TagKey<Enchantment> ENTITY_DEFENSE_ENHANCEMENTS = tag("entity_defense_enhancements");
 
         private static TagKey<Enchantment> tag(String name) {
-            return TagKey.create(Registries.ENCHANTMENT, new ResourceLocation("c", name));
+            return TagKey.create(Registries.ENCHANTMENT, ResourceLocation.fromNamespaceAndPath("c", name));
         }
     }
 
@@ -897,7 +897,7 @@ public class CommonTags {
         public static final TagKey<Biome> IS_OUTER_END_ISLAND = tag("is_outer_end_island");
 
         private static TagKey<Biome> tag(String name) {
-            return TagKey.create(Registries.BIOME, new ResourceLocation("c", name));
+            return TagKey.create(Registries.BIOME, ResourceLocation.fromNamespaceAndPath("c", name));
         }
     }
 
@@ -915,7 +915,7 @@ public class CommonTags {
         public static final TagKey<Structure> HIDDEN_FROM_LOCATOR_SELECTION = tag("hidden_from_locator_selection");
 
         private static TagKey<Structure> tag(String name) {
-            return TagKey.create(Registries.STRUCTURE, new ResourceLocation("c", name));
+            return TagKey.create(Registries.STRUCTURE, ResourceLocation.fromNamespaceAndPath("c", name));
         }
     }
 

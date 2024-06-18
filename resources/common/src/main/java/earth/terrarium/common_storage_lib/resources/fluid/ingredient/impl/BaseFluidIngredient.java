@@ -24,7 +24,7 @@ import java.util.List;
 public class BaseFluidIngredient implements FluidIngredient {
     public static final Codec<BaseFluidIngredient> CODEC = CodecUtils.listAndObjectCodec(Value.CODEC).xmap(BaseFluidIngredient::new, BaseFluidIngredient::values);
     public static final MapCodec<BaseFluidIngredient> MAP_CODEC = CODEC.fieldOf("values");
-    public static final FluidIngredientType<BaseFluidIngredient> TYPE = new FluidIngredientType<>(new ResourceLocation(ResourceLib.MOD_ID, "base"), MAP_CODEC);
+    public static final FluidIngredientType<BaseFluidIngredient> TYPE = new FluidIngredientType<>(ResourceLocation.fromNamespaceAndPath(ResourceLib.MOD_ID, "base"), MAP_CODEC);
 
     private final List<Value> values;
     private List<FluidResource> matchingFluids;

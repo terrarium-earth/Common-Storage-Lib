@@ -12,7 +12,7 @@ import java.util.function.Supplier;
 public class TestModActual {
     @Actual
     public static <T extends BlockEntity> Supplier<BlockEntityType<T>> registerBlockEntity(String name, BlockEntityType.BlockEntitySupplier<T> supplier) {
-        BlockEntityType<T> register = Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, new ResourceLocation(TestMod.MOD_ID, name), BlockEntityType.Builder.of(supplier, FabricTestMod.TRANSFER_BLOCK).build(null));
+        BlockEntityType<T> register = Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, ResourceLocation.fromNamespaceAndPath(TestMod.MOD_ID, name), BlockEntityType.Builder.of(supplier, FabricTestMod.TRANSFER_BLOCK).build(null));
         return () -> register;
     }
 }

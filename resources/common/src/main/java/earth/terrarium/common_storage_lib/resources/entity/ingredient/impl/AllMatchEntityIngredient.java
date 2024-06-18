@@ -12,7 +12,7 @@ import java.util.List;
 
 public record AllMatchEntityIngredient(List<EntityIngredient> children) implements ListEntityIngredient {
     public static final MapCodec<AllMatchEntityIngredient> CODEC = EntityIngredient.CODEC.listOf().fieldOf("children").xmap(AllMatchEntityIngredient::new, AllMatchEntityIngredient::children);
-    public static final EntityIngredientType<AllMatchEntityIngredient> TYPE = new EntityIngredientType<>(new ResourceLocation(ResourceLib.MOD_ID, "all_match"), CODEC);
+    public static final EntityIngredientType<AllMatchEntityIngredient> TYPE = new EntityIngredientType<>(ResourceLocation.fromNamespaceAndPath(ResourceLib.MOD_ID, "all_match"), CODEC);
 
     @Override
     public boolean test(EntityResource fluidResource) {

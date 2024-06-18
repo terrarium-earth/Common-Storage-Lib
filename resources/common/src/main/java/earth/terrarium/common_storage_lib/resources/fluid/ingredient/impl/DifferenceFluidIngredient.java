@@ -17,7 +17,7 @@ public record DifferenceFluidIngredient(FluidIngredient minuend, FluidIngredient
             FluidIngredient.CODEC.fieldOf("subtrahend").forGetter(DifferenceFluidIngredient::subtrahend)
     ).apply(instance, DifferenceFluidIngredient::new));
 
-    public static final FluidIngredientType<DifferenceFluidIngredient> TYPE = new FluidIngredientType<>(new ResourceLocation(ResourceLib.MOD_ID, "difference"), CODEC);
+    public static final FluidIngredientType<DifferenceFluidIngredient> TYPE = new FluidIngredientType<>(ResourceLocation.fromNamespaceAndPath(ResourceLib.MOD_ID, "difference"), CODEC);
 
     @Override
     public List<FluidResource> getMatchingFluids() {

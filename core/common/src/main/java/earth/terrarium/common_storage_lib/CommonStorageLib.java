@@ -21,7 +21,7 @@ import net.minecraft.network.codec.ByteBufCodecs;
 
 public class CommonStorageLib {
     public static final String MOD_ID = "common_storage_lib";
-    public static final DataManagerRegistry REGISTRY = DataManagerRegistry.create(MOD_ID);
+    public static final DataManagerRegistry REGISTRY = new DataManagerRegistry(MOD_ID);
 
     public static final DataManager<FluidStorageData> FLUID_CONTENTS = REGISTRY.builder(FluidStorageData.DEFAULT).serialize(FluidStorageData.CODEC).networkSerializer(FluidStorageData.NETWORK_CODEC).withDataComponent().copyOnDeath().buildAndRegister("fluid_storage_data");
     public static final DataManager<ItemStorageData> ITEM_CONTENTS = REGISTRY.builder(ItemStorageData.DEFAULT).serialize(ItemStorageData.CODEC).networkSerializer(ItemStorageData.NETWORK_CODEC).withDataComponent().copyOnDeath().buildAndRegister("item_storage_data");
@@ -32,9 +32,8 @@ public class CommonStorageLib {
     public static final DataManager<Long> VALUE_CONTENT = REGISTRY.builder(() -> 0L).serialize(Codec.LONG).networkSerializer(ByteBufCodecs.VAR_LONG).withDataComponent().copyOnDeath().buildAndRegister("value_storage_data");
 
     public static void init() {
-        REGISTRY.init();
         ItemConsumerRegistry.init();
-
+        REGISTRY.init();
         //Energy
 
         EnergyApi.ITEM.registerFallback((stack, context) -> {

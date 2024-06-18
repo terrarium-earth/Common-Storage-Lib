@@ -21,5 +21,5 @@ public class FluidApiActual {
     @Actual
     public static final ItemLookup<CommonStorage<FluidResource>, ItemContext> ITEM = new WrappedItemLookup.OfFluid();
     @Actual
-    public static final EntityLookup<CommonStorage<FluidResource>, Direction> ENTITY = EntityLookup.createAutomation(new ResourceLocation(CommonStorageLib.MOD_ID, "entity_fluid"), CommonStorage.asClass());
+    public static final EntityLookup<CommonStorage<FluidResource>, Direction> ENTITY = EntityLookup.createAutomation(ResourceLocation.fromNamespaceAndPath(CommonStorageLib.MOD_ID, "entity_fluid"), CommonStorage.asClass());
 }

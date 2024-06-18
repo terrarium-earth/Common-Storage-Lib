@@ -28,7 +28,7 @@ import java.util.Optional;
 @Mod("common_storage_lib_data")
 public class NeoDataLib {
     public static final String MOD_ID = "common_storage_lib_data";
-    public static final ResourceKey<Registry<DataSyncSerializer<?>>> SYNC_SERIALIZERS_KEY = ResourceKey.createRegistryKey(new ResourceLocation(MOD_ID, "sync_serializers"));
+    public static final ResourceKey<Registry<DataSyncSerializer<?>>> SYNC_SERIALIZERS_KEY = ResourceKey.createRegistryKey(ResourceLocation.fromNamespaceAndPath(MOD_ID, "sync_serializers"));
     public static final Registry<DataSyncSerializer<?>> SYNC_SERIALIZERS = new RegistryBuilder<>(SYNC_SERIALIZERS_KEY).create();
     public static StreamCodec<RegistryFriendlyByteBuf, AttachmentData<?>> SYNC_SERIALIZER_STREAM_CODEC = new StreamCodec<>() {
         @Override

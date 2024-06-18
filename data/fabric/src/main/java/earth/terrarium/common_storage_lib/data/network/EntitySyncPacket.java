@@ -12,7 +12,7 @@ import net.minecraft.world.entity.Entity;
 import org.jetbrains.annotations.Nullable;
 
 public record EntitySyncPacket(int entityId, AttachmentData<?> syncData) implements CustomPacketPayload {
-    public static final Type<EntitySyncPacket> TYPE = new Type<>(new ResourceLocation(FabricDataLib.MOD_ID, "entity"));
+    public static final Type<EntitySyncPacket> TYPE = new Type<>(ResourceLocation.fromNamespaceAndPath(FabricDataLib.MOD_ID, "entity"));
     public static final StreamCodec<RegistryFriendlyByteBuf, EntitySyncPacket> CODEC = StreamCodec.composite(
             ByteBufCodecs.VAR_INT,
             EntitySyncPacket::entityId,

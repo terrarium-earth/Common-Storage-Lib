@@ -23,7 +23,7 @@ import java.util.function.Consumer;
 
 public final class FluidItemLookup implements ItemLookup<CommonStorage<FluidResource>, ItemContext>, RegistryEventListener {
     public static final FluidItemLookup INSTANCE = new FluidItemLookup();
-    private static final ItemCapability<CommonStorage<FluidResource>, ItemContext> CAPABILITY = ItemCapability.create(new ResourceLocation(CommonStorageLib.MOD_ID, "fluid_item"), CommonStorage.asClass(), ItemContext.class);
+    private static final ItemCapability<CommonStorage<FluidResource>, ItemContext> CAPABILITY = ItemCapability.create(ResourceLocation.fromNamespaceAndPath(CommonStorageLib.MOD_ID, "fluid_item"), CommonStorage.asClass(), ItemContext.class);
 
     private final List<Consumer<ItemRegistrar<CommonStorage<FluidResource>, ItemContext>>> registrars = new ArrayList<>();
 

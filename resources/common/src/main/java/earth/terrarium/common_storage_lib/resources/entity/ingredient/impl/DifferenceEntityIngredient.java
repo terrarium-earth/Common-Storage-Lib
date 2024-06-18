@@ -17,7 +17,7 @@ public record DifferenceEntityIngredient(EntityIngredient minuend, EntityIngredi
             EntityIngredient.CODEC.fieldOf("subtrahend").forGetter(DifferenceEntityIngredient::subtrahend)
     ).apply(instance, DifferenceEntityIngredient::new));
 
-    public static final EntityIngredientType<DifferenceEntityIngredient> TYPE = new EntityIngredientType<>(new ResourceLocation(ResourceLib.MOD_ID, "difference"), CODEC);
+    public static final EntityIngredientType<DifferenceEntityIngredient> TYPE = new EntityIngredientType<>(ResourceLocation.fromNamespaceAndPath(ResourceLib.MOD_ID, "difference"), CODEC);
 
     @Override
     public List<EntityResource> getMatchingEntities() {

@@ -12,7 +12,7 @@ import java.util.List;
 
 public record CompoundConsumer(List<ItemConsumer> consumers) implements ItemConsumer {
     public static final MapCodec<CompoundConsumer> CODEC = ItemConsumer.MAP_CODEC.codec().listOf().fieldOf("children").xmap(CompoundConsumer::new, CompoundConsumer::consumers);
-    public static final ConsumerType<CompoundConsumer> TYPE = new ConsumerType<>(new ResourceLocation(CommonStorageLib.MOD_ID, "compound"), CODEC);
+    public static final ConsumerType<CompoundConsumer> TYPE = new ConsumerType<>(ResourceLocation.fromNamespaceAndPath(CommonStorageLib.MOD_ID, "compound"), CODEC);
 
     @Override
     public boolean test(ItemStack stack, ItemContext context) {

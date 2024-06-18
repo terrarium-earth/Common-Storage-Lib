@@ -15,7 +15,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import org.jetbrains.annotations.Nullable;
 
 public record BlockEntitySyncPacket(BlockPos pos, BlockEntityType<?> blockEntityType, AttachmentData<?> syncData) implements CustomPacketPayload {
-    public static final Type<BlockEntitySyncPacket> TYPE = new Type<>(new ResourceLocation(NeoDataLib.MOD_ID, "block_entity"));
+    public static final Type<BlockEntitySyncPacket> TYPE = new Type<>(ResourceLocation.fromNamespaceAndPath(NeoDataLib.MOD_ID, "block_entity"));
     public static final StreamCodec<RegistryFriendlyByteBuf, BlockEntitySyncPacket> CODEC = StreamCodec.composite(
             BlockPos.STREAM_CODEC,
             BlockEntitySyncPacket::pos,
