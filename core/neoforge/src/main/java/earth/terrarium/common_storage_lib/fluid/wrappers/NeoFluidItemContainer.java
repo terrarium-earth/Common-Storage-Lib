@@ -12,7 +12,6 @@ import org.jetbrains.annotations.NotNull;
 public record NeoFluidItemContainer(CommonStorage<FluidResource> container, ItemContext context) implements AbstractNeoFluidHandler, IFluidHandlerItem {
     @Override
     public @NotNull ItemStack getContainer() {
-        StorageSlot<ItemResource> slot = context.mainSlot();
-        return slot.getResource().toStack((int) slot.getAmount());
+        return context.getResource().toStack((int) context.getAmount());
     }
 }

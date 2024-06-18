@@ -31,9 +31,7 @@ public class SimpleFluidStorage implements CommonStorage<FluidResource>, UpdateM
         this.slots = NonNullList.withSize(size, new SimpleFluidSlot(limit, this::update));
         this.limit = limit;
         this.update = () -> {
-            FluidStorageData data = FluidStorageData.from(this);
-            DataComponentPatch patch = DataComponentPatch.builder().set(componentType, data).build();
-            context.modify(patch);
+            context.set(componentType, FluidStorageData.from(this));
             context.updateAll();
         };
         FluidStorageData data = context.getResource().get(componentType);

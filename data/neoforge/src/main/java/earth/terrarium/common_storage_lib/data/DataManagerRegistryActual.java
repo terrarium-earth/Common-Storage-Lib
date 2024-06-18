@@ -35,12 +35,14 @@ public final class DataManagerRegistryActual {
 
     @Actual
     public void init() {
-        ModList.get().getModContainerById(modid).ifPresent(container -> {
+        ModList.get().getModContainerById(modid).ifPresentOrElse(container -> {
             IEventBus eventBus = container.getEventBus();
             if (eventBus == null) throw new IllegalStateException("Mod " + modid + " has no event bus");
             dataRegistry.register(eventBus);
             componentRegistry.register(eventBus);
             serializerRegistry.register(eventBus);
+        }, () -> {
+            throw new IllegalStateException("Mod " + modid + " is not loaded");
         });
     }
 }

@@ -30,11 +30,12 @@ public record NeoItemHandler(CommonStorage<ItemResource> container) implements I
 
     @Override
     public ItemStack extractItem(int i, int j, boolean bl) {
-        long extracted = container.get(i).extract(ItemResource.of(getStackInSlot(i)), j, bl);
+        ItemResource resource = ItemResource.of(getStackInSlot(i));
+        long extracted = container.get(i).extract(resource, j, bl);
         if (!bl) {
             UpdateManager.batch(container);
         }
-        return getStackInSlot(i).copyWithCount((int) extracted);
+        return resource.toStack((int) extracted);
     }
 
     @Override

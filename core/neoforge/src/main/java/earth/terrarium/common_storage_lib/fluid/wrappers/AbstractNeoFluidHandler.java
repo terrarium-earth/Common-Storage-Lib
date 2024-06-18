@@ -40,7 +40,7 @@ public interface AbstractNeoFluidHandler extends IFluidHandler {
     default int fill(FluidStack fluidStack, FluidAction fluidAction) {
         FluidResource resource = ConversionUtils.convert(fluidStack);
         long amount = container().insert(resource, fluidStack.getAmount(), fluidAction.simulate());
-        UpdateManager.batch(container());
+        if (fluidAction.execute()) UpdateManager.batch(container());
         return (int) amount;
     }
 
@@ -48,7 +48,7 @@ public interface AbstractNeoFluidHandler extends IFluidHandler {
     default FluidStack drain(FluidStack fluidStack, FluidAction fluidAction) {
         FluidResource resource = ConversionUtils.convert(fluidStack);
         long amount = container().extract(resource, fluidStack.getAmount(), fluidAction.simulate());
-        UpdateManager.batch(container());
+        if (fluidAction.execute()) UpdateManager.batch(container());
         return amount > 0 ? ConversionUtils.convert(resource, amount) : FluidStack.EMPTY;
     }
 

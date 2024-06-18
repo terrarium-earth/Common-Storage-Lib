@@ -4,22 +4,24 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.neoforged.neoforge.attachment.AttachmentType;
 
+import java.util.function.Supplier;
+
 @SuppressWarnings("UnstableApiUsage")
 public interface DataSyncSerializer<T> {
     AttachmentType<T> getAttachmentType();
     StreamCodec<? super RegistryFriendlyByteBuf, T> getCodec();
 
-    static <T> DataSyncSerializer<T> create(AttachmentType<T> attachmentType, StreamCodec<? super RegistryFriendlyByteBuf, T> codec) {
+    static <T> DataSyncSerializer<T> create(Supplier<AttachmentType<T>> attachmentType, StreamCodec<? super RegistryFriendlyByteBuf, T> codec) {
         return new SimpleDataSyncSerializer<>(attachmentType, codec);
     }
 
     AttachmentData<T> decode(RegistryFriendlyByteBuf buf);
 
-    record SimpleDataSyncSerializer<T>(AttachmentType<T> attachmentType, StreamCodec<? super RegistryFriendlyByteBuf, T> codec) implements DataSyncSerializer<T> {
+    record SimpleDataSyncSerializer<T>(Supplier<AttachmentType<T>> attachmentType, StreamCodec<? super RegistryFriendlyByteBuf, T> codec) implements DataSyncSerializer<T> {
 
         @Override
         public AttachmentType<T> getAttachmentType() {
-            return attachmentType;
+            return attachmentType.get();
         }
 
         @Override

@@ -61,13 +61,13 @@ public class SimpleItemSlot implements StorageSlot<ItemResource>, ModifiableItem
     public long insert(ItemResource resource, long amount, boolean simulate) {
         if (!isResourceValid(resource)) return 0;
         if (this.resource.isBlank()) {
-            long inserted = Math.min(amount, resource.getCachedStack().getMaxStackSize());
+            long inserted = Math.min(amount, getLimit(resource));
             if (!simulate) {
                 this.resource = resource;
                 this.amount = inserted;
             }
             return inserted;
-        } else if (this.resource.test(resource)) {
+        } else if (this.resource.equals(resource)) {
             long inserted = Math.min(amount, getLimit(resource) - this.amount);
             if (!simulate) {
                 this.amount += inserted;
@@ -79,7 +79,7 @@ public class SimpleItemSlot implements StorageSlot<ItemResource>, ModifiableItem
 
     @Override
     public long extract(ItemResource resource, long amount, boolean simulate) {
-        if (this.resource.test(resource)) {
+        if (this.resource.equals(resource)) {
             long extracted = Math.min(amount, this.amount);
             if (!simulate) {
                 this.amount -= extracted;

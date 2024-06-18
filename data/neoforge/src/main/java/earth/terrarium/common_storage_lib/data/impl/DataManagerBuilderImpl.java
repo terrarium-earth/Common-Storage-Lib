@@ -77,7 +77,7 @@ public class DataManagerBuilderImpl<T> implements DataManagerBuilder<T> {
                     clientCodec = ByteBufCodecs.fromCodecWithRegistries(codec);
                 }
             }
-            serializer = serializerRegistry.register(name, () -> DataSyncSerializer.create(type.get(), clientCodec));
+            serializer = serializerRegistry.register(name, () -> DataSyncSerializer.create(type, clientCodec));
         }
         Supplier<DataComponentType<T>> component = null;
         if (registerComponentType) {

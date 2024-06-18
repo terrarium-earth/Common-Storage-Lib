@@ -24,7 +24,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Objects;
 import java.util.function.Predicate;
 
-public final class ItemResource extends ResourceComponent implements Predicate<ItemResource>, ItemLike {
+public final class ItemResource extends ResourceComponent implements ItemLike {
     public static final ItemResource BLANK = ItemResource.of(Items.AIR, DataComponentPatch.EMPTY);
 
     public static final Codec<ItemResource> CODEC = RecordCodecBuilder.create(instance -> instance.group(
@@ -167,9 +167,4 @@ public final class ItemResource extends ResourceComponent implements Predicate<I
 
     @Expect
     private static boolean hasCraftingRemainder(ItemResource resource);
-
-    @Override
-    public boolean test(ItemResource resource) {
-        return false;
-    }
 }
