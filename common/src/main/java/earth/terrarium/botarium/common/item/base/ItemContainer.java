@@ -15,7 +15,7 @@ import org.jetbrains.annotations.Nullable;
 public interface ItemContainer extends Clearable {
 
     @ImplementedByExtension
-    static ItemContainer of(Level level, BlockPos pos, @Nullable BlockState state, @Nullable BlockEntity entity, @Nullable Direction direction) {
+    static ItemContainer of(Level level, BlockPos pos, BlockState state, @Nullable BlockEntity entity, @Nullable Direction direction) {
         throw new NotImplementedException();
     }
 

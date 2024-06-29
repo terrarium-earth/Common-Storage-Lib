@@ -9,7 +9,7 @@ public class SimpleItemSnapshot implements ItemSnapshot {
     NonNullList<ItemStack> stacks;
 
     public SimpleItemSnapshot(NonNullList<ItemStack> stacks) {
-        this.stacks = NonNullList.withSize(stacks.size(), ItemStack.EMPTY);
+        this.stacks = NonNullList.createWithCapacity(stacks.size());
         for (int i = 0; i < stacks.size(); i++) {
             this.stacks.set(i, stacks.get(i).copy());
         }

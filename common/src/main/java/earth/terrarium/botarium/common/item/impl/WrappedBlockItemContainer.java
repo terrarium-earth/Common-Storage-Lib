@@ -91,12 +91,10 @@ public record WrappedBlockItemContainer<T extends ItemContainer & Serializable>(
 
     @Override
     public void update(Void ignored) {
-        if (level != null) {
-            BlockEntity blockEntity = level.getBlockEntity(blockPos);
-            if (blockEntity != null) {
-                blockEntity.setChanged();
-            }
-            level.sendBlockUpdated(blockPos, state, state, Block.UPDATE_ALL);
+        BlockEntity blockEntity = level.getBlockEntity(blockPos);
+        if (blockEntity != null) {
+            blockEntity.setChanged();
         }
+        level.sendBlockUpdated(blockPos, state, state, Block.UPDATE_ALL);
     }
 }

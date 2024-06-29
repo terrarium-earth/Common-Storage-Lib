@@ -2,14 +2,11 @@ package earth.terrarium.botarium.common.item.impl;
 
 import earth.terrarium.botarium.common.item.base.ItemContainer;
 import earth.terrarium.botarium.common.item.base.ItemSnapshot;
-import earth.terrarium.botarium.util.Serializable;
 import net.minecraft.core.NonNullList;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
-public class SimpleItemContainer implements ItemContainer, Serializable {
+public class SimpleItemContainer implements ItemContainer {
     NonNullList<ItemStack> stacks;
 
     public SimpleItemContainer(int capacity) {
@@ -154,15 +151,5 @@ public class SimpleItemContainer implements ItemContainer, Serializable {
     @Override
     public void clearContent() {
         stacks.clear();
-    }
-
-    @Override
-    public void deserialize(CompoundTag nbt) {
-        ContainerHelper.loadAllItems(nbt, stacks);
-    }
-
-    @Override
-    public CompoundTag serialize(CompoundTag nbt) {
-        return ContainerHelper.saveAllItems(nbt, stacks);
     }
 }
