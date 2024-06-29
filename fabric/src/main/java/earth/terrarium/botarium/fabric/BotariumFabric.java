@@ -9,14 +9,11 @@ import earth.terrarium.botarium.common.fluid.FluidApi;
 import earth.terrarium.botarium.common.fluid.base.BotariumFluidBlock;
 import earth.terrarium.botarium.common.fluid.base.BotariumFluidItem;
 import earth.terrarium.botarium.common.fluid.base.FluidContainer;
-import earth.terrarium.botarium.common.item.ItemApi;
 import earth.terrarium.botarium.common.item.ItemContainerBlock;
-import earth.terrarium.botarium.common.item.base.BotariumItemBlock;
 import earth.terrarium.botarium.fabric.energy.FabricBlockEnergyContainer;
 import earth.terrarium.botarium.fabric.energy.FabricItemEnergyContainer;
 import earth.terrarium.botarium.fabric.fluid.storage.FabricBlockFluidContainer;
 import earth.terrarium.botarium.fabric.fluid.storage.FabricItemFluidContainer;
-import earth.terrarium.botarium.fabric.item.FabricItemContainer;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemStorage;
@@ -105,31 +102,6 @@ public class BotariumFabric implements ModInitializer {
         ItemStorage.SIDED.registerFallback((world, pos, state, blockEntity, context) -> {
             if (blockEntity instanceof ItemContainerBlock energyContainer) {
                 return InventoryStorageImpl.of(energyContainer.getContainer(), context);
-            }
-            return null;
-        });
-
-        ItemStorage.SIDED.registerFallback((world, pos, state, blockEntity, context) -> {
-            if (blockEntity instanceof BotariumItemBlock<?> attachment) {
-                var container = attachment.getItemContainer(world, pos, state, blockEntity, context);
-                return container == null ? null : new FabricItemContainer<>(container);
-            } else if (state.getBlock() instanceof BotariumItemBlock<?> attachment) {
-                var container = attachment.getItemContainer(world, pos, state, blockEntity, context);
-                return container == null ? null : new FabricItemContainer<>(container);
-            } else {
-                var blockEnergyGetter = ItemApi.getItemBlock(state.getBlock());
-                if (blockEnergyGetter != null) {
-                    var container = blockEnergyGetter.getItemContainer(world, pos, state, blockEntity, context);
-                    if (container != null) {
-                        return new FabricItemContainer<>(container);
-                    }
-                }
-                if (blockEntity != null) {
-                    var entityEnergyGetter = ItemApi.getItemBlock(blockEntity.getType());
-                    if (entityEnergyGetter == null) return null;
-                    var entityContainer = entityEnergyGetter.getItemContainer(world, pos, state, blockEntity, context);
-                    return entityContainer == null ? null : new FabricItemContainer<>(entityContainer);
-                }
             }
             return null;
         });
