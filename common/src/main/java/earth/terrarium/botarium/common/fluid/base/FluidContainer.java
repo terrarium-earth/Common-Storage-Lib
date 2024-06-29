@@ -246,6 +246,7 @@ public interface FluidContainer extends Serializable, Clearable {
     }
 
     default FluidHolder getFirstFluid() {
-        return getFluids().get(0);
+        if (getSize() <= 0) return FluidHolder.empty();
+        return getFluids().getFirst();
     }
 }
