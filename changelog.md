@@ -1,3 +1,3 @@
-# 2.3.3
+# 2.3.4
 
-- Fix fluid interaction with items
+- Add some index safety checks to avoid crashes
