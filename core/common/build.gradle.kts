@@ -5,7 +5,7 @@ tasks.jar {
 }
 
 dependencies {
-    implementation(projects.commonStorageLibDataCommon)
-    implementation(projects.commonStorageLibLookupCommon)
-    implementation(projects.commonStorageLibResourcesCommon)
+    api(projects.commonStorageLibDataCommon)
+    api(projects.commonStorageLibLookupCommon)
+    api(projects.commonStorageLibResourcesCommon)
 }

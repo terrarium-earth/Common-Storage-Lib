@@ -4,9 +4,9 @@ dependencies {
         compileOnly(projects.commonStorageLibLookupCommon)
         compileOnly(projects.commonStorageLibResourcesCommon)
     }
-    include(implementation(projects.commonStorageLibDataNeoforge)!!)
-    include(implementation(projects.commonStorageLibLookupNeoforge)!!)
-    include(implementation(projects.commonStorageLibResourcesNeoforge)!!)
+    include(api(projects.commonStorageLibDataNeoforge)!!)
+    include(api(projects.commonStorageLibLookupNeoforge)!!)
+    include(api(projects.commonStorageLibResourcesNeoforge)!!)
 
     modRuntimeOnly("curse.maven:energized-power-782147:5301706")
 }

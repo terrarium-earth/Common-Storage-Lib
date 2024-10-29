@@ -20,7 +20,7 @@
     ],
     "embeds": [
         {
-            "title": "Botarium",
+            "title": "Common Storage Lib",
             "description": "**Changelog:**\\n${changelog}",
             "color": 1856851,
             "fields": [
@@ -37,10 +37,10 @@
             ],
             "footer": {
                 "text": "Follow the project on Modrinth at mods.gay/botarium",
-                "icon_url": "https://i.imgur.com/3hVj8nM.png"
+                "icon_url": "https://cdn.modrinth.com/data/N42M457t/0b9eddf59f9dca4f84b8bcc07ca4f0913d2c2121_96.webp"
             },
             "thumbnail": {
-                "url": "https://cdn.modrinth.com/data/2u6LRnMa/31d70002f565c2ae1b2901667f3fb9f553281594.png"
+                "url": "https://cdn.modrinth.com/data/RgLrNK7l/2eeaaf5e6e58ff4fae1134c84e96390fbe07f8bb_96.webp"
             }
         }
     ],
