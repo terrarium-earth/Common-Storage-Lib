@@ -8,6 +8,6 @@ import net.minecraft.resources.ResourceLocation;
 
 public record FluidIngredientType<T extends FluidIngredient>(ResourceLocation id, MapCodec<T> codec, StreamCodec<RegistryFriendlyByteBuf, T> streamCodec) {
     public FluidIngredientType(ResourceLocation id, MapCodec<T> codec) {
-        this(id, codec, ByteBufCodecs.fromCodecWithRegistries(codec.codec()));
+        this(id, codec, ByteBufCodecs.fromCodecWithRegistries(new MapCodec.MapCodecCodec<>(codec)));
     }
 }
