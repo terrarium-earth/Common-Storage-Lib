@@ -8,7 +8,7 @@ dependencies {
     include(api(projects.commonStorageLibLookupFabric)!!)
     include(api(projects.commonStorageLibResourcesFabric)!!)
 
-    include(modApi(group = "teamreborn", name = "energy", version = "4.0.0")) {
+    include(modApi(group = "teamreborn", name = "energy", version = "4.1.0")) {
         exclude(group = "net.fabricmc", module = "fabric-api")
     }
 }

@@ -14,6 +14,14 @@
   "mixins": [
     "common_storage_lib_data.mixins.json"
   ],
+  "entrypoints": {
+    "main": [
+      "earth.terrarium.common_storage_lib.data.FabricDataLib"
+    ],
+    "client": [
+      "earth.terrarium.common_storage_lib.data.FabricDataLibClient"
+    ]
+  },
   "license": "MIT",
   "environment": "*",
   "depends": {

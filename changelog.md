@@ -1,1 +1,3 @@
-Fix mixin file name
+- Fix fluid ingredient codec in debug mode
+- Fix data module entry points not existing on fabric
+- Update energy lib

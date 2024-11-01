@@ -16,6 +16,7 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import org.jetbrains.annotations.NotNull;
 
 public class FabricDataLib implements ModInitializer {
     public static final String MOD_ID = "common_storage_lib_data";
@@ -28,7 +29,7 @@ public class FabricDataLib implements ModInitializer {
         }
 
         @Override
-        public AttachmentData<?> decode(RegistryFriendlyByteBuf object) {
+        public @NotNull AttachmentData<?> decode(RegistryFriendlyByteBuf object) {
             ResourceLocation key = object.readResourceLocation();
             DataSyncSerializer<?> serializer = SYNC_SERIALIZERS.get(key);
             if (serializer == null) {
@@ -49,6 +50,5 @@ public class FabricDataLib implements ModInitializer {
             EntitySyncAllPacket entitySyncAllPacket = EntitySyncAllPacket.of(entity);
             ServerPlayNetworking.send(player, entitySyncAllPacket);
         });
-
     }
 }
