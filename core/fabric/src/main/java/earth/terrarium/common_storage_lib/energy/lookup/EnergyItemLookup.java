@@ -37,6 +37,7 @@ public class EnergyItemLookup implements ItemLookup<ValueStorage, ItemContext> {
     public void registerSelf(ItemGetter<ValueStorage, ItemContext> getter, Item... items) {
         EnergyStorage.ITEM.registerForItems((stack, context) -> {
             ValueStorage container = getter.getContainer(stack, new CommonItemContext(context));
+            if (container == null) return null;
             return new FabricLongStorage(container);
         }, items);
     }

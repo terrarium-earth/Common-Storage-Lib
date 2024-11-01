@@ -18,7 +18,7 @@ import java.util.function.Predicate;
 
 @SuppressWarnings("unused")
 public interface FluidIngredient extends Predicate<FluidResource> {
-    Codec<FluidIngredient> TYPE_CODEC = FluidIngredientRegistry.TYPE_CODEC.dispatch(FluidIngredient::getType, FluidIngredientType::codec);
+    Codec<FluidIngredient> TYPE_CODEC = Codec.lazyInitialized(() -> FluidIngredientRegistry.TYPE_CODEC.dispatch(FluidIngredient::getType, FluidIngredientType::codec));
     Codec<FluidIngredient> CODEC = Codec.lazyInitialized(() -> Codec.either(BaseFluidIngredient.CODEC, TYPE_CODEC).xmap(either -> either.map(l -> l, r -> r), ingredient -> ingredient instanceof BaseFluidIngredient ? Either.left((BaseFluidIngredient) ingredient) : Either.right(ingredient)));
     MapCodec<FluidIngredient> MAP_CODEC = FluidIngredientRegistry.TYPE_CODEC.dispatchMap(FluidIngredient::getType, FluidIngredientType::codec);
 

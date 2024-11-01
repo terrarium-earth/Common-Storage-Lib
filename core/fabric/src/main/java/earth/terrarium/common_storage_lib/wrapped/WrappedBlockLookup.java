@@ -42,22 +42,16 @@ public abstract class WrappedBlockLookup<U extends Resource, V extends TransferV
         @Override
         public void registerBlocks(BlockGetter<CommonStorage<U>, @Nullable Direction> getter, Block... blocks) {
             fabricLookup.registerForBlocks((world, pos, state, blockEntity, context) -> {
-                CommonStorage<U> container = getter.getContainer(world, pos, state, blockEntity, context);
-                if (container != null) {
-                    return wrap(container);
-                }
-                return null;
+                CommonStorage<U> storage = getter.getContainer(world, pos, state, blockEntity, context);
+                return storage == null ? null : wrap(storage);
             }, blocks);
         }
 
         @Override
         public void registerBlockEntities(BlockEntityGetter<CommonStorage<U>, @Nullable Direction> getter, BlockEntityType<?>... blockEntities) {
             fabricLookup.registerForBlockEntities((entity, context) -> {
-                CommonStorage<U> container = getter.getContainer(entity, context);
-                if (container != null) {
-                    return wrap(container);
-                }
-                return null;
+                CommonStorage<U> storage = getter.getContainer(entity, context);
+                return storage == null ? null : wrap(storage);
             }, blockEntities);
         }
     }

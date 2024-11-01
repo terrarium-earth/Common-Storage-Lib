@@ -39,16 +39,16 @@ public class EnergyBlockLookup implements BlockLookup<ValueStorage, @Nullable Di
         @Override
         public void registerBlocks(BlockGetter<ValueStorage, @Nullable Direction> getter, Block... blocks) {
             EnergyStorage.SIDED.registerForBlocks((world, pos, state, blockEntity, context) -> {
-                ValueStorage container = getter.getContainer(world, pos, state, blockEntity, context);
-                return new FabricLongStorage(container);
+                ValueStorage storage = getter.getContainer(world, pos, state, blockEntity, context);
+                return storage == null ? null : new FabricLongStorage(storage);
             }, blocks);
         }
 
         @Override
         public void registerBlockEntities(BlockEntityGetter<ValueStorage, @Nullable Direction> getter, BlockEntityType<?>... containers) {
             EnergyStorage.SIDED.registerForBlockEntities((entity, context) -> {
-                ValueStorage container = getter.getContainer(entity, context);
-                return new FabricLongStorage(container);
+                ValueStorage storage = getter.getContainer(entity, context);
+                return storage == null ? null : new FabricLongStorage(storage);
             }, containers);
         }
     }
