@@ -15,7 +15,7 @@
   "environment": "*",
   "entrypoints": {
     "main": [
-      "earth.terrarium.common_storage_lib.CommonStorageLib::init"
+      "earth.terrarium.common_storage_lib.FabricCommonStorageLib"
     ]
   },
   "depends": {
