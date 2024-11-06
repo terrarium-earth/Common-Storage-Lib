@@ -7,6 +7,4 @@ dependencies {
     include(api(projects.commonStorageLibDataNeoforge)!!)
     include(api(projects.commonStorageLibLookupNeoforge)!!)
     include(api(projects.commonStorageLibResourcesNeoforge)!!)
-
-    modRuntimeOnly("curse.maven:energized-power-782147:5301706")
 }
