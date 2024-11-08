@@ -127,6 +127,7 @@ subprojects {
 
     tasks.named<RemapJarTask>("remapJar") {
         archiveClassifier.set(null as String?)
+        injectAccessWidener.set(true)
     }
 
     tasks.processResources {

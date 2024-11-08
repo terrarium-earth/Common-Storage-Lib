@@ -12,3 +12,11 @@ dependencies {
         exclude(group = "net.fabricmc", module = "fabric-api")
     }
 }
+
+loom {
+    accessWidenerPath = file("../common/src/main/resources/common_storage_lib.accesswidener")
+}
+
+tasks.remapJar {
+    injectAccessWidener.set(true)
+}
