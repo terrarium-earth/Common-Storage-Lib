@@ -12,7 +12,3 @@ dependencies {
         exclude(group = "net.fabricmc", module = "fabric-api")
     }
 }
-
-tasks.remapJar {
-    injectAccessWidener.set(true)
-}
