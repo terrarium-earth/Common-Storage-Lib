@@ -8,9 +8,3 @@ dependencies {
     include(api(projects.commonStorageLibLookupNeoforge)!!)
     include(api(projects.commonStorageLibResourcesNeoforge)!!)
 }
-
-
-tasks.remapJar {
-    injectAccessWidener = true
-    atAccessWideners.add("../common/src/main/resources/common_storage_lib.accesswidener")
-}

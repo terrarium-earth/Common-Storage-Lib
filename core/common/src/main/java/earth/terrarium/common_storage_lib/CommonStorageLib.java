@@ -1,25 +1,14 @@
 package earth.terrarium.common_storage_lib;
 
-import com.mojang.serialization.Codec;
-import earth.terrarium.common_storage_lib.data.DataManager;
-import earth.terrarium.common_storage_lib.data.DataManagerRegistry;
 import earth.terrarium.common_storage_lib.energy.EnergyApi;
 import earth.terrarium.common_storage_lib.energy.EnergyProvider;
 import earth.terrarium.common_storage_lib.fluid.FluidApi;
 import earth.terrarium.common_storage_lib.fluid.util.FluidProvider;
 import earth.terrarium.common_storage_lib.heat.HeatApi;
 import earth.terrarium.common_storage_lib.heat.HeatProvider;
-import earth.terrarium.common_storage_lib.fluid.util.FluidStorageData;
-import earth.terrarium.common_storage_lib.item.input.ItemConsumerRegistry;
-import earth.terrarium.common_storage_lib.item.util.ItemStorageData;
 import earth.terrarium.common_storage_lib.item.ItemApi;
+import earth.terrarium.common_storage_lib.item.input.ItemConsumerRegistry;
 import earth.terrarium.common_storage_lib.item.util.ItemProvider;
-import earth.terrarium.common_storage_lib.resources.fluid.FluidResource;
-import earth.terrarium.common_storage_lib.resources.item.ItemResource;
-import earth.terrarium.common_storage_lib.resources.ResourceStack;
-import net.minecraft.core.BlockPos;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.world.level.block.Blocks;
 
 public class CommonStorageLib {
     public static final String MOD_ID = "common_storage_lib";
@@ -50,7 +39,7 @@ public class CommonStorageLib {
             } else {
                 return null;
             }
-        }, entityType -> entityType.create(BlockPos.ZERO, entityType.validBlocks.stream().findFirst().orElse(Blocks.AIR).defaultBlockState()) instanceof EnergyProvider.BlockEntity);
+        });
 
         EnergyApi.ENTITY.registerFallback((entity, direction) -> {
             if (entity instanceof EnergyProvider.Entity provider) {
@@ -84,7 +73,7 @@ public class CommonStorageLib {
             } else {
                 return null;
             }
-        }, entityType -> entityType.create(BlockPos.ZERO, entityType.validBlocks.stream().findFirst().orElse(Blocks.AIR).defaultBlockState()) instanceof FluidProvider.BlockEntity);
+        });
 
         FluidApi.ENTITY.registerFallback((entity, direction) -> {
             if (entity instanceof FluidProvider.Entity provider) {
@@ -118,7 +107,7 @@ public class CommonStorageLib {
             } else {
                 return null;
             }
-        }, entityType -> entityType.create(BlockPos.ZERO, entityType.validBlocks.stream().findFirst().orElse(Blocks.AIR).defaultBlockState()) instanceof ItemProvider.BlockEntity);
+        });
 
         ItemApi.ENTITY.registerFallback((entity, ignored) -> {
             if (entity instanceof ItemProvider.Entity provider) {
@@ -152,7 +141,7 @@ public class CommonStorageLib {
             } else {
                 return null;
             }
-        }, entityType -> entityType.create(BlockPos.ZERO, entityType.validBlocks.stream().findFirst().orElse(Blocks.AIR).defaultBlockState()) instanceof HeatProvider.BlockEntity);
+        });
 
         HeatApi.ENTITY.registerFallback((entity, ignored) -> {
             if (entity instanceof HeatProvider.Entity provider) {
