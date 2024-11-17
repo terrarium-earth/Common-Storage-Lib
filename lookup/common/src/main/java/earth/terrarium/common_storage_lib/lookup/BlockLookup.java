@@ -71,20 +71,10 @@ public interface BlockLookup<T, C> {
         });
     }
 
-    default void registerFallback(BlockEntityGetter<T, C> getter, Predicate<BlockEntityType<?>> entityTypePredicate) {
+    default void registerFallback(BlockEntityGetter<T, C> getter, Predicate<BlockEntity> blockPredicate) {
         onRegister(registrar -> {
             for (BlockEntityType<?> entityType : BuiltInRegistries.BLOCK_ENTITY_TYPE) {
-                if (entityTypePredicate.test(entityType)) {
-                    registrar.registerBlockEntities(getter, entityType);
-                }
-            }
-        });
-    }
-
-    default void registerFallback(BlockEntityGetter<T, C> getter) {
-        onRegister(registrar -> {
-            for (BlockEntityType<?> entityType : BuiltInRegistries.BLOCK_ENTITY_TYPE) {
-                registrar.registerBlockEntities(getter, entityType);
+                registrar.registerBlockEntities(getter, entityType, blockPredicate);
             }
         });
     }
@@ -104,6 +94,6 @@ public interface BlockLookup<T, C> {
     interface BlockRegistrar<T, C> {
         void registerBlocks(BlockGetter<T, C> getter, Block... blocks);
 
-        void registerBlockEntities(BlockEntityGetter<T, C> getter, BlockEntityType<?>... blockEntityTypes);
+        void registerBlockEntities(BlockEntityGetter<T, C> getter, BlockEntityType<?> blockEntityType, Predicate<BlockEntity> blockPredicate);
     }
 }

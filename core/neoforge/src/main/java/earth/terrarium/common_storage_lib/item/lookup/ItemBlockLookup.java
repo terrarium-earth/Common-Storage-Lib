@@ -1,10 +1,10 @@
 package earth.terrarium.common_storage_lib.item.lookup;
 
-import earth.terrarium.common_storage_lib.resources.item.ItemResource;
 import earth.terrarium.common_storage_lib.item.wrappers.CommonItemContainer;
 import earth.terrarium.common_storage_lib.item.wrappers.NeoItemHandler;
 import earth.terrarium.common_storage_lib.lookup.BlockLookup;
 import earth.terrarium.common_storage_lib.lookup.RegistryEventListener;
+import earth.terrarium.common_storage_lib.resources.item.ItemResource;
 import earth.terrarium.common_storage_lib.storage.base.CommonStorage;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -20,15 +20,16 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.function.Predicate;
 
 public final class ItemBlockLookup implements BlockLookup<CommonStorage<ItemResource>, Direction>, RegistryEventListener {
     public static final ItemBlockLookup INSTANCE = new ItemBlockLookup();
     private final List<Consumer<BlockRegistrar<CommonStorage<ItemResource>, Direction>>> registrars = new ArrayList<>();
-
+    
     private ItemBlockLookup() {
         registerSelf();
     }
-
+    
     @Override
     public @Nullable CommonStorage<ItemResource> find(Level level, BlockPos pos, @Nullable BlockState state, @Nullable BlockEntity entity, @Nullable Direction direction) {
         IItemHandler handler = level.getCapability(Capabilities.ItemHandler.BLOCK, pos, state, entity, direction);
@@ -37,18 +38,19 @@ public final class ItemBlockLookup implements BlockLookup<CommonStorage<ItemReso
         }
         return handler == null ? null : new CommonItemContainer(handler);
     }
-
+    
     @Override
     public void onRegister(Consumer<BlockRegistrar<CommonStorage<ItemResource>, Direction>> registrar) {
         registrars.add(registrar);
     }
-
+    
     @Override
     public void register(RegisterCapabilitiesEvent event) {
         registrars.forEach(registrar -> registrar.accept(new EventRegistrar(event)));
     }
-
-    public record EventRegistrar(RegisterCapabilitiesEvent event) implements BlockRegistrar<CommonStorage<ItemResource>, Direction> {
+    
+    public record EventRegistrar(
+      RegisterCapabilitiesEvent event) implements BlockRegistrar<CommonStorage<ItemResource>, Direction> {
         @Override
         public void registerBlocks(BlockGetter<CommonStorage<ItemResource>, Direction> getter, net.minecraft.world.level.block.Block... containers) {
             for (net.minecraft.world.level.block.Block block : containers) {
@@ -58,15 +60,18 @@ public final class ItemBlockLookup implements BlockLookup<CommonStorage<ItemReso
                 }, block);
             }
         }
-
+        
         @Override
-        public void registerBlockEntities(BlockEntityGetter<CommonStorage<ItemResource>, Direction> getter, BlockEntityType<?>... containers) {
-            for (BlockEntityType<?> blockEntityType : containers) {
-                event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, blockEntityType, (entity, direction) -> {
-                    CommonStorage<ItemResource> container = getter.getContainer(entity, direction);
-                    return container == null ? null : new NeoItemHandler(container);
-                });
-            }
+        public void registerBlockEntities(BlockEntityGetter<CommonStorage<ItemResource>, Direction> getter, BlockEntityType<?> entityType, Predicate<BlockEntity> blockPredicate) {
+            
+            if (entityType.getValidBlocks().isEmpty()
+                  || !blockPredicate.test(entityType.create(BlockPos.ZERO, entityType.getValidBlocks().stream().findFirst().get().defaultBlockState())))
+                return;
+            
+            event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, entityType, (entity, direction) -> {
+                CommonStorage<ItemResource> container = getter.getContainer(entity, direction);
+                return container == null ? null : new NeoItemHandler(container);
+            });
         }
     }
 }

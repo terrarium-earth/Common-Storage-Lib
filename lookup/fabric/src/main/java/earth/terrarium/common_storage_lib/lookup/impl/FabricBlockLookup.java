@@ -2,6 +2,7 @@ package earth.terrarium.common_storage_lib.lookup.impl;
 
 import earth.terrarium.common_storage_lib.lookup.BlockLookup;
 import net.fabricmc.fabric.api.lookup.v1.block.BlockApiLookup;
+import net.fabricmc.fabric.mixin.lookup.BlockEntityTypeAccessor;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
@@ -12,6 +13,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Consumer;
+import java.util.function.Predicate;
 
 public class FabricBlockLookup<T, C> implements BlockLookup<T, C> {
     private final BlockApiLookup<T, C> lookup;
@@ -38,6 +40,13 @@ public class FabricBlockLookup<T, C> implements BlockLookup<T, C> {
     public void registerSelf(BlockGetter<T, C> getter, Block... blocks) {
         lookup.registerForBlocks(getter::getContainer, blocks);
     }
+    
+    @SuppressWarnings({"UnstableApiUsage", "ReferenceToMixin"})
+    private static @Nullable BlockEntity getTypeInstance(BlockEntityType<?> type) {
+        var blocks = ((BlockEntityTypeAccessor) type).getBlocks();
+        if (blocks.isEmpty()) return null;
+        return type.create(BlockPos.ZERO, blocks.stream().findFirst().get().defaultBlockState());
+    }
 
     public class LookupRegistrar implements BlockRegistrar<T, C> {
         @Override
@@ -46,8 +55,12 @@ public class FabricBlockLookup<T, C> implements BlockLookup<T, C> {
         }
 
         @Override
-        public void registerBlockEntities(BlockEntityGetter<T, C> getter, BlockEntityType<?>... containers) {
-            lookup.registerForBlockEntities(getter::getContainer, containers);
+        public void registerBlockEntities(BlockEntityGetter<T, C> getter, BlockEntityType<?> container, Predicate<BlockEntity> blockPredicate) {
+            
+            var entityInstance = FabricBlockLookup.getTypeInstance(container);
+            if (entityInstance == null || !blockPredicate.test(entityInstance)) return;
+            
+            lookup.registerForBlockEntities(getter::getContainer, container);
         }
     }
 }

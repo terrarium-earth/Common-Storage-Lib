@@ -20,15 +20,16 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.function.Predicate;
 
 public final class EnergyBlockLookup implements BlockLookup<ValueStorage, Direction>, RegistryEventListener {
     public static final EnergyBlockLookup INSTANCE = new EnergyBlockLookup();
     private final List<Consumer<BlockRegistrar<ValueStorage, Direction>>> registrars = new ArrayList<>();
-
+    
     private EnergyBlockLookup() {
         registerSelf();
     }
-
+    
     @Override
     @SuppressWarnings("DataFlowIssue")
     public @Nullable ValueStorage find(Level level, BlockPos pos, @Nullable BlockState state, @Nullable BlockEntity entity, @Nullable Direction direction) {
@@ -38,23 +39,23 @@ public final class EnergyBlockLookup implements BlockLookup<ValueStorage, Direct
         }
         return storage == null ? null : new CommonEnergyStorage(storage);
     }
-
+    
     @Override
     public void onRegister(Consumer<BlockRegistrar<ValueStorage, Direction>> registrar) {
         registrars.add(registrar);
     }
-
+    
     public void register(RegisterCapabilitiesEvent event) {
         registrars.forEach(registrar -> registrar.accept(new EventRegistrar(event)));
     }
-
+    
     public static class EventRegistrar implements BlockLookup.BlockRegistrar<ValueStorage, Direction> {
         RegisterCapabilitiesEvent event;
-
+        
         public EventRegistrar(RegisterCapabilitiesEvent event) {
             this.event = event;
         }
-
+        
         @Override
         public void registerBlocks(BlockLookup.BlockGetter<ValueStorage, Direction> getter, Block... containers) {
             for (Block block : containers) {
@@ -64,15 +65,18 @@ public final class EnergyBlockLookup implements BlockLookup<ValueStorage, Direct
                 }, block);
             }
         }
-
+        
+        @SuppressWarnings({"OptionalGetWithoutIsPresent"})
         @Override
-        public void registerBlockEntities(BlockLookup.BlockEntityGetter<ValueStorage, Direction> getter, BlockEntityType<?>... containers) {
-            for (BlockEntityType<?> blockEntity : containers) {
-                event.registerBlockEntity(Capabilities.EnergyStorage.BLOCK, blockEntity, (entity, direction) -> {
-                    ValueStorage storage = getter.getContainer(entity, direction);
-                    return storage == null ? null : new NeoEnergyContainer(storage);
-                });
-            }
+        public void registerBlockEntities(BlockLookup.BlockEntityGetter<ValueStorage, Direction> getter, BlockEntityType<?> container, Predicate<BlockEntity> blockPredicate) {
+            
+            if (container.getValidBlocks().isEmpty()
+                  || !blockPredicate.test(container.create(BlockPos.ZERO, container.getValidBlocks().stream().findFirst().get().defaultBlockState()))) return;
+            
+            event.registerBlockEntity(Capabilities.EnergyStorage.BLOCK, container, (entity, direction) -> {
+                ValueStorage storage = getter.getContainer(entity, direction);
+                return storage == null ? null : new NeoEnergyContainer(storage);
+            });
         }
     }
 }
