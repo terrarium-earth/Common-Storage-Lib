@@ -1,6 +1,5 @@
 package earth.terrarium.common_storage_lib.energy.lookup;
 
-import earth.terrarium.common_storage_lib.FabricCommonStorageLib;
 import earth.terrarium.common_storage_lib.lookup.BlockLookup;
 import earth.terrarium.common_storage_lib.storage.base.ValueStorage;
 import earth.terrarium.common_storage_lib.storage.common.CommonValueStorage;
@@ -16,7 +15,6 @@ import org.jetbrains.annotations.Nullable;
 import team.reborn.energy.api.EnergyStorage;
 
 import java.util.function.Consumer;
-import java.util.function.Predicate;
 
 public class EnergyBlockLookup implements BlockLookup<ValueStorage, @Nullable Direction> {
 
@@ -47,15 +45,11 @@ public class EnergyBlockLookup implements BlockLookup<ValueStorage, @Nullable Di
         }
 
         @Override
-        public void registerBlockEntities(BlockEntityGetter<ValueStorage, @Nullable Direction> getter, BlockEntityType<?> container, Predicate<BlockEntity> blockPredicate) {
-            
-            var entityInstance = FabricCommonStorageLib.getTypeInstance(container);
-            if (entityInstance == null || !blockPredicate.test(entityInstance)) return;
-            
+        public void registerBlockEntities(BlockEntityGetter<ValueStorage, @Nullable Direction> getter, BlockEntityType<?>... containers) {
             EnergyStorage.SIDED.registerForBlockEntities((entity, context) -> {
                 ValueStorage storage = getter.getContainer(entity, context);
                 return storage == null ? null : new FabricLongStorage(storage);
-            }, container);
+            }, containers);
         }
     }
 }

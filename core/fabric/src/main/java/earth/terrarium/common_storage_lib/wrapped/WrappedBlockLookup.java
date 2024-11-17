@@ -1,6 +1,5 @@
 package earth.terrarium.common_storage_lib.wrapped;
 
-import earth.terrarium.common_storage_lib.FabricCommonStorageLib;
 import earth.terrarium.common_storage_lib.resources.fluid.FluidResource;
 import earth.terrarium.common_storage_lib.resources.item.ItemResource;
 import earth.terrarium.common_storage_lib.storage.ConversionUtils;
@@ -26,7 +25,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Consumer;
-import java.util.function.Predicate;
 
 public abstract class WrappedBlockLookup<U extends Resource, V extends TransferVariant<?>> implements BlockLookup<CommonStorage<U>, @Nullable Direction> {
     private final BlockApiLookup<Storage<V>, Direction> fabricLookup;
@@ -50,15 +48,11 @@ public abstract class WrappedBlockLookup<U extends Resource, V extends TransferV
         }
 
         @Override
-        public void registerBlockEntities(BlockEntityGetter<CommonStorage<U>, @Nullable Direction> getter, BlockEntityType<?> blockEntity, Predicate<BlockEntity> blockPredicate) {
-            
-            var entityInstance = FabricCommonStorageLib.getTypeInstance(blockEntity);
-            if (entityInstance == null || !blockPredicate.test(entityInstance)) return;
-            
+        public void registerBlockEntities(BlockEntityGetter<CommonStorage<U>, @Nullable Direction> getter, BlockEntityType<?>... blockEntities) {
             fabricLookup.registerForBlockEntities((entity, context) -> {
                 CommonStorage<U> storage = getter.getContainer(entity, context);
                 return storage == null ? null : wrap(storage);
-            }, blockEntity);
+            }, blockEntities);
         }
     }
 

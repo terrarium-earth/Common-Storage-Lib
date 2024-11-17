@@ -16,55 +16,51 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
-import java.util.function.Predicate;
 
 public class NeoBlockLookup<T, C> implements BlockLookup<T, C>, RegistryEventListener {
     private final List<Consumer<BlockLookup.BlockRegistrar<T, C>>> registrars = new ArrayList<>();
     private final BlockCapability<T, C> capability;
-    
+
     public NeoBlockLookup(BlockCapability<T, C> capability) {
         this.capability = capability;
     }
-    
+
     public NeoBlockLookup(ResourceLocation id, Class<T> type, Class<C> contextType) {
         this(BlockCapability.create(id, type, contextType));
     }
-    
+
     @Override
     public @Nullable T find(Level level, BlockPos pos, @Nullable BlockState state, @Nullable BlockEntity entity, @Nullable C direction) {
         return level.getCapability(capability, pos, state, entity, direction);
     }
-    
+
     @Override
     public void onRegister(Consumer<BlockRegistrar<T, C>> registrar) {
         registrars.add(registrar);
     }
-    
+
     @Override
     public void register(RegisterCapabilitiesEvent event) {
         registrars.forEach(registrar -> registrar.accept(new EventRegistrar(event)));
     }
-    
+
     public class EventRegistrar implements BlockRegistrar<T, C> {
         private final RegisterCapabilitiesEvent event;
-        
+
         public EventRegistrar(RegisterCapabilitiesEvent event) {
             this.event = event;
         }
-        
+
         @Override
         public void registerBlocks(BlockGetter<T, C> getter, Block... blocks) {
             event.registerBlock(capability, getter::getContainer, blocks);
         }
-        
+
         @Override
-        public void registerBlockEntities(BlockEntityGetter<T, C> getter, BlockEntityType<?> container, Predicate<BlockEntity> blockPredicate) {
-            
-            if (container.getValidBlocks().isEmpty()
-                  || !blockPredicate.test(container.create(BlockPos.ZERO, container.getValidBlocks().stream().findFirst().get().defaultBlockState())))
-                return;
-            
-            event.registerBlockEntity(capability, container, getter::getContainer);
+        public void registerBlockEntities(BlockEntityGetter<T, C> getter, BlockEntityType<?>... blocks) {
+            for (BlockEntityType<?> block : blocks) {
+                event.registerBlockEntity(capability, block, getter::getContainer);
+            }
         }
     }
 }

@@ -1,10 +1,10 @@
 package earth.terrarium.common_storage_lib.fluid.lookup;
 
+import earth.terrarium.common_storage_lib.resources.fluid.FluidResource;
 import earth.terrarium.common_storage_lib.fluid.wrappers.CommonFluidContainer;
 import earth.terrarium.common_storage_lib.fluid.wrappers.NeoFluidContainer;
 import earth.terrarium.common_storage_lib.lookup.BlockLookup;
 import earth.terrarium.common_storage_lib.lookup.RegistryEventListener;
-import earth.terrarium.common_storage_lib.resources.fluid.FluidResource;
 import earth.terrarium.common_storage_lib.storage.base.CommonStorage;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -20,39 +20,37 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
-import java.util.function.Predicate;
 
 public final class FluidBlockLookup implements BlockLookup<CommonStorage<FluidResource>, Direction>, RegistryEventListener {
     public static final FluidBlockLookup INSTANCE = new FluidBlockLookup();
     private final List<Consumer<BlockRegistrar<CommonStorage<FluidResource>, Direction>>> registrars = new ArrayList<>();
-    
+
     private FluidBlockLookup() {
         registerSelf();
     }
-    
+
     @Override
     public @Nullable CommonStorage<FluidResource> find(Level level, BlockPos pos, @Nullable BlockState state, @Nullable BlockEntity entity, @Nullable Direction direction) {
         IFluidHandler handler = level.getCapability(Capabilities.FluidHandler.BLOCK, pos, state, entity, direction);
-        
+
         if (handler instanceof NeoFluidContainer(CommonStorage<FluidResource> container)) {
             return container;
         }
-        
+
         return handler == null ? null : new CommonFluidContainer(handler);
     }
-    
+
     @Override
     public void onRegister(Consumer<BlockRegistrar<CommonStorage<FluidResource>, Direction>> registrar) {
         registrars.add(registrar);
     }
-    
+
     @Override
     public void register(RegisterCapabilitiesEvent event) {
         registrars.forEach(registrar -> registrar.accept(new EventRegistrar(event)));
     }
-    
-    public record EventRegistrar(
-      RegisterCapabilitiesEvent event) implements BlockRegistrar<CommonStorage<FluidResource>, Direction> {
+
+    public record EventRegistrar(RegisterCapabilitiesEvent event) implements BlockRegistrar<CommonStorage<FluidResource>, Direction> {
         @Override
         public void registerBlocks(BlockGetter<CommonStorage<FluidResource>, Direction> getter, net.minecraft.world.level.block.Block... containers) {
             for (net.minecraft.world.level.block.Block block : containers) {
@@ -62,19 +60,15 @@ public final class FluidBlockLookup implements BlockLookup<CommonStorage<FluidRe
                 }, block);
             }
         }
-        
-        @SuppressWarnings("OptionalGetWithoutIsPresent")
+
         @Override
-        public void registerBlockEntities(BlockEntityGetter<CommonStorage<FluidResource>, Direction> getter, BlockEntityType<?> entityType, Predicate<BlockEntity> blockPredicate) {
-            
-            if (entityType.getValidBlocks().isEmpty()
-                  || !blockPredicate.test(entityType.create(BlockPos.ZERO, entityType.getValidBlocks().stream().findFirst().get().defaultBlockState())))
-                return;
-            
-            event.registerBlockEntity(Capabilities.FluidHandler.BLOCK, entityType, (entity, direction) -> {
-                CommonStorage<FluidResource> container = getter.getContainer(entity, direction);
-                return container == null ? null : new NeoFluidContainer(container);
-            });
+        public void registerBlockEntities(BlockEntityGetter<CommonStorage<FluidResource>, Direction> getter, BlockEntityType<?>... containers) {
+            for (BlockEntityType<?> blockEntityType : containers) {
+                event.registerBlockEntity(Capabilities.FluidHandler.BLOCK, blockEntityType, (entity, direction) -> {
+                    CommonStorage<FluidResource> container = getter.getContainer(entity, direction);
+                    return container == null ? null : new NeoFluidContainer(container);
+                });
+            }
         }
     }
 }

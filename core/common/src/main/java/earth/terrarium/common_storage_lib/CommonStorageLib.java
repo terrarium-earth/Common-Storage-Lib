@@ -39,7 +39,7 @@ public class CommonStorageLib {
             } else {
                 return null;
             }
-        }, blockEntity -> blockEntity instanceof EnergyProvider.BlockEntity);
+        });
 
         EnergyApi.ENTITY.registerFallback((entity, direction) -> {
             if (entity instanceof EnergyProvider.Entity provider) {
@@ -73,7 +73,7 @@ public class CommonStorageLib {
             } else {
                 return null;
             }
-        }, blockEntity -> blockEntity instanceof FluidProvider.BlockEntity);
+        });
 
         FluidApi.ENTITY.registerFallback((entity, direction) -> {
             if (entity instanceof FluidProvider.Entity provider) {
@@ -107,7 +107,7 @@ public class CommonStorageLib {
             } else {
                 return null;
             }
-        }, blockEntity -> blockEntity instanceof ItemProvider.BlockEntity);
+        });
 
         ItemApi.ENTITY.registerFallback((entity, ignored) -> {
             if (entity instanceof ItemProvider.Entity provider) {
@@ -141,7 +141,7 @@ public class CommonStorageLib {
             } else {
                 return null;
             }
-        }, blockEntity -> blockEntity instanceof HeatProvider.BlockEntity);
+        });
 
         HeatApi.ENTITY.registerFallback((entity, ignored) -> {
             if (entity instanceof HeatProvider.Entity provider) {
