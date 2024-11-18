@@ -1,1 +1,2 @@
-- Fix nullability issue with Fabric energy storage
+- Fix lookups not being registered properly on Fabric
+- Fix class loading lockup with fluid ingredients

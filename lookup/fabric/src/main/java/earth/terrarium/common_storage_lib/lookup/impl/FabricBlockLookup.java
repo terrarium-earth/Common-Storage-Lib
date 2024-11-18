@@ -1,6 +1,7 @@
 package earth.terrarium.common_storage_lib.lookup.impl;
 
 import earth.terrarium.common_storage_lib.lookup.BlockLookup;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.lookup.v1.block.BlockApiLookup;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
@@ -12,6 +13,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Consumer;
+import java.util.function.Predicate;
 
 public class FabricBlockLookup<T, C> implements BlockLookup<T, C> {
     private final BlockApiLookup<T, C> lookup;
@@ -37,6 +39,26 @@ public class FabricBlockLookup<T, C> implements BlockLookup<T, C> {
     @Override
     public void registerSelf(BlockGetter<T, C> getter, Block... blocks) {
         lookup.registerForBlocks(getter::getContainer, blocks);
+    }
+
+    @Override
+    public void registerFallback(BlockGetter<T, C> getter, Predicate<Block> blockPredicate) {
+        ServerLifecycleEvents.SERVER_STARTED.register(server -> BlockLookup.super.registerFallback(getter, blockPredicate));
+    }
+
+    @Override
+    public void registerFallback(BlockGetter<T, C> getter) {
+        lookup.registerFallback(getter::getContainer);
+    }
+
+    @Override
+    public void registerFallback(BlockEntityGetter<T, C> getter, Predicate<BlockEntityType<?>> entityTypePredicate) {
+        ServerLifecycleEvents.SERVER_STARTED.register(server -> BlockLookup.super.registerFallback(getter, entityTypePredicate));
+    }
+
+    @Override
+    public void registerFallback(BlockEntityGetter<T, C> getter) {
+        lookup.registerFallback((level, blockPos, blockState, blockEntity, c) -> getter.getContainer(blockEntity, c));
     }
 
     public class LookupRegistrar implements BlockRegistrar<T, C> {
