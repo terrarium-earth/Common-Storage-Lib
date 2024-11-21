@@ -53,6 +53,10 @@ public interface BlockLookup<T, C> {
         onRegister(registrar -> registrar.registerBlocks(getter, blocks));
     }
 
+    default void registerSelf(BlockEntityGetter<T, C> getter, BlockEntityType<?>... types) {
+        onRegister(registrar -> registrar.registerBlockEntities(getter, types));
+    }
+
     default void registerFallback(BlockGetter<T, C> getter, Predicate<Block> blockPredicate) {
         onRegister(registrar -> {
             for (Block block : BuiltInRegistries.BLOCK) {
