@@ -6,6 +6,7 @@ import earth.terrarium.common_storage_lib.item.wrappers.NeoItemHandler;
 import earth.terrarium.common_storage_lib.lookup.RegistryEventListener;
 import earth.terrarium.common_storage_lib.lookup.EntityLookup;
 import earth.terrarium.common_storage_lib.storage.base.CommonStorage;
+import earth.terrarium.common_storage_lib.storage.impl.AutoUpdatingCommonStorage;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -35,7 +36,7 @@ public final class ItemEntityLookup<C> implements EntityLookup<CommonStorage<Ite
     public @Nullable CommonStorage<ItemResource> find(Entity entity, C context) {
         IItemHandler handler = entity.getCapability(capability, context);
         if (handler instanceof NeoItemHandler(CommonStorage<ItemResource> container)) {
-            return container;
+            return new AutoUpdatingCommonStorage<>(container);
         }
 
         return handler == null ? null : new CommonItemContainer(handler);

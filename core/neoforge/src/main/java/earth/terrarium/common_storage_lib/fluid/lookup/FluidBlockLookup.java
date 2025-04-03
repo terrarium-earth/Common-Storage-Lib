@@ -6,6 +6,7 @@ import earth.terrarium.common_storage_lib.fluid.wrappers.NeoFluidContainer;
 import earth.terrarium.common_storage_lib.lookup.BlockLookup;
 import earth.terrarium.common_storage_lib.lookup.RegistryEventListener;
 import earth.terrarium.common_storage_lib.storage.base.CommonStorage;
+import earth.terrarium.common_storage_lib.storage.impl.AutoUpdatingCommonStorage;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.Level;
@@ -34,7 +35,7 @@ public final class FluidBlockLookup implements BlockLookup<CommonStorage<FluidRe
         IFluidHandler handler = level.getCapability(Capabilities.FluidHandler.BLOCK, pos, state, entity, direction);
 
         if (handler instanceof NeoFluidContainer(CommonStorage<FluidResource> container)) {
-            return container;
+            return new AutoUpdatingCommonStorage<>(container);
         }
 
         return handler == null ? null : new CommonFluidContainer(handler);

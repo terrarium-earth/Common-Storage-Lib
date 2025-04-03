@@ -6,6 +6,7 @@ import earth.terrarium.common_storage_lib.fluid.wrappers.NeoFluidContainer;
 import earth.terrarium.common_storage_lib.lookup.RegistryEventListener;
 import earth.terrarium.common_storage_lib.lookup.EntityLookup;
 import earth.terrarium.common_storage_lib.storage.base.CommonStorage;
+import earth.terrarium.common_storage_lib.storage.impl.AutoUpdatingCommonStorage;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.Entity;
 import net.neoforged.neoforge.capabilities.Capabilities;
@@ -30,7 +31,7 @@ public final class FluidEntityLookup implements EntityLookup<CommonStorage<Fluid
         IFluidHandler handler = entity.getCapability(Capabilities.FluidHandler.ENTITY, context);
 
         if (handler instanceof NeoFluidContainer(CommonStorage<FluidResource> container)) {
-            return container;
+            return new AutoUpdatingCommonStorage<>(container);
         }
 
         return handler == null ? null : new CommonFluidContainer(handler);
