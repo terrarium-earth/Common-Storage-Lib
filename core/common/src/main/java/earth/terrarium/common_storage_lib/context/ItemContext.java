@@ -54,12 +54,13 @@ public interface ItemContext extends StorageIO<ItemResource>, DataComponentHolde
      * @param patch The patch to apply
      * @return Whether the patch was successfully applied
      */
+    @Deprecated
     default boolean modify(DataComponentPatch patch) {
         return exchange(getResource().modify(patch), getAmount(), false) == getAmount();
     }
 
     default <T> boolean set(DataComponentType<T> type, T value) {
-        return modify(DataComponentPatch.builder().set(type, value).build());
+        return exchange(getResource().set(type, value), getAmount(), false) == getAmount();
     }
 
     @Override

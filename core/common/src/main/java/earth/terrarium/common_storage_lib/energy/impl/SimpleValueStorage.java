@@ -21,8 +21,7 @@ public class SimpleValueStorage implements ValueStorage, UpdateManager<Long> {
     public SimpleValueStorage(ItemContext context, DataComponentType<Long> componentType, long capacity) {
         this.capacity = capacity;
         this.onUpdate = () -> {
-            DataComponentPatch data = DataComponentPatch.builder().set(componentType, this.amount).build();
-            context.modify(data);
+            context.exchange(context.getResource().set(componentType, this.amount), context.getAmount(), false);
             context.updateAll();
         };
         if (context.getResource().has(componentType)) {
