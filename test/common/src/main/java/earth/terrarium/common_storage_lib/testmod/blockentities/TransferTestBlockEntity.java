@@ -1,5 +1,7 @@
 package earth.terrarium.common_storage_lib.testmod.blockentities;
 
+import earth.terrarium.common_storage_lib.context.ItemContext;
+import earth.terrarium.common_storage_lib.context.impl.SimpleItemContext;
 import earth.terrarium.common_storage_lib.energy.EnergyApi;
 import earth.terrarium.common_storage_lib.energy.EnergyProvider;
 import earth.terrarium.common_storage_lib.energy.impl.SimpleValueStorage;
@@ -20,6 +22,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Fluids;
 import org.jetbrains.annotations.Nullable;
 
 public class TransferTestBlockEntity extends BlockEntity implements EnergyProvider.BlockEntity, FluidProvider.BlockEntity, ItemProvider.BlockEntity {
@@ -61,6 +64,18 @@ public class TransferTestBlockEntity extends BlockEntity implements EnergyProvid
         CommonStorage<ItemResource> foundItemBelow = ItemApi.BLOCK.find(level, getBlockPos().below(), Direction.UP);
         if (foundItemBelow != null) {
             TransferUtil.moveAny(items, foundItemBelow, 1, false);
+        }
+
+        ItemContext context = SimpleItemContext.of(items, 0);
+
+        ValueStorage valueStorage = context.find(EnergyApi.ITEM);
+        if (valueStorage != null) {
+            valueStorage.insert(1, false);
+        }
+        
+        CommonStorage<FluidResource> fluidStorage = context.find(FluidApi.ITEM);
+        if (fluidStorage != null) {
+            fluidStorage.insert(FluidResource.of(Fluids.WATER), 1000, false);
         }
     }
 

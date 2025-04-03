@@ -27,7 +27,7 @@ public record CommonValueStorage(EnergyStorage storage) implements ValueStorage 
 
     @Override
     public long insert(long amount, boolean simulate) {
-        try (var transaction = Transaction.openOuter()) {
+        try (var transaction = Transaction.openNested(Transaction.getCurrentUnsafe())) {
             long inserted = storage.insert(amount, transaction);
             if (!simulate) {
                 transaction.commit();
@@ -38,7 +38,7 @@ public record CommonValueStorage(EnergyStorage storage) implements ValueStorage 
 
     @Override
     public long extract(long amount, boolean simulate) {
-        try (var transaction = Transaction.openOuter()) {
+        try (var transaction = Transaction.openNested(Transaction.getCurrentUnsafe())) {
             long extracted = storage.extract(amount, transaction);
             if (!simulate) {
                 transaction.commit();

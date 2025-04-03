@@ -14,8 +14,7 @@ import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 public record CommonItemContext(ContainerItemContext context) implements ItemContext {
     @Override
     public long insert(ItemResource resource, long amount, boolean simulate) {
-        Object2LongLinkedOpenHashMap<ItemVariant> map = new Object2LongLinkedOpenHashMap<>();
-        try (var transaction = Transaction.openOuter()) {
+        try (var transaction = Transaction.openNested(Transaction.getCurrentUnsafe())) {
             long inserted = context.insert(ConversionUtils.toVariant(resource), amount, transaction);
             if (!simulate) {
                 transaction.commit();
@@ -26,7 +25,7 @@ public record CommonItemContext(ContainerItemContext context) implements ItemCon
 
     @Override
     public long extract(ItemResource resource, long amount, boolean simulate) {
-        try (var transaction = Transaction.openOuter()) {
+        try (var transaction = Transaction.openNested(Transaction.getCurrentUnsafe())) {
             long extracted = context.extract(ConversionUtils.toVariant(resource), amount, transaction);
             if (!simulate) {
                 transaction.commit();
@@ -37,7 +36,7 @@ public record CommonItemContext(ContainerItemContext context) implements ItemCon
 
     @Override
     public long exchange(ItemResource newResource, long amount, boolean simulate) {
-        try (var transaction = Transaction.openOuter()) {
+        try (var transaction = Transaction.openNested(Transaction.getCurrentUnsafe())) {
             long exchanged = context.exchange(ConversionUtils.toVariant(newResource), amount, transaction);
             if (!simulate) {
                 transaction.commit();

@@ -25,7 +25,7 @@ public record CommonWrappedSlotSlot<U extends Resource, V extends TransferVarian
     @Override
     public long insert(U value, long amount, boolean simulate) {
         if (view instanceof SingleSlotStorage<V> slot) {
-            try (var transaction = Transaction.openOuter()) {
+            try (var transaction = Transaction.openNested(Transaction.getCurrentUnsafe())) {
                 long inserted = slot.insert(toVariant.apply(value), amount, transaction);
                 if (!simulate) {
                     transaction.commit();
@@ -39,7 +39,7 @@ public record CommonWrappedSlotSlot<U extends Resource, V extends TransferVarian
 
     @Override
     public long extract(U resource, long amount, boolean simulate) {
-        try (var transaction = Transaction.openOuter()) {
+        try (var transaction = Transaction.openNested(Transaction.getCurrentUnsafe())) {
             long extracted = view.extract(toVariant.apply(resource), amount, transaction);
             if (!simulate) {
                 transaction.commit();

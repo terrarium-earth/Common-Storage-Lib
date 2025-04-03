@@ -49,7 +49,7 @@ public record CommonWrappedContainer<U extends Resource, V extends TransferVaria
 
     @Override
     public long insert(U resource, long amount, boolean simulate) {
-        try (var transaction = Transaction.openOuter()) {
+        try (var transaction = Transaction.openNested(Transaction.getCurrentUnsafe())) {
             long inserted = storage.insert(toVariant(resource), amount, transaction);
             if (!simulate) {
                 transaction.commit();
@@ -60,7 +60,7 @@ public record CommonWrappedContainer<U extends Resource, V extends TransferVaria
 
     @Override
     public long extract(U resource, long amount, boolean simulate) {
-        try (var transaction = Transaction.openOuter()) {
+        try (var transaction = Transaction.openNested(Transaction.getCurrentUnsafe())) {
             long extracted = storage.extract(toVariant(resource), amount, transaction);
             if (!simulate) {
                 transaction.commit();

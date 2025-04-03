@@ -26,7 +26,7 @@ public record ContextItemContainer(List<SingleSlotStorage<ItemVariant>> storage,
 
     @Override
     public long insert(ItemResource resource, long amount, boolean simulate) {
-        try (var transaction = Transaction.openOuter()) {
+        try (var transaction = Transaction.openNested(Transaction.getCurrentUnsafe())) {
             long inserted = insert.apply(ConversionUtils.toVariant(resource), amount, transaction);
             if (!simulate) {
                 transaction.commit();
@@ -39,7 +39,7 @@ public record ContextItemContainer(List<SingleSlotStorage<ItemVariant>> storage,
     public long extract(ItemResource predicate, long amount, boolean simulate) {
         long leftover = amount;
         ItemVariant variant = ConversionUtils.toVariant(predicate);
-        try (var transaction = Transaction.openOuter()) {
+        try (var transaction = Transaction.openNested(Transaction.getCurrentUnsafe())) {
             for (SingleSlotStorage<ItemVariant> view : storage) {
                 long extractedAmount = view.extract(variant, leftover, transaction);
                 leftover -= extractedAmount;
@@ -68,7 +68,7 @@ public record ContextItemContainer(List<SingleSlotStorage<ItemVariant>> storage,
 
         @Override
         public long insert(ItemResource resource, long amount, boolean simulate) {
-            try (var transaction = Transaction.openOuter()) {
+            try (var transaction = Transaction.openNested(Transaction.getCurrentUnsafe())) {
                 long inserted = storage.insert(ConversionUtils.toVariant(resource), amount, transaction);
                 if (!simulate) {
                     transaction.commit();
@@ -79,7 +79,7 @@ public record ContextItemContainer(List<SingleSlotStorage<ItemVariant>> storage,
 
         @Override
         public long extract(ItemResource resource, long amount, boolean simulate) {
-            try (var transaction = Transaction.openOuter()) {
+            try (var transaction = Transaction.openNested(Transaction.getCurrentUnsafe())) {
                 long extracted = storage.extract(ConversionUtils.toVariant(resource), amount, transaction);
                 if (!simulate) {
                     transaction.commit();
