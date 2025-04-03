@@ -49,7 +49,7 @@ public final class EntityResource extends ResourceComponent {
     }
 
     public static EntityResource of(EntityType<?> type, DataComponentPatch patch) {
-        return new EntityResource(type, PatchedDataComponentMap.fromPatch(DataComponentMap.EMPTY, patch));
+        return new EntityResource(type, patch);
     }
 
     public static EntityResource of(Holder<EntityType<?>> type, DataComponentPatch patch) {
@@ -58,7 +58,7 @@ public final class EntityResource extends ResourceComponent {
 
     private final EntityType<?> type;
 
-    private EntityResource(@Nullable EntityType<?> type, PatchedDataComponentMap components) {
+    private EntityResource(@Nullable EntityType<?> type, DataComponentPatch components) {
         super(components);
         this.type = type;
     }
@@ -78,15 +78,11 @@ public final class EntityResource extends ResourceComponent {
     }
 
     public <D> EntityResource set(DataComponentType<D> type, D value) {
-        PatchedDataComponentMap newComponents = new PatchedDataComponentMap(components);
-        newComponents.set(type, value);
-        return new EntityResource(this.type, newComponents);
+        return new EntityResource(this.type, addChanges(dataPatch, type, value));
     }
 
     public EntityResource modify(DataComponentPatch patch) {
-        PatchedDataComponentMap newComponents = new PatchedDataComponentMap(components);
-        newComponents.applyPatch(patch);
-        return new EntityResource(type, newComponents);
+        return new EntityResource(type, mergeChanges(this.dataPatch, patch));
     }
 
     public ResourceStack<EntityResource> toStack(long amount) {

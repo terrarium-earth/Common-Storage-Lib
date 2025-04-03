@@ -40,7 +40,7 @@ public final class FluidResource extends ResourceComponent {
     );
 
     public static FluidResource of(Fluid fluid) {
-        return new FluidResource(fluid, PatchedDataComponentMap.fromPatch(DataComponentMap.EMPTY, DataComponentPatch.EMPTY));
+        return new FluidResource(fluid, DataComponentPatch.EMPTY);
     }
 
     public static FluidResource of(Holder<Fluid> holder) {
@@ -48,7 +48,7 @@ public final class FluidResource extends ResourceComponent {
     }
 
     public static FluidResource of(Fluid fluid, DataComponentPatch components) {
-        return new FluidResource(fluid, PatchedDataComponentMap.fromPatch(DataComponentMap.EMPTY, components));
+        return new FluidResource(fluid, components);
     }
 
     public static FluidResource of(Holder<Fluid> holder, DataComponentPatch components) {
@@ -57,7 +57,14 @@ public final class FluidResource extends ResourceComponent {
 
     private final Fluid type;
 
-    public FluidResource(Fluid type, PatchedDataComponentMap components) {
+    /**
+     * Immutable fluid resource representing a fluid stack
+     * @param type type o' fluid
+     * @param components data o' fluid
+     * @deprecated Use the static of methods
+     */
+    @Deprecated
+    public FluidResource(Fluid type, DataComponentPatch components) {
         super(components);
         this.type = type;
     }
@@ -76,15 +83,11 @@ public final class FluidResource extends ResourceComponent {
     }
 
     public <D> FluidResource set(DataComponentType<D> type, D value) {
-        PatchedDataComponentMap copy = new PatchedDataComponentMap(components);
-        copy.set(type, value);
-        return new FluidResource(this.type, copy);
+        return new FluidResource(this.type, addChanges(this.dataPatch, type, value));
     }
 
     public FluidResource modify(DataComponentPatch patch) {
-        PatchedDataComponentMap copy = new PatchedDataComponentMap(components);
-        copy.applyPatch(patch);
-        return new FluidResource(this.type, copy);
+        return new FluidResource(this.type, mergeChanges(this.dataPatch, patch));
     }
 
     public ResourceStack<FluidResource> toStack(long amount) {

@@ -7,7 +7,6 @@ import earth.terrarium.common_storage_lib.resources.ResourceComponent;
 import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponentPatch;
 import net.minecraft.core.component.DataComponentType;
-import net.minecraft.core.component.PatchedDataComponentMap;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -22,7 +21,6 @@ import net.msrandom.multiplatform.annotations.Expect;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
-import java.util.function.Predicate;
 
 public final class ItemResource extends ResourceComponent implements ItemLike {
     public static final ItemResource BLANK = ItemResource.of(Items.AIR, DataComponentPatch.EMPTY);
@@ -46,7 +44,7 @@ public final class ItemResource extends ResourceComponent implements ItemLike {
     );
 
     public static ItemResource of(ItemLike item) {
-        return new ItemResource(item.asItem(), new PatchedDataComponentMap(item.asItem().components()));
+        return new ItemResource(item.asItem(), DataComponentPatch.EMPTY);
     }
 
     public static ItemResource of(Holder<Item> holder) {
@@ -54,11 +52,11 @@ public final class ItemResource extends ResourceComponent implements ItemLike {
     }
 
     public static ItemResource of(ItemLike item, DataComponentPatch components) {
-        return new ItemResource(item.asItem(), PatchedDataComponentMap.fromPatch(item.asItem().components(), components));
+        return new ItemResource(item.asItem(), components);
     }
 
     public static ItemResource of(Holder<Item> holder, DataComponentPatch components) {
-        return new ItemResource(holder.value(), PatchedDataComponentMap.fromPatch(holder.value().components(), components));
+        return new ItemResource(holder.value(), components);
     }
 
     public static ItemResource of(ItemStack stack) {
@@ -68,7 +66,14 @@ public final class ItemResource extends ResourceComponent implements ItemLike {
     private final Item type;
     private ItemStack cachedStack;
 
-    public ItemResource(Item type, PatchedDataComponentMap components) {
+    /**
+     * Immutable resource representing an itemstack
+     * @param type item type
+     * @param components data of item
+     * @deprecated use of methods instead
+     */
+    @Deprecated
+    public ItemResource(Item type, DataComponentPatch components) {
         super(components);
         this.type = type;
     }
@@ -113,15 +118,11 @@ public final class ItemResource extends ResourceComponent implements ItemLike {
     }
 
     public <D> ItemResource set(DataComponentType<D> type, D value) {
-        PatchedDataComponentMap copy = new PatchedDataComponentMap(components);
-        copy.set(type, value);
-        return new ItemResource(this.type, copy);
+        return new ItemResource(this.type, addChanges(this.dataPatch, type, value));
     }
 
     public ItemResource modify(DataComponentPatch patch) {
-        PatchedDataComponentMap copy = new PatchedDataComponentMap(components);
-        copy.applyPatch(patch);
-        return new ItemResource(this.type, copy);
+        return new ItemResource(this.type, mergeChanges(this.dataPatch, patch));
     }
 
     @Override

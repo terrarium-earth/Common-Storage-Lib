@@ -1,27 +1,23 @@
 package earth.terrarium.common_storage_lib.resources;
 
-import net.minecraft.core.component.DataComponentHolder;
-import net.minecraft.core.component.DataComponentMap;
-import net.minecraft.core.component.DataComponentPatch;
-import net.minecraft.core.component.PatchedDataComponentMap;
+import net.minecraft.core.component.*;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 
 public abstract class ResourceComponent implements Resource, DataComponentHolder {
     protected final DataComponentMap components;
-    private DataComponentPatch dataPatch;
+    protected final DataComponentPatch dataPatch;
 
-    protected ResourceComponent(DataComponentMap components) {
-        this.components = components;
+    protected ResourceComponent(DataComponentPatch patch) {
+        this.components = patch == DataComponentPatch.EMPTY ? DataComponentMap.EMPTY : PatchedDataComponentMap.fromPatch(DataComponentMap.EMPTY, patch);
+        this.dataPatch = patch;
     }
 
     public DataComponentPatch getDataPatch() {
-        DataComponentPatch patch = dataPatch;
-        if (patch == null) {
-            patch = dataPatch = components instanceof PatchedDataComponentMap ? ((PatchedDataComponentMap) components).asPatch() : DataComponentPatch.EMPTY;
-        }
-        return patch;
+        return dataPatch;
     }
 
     @Override
@@ -31,5 +27,29 @@ public abstract class ResourceComponent implements Resource, DataComponentHolder
 
     public boolean componentsMatch(DataComponentPatch other) {
         return Objects.equals(getDataPatch(), other);
+    }
+
+    public static DataComponentPatch mergeChanges(DataComponentPatch base, DataComponentPatch applied) {
+        DataComponentPatch.Builder builder = DataComponentPatch.builder();
+        writeChangesTo(base, builder);
+        writeChangesTo(applied, builder);
+        return builder.build();
+    }
+
+    public static <T> DataComponentPatch addChanges(DataComponentPatch base, DataComponentType<T> type, T value) {
+        DataComponentPatch.Builder builder = DataComponentPatch.builder();
+        writeChangesTo(base, builder);
+        builder.set(type, value);
+        return builder.build();
+    }
+
+    private static void writeChangesTo(DataComponentPatch changes, DataComponentPatch.Builder builder) {
+        for(Map.Entry<DataComponentType<?>, Optional<?>> entry : changes.entrySet()) {
+            if (entry.getValue().isPresent()) {
+                builder.set((DataComponentType)entry.getKey(), ((Optional)entry.getValue()).get());
+            } else {
+                builder.remove((DataComponentType)entry.getKey());
+            }
+        }
     }
 }
