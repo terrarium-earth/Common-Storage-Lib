@@ -3,12 +3,14 @@ package earth.terrarium.common_storage_lib.data.impl;
 import earth.terrarium.common_storage_lib.data.DataManager;
 import earth.terrarium.common_storage_lib.data.network.BlockEntitySyncPacket;
 import earth.terrarium.common_storage_lib.data.network.EntitySyncPacket;
+import earth.terrarium.common_storage_lib.data.network.LevelSyncPacket;
 import earth.terrarium.common_storage_lib.data.sync.DataSyncSerializer;
 import net.minecraft.core.component.DataComponentHolder;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.neoforged.neoforge.attachment.AttachmentHolder;
 import net.neoforged.neoforge.attachment.AttachmentType;
@@ -58,7 +60,10 @@ public record DataManagerImpl<T>(Supplier<AttachmentType<T>> attachmentType,
     @Override
     public T set(Object dataHolder, T data) {
         return switch (dataHolder) {
-            case AttachmentHolder holder -> holder.setData(attachmentType, data);
+            case AttachmentHolder holder -> {
+                updateTarget(holder, data);
+                yield holder.setData(attachmentType, data);
+            }
             case MutableDataComponentHolder holder -> holder.set(Objects.requireNonNull(componentType(),"Component type is null"), data);
             default -> throw new IllegalArgumentException(dataHolder + " is not an attachment holder");
         };
@@ -67,7 +72,10 @@ public record DataManagerImpl<T>(Supplier<AttachmentType<T>> attachmentType,
     @Override
     public T remove(Object dataHolder) {
         return switch (dataHolder) {
-            case AttachmentHolder holder -> holder.removeData(attachmentType);
+            case AttachmentHolder holder -> {
+                updateTarget(holder, null);
+                yield holder.removeData(attachmentType);
+            }
             case MutableDataComponentHolder holder -> holder.remove(Objects.requireNonNull(componentType(), "Component type is null"));
             default -> throw new IllegalArgumentException(dataHolder + " is not an attachment holder");
         };
@@ -97,6 +105,10 @@ public record DataManagerImpl<T>(Supplier<AttachmentType<T>> attachmentType,
 
         if (target instanceof BlockEntity blockEntity && blockEntity.getLevel() instanceof ServerLevel level) {
             PacketDistributor.sendToPlayersTrackingChunk(level, new ChunkPos(blockEntity.getBlockPos()), BlockEntitySyncPacket.of(blockEntity, syncer.get(), data));
+        }
+
+        if (target instanceof ServerLevel) {
+            PacketDistributor.sendToAllPlayers(LevelSyncPacket.of(syncer.get(), data));
         }
     }
 }

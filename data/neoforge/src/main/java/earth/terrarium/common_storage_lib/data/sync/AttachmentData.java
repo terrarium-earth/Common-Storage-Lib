@@ -29,7 +29,7 @@ public record AttachmentData<T>(DataSyncSerializer<T> serializer, @Nullable T da
             buf.writeBoolean(false);
         } else {
             buf.writeBoolean(true);
-            serializer.getCodec().encode(buf, (T) data);
+            serializer.getCodec().encode(buf, data);
         }
     }
 

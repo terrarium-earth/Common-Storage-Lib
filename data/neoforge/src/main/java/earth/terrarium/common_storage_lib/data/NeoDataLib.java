@@ -1,9 +1,6 @@
 package earth.terrarium.common_storage_lib.data;
 
-import earth.terrarium.common_storage_lib.data.network.BlockEntitySyncAllPacket;
-import earth.terrarium.common_storage_lib.data.network.BlockEntitySyncPacket;
-import earth.terrarium.common_storage_lib.data.network.EntitySyncAllPacket;
-import earth.terrarium.common_storage_lib.data.network.EntitySyncPacket;
+import earth.terrarium.common_storage_lib.data.network.*;
 import earth.terrarium.common_storage_lib.data.sync.AttachmentData;
 import earth.terrarium.common_storage_lib.data.sync.DataSyncSerializer;
 import net.minecraft.core.Registry;
@@ -11,6 +8,7 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -64,6 +62,11 @@ public class NeoDataLib {
     }
 
     @SubscribeEvent
+    public void initLevelData(PlayerEvent.PlayerLoggedInEvent event) {
+        PacketDistributor.sendToPlayer((ServerPlayer) event.getEntity(), LevelSyncAllPacket.of((ServerLevel) event.getEntity().level()));
+    }
+
+    @SubscribeEvent
     public void registerNetworkHandling(RegisterPayloadHandlersEvent event) {
         event.registrar("1").playToClient(EntitySyncAllPacket.TYPE, EntitySyncAllPacket.CODEC, (packet, context) -> {
             Optional.ofNullable(context.player().level().getEntity(packet.entityId())).ifPresent(entity -> {
@@ -77,6 +80,10 @@ public class NeoDataLib {
             });
         });
 
+        event.registrar("1").playToClient(LevelSyncAllPacket.TYPE, LevelSyncAllPacket.CODEC, (packet, context) -> {
+            packet.syncData().forEach(data -> data.updateTarget(context.player().level()));
+        });
+
         event.registrar("1").playToClient(EntitySyncPacket.TYPE, EntitySyncPacket.CODEC, (packet, context) -> {
             Optional.ofNullable(context.player().level().getEntity(packet.entityId())).ifPresent(entity -> {
                 packet.syncData().updateTarget(entity);
@@ -87,6 +94,10 @@ public class NeoDataLib {
             context.player().level().getBlockEntity(packet.pos(), packet.blockEntityType()).ifPresent(entity -> {
                 packet.syncData().updateTarget(entity);
             });
+        });
+
+        event.registrar("1").playToClient(LevelSyncPacket.TYPE, LevelSyncPacket.CODEC, (packet, context) -> {
+            packet.syncData().updateTarget(context.player().level());
         });
     }
 }
