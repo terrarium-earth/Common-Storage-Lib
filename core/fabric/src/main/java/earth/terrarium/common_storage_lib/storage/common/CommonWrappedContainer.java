@@ -1,6 +1,7 @@
 package earth.terrarium.common_storage_lib.storage.common;
 
 import earth.terrarium.common_storage_lib.resources.Resource;
+import earth.terrarium.common_storage_lib.storage.ConversionUtils;
 import earth.terrarium.common_storage_lib.storage.base.CommonStorage;
 import earth.terrarium.common_storage_lib.storage.base.StorageSlot;
 import net.fabricmc.fabric.api.transfer.v1.storage.SlottedStorage;
@@ -49,7 +50,7 @@ public record CommonWrappedContainer<U extends Resource, V extends TransferVaria
 
     @Override
     public long insert(U resource, long amount, boolean simulate) {
-        try (var transaction = Transaction.openNested(Transaction.getCurrentUnsafe())) {
+        try (var transaction = ConversionUtils.getTransaction()) {
             long inserted = storage.insert(toVariant(resource), amount, transaction);
             if (!simulate) {
                 transaction.commit();
@@ -60,7 +61,7 @@ public record CommonWrappedContainer<U extends Resource, V extends TransferVaria
 
     @Override
     public long extract(U resource, long amount, boolean simulate) {
-        try (var transaction = Transaction.openNested(Transaction.getCurrentUnsafe())) {
+        try (var transaction = ConversionUtils.getTransaction()) {
             long extracted = storage.extract(toVariant(resource), amount, transaction);
             if (!simulate) {
                 transaction.commit();

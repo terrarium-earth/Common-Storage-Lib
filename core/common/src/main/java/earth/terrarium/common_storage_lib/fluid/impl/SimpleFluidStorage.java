@@ -19,21 +19,21 @@ import java.util.function.Predicate;
 public class SimpleFluidStorage implements CommonStorage<FluidResource>, UpdateManager<FluidStorageData> {
     protected final NonNullList<SimpleFluidSlot> slots;
     private final Runnable update;
+    private final Runnable save;
     private final long limit;
 
     public SimpleFluidStorage(int size, long limit) {
         this.slots = NonNullList.withSize(size, new SimpleFluidSlot(limit, this::update));
         this.limit = limit;
         this.update = () -> {};
+        this.save = () -> {};
     }
 
     public SimpleFluidStorage(ItemContext context, DataComponentType<FluidStorageData> componentType, int size, long limit) {
         this.slots = NonNullList.withSize(size, new SimpleFluidSlot(limit, this::update));
         this.limit = limit;
-        this.update = () -> {
-            context.set(componentType, FluidStorageData.from(this));
-            context.updateAll();
-        };
+        this.update = context::updateAll;
+        this.save = () -> context.set(componentType, FluidStorageData.from(this));
         FluidStorageData data = context.getResource().get(componentType);
         if (data != null) readSnapshot(data);
     }
@@ -45,6 +45,7 @@ public class SimpleFluidStorage implements CommonStorage<FluidResource>, UpdateM
             FluidStorageData data = FluidStorageData.from(this);
             manager.set(entityOrBlockEntity, data);
         };
+        this.save = () -> {};
         readSnapshot(manager.get(entityOrBlockEntity));
     }
 

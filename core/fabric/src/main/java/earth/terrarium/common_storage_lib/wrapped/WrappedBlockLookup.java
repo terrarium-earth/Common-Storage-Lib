@@ -26,6 +26,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Consumer;
+import java.util.function.Predicate;
 
 public abstract class WrappedBlockLookup<U extends Resource, V extends TransferVariant<?>> implements BlockLookup<CommonStorage<U>, @Nullable Direction> {
     private final BlockApiLookup<Storage<V>, Direction> fabricLookup;
@@ -37,6 +38,35 @@ public abstract class WrappedBlockLookup<U extends Resource, V extends TransferV
     @Override
     public void onRegister(Consumer<BlockLookup.BlockRegistrar<CommonStorage<U>, @Nullable Direction>> registrar) {
         registrar.accept(new LookupRegistrar());
+    }
+
+    @Override
+    public void registerFallback(BlockEntityGetter<CommonStorage<U>, @Nullable Direction> getter) {
+        fabricLookup.registerFallback((level, pos, state, block, dir) -> {
+            var be = block;
+            if (be == null) be = level.getBlockEntity(pos);
+            if (be == null) return null;
+            CommonStorage<U> storage = getter.getContainer(be, dir);
+            return storage == null ? null : wrap(storage);
+        });
+    }
+
+    @Override
+    public void registerFallback(BlockEntityGetter<CommonStorage<U>, @Nullable Direction> getter, Predicate<BlockEntityType<?>> entityTypePredicate) {
+        registerFallback(getter);
+    }
+
+    @Override
+    public void registerFallback(BlockGetter<CommonStorage<U>, @Nullable Direction> getter) {
+        fabricLookup.registerFallback((level, pos, state, block, dir) -> {
+            CommonStorage<U> storage = getter.getContainer(level, pos, state, block, dir);
+            return storage == null ? null : wrap(storage);
+        });
+    }
+
+    @Override
+    public void registerFallback(BlockGetter<CommonStorage<U>, @Nullable Direction> getter, Predicate<Block> blockPredicate) {
+        registerFallback(getter);
     }
 
     public class LookupRegistrar implements BlockRegistrar<CommonStorage<U>, @Nullable Direction> {

@@ -1,5 +1,6 @@
 package earth.terrarium.common_storage_lib.storage.common;
 
+import earth.terrarium.common_storage_lib.storage.ConversionUtils;
 import earth.terrarium.common_storage_lib.storage.base.ValueStorage;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import team.reborn.energy.api.EnergyStorage;
@@ -27,7 +28,7 @@ public record CommonValueStorage(EnergyStorage storage) implements ValueStorage 
 
     @Override
     public long insert(long amount, boolean simulate) {
-        try (var transaction = Transaction.openNested(Transaction.getCurrentUnsafe())) {
+        try (var transaction = ConversionUtils.getTransaction()) {
             long inserted = storage.insert(amount, transaction);
             if (!simulate) {
                 transaction.commit();
@@ -38,7 +39,7 @@ public record CommonValueStorage(EnergyStorage storage) implements ValueStorage 
 
     @Override
     public long extract(long amount, boolean simulate) {
-        try (var transaction = Transaction.openNested(Transaction.getCurrentUnsafe())) {
+        try (var transaction = ConversionUtils.getTransaction()) {
             long extracted = storage.extract(amount, transaction);
             if (!simulate) {
                 transaction.commit();

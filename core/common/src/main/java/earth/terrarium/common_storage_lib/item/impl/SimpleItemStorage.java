@@ -16,18 +16,18 @@ import java.util.function.Predicate;
 public class SimpleItemStorage implements CommonStorage<ItemResource>, UpdateManager<ItemStorageData> {
     protected final NonNullList<SimpleItemSlot> slots;
     private final Runnable onUpdate;
+    private final Runnable save;
 
     public SimpleItemStorage(int size) {
         this.slots = NonNullList.withSize(size, new SimpleItemSlot(this::update));
         this.onUpdate = () -> {};
+        this.save = () -> {};
     }
 
     public SimpleItemStorage(ItemContext context, DataComponentType<ItemStorageData> componentType, int size) {
         this.slots = NonNullList.withSize(size, new SimpleItemSlot(this::update));
-        this.onUpdate = () -> {
-            ItemStorageData data = ItemStorageData.of(this);
-            context.set(componentType, data);
-        };
+        this.onUpdate = context::updateAll;
+        this.save = () -> context.set(componentType, ItemStorageData.of(this));
         if (context.getResource().has(componentType)) {
             this.readSnapshot(context.getResource().get(componentType));
         }
@@ -35,10 +35,8 @@ public class SimpleItemStorage implements CommonStorage<ItemResource>, UpdateMan
 
     public SimpleItemStorage(Object entityOrBlockEntity, DataManager<ItemStorageData> dataManager, int size) {
         this.slots = NonNullList.withSize(size, new SimpleItemSlot(this::update));
-        this.onUpdate = () -> {
-            ItemStorageData data = ItemStorageData.of(this);
-            dataManager.set(entityOrBlockEntity, data);
-        };
+        this.onUpdate = () -> dataManager.set(entityOrBlockEntity, ItemStorageData.of(this));
+        this.save = () -> {};
         this.readSnapshot(dataManager.get(entityOrBlockEntity));
     }
 

@@ -70,7 +70,7 @@ public class TransferTestBlockEntity extends BlockEntity implements EnergyProvid
             TransferUtil.moveAny(items, foundItemBelow, 1, false);
         }
 
-        ItemContext context = SimpleItemContext.of(ItemApi.BLOCK.find(this, null), 0);
+        ItemContext context = SimpleItemContext.of(items, 0);
 
         ValueStorage valueStorage = context.find(EnergyApi.ITEM);
         if (valueStorage != null) {

@@ -22,6 +22,7 @@ import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Consumer;
+import java.util.function.Predicate;
 
 public abstract class WrappedItemLookup<U extends Resource, V extends TransferVariant<?>> implements ItemLookup<CommonStorage<U>, ItemContext> {
     private final ItemApiLookup<Storage<V>, ContainerItemContext> fabricLookup;
@@ -38,11 +39,21 @@ public abstract class WrappedItemLookup<U extends Resource, V extends TransferVa
     public void registerItems(ItemGetter<CommonStorage<U>, ItemContext> getter, Item... items) {
         fabricLookup.registerForItems((stack, context) -> {
             CommonStorage<U> container = getter.getContainer(stack, new CommonItemContext(context));
-            if (container != null) {
-                return wrap(container);
-            }
-            return null;
+            return container == null ? null : wrap(container);
         }, items);
+    }
+
+    @Override
+    public void registerFallback(ItemGetter<CommonStorage<U>, ItemContext> getter) {
+        fabricLookup.registerFallback((stack, context) -> {
+            CommonStorage<U> container = getter.getContainer(stack, new CommonItemContext(context));
+            return container == null ? null : wrap(container);
+        });
+    }
+
+    @Override
+    public void registerFallback(ItemGetter<CommonStorage<U>, ItemContext> getter, Predicate<Item> itemPredicate) {
+        registerFallback(getter);
     }
 
     public abstract FabricWrappedContainer<U, V> wrap(CommonStorage<U> container);

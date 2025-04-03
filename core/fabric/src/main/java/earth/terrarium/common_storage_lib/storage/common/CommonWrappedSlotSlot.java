@@ -1,6 +1,7 @@
 package earth.terrarium.common_storage_lib.storage.common;
 
 import earth.terrarium.common_storage_lib.resources.Resource;
+import earth.terrarium.common_storage_lib.storage.ConversionUtils;
 import earth.terrarium.common_storage_lib.storage.base.StorageSlot;
 import net.fabricmc.fabric.api.transfer.v1.storage.StorageView;
 import net.fabricmc.fabric.api.transfer.v1.storage.TransferVariant;
@@ -25,7 +26,7 @@ public record CommonWrappedSlotSlot<U extends Resource, V extends TransferVarian
     @Override
     public long insert(U value, long amount, boolean simulate) {
         if (view instanceof SingleSlotStorage<V> slot) {
-            try (var transaction = Transaction.openNested(Transaction.getCurrentUnsafe())) {
+            try (var transaction = ConversionUtils.getTransaction()) {
                 long inserted = slot.insert(toVariant.apply(value), amount, transaction);
                 if (!simulate) {
                     transaction.commit();
@@ -39,7 +40,7 @@ public record CommonWrappedSlotSlot<U extends Resource, V extends TransferVarian
 
     @Override
     public long extract(U resource, long amount, boolean simulate) {
-        try (var transaction = Transaction.openNested(Transaction.getCurrentUnsafe())) {
+        try (var transaction = ConversionUtils.getTransaction()) {
             long extracted = view.extract(toVariant.apply(resource), amount, transaction);
             if (!simulate) {
                 transaction.commit();

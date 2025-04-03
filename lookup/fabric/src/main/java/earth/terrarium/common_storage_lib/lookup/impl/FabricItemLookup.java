@@ -39,6 +39,6 @@ public class FabricItemLookup<T, C> implements ItemLookup<T, C> {
 
     @Override
     public void registerFallback(ItemGetter<T, C> getter, Predicate<Item> itemPredicate) {
-        ServerLifecycleEvents.SERVER_STARTED.register(ignored -> ItemLookup.super.registerFallback(getter, itemPredicate));
+        registerFallback(getter);
     }
 }

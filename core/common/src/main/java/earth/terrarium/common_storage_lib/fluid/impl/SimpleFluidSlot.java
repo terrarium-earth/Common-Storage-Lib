@@ -10,14 +10,20 @@ import java.util.function.Predicate;
 public class SimpleFluidSlot implements StorageSlot<FluidResource>, UpdateManager<ResourceStack<FluidResource>> {
     private final long limit;
     private final Runnable update;
+    private final Runnable save;
     private FluidResource resource;
     private long amount;
 
-    public SimpleFluidSlot(long limit, Runnable update) {
+    public SimpleFluidSlot(long limit, Runnable update, Runnable save) {
         this.resource = FluidResource.BLANK;
         this.amount = getAmount();
         this.limit = limit;
         this.update = update;
+        this.save = save;
+    }
+
+    public SimpleFluidSlot(long limit, Runnable update) {
+        this(limit, update, () -> {});
     }
 
     @Override
@@ -48,12 +54,14 @@ public class SimpleFluidSlot implements StorageSlot<FluidResource>, UpdateManage
             if (!simulate) {
                 this.resource = resource;
                 this.amount = inserted;
+                save.run();
             }
             return inserted;
         } else if (this.resource.equals(resource)) {
             long inserted = Math.min(amount, limit - this.amount);
             if (!simulate) {
                 this.amount += inserted;
+                save.run();
             }
             return inserted;
         }
@@ -69,6 +77,7 @@ public class SimpleFluidSlot implements StorageSlot<FluidResource>, UpdateManage
                 if (this.amount == 0) {
                     this.resource = FluidResource.BLANK;
                 }
+                save.run();
             }
             return extracted;
         }

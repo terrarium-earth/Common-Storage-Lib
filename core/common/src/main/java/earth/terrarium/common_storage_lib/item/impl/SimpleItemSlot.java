@@ -12,19 +12,26 @@ import java.util.function.Predicate;
 
 public class SimpleItemSlot implements StorageSlot<ItemResource>, ModifiableItemSlot, UpdateManager<ResourceStack<ItemResource>> {
     private final Runnable update;
+    private final Runnable save;
     private ItemResource resource;
     private long amount;
 
-    public SimpleItemSlot(Runnable update) {
+    public SimpleItemSlot(Runnable update, Runnable save) {
         this.resource = ItemResource.BLANK;
         this.amount = getAmount();
         this.update = update;
+        this.save = save;
+    }
+
+    public SimpleItemSlot(Runnable update) {
+        this(update, () -> {});
     }
 
     public SimpleItemSlot(ItemStack stack) {
         this.resource = ItemResource.of(stack);
         this.amount = stack.getCount();
         this.update = () -> {};
+        this.save = () -> {};
     }
 
     @Override
@@ -65,12 +72,14 @@ public class SimpleItemSlot implements StorageSlot<ItemResource>, ModifiableItem
             if (!simulate) {
                 this.resource = resource;
                 this.amount = inserted;
+                save.run();
             }
             return inserted;
         } else if (this.resource.equals(resource)) {
             long inserted = Math.min(amount, getLimit(resource) - this.amount);
             if (!simulate) {
                 this.amount += inserted;
+                save.run();
             }
             return inserted;
         }
@@ -85,6 +94,7 @@ public class SimpleItemSlot implements StorageSlot<ItemResource>, ModifiableItem
                 this.amount -= extracted;
                 if (this.amount == 0) {
                     this.resource = ItemResource.BLANK;
+                    save.run();
                 }
             }
             return extracted;

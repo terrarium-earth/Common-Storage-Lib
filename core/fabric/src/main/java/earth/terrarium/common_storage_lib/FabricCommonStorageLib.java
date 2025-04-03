@@ -6,8 +6,6 @@ public class FabricCommonStorageLib implements ModInitializer {
     
     @Override
     public void onInitialize() {
-        
         CommonStorageLib.init();
-        
     }
 }

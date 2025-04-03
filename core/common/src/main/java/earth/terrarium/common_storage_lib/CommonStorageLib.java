@@ -9,16 +9,21 @@ import earth.terrarium.common_storage_lib.heat.HeatProvider;
 import earth.terrarium.common_storage_lib.item.ItemApi;
 import earth.terrarium.common_storage_lib.item.input.ItemConsumerRegistry;
 import earth.terrarium.common_storage_lib.item.util.ItemProvider;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class CommonStorageLib {
     public static final String MOD_ID = "common_storage_lib";
+    public static final Logger LOGGER = LogManager.getLogger(MOD_ID);
 
     public static void init() {
         ItemConsumerRegistry.init();
-        
+
+        LOGGER.info("Common Storage Library Initialized");
         //Energy
         
         EnergyApi.ITEM.registerFallback((stack, context) -> {
+            LOGGER.warn(stack.toString());
             if (stack.getItem() instanceof EnergyProvider.Item provider) {
                 return provider.getEnergy(stack, context);
             } else {

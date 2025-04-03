@@ -16,15 +16,14 @@ import org.jetbrains.annotations.Nullable;
 import team.reborn.energy.api.EnergyStorage;
 
 import java.util.function.Consumer;
+import java.util.function.Predicate;
 
 public class EnergyBlockLookup implements BlockLookup<ValueStorage, @Nullable Direction> {
 
     @Override
     public @Nullable ValueStorage find(Level level, BlockPos pos, @Nullable BlockState state, @Nullable BlockEntity entity, @Nullable Direction direction) {
         EnergyStorage storage = EnergyStorage.SIDED.find(level, pos, state, entity, direction);
-        if (storage == null) {
-            return null;
-        }
+        if (storage == null) return null;
         if (storage instanceof FabricLongStorage(ValueStorage rootContainer, var ignored)) {
             return new AutoUpdatingValueStorage(rootContainer);
         }
@@ -34,6 +33,35 @@ public class EnergyBlockLookup implements BlockLookup<ValueStorage, @Nullable Di
     @Override
     public void onRegister(Consumer<BlockRegistrar<ValueStorage, @Nullable Direction>> registrar) {
         registrar.accept(new LookupRegistrar());
+    }
+
+    @Override
+    public void registerFallback(BlockGetter<ValueStorage, @Nullable Direction> getter, Predicate<Block> blockPredicate) {
+        registerFallback(getter);
+    }
+
+    @Override
+    public void registerFallback(BlockGetter<ValueStorage, @Nullable Direction> getter) {
+        EnergyStorage.SIDED.registerFallback((level, pos, state, entity, dir) -> {
+            ValueStorage storage = getter.getContainer(level, pos, state, entity, dir);
+            return storage == null ? null : new FabricLongStorage(storage);
+        });
+    }
+
+    @Override
+    public void registerFallback(BlockEntityGetter<ValueStorage, @Nullable Direction> getter, Predicate<BlockEntityType<?>> entityTypePredicate) {
+        registerFallback(getter);
+    }
+
+    @Override
+    public void registerFallback(BlockEntityGetter<ValueStorage, @Nullable Direction> getter) {
+        EnergyStorage.SIDED.registerFallback((level, blockPos, blockState, blockEntity, direction) -> {
+            var be = blockEntity;
+            if (be == null) be = level.getBlockEntity(blockPos);
+            if (be == null) return null;
+            ValueStorage storage = getter.getContainer(be, direction);
+            return storage == null ? null : new FabricLongStorage(storage);
+        });
     }
 
     public static class LookupRegistrar implements BlockRegistrar<ValueStorage, @Nullable Direction> {

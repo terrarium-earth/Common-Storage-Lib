@@ -10,20 +10,20 @@ import net.minecraft.core.component.DataComponentType;
 public class SimpleValueStorage implements ValueStorage, UpdateManager<Long> {
     private final long capacity;
     private final Runnable onUpdate;
+    private final Runnable save;
     private long amount;
 
     public SimpleValueStorage(long capacity) {
         this.capacity = capacity;
         this.onUpdate = () -> {};
+        this.save = () -> {};
     }
 
     @SuppressWarnings("DataFlowIssue")
     public SimpleValueStorage(ItemContext context, DataComponentType<Long> componentType, long capacity) {
         this.capacity = capacity;
-        this.onUpdate = () -> {
-            context.exchange(context.getResource().set(componentType, this.amount), context.getAmount(), false);
-            context.updateAll();
-        };
+        this.onUpdate = context::updateAll;
+        this.save = () -> context.set(componentType, this.amount);
         if (context.getResource().has(componentType)) {
             this.amount = context.getResource().get(componentType);
         }
@@ -32,6 +32,7 @@ public class SimpleValueStorage implements ValueStorage, UpdateManager<Long> {
     public SimpleValueStorage(Object entityOrBlockEntity, DataManager<Long> dataManager, long capacity) {
         this.capacity = capacity;
         this.onUpdate = () -> dataManager.set(entityOrBlockEntity, this.amount);
+        save = () -> {};
         this.amount = dataManager.get(entityOrBlockEntity);
     }
 
@@ -64,6 +65,7 @@ public class SimpleValueStorage implements ValueStorage, UpdateManager<Long> {
         long inserted = Math.min(amount, capacity - this.amount);
         if (!simulate) {
             this.amount += inserted;
+            save.run();
         }
         return inserted;
     }
@@ -73,6 +75,7 @@ public class SimpleValueStorage implements ValueStorage, UpdateManager<Long> {
         long extracted = Math.min(amount, this.amount);
         if (!simulate) {
             this.amount -= extracted;
+            save.run();
         }
         return extracted;
     }

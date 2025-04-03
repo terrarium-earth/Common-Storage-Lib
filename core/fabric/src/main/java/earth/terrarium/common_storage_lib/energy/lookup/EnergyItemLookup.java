@@ -14,6 +14,7 @@ import org.jetbrains.annotations.Nullable;
 import team.reborn.energy.api.EnergyStorage;
 
 import java.util.function.Consumer;
+import java.util.function.Predicate;
 
 public class EnergyItemLookup implements ItemLookup<ValueStorage, ItemContext> {
 
@@ -41,5 +42,19 @@ public class EnergyItemLookup implements ItemLookup<ValueStorage, ItemContext> {
             if (container == null) return null;
             return new FabricLongStorage(container);
         }, items);
+    }
+
+    @Override
+    public void registerFallback(ItemGetter<ValueStorage, ItemContext> getter) {
+        EnergyStorage.ITEM.registerFallback((stack, context) -> {
+            ValueStorage container = getter.getContainer(stack, new CommonItemContext(context));
+            if (container == null) return null;
+            return new FabricLongStorage(container);
+        });
+    }
+
+    @Override
+    public void registerFallback(ItemGetter<ValueStorage, ItemContext> getter, Predicate<Item> itemPredicate) {
+        registerFallback(getter);
     }
 }
