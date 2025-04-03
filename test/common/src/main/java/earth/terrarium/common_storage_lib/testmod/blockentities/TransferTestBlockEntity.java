@@ -70,23 +70,19 @@ public class TransferTestBlockEntity extends BlockEntity implements EnergyProvid
             TransferUtil.moveAny(items, foundItemBelow, 1, false);
         }
 
-        ItemContext context = SimpleItemContext.of(items, 0);
+        ItemContext context = SimpleItemContext.of(ItemApi.BLOCK.find(this, null), 0);
 
         ValueStorage valueStorage = context.find(EnergyApi.ITEM);
         if (valueStorage != null) {
             var amount = valueStorage.insert(1000, false);
             level.getServer().sendSystemMessage(Component.literal("Inserted Energy: " + amount));
-            UpdateManager.batch(valueStorage);
         }
 
         CommonStorage<FluidResource> fluidStorage = context.find(FluidApi.ITEM);
         if (fluidStorage != null) {
             var amount = fluidStorage.insert(FluidResource.of(Fluids.WATER), 1000, false);
             level.getServer().sendSystemMessage(Component.literal("Inserted Liquid: " + amount));
-            UpdateManager.batch(fluidStorage);
         }
-
-        items.update();
     }
 
     @Override
