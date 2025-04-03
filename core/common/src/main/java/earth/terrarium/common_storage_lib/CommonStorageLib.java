@@ -23,7 +23,6 @@ public class CommonStorageLib {
         //Energy
         
         EnergyApi.ITEM.registerFallback((stack, context) -> {
-            LOGGER.warn(stack.toString());
             if (stack.getItem() instanceof EnergyProvider.Item provider) {
                 return provider.getEnergy(stack, context);
             } else {
