@@ -8,6 +8,7 @@ import earth.terrarium.common_storage_lib.lookup.BlockLookup;
 import earth.terrarium.common_storage_lib.storage.base.CommonStorage;
 import earth.terrarium.common_storage_lib.storage.common.CommonWrappedContainer;
 import earth.terrarium.common_storage_lib.storage.fabric.FabricWrappedContainer;
+import earth.terrarium.common_storage_lib.storage.impl.AutoUpdatingCommonStorage;
 import net.fabricmc.fabric.api.lookup.v1.block.BlockApiLookup;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
@@ -68,7 +69,7 @@ public abstract class WrappedBlockLookup<U extends Resource, V extends TransferV
             Storage<FluidVariant> storage = FluidStorage.SIDED.find(level, pos, state, entity, direction);
             if (storage != null) {
                 if (storage instanceof FabricWrappedContainer.OfFluid wrappedContainer) {
-                    return wrappedContainer.container();
+                    return new AutoUpdatingCommonStorage<>(wrappedContainer.container());
                 }
                 return new CommonWrappedContainer<>(storage, ConversionUtils::toVariant, ConversionUtils::toResource);
             }
@@ -91,7 +92,7 @@ public abstract class WrappedBlockLookup<U extends Resource, V extends TransferV
             Storage<ItemVariant> storage = ItemStorage.SIDED.find(level, pos, state, entity, direction);
             if (storage != null) {
                 if (storage instanceof FabricWrappedContainer.OfItem wrappedContainer) {
-                    return wrappedContainer.container();
+                    return new AutoUpdatingCommonStorage<>(wrappedContainer.container());
                 }
                 return new CommonWrappedContainer<>(storage, ConversionUtils::toVariant, ConversionUtils::toResource);
             }

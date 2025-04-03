@@ -1,5 +1,6 @@
 package earth.terrarium.common_storage_lib.energy.lookup;
 
+import earth.terrarium.common_storage_lib.energy.impl.AutoUpdatingValueStorage;
 import earth.terrarium.common_storage_lib.lookup.BlockLookup;
 import earth.terrarium.common_storage_lib.storage.base.ValueStorage;
 import earth.terrarium.common_storage_lib.storage.common.CommonValueStorage;
@@ -25,7 +26,7 @@ public class EnergyBlockLookup implements BlockLookup<ValueStorage, @Nullable Di
             return null;
         }
         if (storage instanceof FabricLongStorage(ValueStorage rootContainer, var ignored)) {
-            return rootContainer;
+            return new AutoUpdatingValueStorage(rootContainer);
         }
         return new CommonValueStorage(storage);
     }

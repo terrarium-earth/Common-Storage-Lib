@@ -10,6 +10,7 @@ import earth.terrarium.common_storage_lib.storage.common.CommonWrappedContainer;
 import earth.terrarium.common_storage_lib.storage.context.CommonItemContext;
 import earth.terrarium.common_storage_lib.storage.context.FabricItemContext;
 import earth.terrarium.common_storage_lib.storage.fabric.FabricWrappedContainer;
+import earth.terrarium.common_storage_lib.storage.impl.AutoUpdatingCommonStorage;
 import net.fabricmc.fabric.api.lookup.v1.item.ItemApiLookup;
 import net.fabricmc.fabric.api.transfer.v1.context.ContainerItemContext;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
@@ -65,7 +66,7 @@ public abstract class WrappedItemLookup<U extends Resource, V extends TransferVa
             Storage<FluidVariant> storage = getFabricLookup().find(stack, new FabricItemContext(context));
             if (storage != null) {
                 if (storage instanceof FabricWrappedContainer.OfFluid container) {
-                    return container.container();
+                    return new AutoUpdatingCommonStorage<>(container.container());
                 }
                 return new CommonWrappedContainer<>(storage, ConversionUtils::toVariant, ConversionUtils::toResource);
             }

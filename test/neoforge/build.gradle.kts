@@ -6,4 +6,6 @@ dependencies {
     implementation(projects.commonStorageLibLookupNeoforge)
     implementation(projects.commonStorageLibResourcesNeoforge)
     implementation(projects.commonStorageLibNeoforge)
+
+    runtimeOnly(group = "curse.maven", name = "mekanism-268560", version = "6327955")
 }

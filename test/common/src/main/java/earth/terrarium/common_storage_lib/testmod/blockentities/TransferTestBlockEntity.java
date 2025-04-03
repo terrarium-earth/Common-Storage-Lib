@@ -15,11 +15,13 @@ import earth.terrarium.common_storage_lib.resources.fluid.FluidResource;
 import earth.terrarium.common_storage_lib.resources.fluid.util.FluidAmounts;
 import earth.terrarium.common_storage_lib.resources.item.ItemResource;
 import earth.terrarium.common_storage_lib.storage.base.CommonStorage;
+import earth.terrarium.common_storage_lib.storage.base.UpdateManager;
 import earth.terrarium.common_storage_lib.storage.base.ValueStorage;
 import earth.terrarium.common_storage_lib.storage.util.TransferUtil;
 import earth.terrarium.common_storage_lib.testmod.TestMod;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluids;
@@ -35,6 +37,8 @@ public class TransferTestBlockEntity extends BlockEntity implements EnergyProvid
     }
 
     public void tick() {
+        if(level == null || level.isClientSide()) return;
+
         ValueStorage foundEnergy = EnergyApi.BLOCK.find(level, getBlockPos().above(), Direction.DOWN);
         if (foundEnergy != null) {
             TransferUtil.moveValue(foundEnergy, energy, 50, false);
@@ -70,13 +74,19 @@ public class TransferTestBlockEntity extends BlockEntity implements EnergyProvid
 
         ValueStorage valueStorage = context.find(EnergyApi.ITEM);
         if (valueStorage != null) {
-            valueStorage.insert(1, false);
+            var amount = valueStorage.insert(1000, false);
+            level.getServer().sendSystemMessage(Component.literal("Inserted Energy: " + amount));
+            UpdateManager.batch(valueStorage);
         }
-        
+
         CommonStorage<FluidResource> fluidStorage = context.find(FluidApi.ITEM);
         if (fluidStorage != null) {
-            fluidStorage.insert(FluidResource.of(Fluids.WATER), 1000, false);
+            var amount = fluidStorage.insert(FluidResource.of(Fluids.WATER), 1000, false);
+            level.getServer().sendSystemMessage(Component.literal("Inserted Liquid: " + amount));
+            UpdateManager.batch(fluidStorage);
         }
+
+        items.update();
     }
 
     @Override

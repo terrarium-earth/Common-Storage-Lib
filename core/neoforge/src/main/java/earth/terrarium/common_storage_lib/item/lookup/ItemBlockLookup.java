@@ -6,6 +6,7 @@ import earth.terrarium.common_storage_lib.item.wrappers.NeoItemHandler;
 import earth.terrarium.common_storage_lib.lookup.BlockLookup;
 import earth.terrarium.common_storage_lib.lookup.RegistryEventListener;
 import earth.terrarium.common_storage_lib.storage.base.CommonStorage;
+import earth.terrarium.common_storage_lib.storage.impl.AutoUpdatingCommonStorage;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.Level;
@@ -33,7 +34,7 @@ public final class ItemBlockLookup implements BlockLookup<CommonStorage<ItemReso
     public @Nullable CommonStorage<ItemResource> find(Level level, BlockPos pos, @Nullable BlockState state, @Nullable BlockEntity entity, @Nullable Direction direction) {
         IItemHandler handler = level.getCapability(Capabilities.ItemHandler.BLOCK, pos, state, entity, direction);
         if (handler instanceof NeoItemHandler(CommonStorage<ItemResource> container)) {
-            return container;
+            return new AutoUpdatingCommonStorage<>(container);
         }
         return handler == null ? null : new CommonItemContainer(handler);
     }

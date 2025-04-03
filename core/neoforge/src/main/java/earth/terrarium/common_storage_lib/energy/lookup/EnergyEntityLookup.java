@@ -1,5 +1,6 @@
 package earth.terrarium.common_storage_lib.energy.lookup;
 
+import earth.terrarium.common_storage_lib.energy.impl.AutoUpdatingValueStorage;
 import earth.terrarium.common_storage_lib.energy.wrappers.CommonEnergyStorage;
 import earth.terrarium.common_storage_lib.energy.wrappers.NeoEnergyContainer;
 import earth.terrarium.common_storage_lib.lookup.RegistryEventListener;
@@ -29,7 +30,7 @@ public final class EnergyEntityLookup implements EntityLookup<ValueStorage, Dire
     public @Nullable ValueStorage find(Entity entity, Direction context) {
         IEnergyStorage capability = entity.getCapability(Capabilities.EnergyStorage.ENTITY, context);
         if (capability instanceof NeoEnergyContainer(ValueStorage container)) {
-            return container;
+            return new AutoUpdatingValueStorage(container);
         }
         return capability == null ? null : new CommonEnergyStorage(capability);
     }
