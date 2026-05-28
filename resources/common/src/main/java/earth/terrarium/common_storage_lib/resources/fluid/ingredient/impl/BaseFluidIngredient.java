@@ -57,7 +57,7 @@ public class BaseFluidIngredient implements FluidIngredient {
 
     @Override
     public boolean test(FluidResource fluidResource) {
-        return false;
+        return this.getMatchingFluids().stream().anyMatch(resource -> resource.isOf(fluidResource.getType()));
     }
 
     @Override
