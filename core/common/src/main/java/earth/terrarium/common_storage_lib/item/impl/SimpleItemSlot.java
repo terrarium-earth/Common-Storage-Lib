@@ -146,8 +146,8 @@ public class SimpleItemSlot implements StorageSlot<ItemResource>, ModifiableItem
     public static class Filtered extends SimpleItemSlot {
         private final Predicate<ItemResource> filter;
 
-        public Filtered(Runnable update, Predicate<ItemResource> filter) {
-            super(update);
+        public Filtered(Runnable update, Runnable save, Predicate<ItemResource> filter) {
+            super(update, save);
             this.filter = filter;
         }
 

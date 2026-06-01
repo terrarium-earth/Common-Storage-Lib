@@ -30,10 +30,10 @@ public class SimpleFluidStorage implements CommonStorage<FluidResource>, UpdateM
     }
 
     public SimpleFluidStorage(ItemContext context, DataComponentType<FluidStorageData> componentType, int size, long limit) {
-        this.slots = NonNullList.withSize(size, new SimpleFluidSlot(limit, this::update));
         this.limit = limit;
         this.update = context::updateAll;
         this.save = () -> context.set(componentType, FluidStorageData.from(this));
+        this.slots = NonNullList.withSize(size, new SimpleFluidSlot(limit, this::update, this.save));
         FluidStorageData data = context.getResource().get(componentType);
         if (data != null) readSnapshot(data);
     }
@@ -50,7 +50,10 @@ public class SimpleFluidStorage implements CommonStorage<FluidResource>, UpdateM
     }
 
     public SimpleFluidStorage filter(int slot, Predicate<FluidResource> predicate) {
-        slots.set(slot, new SimpleFluidSlot.Filtered(limit, this::update, predicate));
+        SimpleFluidSlot oldSlot = slots.get(slot);
+        SimpleFluidSlot newSlot = new SimpleFluidSlot.Filtered(limit, this.update, this.save, predicate);
+        newSlot.readSnapshot(oldSlot.createSnapshot());
+        slots.set(slot, newSlot);
         return this;
     }
 

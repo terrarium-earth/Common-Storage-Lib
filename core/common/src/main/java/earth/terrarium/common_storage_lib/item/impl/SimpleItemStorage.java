@@ -2,6 +2,7 @@ package earth.terrarium.common_storage_lib.item.impl;
 
 import earth.terrarium.common_storage_lib.context.ItemContext;
 import earth.terrarium.common_storage_lib.data.DataManager;
+import earth.terrarium.common_storage_lib.fluid.impl.SimpleFluidSlot;
 import earth.terrarium.common_storage_lib.resources.item.ItemResource;
 import earth.terrarium.common_storage_lib.item.util.ItemStorageData;
 import earth.terrarium.common_storage_lib.storage.base.CommonStorage;
@@ -25,9 +26,9 @@ public class SimpleItemStorage implements CommonStorage<ItemResource>, UpdateMan
     }
 
     public SimpleItemStorage(ItemContext context, DataComponentType<ItemStorageData> componentType, int size) {
-        this.slots = NonNullList.withSize(size, new SimpleItemSlot(this::update));
         this.onUpdate = context::updateAll;
         this.save = () -> context.set(componentType, ItemStorageData.of(this));
+        this.slots = NonNullList.withSize(size, new SimpleItemSlot(this::update, this.save));
         if (context.getResource().has(componentType)) {
             this.readSnapshot(context.getResource().get(componentType));
         }
@@ -41,7 +42,10 @@ public class SimpleItemStorage implements CommonStorage<ItemResource>, UpdateMan
     }
 
     public SimpleItemStorage filter(int slot, Predicate<ItemResource> predicate) {
-        slots.set(slot, new SimpleItemSlot.Filtered(this::update, predicate));
+        SimpleItemSlot oldSlot = slots.get(slot);
+        SimpleItemSlot newSlot = new SimpleItemSlot.Filtered(this::update, this.save, predicate);
+        newSlot.readSnapshot(oldSlot.createSnapshot());
+        slots.set(slot, newSlot);
         return this;
     }
 
