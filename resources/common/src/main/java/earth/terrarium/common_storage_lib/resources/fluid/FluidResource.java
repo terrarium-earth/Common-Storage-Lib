@@ -101,4 +101,19 @@ public final class FluidResource extends ResourceComponent {
     public boolean is(TagKey<Fluid> tag) {
         return type.is(tag);
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (!(obj instanceof FluidResource other)) return false;
+        if (this.type != other.type) return false;
+        return this.dataPatch.equals(other.dataPatch);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = type.hashCode();
+        result = 31 * result + dataPatch.hashCode();
+        return result;
+    }
 }
