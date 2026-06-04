@@ -108,6 +108,11 @@ public class SimpleFluidSlot implements StorageSlot<FluidResource>, UpdateManage
             this.filter = filter;
         }
 
+        @Deprecated
+        public Filtered(long limit, Runnable update, Predicate<FluidResource> filter) {
+            this(limit, update, () -> {}, filter);
+        }
+
         @Override
         public boolean isResourceValid(FluidResource resource) {
             return filter.test(resource);
