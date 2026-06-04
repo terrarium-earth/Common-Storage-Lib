@@ -1,6 +1,7 @@
 package earth.terrarium.common_storage_lib.item.impl;
 
 import earth.terrarium.common_storage_lib.resources.ResourceStack;
+import earth.terrarium.common_storage_lib.resources.fluid.FluidResource;
 import earth.terrarium.common_storage_lib.resources.item.ItemResource;
 import earth.terrarium.common_storage_lib.storage.util.ModifiableItemSlot;
 import earth.terrarium.common_storage_lib.storage.base.StorageSlot;
@@ -146,9 +147,14 @@ public class SimpleItemSlot implements StorageSlot<ItemResource>, ModifiableItem
     public static class Filtered extends SimpleItemSlot {
         private final Predicate<ItemResource> filter;
 
-        public Filtered(Runnable update, Predicate<ItemResource> filter) {
-            super(update);
+        public Filtered(Runnable update, Runnable save, Predicate<ItemResource> filter) {
+            super(update, save);
             this.filter = filter;
+        }
+
+        @Deprecated
+        public Filtered(Runnable update, Predicate<ItemResource> filter) {
+            this(update, () -> {}, filter);
         }
 
         @Override

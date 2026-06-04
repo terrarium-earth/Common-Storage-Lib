@@ -103,9 +103,14 @@ public class SimpleFluidSlot implements StorageSlot<FluidResource>, UpdateManage
     public static class Filtered extends SimpleFluidSlot {
         private final Predicate<FluidResource> filter;
 
-        public Filtered(long limit, Runnable update, Predicate<FluidResource> filter) {
-            super(limit, update);
+        public Filtered(long limit, Runnable update, Runnable save, Predicate<FluidResource> filter) {
+            super(limit, update, save);
             this.filter = filter;
+        }
+
+        @Deprecated
+        public Filtered(long limit, Runnable update, Predicate<FluidResource> filter) {
+            this(limit, update, () -> {}, filter);
         }
 
         @Override
