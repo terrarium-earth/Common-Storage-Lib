@@ -1,1 +1,1 @@
-Fix storage data not saving to item components
+Fix item context not respecting custom exchange function
