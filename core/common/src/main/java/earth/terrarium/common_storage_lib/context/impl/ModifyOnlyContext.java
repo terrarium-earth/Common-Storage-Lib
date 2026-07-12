@@ -5,12 +5,13 @@ import earth.terrarium.common_storage_lib.resources.item.ItemResource;
 import earth.terrarium.common_storage_lib.item.impl.noops.NoOpsItemContainer;
 import earth.terrarium.common_storage_lib.storage.base.CommonStorage;
 import earth.terrarium.common_storage_lib.storage.base.StorageSlot;
+import earth.terrarium.common_storage_lib.storage.base.UpdateManager;
 import net.minecraft.core.component.DataComponentPatch;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.component.PatchedDataComponentMap;
 import net.minecraft.world.item.ItemStack;
 
-public record ModifyOnlyContext(ItemStack stack) implements ItemContext {
+public record ModifyOnlyContext(ItemStack stack) implements ItemContext, UpdateManager<ItemStack> {
     @Override
     public long exchange(ItemResource newResource, long amount, boolean simulate) {
         if (!newResource.isOf(stack.getItem()) || amount != stack.getCount()) return 0;
@@ -45,6 +46,20 @@ public record ModifyOnlyContext(ItemStack stack) implements ItemContext {
     public StorageSlot<ItemResource> mainSlot() {
         return new ModifyOnlyContainer(stack);
     }
+
+    @Override
+    public ItemStack createSnapshot() {
+        return stack.copy();
+    }
+
+    @Override
+    public void readSnapshot(ItemStack snapshot) {
+        stack.setCount(snapshot.getCount());
+        stack.applyComponents(snapshot.getComponents());
+    }
+
+    @Override
+    public void update() {}
 
     public record ModifyOnlyContainer(ItemStack stack) implements StorageSlot<ItemResource> {
         @Override

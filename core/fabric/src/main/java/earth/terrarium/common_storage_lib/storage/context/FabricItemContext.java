@@ -4,7 +4,7 @@ import earth.terrarium.common_storage_lib.context.ItemContext;
 import earth.terrarium.common_storage_lib.storage.ConversionUtils;
 import earth.terrarium.common_storage_lib.storage.fabric.FabricWrappedContainer;
 import earth.terrarium.common_storage_lib.storage.fabric.FabricWrappedSlot;
-import net.fabricmc.fabric.api.transfer.v1.context.ContainerItemContext;
+import earth.terrarium.common_storage_lib.storage.fabric.OptionalSnapshotParticipant;import net.fabricmc.fabric.api.transfer.v1.context.ContainerItemContext;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.SlottedStorage;
 import net.fabricmc.fabric.api.transfer.v1.storage.base.SingleSlotStorage;
@@ -16,10 +16,14 @@ import java.util.List;
 public final class FabricItemContext implements ContainerItemContext {
     private final SingleSlotStorage<ItemVariant> mainSlot;
     private final SlottedStorage<ItemVariant> container;
+    private final OptionalSnapshotParticipant<?> updateManager;
+    private final ItemContext itemContext;
 
     public FabricItemContext(ItemContext context) {
         this.mainSlot = new FabricWrappedSlot<>(context.mainSlot(), ConversionUtils::toVariant, ConversionUtils::toResource);
         this.container = new FabricWrappedContainer<>(context.outerContainer(), ConversionUtils::toVariant, ConversionUtils::toResource);
+        this.updateManager = OptionalSnapshotParticipant.of(container);
+        this.itemContext = context;
     }
 
     @Override
@@ -33,7 +37,19 @@ public final class FabricItemContext implements ContainerItemContext {
     }
 
     @Override
+    public long exchange(ItemVariant newVariant, long maxAmount, TransactionContext transaction) {
+        updateSnapshots(transaction);
+        return itemContext.exchange(ConversionUtils.toResource(newVariant), maxAmount, false);
+    }
+
+    @Override
     public @UnmodifiableView List<SingleSlotStorage<ItemVariant>> getAdditionalSlots() {
         return container.getSlots();
+    }
+
+    private void updateSnapshots(TransactionContext transaction) {
+        if (updateManager != null) {
+            updateManager.updateSnapshots(transaction);
+        }
     }
 }
